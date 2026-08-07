@@ -1,0 +1,118 @@
+{{- if .Values.akash_node.enabled -}}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: akash-node-1
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: akash-node
+    akash.network/node: "1"
+spec:
+  replicas: 1
+  serviceName: {{ include "akash-node.fullname" . }}
+  selector:
+    matchLabels:
+      app: akash-node
+      akash.network/node: "1"
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        app: akash-node
+        akash.network/node: "1"
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: akash-node
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.local_storage.enabled }}
+      nodeSelector:
+        kubernetes.io/hostname: {{ $.Values.local_storage.host }}
+      {{- end }}
+      initContainers:
+        - name: init
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: [ "/bin/bash" , "/config/init.sh" ]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: akash-node-env
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          {{- if or .Values.local_storage.enabled .Values.ceph_storage.enabled }}
+            - name: local-persistent-storage
+              mountPath: "{{ .Values.home }}"
+          {{- else }}
+            - name: home
+              mountPath: "{{ .Values.home }}"
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: [ "/bin/akash" , "start" ]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: akash-node-env
+          ports:
+            - containerPort: 1317
+              name: akashd-api
+            - containerPort: 9090
+              name: akashd-grpc
+            - containerPort: 26656
+              name: akashd-p2p
+            - containerPort: 26657
+              name: akashd-rpc
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          {{- if or .Values.local_storage.enabled .Values.ceph_storage.enabled }}
+            - name: local-persistent-storage
+              mountPath: "{{ .Values.home }}"
+          {{- else }}
+            - name: home
+              mountPath: "{{ .Values.home }}"
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: akash-node-script
+      {{- if or .Values.local_storage.enabled .Values.ceph_storage.enabled }}
+        - name: local-persistent-storage
+          persistentVolumeClaim:
+            claimName: akash-node-pvc
+      {{- else }}
+        - name: home
+          emptyDir: {}
+      {{- end }}
+{{- end }}
