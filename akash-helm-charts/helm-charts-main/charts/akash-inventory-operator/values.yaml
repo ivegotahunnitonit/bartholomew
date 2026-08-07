@@ -1,0 +1,23 @@
+# Default values for inventory-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: ghcr.io/akash-network/provider
+  pullPolicy: IfNotPresent
+
+inventoryConfig:
+  # Allow users to specify cluster storage options
+  cluster_storage:
+    - default
+    - beta3
+    - ram
+  exclude:
+    nodes: []
+    node_storage: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
