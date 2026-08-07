@@ -1,0 +1,152 @@
+[
+  {
+    "number": 1592,
+    "title": "Merge/prs streaming upload",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1592"
+  },
+  {
+    "number": 1591,
+    "title": "Preserve provenance metadata on memory update (#770)",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1591"
+  },
+  {
+    "number": 1590,
+    "title": "fix: ensure _parse_ts returns aware datetime and clean up batch counting logic",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1590"
+  },
+  {
+    "number": 1589,
+    "title": "fix: ensure _parse_ts returns aware datetime and clean up batch counting logic",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1589"
+  },
+  {
+    "number": 1585,
+    "title": "fix(temporal): parse_relative_time silently returns None for 'last week'/'last month'/'last year' → timeline amnesia",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1585"
+  },
+  {
+    "number": 1584,
+    "title": "fix: bound yesterday temporal recall",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1584"
+  },
+  {
+    "number": 1577,
+    "title": "fix: revoke sessions when deleting agents",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1577"
+  },
+  {
+    "number": 1571,
+    "title": "fix: preserve committed memory results when summary logging fails",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1571"
+  },
+  {
+    "number": 1570,
+    "title": "fix(mcp): isolate concurrent agent sessions",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1570"
+  },
+  {
+    "number": 1569,
+    "title": "fix(claudecode): distill only the current Stop turn",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1569"
+  },
+  {
+    "number": 1563,
+    "title": "fix: preserve Supermemory multi-container tags",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1563"
+  },
+  {
+    "number": 1562,
+    "title": "fix: enforce Python client query guards",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1562"
+  },
+  {
+    "number": 1557,
+    "title": "fix: classify negated preferences as preferences",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1557"
+  },
+  {
+    "number": 1556,
+    "title": "fix: return union for multi-type recall",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1556"
+  },
+  {
+    "number": 1553,
+    "title": "fix: serialize concurrent session summary writes",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1553"
+  },
+  {
+    "number": 1550,
+    "title": "fix: add input validation to delete_memory and update_memory",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1550"
+  },
+  {
+    "number": 1549,
+    "title": "fix(cli): log namespace fetch failure in agent bootstrap",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1549"
+  },
+  {
+    "number": 1548,
+    "title": "fix: add logging to silent exception handlers in CLI",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1548"
+  },
+  {
+    "number": 1547,
+    "title": "docs: fix 11 broken internal links across 4 doc files",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1547"
+  },
+  {
+    "number": 1543,
+    "title": "fix: prevent API key corruption + add missing session validation (#770)",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1543"
+  },
+  {
+    "number": 1541,
+    "title": "fix(connect): clean managed hooks and permissions",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1541"
+  },
+  {
+    "number": 1540,
+    "title": "fix(okf): preserve literal entry delimiters during round trips",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1540"
+  },
+  {
+    "number": 1539,
+    "title": "fix(app): decouple conflict detection prompt from embedded query to prevent context overflow",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1539"
+  },
+  {
+    "number": 1538,
+    "title": "fix(app): preserve provenance in update_memory() to prevent metadata overwrite",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1538"
+  },
+  {
+    "number": 1536,
+    "title": "fix: protect persisted session credentials",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1536"
+  },
+  {
+    "number": 1535,
+    "title": "fix: serialize persisted JWT secret creation",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1535"
+  },
+  {
+    "number": 1534,
+    "title": "fix: serialize session renewal and logout",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1534"
+  },
+  {
+    "number": 1533,
+    "title": "fix: Add tests for memory contradiction and deduplication edge cases",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1533"
+  },
+  {
+    "number": 1528,
+    "title": "fix: enforce ALLOWED_UPDATE_FIELDS in update_memory (#770)",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1528"
+  },
+  {
+    "number": 1526,
+    "title": "fix(plugin/onprem): fix 403 error on profile startup (issue #1478)",
+    "html_url": "https://github.com/moorcheh-ai/memanto/pull/1526"
+  }
+]
