@@ -1,0 +1,21 @@
+{{- if .Values.akash_node.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akash-node-1
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 1317
+      name: akashd-api
+    - port: 9090
+      name: akashd-grpc
+    - port: 26656
+      name: akashd-p2p
+    - port: 26657
+      name: akashd-rpc
+  selector:
+    akash.network/node: "1"
+{{- end }}
