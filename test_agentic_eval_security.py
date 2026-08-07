@@ -16,7 +16,7 @@ class TestAgenticEvalSecurityEngine(unittest.TestCase):
                 {
                     "type": "tool_call",
                     "tool_name": "github_fetch",
-                    "content": "Using token ghp_A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5"
+                    "content": "Using token YOUR_GITHUB_TOKEN_HERE"
                 }
             ]
         }
