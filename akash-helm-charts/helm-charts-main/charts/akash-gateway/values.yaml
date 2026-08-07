@@ -1,0 +1,90 @@
+# Default values for akash-gateway.
+# Install after: Gateway API CRDs and a Gateway implementation (e.g. NGINX Gateway Fabric).
+# Install in akash-gateway namespace: helm install akash-gateway . -n akash-gateway --create-namespace
+#
+# Setting your domain: use a values file (recommended) so it matches the rest of your stack, e.g.
+#   helm install akash-gateway ./charts/akash-gateway -f provider.yaml -n akash-gateway
+# The same `provider.yaml` you use for akash-provider is safe: only keys this chart uses are
+# applied; everything else (images, gas, etc.) is ignored. akash-provider already defines
+# top-level `domain` — with no gateway-specific override, the HTTPS wildcard uses
+#   *.ingress.<domain>
+
+# Resolves the ingress base for *.ingress.<domain> unless gateway.https.domain is set.
+# Same key name and meaning as charts/akash-provider/values.yaml `domain`.
+domain: ""
+
+# Gateway resource
+gateway:
+  name: akash-gateway
+  gatewayClassName: nginx
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+
+    - name: tcp-8443
+      port: 8443
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - group: gateway.networking.k8s.io
+            kind: TCPRoute
+
+    - name: tcp-8444
+      port: 8444
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - group: gateway.networking.k8s.io
+            kind: TCPRoute
+
+  # TLS (HTTPS) listeners: enabled by default. Two listeners on 443 (wildcard + catch-all for custom domains).
+  # Wildcard host is *.ingress.<domain> (e.g. domain "provider.url" -> "*.ingress.provider.url").
+  # Create secrets in the install namespace: wildcard-ingress-tls (true wildcard cert) and
+  # akash-default-tls (e.g. self-signed; see post-install notes for openssl/kubectl).
+  https:
+    enabled: true
+    # If set, used as the base for the wildcard host *.ingress.<this> (overrides top-level `domain`).
+    # Leave empty to use `domain` from this file (e.g. from -f provider.yaml) or the chart default.
+    domain: ""
+    # Optional: full host for https-wildcard (overrides the *.ingress.<domain> build).
+    wildcardHostname: ""
+    wildcardCertificateSecret: wildcard-ingress-tls
+    defaultCertificateSecret: akash-default-tls
+
+# TCPRoutes - attach to Gateway TCP listeners and route to backends.
+# Use namespace to create the route in a different namespace (e.g. akash-services).
+tcpRoutes:
+  - name: akash-provider-8443
+    namespace: akash-services
+    listenerName: tcp-8443
+    backendRef:
+      name: akash-provider
+      port: 8443
+      namespace: akash-services
+
+  - name: akash-provider-8444
+    namespace: akash-services
+    listenerName: tcp-8444
+    backendRef:
+      name: akash-provider
+      port: 8444
+      namespace: akash-services
+
+# NGINX proxy buffer settings (equivalent to ingress-nginx ConfigMap settings)
+proxySettings:
+  bufferSize: "16k"
+  buffersNumber: 4
+  buffersSize: "32k"
+  busyBuffersSize: "32k"
+
+# NGINX client settings
+clientSettings:
+  maxBodySize: "2000m"
