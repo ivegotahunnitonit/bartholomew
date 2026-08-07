@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-eval"
+version = "2.5.0"
+authors = [
+    { name = "Bartholomew Security Firm", email = "security@agentic-eval.com" }
+]
+description = "Enterprise OWASP LLM Top 10 AI Agent Security & Trajectory Audit Engine"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.25.0",
+    "pydantic>=1.8.0",
+    "cryptography>=3.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ivegotahunnitonit/agentic-eval"
+"Bug Tracker" = "https://github.com/ivegotahunnitonit/agentic-eval/issues"
+
+[project.scripts]
+agent-qa-guard = "agent_qa_guard:main"
+
+[tool.pyright]
+pythonVersion = "3.10"
+include = ["."]
+extraPaths = ["."]
+venvPath = "."
