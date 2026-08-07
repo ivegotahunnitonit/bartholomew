@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": "dashboard",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "acn-fastapi-backend",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "**",
+        "destination": "/orchestrator.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}
