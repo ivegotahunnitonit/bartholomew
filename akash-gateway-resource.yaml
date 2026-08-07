@@ -1,0 +1,29 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: akash-gateway-class
+spec:
+  controllerName: gateway.nginx.org/nginx-gateway-fabric
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: akash-gateway
+  namespace: akash-services
+spec:
+  gatewayClassName: akash-gateway-class
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    protocol: HTTPS
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Passthrough
