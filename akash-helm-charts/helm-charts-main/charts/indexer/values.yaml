@@ -1,0 +1,19 @@
+appVersion: "2.79.3"
+hostNames:
+
+chain: mainnet
+nodePort: 30000
+deploymentEnv: staging
+
+otel:
+  enabled: true
+
+resources:
+  limits:
+    cpu: 2
+    ephemeral-storage: 2Gi
+    memory: 2Gi
+  requests:
+    cpu: 100m
+    ephemeral-storage: 1Gi
+    memory: 1Gi
