@@ -1,0 +1,16 @@
+{
+  "submitted": [
+    {
+      "issue": 1436,
+      "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1708",
+      "branch": "fix-caller-auth-enforcement-1436"
+    },
+    {
+      "issue": 1453,
+      "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1709",
+      "branch": "fix-agent-creation-race-condition-1453"
+    }
+  ],
+  "errors": [],
+  "timestamp": "2026-07-29T01:44:55.946Z"
+}
