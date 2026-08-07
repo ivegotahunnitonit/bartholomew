@@ -1,8 +1,13 @@
 .git
 .gitignore
 node_modules
-node_modules/**
 dist
 build
-.next
+.system_generated
+.tempmediaStorage
+helm_dir
+helm3_out
+*.exe
+*.zip
+*.tar.gz
 *.log
