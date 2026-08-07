@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.chain }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-{{ .Values.chain }}
+  annotations:
+    secrets.doppler.com/reload: 'true'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-{{ .Values.chain }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-{{ .Values.chain }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Values.chain }}
+          image: ghcr.io/akash-network/indexer:{{ .Values.appVersion }}
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 3000
+              name: api-port
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-{{ .Values.chain }}-secret
+            - configMapRef:
+                name: {{ .Chart.Name }}-{{ .Values.chain }}-config
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
