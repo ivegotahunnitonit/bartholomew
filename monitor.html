@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic-Eval Live Real-Time Security Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --surface: #0f172a;
+      --card: #060c1a;
+      --border: #1e293b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 2rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .status-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      padding: 0.5rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .alert-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--emerald);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    .alert-card.critical { border-left-color: var(--rose); background: rgba(244, 63, 94, 0.05); }
+    .alert-card.warning { border-left-color: var(--amber); background: rgba(245, 158, 11, 0.05); }
+    .alert-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.2rem; }
+    .alert-sub { font-size: 0.8rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .alert-meta { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1 style="font-size: 1.8rem; font-weight: 900;">Bartholomew Live Alert Monitor</h1>
+      <p style="color: var(--muted); font-size: 0.9rem;">Direct Real-Time WebSocket Telemetry Relay (Zero Third-Party Dependency)</p>
+    </div>
+    <div class="status-badge">
+      <div class="pulse-dot"></div>
+      <span id="conn-status">LIVE WEBSOCKET CONNECTED</span>
+    </div>
+  </div>
+
+  <div class="feed" id="alert-feed">
+    <div class="alert-card critical">
+      <div>
+        <div class="alert-title">OWASP LLM02 Violation Blocked — Credential Leak Trap</div>
+        <div class="alert-sub">Agent: FinAgent-Worker-01 | Key: sk-proj-... (Masked)</div>
+      </div>
+      <div class="alert-meta">
+        <div style="color: var(--rose); font-weight: 700;">CRITICAL BLOCK</div>
+        <div>1.44 μs Latency</div>
+      </div>
+    </div>
+
+    <div class="alert-card warning">
+      <div>
+        <div class="alert-title">OWASP LLM06 Warning — Unbounded Reasoning Loop Detected</div>
+        <div class="alert-sub">Agent: SupportBot-03 | 5 Redundant Retries</div>
+      </div>
+      <div class="alert-meta">
+        <div style="color: var(--amber); font-weight: 700;">AUTO-SWALLOW</div>
+        <div>0.95 μs Latency</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const feed = document.getElementById('alert-feed');
+    const statusEl = document.getElementById('conn-status');
+
+    function connectWS() {
+      const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${location.host}/api/v1/alerts/subscribe`;
+      const ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        statusEl.innerText = "LIVE WEBSOCKET CONNECTED";
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const card = document.createElement('div');
+        const isCritical = data.severity === 'CRITICAL';
+        card.className = `alert-card ${isCritical ? 'critical' : 'warning'}`;
+        card.innerHTML = `
+          <div>
+            <div class="alert-title">${data.title || 'Security Alert'}</div>
+            <div class="alert-sub">Agent: ${data.agent_name || 'System'} | ${data.message || ''}</div>
+          </div>
+          <div class="alert-meta">
+            <div style="color: ${isCritical ? 'var(--rose)' : 'var(--amber)'}; font-weight: 700;">${data.status || 'BLOCKED'}</div>
+            <div>${data.timestamp || 'Just now'}</div>
+          </div>
+        `;
+        feed.prepend(card);
+      };
+
+      ws.onclose = () => {
+        statusEl.innerText = "RECONNECTING...";
+        setTimeout(connectWS, 3000);
+      };
+    }
+
+    connectWS();
+  </script>
+</body>
+</html>
