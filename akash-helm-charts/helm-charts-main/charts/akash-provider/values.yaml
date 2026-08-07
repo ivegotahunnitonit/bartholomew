@@ -1,0 +1,258 @@
+# Default values for provider.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: ghcr.io/akash-network/provider
+  pullPolicy: IfNotPresent
+
+from:
+key:
+keysecret:
+# Network identity: use .chain_id from the network's meta.json (e.g. mainnet:
+# https://raw.githubusercontent.com/akash-network/net/main/mainnet/meta.json ).
+chainid: akashnet-2
+domain:
+home: "/root/.akash"
+# Tendermint RPC base URL passed as AKASH_NODE. Use any entry from .apis.rpc[].address
+# in the same meta.json (below default is one community RPC; override as needed).
+node: "https://akash-rpc.polkachu.com:443"
+keyringbackend: "test"
+
+#  Providers should set these based on their configuration,
+#  these cannot be generic, hence commented.
+# attributes:
+#   - key: region
+#     value: us-west
+#   - key: host
+#     value: akash
+#   - key: tier
+#     value: community
+#   - key: organization
+#     value: akash.network
+#   - key: capabilities/storage/1/class
+#     value: default
+#   - key: capabilities/storage/1/persistent
+#     value: true
+#   - key: capabilities/storage/2/class
+#     value: beta2
+#   - key: capabilities/storage/2/persistent
+#     value: true
+#   # Confidential Compute (TEE) attributes. Requires attestation.enabled below
+#   # and TDX/SGX-capable hosts. See the "attestation" block for the sidecar image.
+#   - key: tee/platform
+#     value: tdx
+#   - key: tee/type
+#     value: cpu-gpu
+
+# Your provider contact details we submit to the chain
+email:
+website:
+
+# Important to know about the gas and fees:
+#
+# fees = (gas * gas-prices) as per Cosmos SDK docs.
+# (200000 * 0.025uakt) = 5000uakt floor fee for most of RPC nodes.
+#
+# Akash RPC nodes set --minimum-gas-prices=0.025uakt which gives
+# 5000uakt minimum fee when multiplied by the gas price (200000 default).
+#
+# Akash clients should respect this and set --gas-prices to 0.025uakt
+#
+# Note that RPC node running without minimum-gas-prices set will accept
+# 0uakt fee transactions which is not desirable as per Cosmos SDK docs.
+#
+# --gas argument works only when --gas-prices is set!
+# Note that the clients cannot provide both fees and gas prices!
+#
+# Anything you set here will get globally exposed via AKASH_GAS_PRICES,
+# AKASH_GAS, AKASH_GAS_ADJUSTMENT environment variables in
+# charts/akash-provider/templates/deployment.yaml
+gasprices: "0.025uakt"
+# set --gas to 200000 (or higher) to meet Akash RPC's minimum fees, (--minimum-gas-prices X 200000) = 5000uakt.
+# or set --gas to "auto" to leverage the gasadjustment setting;
+# increase gasadjustment to tackle "out of gas" issues, i.e. https://github.com/ovrclk/akash/issues/1508
+gas: "auto"
+# Note that --gas-adjustment is working only when --gas is "auto"!
+gasadjustment: "1.5"
+
+# 0.5 AKT - provider minimum bid deposit (5 AKT for sandbox)
+bidmindeposit: "500000uakt"
+
+# Might help increasing tx_broadcast_timeout when seeing errors like this "RPC error -32603 - Internal error: timed out waiting for tx to be included in a block"
+tx_broadcast_timeout: "60s"  # CLI default is 30s
+
+# If you plan to use bid price script, then make sure to set bidpricescript variable to the base64 encoded contents of the script.
+# This will automatically switch AKASH_BID_PRICE_STRATEGY from "scale" (default) to "shellScript".
+# Sample scripts can be found under charts/akash-provider/scripts/ directory.
+# Example usage:
+# --set bidpricescript="$(cat ./charts/akash-provider/scripts/price_script_generic.sh | openssl base64 -A)"
+bidpricecpuscale: "0.004"
+bidpricememoryscale: "0.0016"
+bidpriceendpointscale: "1"
+# set pricing for leased IP
+# 1 IP would cost ((1*60*429903)/10^6)*0.194 = $5/month (if 1 AKT = $0.194; and 429903 blocks a month)
+bidpriceipscale: "60"
+# set storage pricing for your StorageClass you are using
+# here is an example for beta2 StorageClass:
+bidpricestoragescale: "0.00016,beta2=0.00016"
+withdrawalperiod: "1h"
+# Go duration string (e.g. "24h", "720h"). Empty/unset means no reclamation offered (provider default 0).
+reclamationWindow: ""
+minimumbalance: "10000000"
+
+deploymentnetworkpoliciesenabled: "false"
+cluster_node_port_quantity: "2500"
+
+ipoperator: false
+
+debug: "false"
+
+# Attestation / Confidential Compute (TEE) configuration.
+# When enabled, the provider advertises confidential compute capability and
+# exposes the attestation sidecar image via AKASH_ATTESTATION_SIDECAR_IMAGE so
+# the provider can launch the sidecar for TEE workloads.
+attestation:
+  enabled: false
+  # webhookEnabled is an alias for enabled, kept for backwards compatibility
+  # with provider.yaml files that use the webhookEnabled key.
+  webhookEnabled: false
+  webhookPort: 9443
+  sidecarImage:
+    repository: ghcr.io/akash-network/provider-attestation-sidecar
+    # Defaults to .Chart.AppVersion when empty, keeping the sidecar in sync
+    # with the provider image tag.
+    tag: ""
+
+#  monitor
+##
+
+# These monitor settings control the retry behavior for deployment checks and health monitoring.
+#
+# If a user deployment cannot start for any reason - such as an issue with the deployment itself,
+# a provider issue (e.g., a lost node due to disk or networking failure), or scheduled maintenance -
+# this monitor starts a counter for retry attempts. It determines how many times and how frequently
+# the provider will retry before marking the deployment as failed and closing the lease.
+#
+# With the default settings (maxRetries = 40, retryPeriod = 4s, retryPeriodJitter = 15s), the total retry time is ~8 minutes.
+#
+# Setting maxRetries to 0 will immediately deem the deployment as failed without attempting any retries.
+#
+# Formula: Total Time = maxRetries * (retryPeriod + average retryPeriodJitter)
+# Example for 1 hour (3600 seconds): maxRetries = 3600 / (retryPeriod + average retryPeriodJitter)
+# Example for 24 hours (86400 seconds): maxRetries = 86400 / (retryPeriod + average retryPeriodJitter)
+# Example for 48 hours (172800 seconds): maxRetries = 172800 / (retryPeriod + average retryPeriodJitter)
+
+# Defaults: retryPeriod = 4s, retryPeriodJitter = 15s, average retryPeriodJitter = 7.5s
+# Example for 1 hour: maxRetries = 3600 / (4 + 7.5) = 3600 / 11.5 ≈ 313
+# Example for 24 hours: maxRetries = 86400 / (4 + 7.5) = 86400 / 11.5 ≈ 7513
+# Example for 48 hours: maxRetries = 172800 / (4 + 7.5) = 172800 / 11.5 ≈ 15026
+
+monitor:
+  maxRetries: 2304                   # Maximum retry attempts before closing a lease - Retry for about 24h
+  retryPeriod: 30s                   # Time interval between retries
+  retryPeriodJitter: 15s             # Jitter for retry period
+  healthcheckPeriod: 10s             # Health check period
+  healthcheckPeriodJitter: 5s        # Jitter for health check period
+
+# Percentage of CPU overcommit
+overcommit_pct_cpu: 0
+# Percentage of memory overcommit
+overcommit_pct_mem: 0
+# Percentage of storage overcommit
+overcommit_pct_storage: 0
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name:
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4096Mi
+  requests:
+    cpu: 1000m
+    memory: 2048Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Let's Encrypt Certificate Issuer Configuration
+letsEncrypt:
+  enabled: true
+  # ACME configuration for HTTP challenge
+  acme:
+    # Email for Let's Encrypt registration
+    # Will use email from provider.yaml if not specified here
+    email: ""
+    # CA directory URL (optional, defaults to Let's Encrypt production)
+    caDirUrl: "https://acme-v02.api.letsencrypt.org/directory"
+    # HTTP challenge port (required for HTTP challenge)
+    # Make sure this port matches the one configured on nginx side
+    httpChallengePort: 5002
+  # Let's Encrypt certificates will be stored in the main home PVC at /root/.akash
+  storage:
+    # Storage class for Let's Encrypt certificates
+    # If not specified here, will use the storage class from provider.yaml
+    # If no persistent storage is configured in provider.yaml, falls back to local path storage
+    storageClass: ""
+  # DNS providers for DNS-01 challenge (optional)
+  # Only needed if using DNS-01 solver. HTTP-01 solver is enabled by default.
+  providers:
+    cloudflare:
+      enabled: false
+      apiToken: ""
+    googleCloud:
+      enabled: false
+      serviceAccount:
+        content: ""
+
+# When gatewayApi.enabled is true (default), Let's Encrypt uses Gateway API: an HTTPRoute
+# routes provider.{{ domain }}:80 to the provider for the HTTP-01 challenge.
+# The ingress block below is only used when gatewayApi.enabled is false (Ingress mode).
+
+# Ingress configuration (only for Let's Encrypt when gatewayApi.enabled is false)
+ingress:
+  # Ingress class name (default: akash-ingress-class)
+  className: "akash-ingress-class"
+  # Additional annotations for the ingress
+  annotations: {}
+
+# Gateway API configuration (default: enabled; set enabled: false to use Ingress)
+gatewayApi:
+  # Enable Gateway API resources (HTTPRoute and TLSRoute). Gateway must exist before install.
+  # Migration: install CRDs, then NGINX Gateway Fabric (or other implementation), then create Gateway.
+  enabled: true
+  # Name of existing Gateway to reference (e.g. akash-gateway from your gateway.yaml)
+  gatewayName: "akash-gateway"
+  # Namespace of the Gateway (default: akash-gateway; set to "" to use release namespace)
+  gatewayNamespace: "akash-gateway"
+  # Gateway implementation (e.g. "nginx" for NGINX Gateway Fabric)
+  implementation: "nginx"
+
+# Storage configuration
+storage:
+  # Home directory persistent volume claim
+  home:
+    # Storage size for home directory
+    size: "10Gi"
+    # Access mode for the PVC
+    accessMode: "ReadWriteOnce"
