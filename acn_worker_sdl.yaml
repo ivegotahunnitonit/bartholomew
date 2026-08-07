@@ -1,0 +1,45 @@
+---
+version: "2.0"
+
+services:
+  acn-worker:
+    image: us-central1-docker.pkg.dev/project-69103dd0-70f5-4f9c-a2a/acn/worker:latest
+    env:
+      - ACN_NODE_ID=akash-supernode-001
+      - ACN_PROTOCOL=akash
+      - ACN_BACKEND_URL=https://acn-backend-444129982305.us-central1.run.app
+    expose:
+      - port: 8080
+        as: 80
+        to:
+          - global: true
+
+profiles:
+  compute:
+    acn-worker:
+      resources:
+        cpu:
+          units: 2.0
+        memory:
+          size: 4Gi
+        storage:
+          size: 20Gi
+        gpu:
+          units: 1
+          attributes:
+            vendor:
+              nvidia:
+                - model: rtx4090
+
+  placement:
+    akash:
+      pricing:
+        acn-worker:
+          denom: uakt
+          amount: 5000
+
+deployment:
+  acn-worker:
+    akash:
+      profile: acn-worker
+      count: 1
