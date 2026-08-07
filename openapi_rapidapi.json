@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ACN Multi-Region Continuous Batching LLM Inference API",
+    "description": "High-performance distributed LLM inference engine with PagedAttention KV caching, continuous batching, and multi-region routing across 5 global GCP regions.",
+    "version": "4.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://acn-backend-444129982305.us-central1.run.app",
+      "description": "US-Central Master Hub (Iowa)"
+    },
+    {
+      "url": "https://acn-backend-east-444129982305.us-east1.run.app",
+      "description": "US-East Worker (Virginia)"
+    },
+    {
+      "url": "https://acn-backend-west-444129982305.us-west1.run.app",
+      "description": "US-West Worker (Oregon)"
+    },
+    {
+      "url": "https://acn-backend-eu-444129982305.europe-west1.run.app",
+      "description": "Europe-West Worker (Belgium)"
+    },
+    {
+      "url": "https://acn-backend-asia-444129982305.asia-east1.run.app",
+      "description": "Asia-East Worker (Taiwan)"
+    }
+  ],
+  "paths": {
+    "/api/inference": {
+      "post": {
+        "summary": "Submit LLM Inference Request",
+        "operationId": "runInference",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": { "type": "string", "example": "Explain quantum computing in 3 sentences." },
+                  "max_tokens": { "type": "integer", "example": 512 },
+                  "temperature": { "type": "number", "example": 0.7 },
+                  "task_type": { "type": "string", "example": "general" }
+                },
+                "required": ["prompt"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inference completed successfully with KV cache statistics and execution latency.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "request_id": { "type": "string" },
+                    "text": { "type": "string" },
+                    "tokens_used": { "type": "integer" },
+                    "kv_cache_hit": { "type": "boolean" },
+                    "latency_sec": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "summary": "Public Telemetry & Node Health",
+        "operationId": "getStatus",
+        "responses": {
+          "200": { "description": "Returns clean telemetry metrics across 5 global regions." }
+        }
+      }
+    }
+  }
+}
