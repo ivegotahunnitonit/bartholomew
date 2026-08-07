@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Autonomous Circularity Network (ACN) Enterprise API",
+    "description": "API for registering circular economy waste/need listings, triggering autonomous matchmaking, and initializing EVM escrow settlements.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8090",
+      "description": "Local Supernode Gateway"
+    }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Supernode Health Check",
+        "responses": {
+          "200": {
+            "description": "Returns status, node ID, and peer connectivity status."
+          }
+        }
+      }
+    },
+    "/api/v1/listings": {
+      "get": {
+        "summary": "List Active Circular Listings",
+        "responses": {
+          "200": {
+            "description": "List of active waste and need listings."
+          }
+        }
+      },
+      "post": {
+        "summary": "Register New Circular Listing",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type", "material", "quantityKg"],
+                "properties": {
+                  "type": { "type": "string", "enum": ["waste", "need"] },
+                  "material": { "type": "string" },
+                  "quantityKg": { "type": "number" },
+                  "lat": { "type": "number" },
+                  "lng": { "type": "number" },
+                  "pricePerKg": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Listing registered successfully." }
+        }
+      }
+    },
+    "/api/v1/match": {
+      "post": {
+        "summary": "Trigger Matchmaking Cycle",
+        "responses": {
+          "200": { "description": "Returns matches created." }
+        }
+      }
+    },
+    "/api/v1/escrow/init": {
+      "post": {
+        "summary": "Initialize EVM Escrow Settlement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["dealId", "amountUsd", "buyerAddress"],
+                "properties": {
+                  "dealId": { "type": "string" },
+                  "amountUsd": { "type": "number" },
+                  "buyerAddress": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Escrow initialized successfully." }
+        }
+      }
+    }
+  }
+}
