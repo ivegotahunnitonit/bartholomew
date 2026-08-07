@@ -1,0 +1,803 @@
+{
+  "Rachaelisa": {
+    "total": 1410,
+    "submissions": [],
+    "task_count": 43
+  },
+  "yk578": {
+    "total": 575,
+    "submissions": [],
+    "task_count": 25
+  },
+  "hero-infosec": {
+    "total": 525,
+    "submissions": [],
+    "task_count": 14
+  },
+  "danielalanbates": {
+    "total": 515,
+    "submissions": [
+      {
+        "issue": 201,
+        "score": 100,
+        "clean": true,
+        "date": "2026-07-01"
+      },
+      {
+        "issue": 203,
+        "score": 25,
+        "clean": true,
+        "date": "2026-07-01"
+      },
+      {
+        "issue": 204,
+        "score": 25,
+        "clean": true,
+        "date": "2026-07-01"
+      },
+      {
+        "issue": 206,
+        "score": 25,
+        "clean": true,
+        "date": "2026-07-01"
+      },
+      {
+        "issue": 207,
+        "score": 25,
+        "clean": true,
+        "date": "2026-07-01"
+      }
+    ],
+    "task_count": 13
+  },
+  "foxyManTou": {
+    "total": 220,
+    "submissions": [],
+    "task_count": 10
+  },
+  "bambooshadow-studio": {
+    "total": 105,
+    "submissions": [],
+    "task_count": 14
+  },
+  "MRhuang1106": {
+    "total": 65,
+    "submissions": [],
+    "task_count": 4
+  },
+  "merlinsantiago982-cmd": {
+    "total": -35,
+    "submissions": [],
+    "task_count": 1
+  },
+  "jhaayushkumar": {
+    "total": -210,
+    "submissions": [],
+    "task_count": 6
+  },
+  "namdamdoi68-oss": {
+    "total": 300,
+    "submissions": [
+      {
+        "issue": 643,
+        "targetIssue": "615",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-07T17:25:49.607Z"
+      },
+      {
+        "issue": 647,
+        "targetIssue": "616",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-07T17:28:14.630Z"
+      },
+      {
+        "issue": 648,
+        "targetIssue": "619",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-07T17:28:40.362Z"
+      },
+      {
+        "issue": 649,
+        "targetIssue": "621",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-07T17:29:07.196Z"
+      }
+    ],
+    "task_count": 4
+  },
+  "Zubi-fix": {
+    "total": 100,
+    "submissions": [],
+    "task_count": 3
+  },
+  "zydd123": {
+    "total": 675,
+    "submissions": [
+      {
+        "issue": 845,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-10T15:38:09.420Z"
+      },
+      {
+        "issue": 846,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-10T16:03:40.416Z"
+      },
+      {
+        "issue": 847,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-10T16:20:15.088Z"
+      },
+      {
+        "issue": 854,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:06:22.446Z"
+      },
+      {
+        "issue": 859,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:44:54.136Z"
+      },
+      {
+        "issue": 862,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:46:02.626Z"
+      },
+      {
+        "issue": 865,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:46:58.502Z"
+      },
+      {
+        "issue": 868,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:48:12.093Z"
+      },
+      {
+        "issue": 869,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-11T02:48:42.851Z"
+      }
+    ]
+  },
+  "voladoradepapantla-netizen": {
+    "total": 225,
+    "submissions": [
+      {
+        "issue": 1209,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-16T02:41:31.372Z"
+      },
+      {
+        "issue": 1210,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-16T02:42:08.515Z"
+      },
+      {
+        "issue": 1242,
+        "targetIssue": "1219",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-16T23:11:50.432Z"
+      }
+    ]
+  },
+  "JHON12091986": {
+    "total": 75,
+    "submissions": [
+      {
+        "issue": 1380,
+        "targetIssue": "1005",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-19T13:56:53.578Z"
+      }
+    ]
+  },
+  "ZachDreamZ": {
+    "total": 150,
+    "submissions": [
+      {
+        "issue": 1428,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-20T16:03:59.709Z"
+      },
+      {
+        "issue": 1429,
+        "targetIssue": "N/A",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-20T18:19:53.821Z"
+      }
+    ]
+  },
+  "ivegotahunnitonit": {
+    "total": 7853,
+    "submissions": [
+      {
+        "issue": 1436,
+        "targetIssue": "1436",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1708",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-29T01:45:03.909Z"
+      },
+      {
+        "issue": 1453,
+        "targetIssue": "1453",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1709",
+        "score": 75,
+        "clean": true,
+        "difficulty": "medium",
+        "date": "2026-07-29T01:45:03.909Z"
+      },
+      {
+        "issue": 1609,
+        "targetIssue": "1609",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1710",
+        "score": 200,
+        "clean": true,
+        "difficulty": "hard",
+        "date": "2026-07-29T01:53:32.271Z"
+      },
+      {
+        "issue": 1609,
+        "targetIssue": "1609",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1711",
+        "score": 200,
+        "clean": true,
+        "difficulty": "hard",
+        "date": "2026-07-29T02:00:00.771Z"
+      },
+      {
+        "issue": 741,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [BOUNTY] 500 USD - Add Runescape inspired chat effects",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/741#issuecomment-5111978626",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:00.566Z"
+      },
+      {
+        "issue": 738,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [DIRECT] Restore the public ChatGPT bounty inventory tool",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/738#issuecomment-5111978705",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:01.335Z"
+      },
+      {
+        "issue": 737,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [DIRECT] Add an end-to-end profitable inventory contract test",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/737#issuecomment-5111978755",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:01.858Z"
+      },
+      {
+        "issue": 736,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [DIRECT] Show solver cash margin before claim",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/736#issuecomment-5111978811",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:02.350Z"
+      },
+      {
+        "issue": 735,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [DIRECT] Make activation reconciliation lifecycle-aware",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/735#issuecomment-5111978857",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:02.898Z"
+      },
+      {
+        "issue": 734,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [DIRECT] Add a reusable five-bounty direct seed runner",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/734#issuecomment-5111978909",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:03.528Z"
+      },
+      {
+        "issue": 730,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [BOUNTY] [$25] Give space carp visible feet",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/730#issuecomment-5111978988",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:04.177Z"
+      },
+      {
+        "issue": 729,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [BOUNTY] [$300] re-add nanites",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/729#issuecomment-5111979052",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:04.668Z"
+      },
+      {
+        "issue": 1693,
+        "repo": "moorcheh-ai/memanto",
+        "title": "Your project is on StackMap — a curated map of the AI stack",
+        "comment_url": "https://github.com/moorcheh-ai/memanto/issues/1693#issuecomment-5111979158",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:05.748Z"
+      },
+      {
+        "issue": 1503,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Race Condition in /tmp File Handling (TOCTOU) $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1503#issuecomment-5111979281",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:06.752Z"
+      },
+      {
+        "issue": 1502,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] AWS IAM Privilege Escalation via PassRole + EC2 $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1502#issuecomment-5111979349",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:07.229Z"
+      },
+      {
+        "issue": 1501,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Reentrancy via ERC-777 Callback in Withdraw Function $180",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1501#issuecomment-5111979390",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:07.699Z"
+      },
+      {
+        "issue": 1492,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "🏅 新成就！🎉 @Rachaelisa 完成了 **1** 个任务！...",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1492#issuecomment-5111979439",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:08.270Z"
+      },
+      {
+        "issue": 1491,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Session Fixation + Session ID in URL $120",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1491#issuecomment-5111979497",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:08.916Z"
+      },
+      {
+        "issue": 1490,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] LDAP Injection → Anonymous Bind Bypass $120",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1490#issuecomment-5111979581",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:09.505Z"
+      },
+      {
+        "issue": 1489,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] JWT Kid Injection → Path Traversal → Secret Key Leak $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1489#issuecomment-5111979670",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:10.229Z"
+      },
+      {
+        "issue": 1478,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] S3 Bucket Misconfiguration → Mass Data Leak $120",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1478#issuecomment-5111979764",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:10.691Z"
+      },
+      {
+        "issue": 1477,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Hardcoded AWS Keys in Public Artifact → Cloud Takeover $180",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1477#issuecomment-5111979845",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:11.229Z"
+      },
+      {
+        "issue": 1476,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Predictable OAuth State Token → CSRF + Account Takeover $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1476#issuecomment-5111979930",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:11.692Z"
+      },
+      {
+        "issue": 1475,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] ECB Mode Encryption → Data Leak via Pattern Matching $120",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1475#issuecomment-5111980002",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:12.145Z"
+      },
+      {
+        "issue": 1474,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "Formal Payment Dispute: 9 Merged PRs ($900 USD) - 21 Days Unpaid",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1474#issuecomment-5111980093",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:12.660Z"
+      },
+      {
+        "issue": 1452,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Web Cache Deception → Session Token Leak $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1452#issuecomment-5111980178",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:13.109Z"
+      },
+      {
+        "issue": 1450,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Blind Command Injection via Email Header $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1450#issuecomment-5111980225",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:13.555Z"
+      },
+      {
+        "issue": 1449,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Web Cache Poisoning via Unkeyed Header $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1449#issuecomment-5111980303",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:13.981Z"
+      },
+      {
+        "issue": 1448,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] IDOR in GraphQL Nested Query → Mass Data Leak $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1448#issuecomment-5111980352",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:14.416Z"
+      },
+      {
+        "issue": 1446,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Zip Slip → Arbitrary File Write via Archive Extraction $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1446#issuecomment-5111980447",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T02:10:14.837Z"
+      },
+      {
+        "issue": 741,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[BOUNTY] 500 USD - Add Runescape inspired chat effects",
+        "reward_usd": 500,
+        "score": 500,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/741#issuecomment-5111996799",
+        "date": "2026-07-29T02:12:12.933Z"
+      },
+      {
+        "issue": 729,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[BOUNTY] [$300] re-add nanites",
+        "reward_usd": 300,
+        "score": 300,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/729#issuecomment-5111996877",
+        "date": "2026-07-29T02:12:13.728Z"
+      },
+      {
+        "issue": 738,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[DIRECT] Restore the public ChatGPT bounty inventory tool",
+        "reward_usd": 123,
+        "score": 123,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/738#issuecomment-5111997001",
+        "date": "2026-07-29T02:12:14.263Z"
+      },
+      {
+        "issue": 1503,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Race Condition in /tmp File Handling (TOCTOU)",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1503#issuecomment-5111997092",
+        "date": "2026-07-29T02:12:14.781Z"
+      },
+      {
+        "issue": 1502,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] AWS IAM Privilege Escalation via PassRole + EC2",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1502#issuecomment-5111997188",
+        "date": "2026-07-29T02:12:15.249Z"
+      },
+      {
+        "issue": 1501,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Reentrancy via ERC-777 Callback in Withdraw Function",
+        "reward_usd": 180,
+        "score": 180,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1501#issuecomment-5111997278",
+        "date": "2026-07-29T02:12:15.695Z"
+      },
+      {
+        "issue": 1491,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Session Fixation + Session ID in URL",
+        "reward_usd": 120,
+        "score": 120,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1491#issuecomment-5111997370",
+        "date": "2026-07-29T02:12:16.154Z"
+      },
+      {
+        "issue": 1489,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] JWT Kid Injection → Path Traversal → Secret Key Leak",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1489#issuecomment-5111997449",
+        "date": "2026-07-29T02:12:16.638Z"
+      },
+      {
+        "issue": 1477,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Hardcoded AWS Keys in Public Artifact",
+        "reward_usd": 180,
+        "score": 180,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1477#issuecomment-5111997546",
+        "date": "2026-07-29T02:12:17.119Z"
+      },
+      {
+        "issue": 1476,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Predictable OAuth State Token → CSRF",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1476#issuecomment-5111997635",
+        "date": "2026-07-29T02:12:17.617Z"
+      },
+      {
+        "issue": 1448,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] IDOR in GraphQL Nested Query",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1448#issuecomment-5111997718",
+        "date": "2026-07-29T02:12:18.037Z"
+      },
+      {
+        "issue": 1446,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Zip Slip → Arbitrary File Write via Archive Extraction",
+        "reward_usd": 150,
+        "score": 150,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1446#issuecomment-5111997801",
+        "date": "2026-07-29T02:12:18.477Z"
+      },
+      {
+        "issue": 741,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[BOUNTY] 500 USD - Add Runescape inspired chat effects",
+        "reward_usd": 500,
+        "score": 500,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/741#issuecomment-5111999367",
+        "date": "2026-07-29T02:12:26.869Z"
+      },
+      {
+        "issue": 729,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[BOUNTY] [$300] re-add nanites",
+        "reward_usd": 300,
+        "score": 300,
+        "status": "submitted",
+        "solution_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/729#issuecomment-5111999482",
+        "date": "2026-07-29T02:12:27.593Z"
+      },
+      {
+        "issue": 1609,
+        "targetIssue": "1609",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1713",
+        "score": 200,
+        "clean": true,
+        "difficulty": "hard",
+        "date": "2026-07-29T02:23:30.265Z"
+      },
+      {
+        "issue": 1609,
+        "targetIssue": "1609",
+        "pr_url": "https://github.com/moorcheh-ai/memanto/pull/1714",
+        "score": 200,
+        "clean": true,
+        "difficulty": "hard",
+        "date": "2026-07-29T02:24:03.922Z"
+      },
+      {
+        "issue": 747,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [BOUNTY][$67] Add the Tung Tung Tung Sahur antagonist.",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/747#issuecomment-5122267907",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:31.858Z"
+      },
+      {
+        "issue": 746,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [BOUNTY][$640][FIX] Fix the compatability issues with the TempleOS operating sys",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/746#issuecomment-5122268052",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:32.699Z"
+      },
+      {
+        "issue": 745,
+        "repo": "zhangjiayang6835-cyber/bounty-plaza",
+        "title": "[Bounty] [Bounty] [$600] Add Thursday's Boots",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/bounty-plaza/issues/745#issuecomment-5122268173",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:33.395Z"
+      },
+      {
+        "issue": 1444,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Java RMI Deserialization → Remote Code Execution $200",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1444#issuecomment-5122268440",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:35.035Z"
+      },
+      {
+        "issue": 1442,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Blind XXE via SVG Upload → SSRF + Data Exfil $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1442#issuecomment-5122268543",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:35.524Z"
+      },
+      {
+        "issue": 1441,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] OAuth 2.0 CSRF → Account Takeover via State Bypass $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1441#issuecomment-5122268627",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:36.076Z"
+      },
+      {
+        "issue": 1439,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Race Condition in Distributed Transaction → Double Spend $180",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1439#issuecomment-5122268720",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:36.553Z"
+      },
+      {
+        "issue": 1438,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] MongoDB NoSQL Injection → Authentication Bypass $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1438#issuecomment-5122268800",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:37.045Z"
+      },
+      {
+        "issue": 1437,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Python Pickle Deserialization RCE via Cache $200",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1437#issuecomment-5122268881",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:37.557Z"
+      },
+      {
+        "issue": 1435,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Server-Side Prototype Pollution to RCE $200",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1435#issuecomment-5122268962",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:37.983Z"
+      },
+      {
+        "issue": 1434,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "[BUG] Blind SSRF via DNS Rebinding Bypass $150",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1434#issuecomment-5122269038",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:38.490Z"
+      },
+      {
+        "issue": 1430,
+        "repo": "zhangjiayang6835-cyber/ai-research",
+        "title": "Payment Request: 2 Merged Issues -  USD",
+        "comment_url": "https://github.com/zhangjiayang6835-cyber/ai-research/issues/1430#issuecomment-5122269119",
+        "score": 100,
+        "status": "claimed",
+        "date": "2026-07-29T18:59:38.944Z"
+      }
+    ],
+    "task_count": 58
+  }
+}
