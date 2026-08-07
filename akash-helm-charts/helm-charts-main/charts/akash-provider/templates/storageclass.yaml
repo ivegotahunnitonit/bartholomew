@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ include "provider.fullname" . }}-local-storage
+  labels:
+    app: {{ include "provider.fullname" . }}
+    {{- include "provider.labels" . | nindent 4 }}
+provisioner: pd.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  type: pd-balanced
