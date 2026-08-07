@@ -1,0 +1,690 @@
+{
+  "last_updated": "2026-07-30T18:00:46.521Z",
+  "total_found": 50,
+  "payout_wallets": {
+    "BASE_USDC": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+    "AKASH_AKT": "akash1y557yjut3zxlfpd3p0elet4t2w5hermd69p8k7",
+    "PAYPAL_EMAIL": "PAYPAL_RECEIVER_EMAIL",
+    "STRIPE_CONNECT": "STRIPE_SECRET_KEY"
+  },
+  "bounties": [
+    {
+      "id": 4821398111,
+      "number": 3,
+      "title": "Bug bounty 100 usd to whoever makes my landing page responsive for mobile",
+      "repo": "iii123iii/Crystal-PDF",
+      "html_url": "https://github.com/iii123iii/Crystal-PDF/issues/3",
+      "reward": "$100",
+      "created_at": "2026-07-06T17:06:41Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bug",
+        "bounty",
+        "opire",
+        "100$",
+        "money"
+      ]
+    },
+    {
+      "id": 4997223651,
+      "number": 649,
+      "title": "[META] Earn 1 USDC margin with a agent wallet UX bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/649",
+      "reward": "$1",
+      "created_at": "2026-07-28T09:51:08Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4997223814,
+      "number": 650,
+      "title": "[META] Earn 1 USDC margin with a verifier reliability bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/650",
+      "reward": "$1",
+      "created_at": "2026-07-28T09:51:09Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4997223406,
+      "number": 648,
+      "title": "[META] Earn 1 USDC margin with a MCP interoperability bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/648",
+      "reward": "$1",
+      "created_at": "2026-07-28T09:51:06Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4997223260,
+      "number": 647,
+      "title": "[META] Earn 1 USDC margin with a API reliability bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/647",
+      "reward": "$1",
+      "created_at": "2026-07-28T09:51:05Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4761249748,
+      "number": 1580,
+      "title": "[Bounty: 23 USDC] Create contributors webpage",
+      "repo": "dwebagents/AgentPipe",
+      "html_url": "https://github.com/dwebagents/AgentPipe/issues/1580",
+      "reward": "$23",
+      "created_at": "2026-06-28T05:48:00Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "enhancement",
+        "good first issue",
+        "bounty"
+      ]
+    },
+    {
+      "id": 4972111892,
+      "number": 590,
+      "title": "[META] Earn 1 USDC margin with an agent-discovery bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/590",
+      "reward": "$1",
+      "created_at": "2026-07-24T21:15:35Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4907443847,
+      "number": 335,
+      "title": "[META] Earn 1 USDC margin with an MCP bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/335",
+      "reward": "$1",
+      "created_at": "2026-07-17T02:08:37Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "distribution",
+        "verifier",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4907443890,
+      "number": 336,
+      "title": "[META] Earn 1 USDC margin with a wallet UX bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/336",
+      "reward": "$1",
+      "created_at": "2026-07-17T02:08:37Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "distribution",
+        "verifier",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 4907443765,
+      "number": 333,
+      "title": "[META] Earn 1 USDC margin with a CLI bounty",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/333",
+      "reward": "$1",
+      "created_at": "2026-07-17T02:08:35Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome",
+        "payments",
+        "distribution",
+        "verifier",
+        "good-first-agent-bounty",
+        "funded-live",
+        "claimable-live"
+      ]
+    },
+    {
+      "id": 5001455203,
+      "number": 664,
+      "title": "[SYNTHETIC CANARY] Repair claim-next-action state mapper",
+      "repo": "NSPG13/agent-bounties",
+      "html_url": "https://github.com/NSPG13/agent-bounties/issues/664",
+      "reward": "$10",
+      "created_at": "2026-07-28T17:44:38Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "ai-agent-welcome"
+      ]
+    },
+    {
+      "id": 4502638273,
+      "number": 395,
+      "title": "[App] Algora",
+      "repo": "gitcoinco/gitcoin_co_30",
+      "html_url": "https://github.com/gitcoinco/gitcoin_co_30/issues/395",
+      "reward": "Cash/USDC",
+      "created_at": "2026-05-22T12:36:30Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4804059201,
+      "number": 4,
+      "title": "🔍 [Agent Task] Add Algora bounty discovery to runtime-opportunity-scout",
+      "repo": "Nexussyn/ai-growth-platform",
+      "html_url": "https://github.com/Nexussyn/ai-growth-platform/issues/4",
+      "reward": "$3",
+      "created_at": "2026-07-03T14:00:07Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "agent-task"
+      ]
+    },
+    {
+      "id": 4470554242,
+      "number": 748,
+      "title": "open issues with algora bounty",
+      "repo": "rosenpass/rosenpass",
+      "html_url": "https://github.com/rosenpass/rosenpass/issues/748",
+      "reward": "Cash/USDC",
+      "created_at": "2026-05-18T15:52:53Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "admin"
+      ]
+    },
+    {
+      "id": 3885585346,
+      "number": 83,
+      "title": "Add Algora bounty integration",
+      "repo": "appmeee/ClawFreelance",
+      "html_url": "https://github.com/appmeee/ClawFreelance/issues/83",
+      "reward": "Cash/USDC",
+      "created_at": "2026-02-02T12:08:16Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "feat",
+        "integration",
+        "bounty feature",
+        "oss-integration"
+      ]
+    },
+    {
+      "id": 4723181096,
+      "number": 1,
+      "title": "Feedback welcome from Algora contributors",
+      "repo": "Bakomebandias/algora-bounty-sentinel",
+      "html_url": "https://github.com/Bakomebandias/algora-bounty-sentinel/issues/1",
+      "reward": "Cash/USDC",
+      "created_at": "2026-06-23T06:17:54Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4515578822,
+      "number": 18,
+      "title": "扩充赏金组织列表：当前 21 个组织中仅 2 个有活跃赏金",
+      "repo": "FuZoe/PD-Hunter",
+      "html_url": "https://github.com/FuZoe/PD-Hunter/issues/18",
+      "reward": "$500",
+      "created_at": "2026-05-25T08:42:39Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4945285440,
+      "number": 36,
+      "title": "Detect and contain Stop-hook loops that perpetually respawn bounty agents",
+      "repo": "chengyixu/OWLSpace-feedback",
+      "html_url": "https://github.com/chengyixu/OWLSpace-feedback/issues/36",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-22T03:56:58Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bug",
+        "agent-report"
+      ]
+    },
+    {
+      "id": 4918750210,
+      "number": 1063,
+      "title": "self-improve: model-flagged: bounty gate has rejected 0/48-63 survivors fo",
+      "repo": "Daisuke134/life-manager",
+      "html_url": "https://github.com/Daisuke134/life-manager/issues/1063",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-18T14:57:13Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4671288126,
+      "number": 1812,
+      "title": "Urgent – Payment Issue for Bounty #17",
+      "repo": "xevrion-v2/agent-playground",
+      "html_url": "https://github.com/xevrion-v2/agent-playground/issues/1812",
+      "reward": "Cash/USDC",
+      "created_at": "2026-06-16T05:16:03Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4823510906,
+      "number": 399,
+      "title": "🎯 Bounty Alert: 3 New Opportunityies found",
+      "repo": "dev-kp-eloper/BountyScout",
+      "html_url": "https://github.com/dev-kp-eloper/BountyScout/issues/399",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-06T22:17:17Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty-alert"
+      ]
+    },
+    {
+      "id": 4805271192,
+      "number": 254,
+      "title": "🎯 Bounty Alert: 3 New Opportunityies found",
+      "repo": "vansh-09/BountyScout",
+      "html_url": "https://github.com/vansh-09/BountyScout/issues/254",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-03T17:24:16Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty-alert"
+      ]
+    },
+    {
+      "id": 4854959234,
+      "number": 995,
+      "title": "self-improve: model-flagged: bounty cadence contract (increment kind on ga",
+      "repo": "Daisuke134/life-manager",
+      "html_url": "https://github.com/Daisuke134/life-manager/issues/995",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-10T12:26:29Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4463079484,
+      "number": 1724,
+      "title": "Brand-impersonation spam: @BossChaos posting fake Algora-style bounty comments across 94+ PRs (wallet 0xdaE5...)",
+      "repo": "spaceandtimefdn/sxt-proof-of-sql",
+      "html_url": "https://github.com/spaceandtimefdn/sxt-proof-of-sql/issues/1724",
+      "reward": "Cash/USDC",
+      "created_at": "2026-05-17T09:48:15Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4975184165,
+      "number": 11396,
+      "title": "Bug: User routes should require authentication",
+      "repo": "SecureBananaLabs/bug-bounty",
+      "html_url": "https://github.com/SecureBananaLabs/bug-bounty/issues/11396",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-25T09:23:41Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4975178127,
+      "number": 11393,
+      "title": "Bug: API test script should target test files explicitly",
+      "repo": "SecureBananaLabs/bug-bounty",
+      "html_url": "https://github.com/SecureBananaLabs/bug-bounty/issues/11393",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-25T09:21:29Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4528387415,
+      "number": 28,
+      "title": "🎯 Bounty Alert: 10 New Opportunityies found",
+      "repo": "dev-kp-eloper/BountyScout",
+      "html_url": "https://github.com/dev-kp-eloper/BountyScout/issues/28",
+      "reward": "Cash/USDC",
+      "created_at": "2026-05-27T00:10:41Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty-alert"
+      ]
+    },
+    {
+      "id": 4602805444,
+      "number": 329,
+      "title": "[Bug] Successful GitHub login redirects to /home which returns 404",
+      "repo": "algora-io/algora",
+      "html_url": "https://github.com/algora-io/algora/issues/329",
+      "reward": "Cash/USDC",
+      "created_at": "2026-06-06T09:33:04Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4553605952,
+      "number": 55,
+      "title": "🎯 Bounty Alert: 5 New Opportunityies found",
+      "repo": "dev-kp-eloper/BountyScout",
+      "html_url": "https://github.com/dev-kp-eloper/BountyScout/issues/55",
+      "reward": "Cash/USDC",
+      "created_at": "2026-05-30T06:49:23Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty-alert"
+      ]
+    },
+    {
+      "id": 4975172683,
+      "number": 11391,
+      "title": "Bug: Invalid PORT env crashes API startup",
+      "repo": "SecureBananaLabs/bug-bounty",
+      "html_url": "https://github.com/SecureBananaLabs/bug-bounty/issues/11391",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-25T09:19:23Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4971982545,
+      "number": 4,
+      "title": "Claim for Memanto PR #801 missing from bounty #770 public data",
+      "repo": "Bounty-Hub/.github",
+      "html_url": "https://github.com/Bounty-Hub/.github/issues/4",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-24T20:57:03Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4623938027,
+      "number": 2,
+      "title": "Claim for Memanto PR #614 missing from bounty",
+      "repo": "Bounty-Hub/.github",
+      "html_url": "https://github.com/Bounty-Hub/.github/issues/2",
+      "reward": "Cash/USDC",
+      "created_at": "2026-06-09T16:57:58Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 2959305187,
+      "number": 2843,
+      "title": "[BOUNTY] WearOS Support [$1340]",
+      "repo": "microg/GmsCore",
+      "html_url": "https://github.com/microg/GmsCore/issues/2843",
+      "reward": "$1340",
+      "created_at": "2025-03-31T02:15:48Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "enhancement",
+        "bounty"
+      ]
+    },
+    {
+      "id": 4952163122,
+      "number": 1609,
+      "title": "[BOUNTY $200] 🐜 The Great Memory Migration: Own Your Agentic Memory with Memanto + OKF",
+      "repo": "moorcheh-ai/memanto",
+      "html_url": "https://github.com/moorcheh-ai/memanto/issues/1609",
+      "reward": "$200",
+      "created_at": "2026-07-22T18:52:55Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty",
+        "Bounty#6"
+      ]
+    },
+    {
+      "id": 4862550548,
+      "number": 27,
+      "title": "[BUG] can't build azerothcore with PlayerUpdates.cpp and sql files give error when importing",
+      "repo": "gitdalisar/mod-Faction-Free",
+      "html_url": "https://github.com/gitdalisar/mod-Faction-Free/issues/27",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-11T13:54:52Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bug"
+      ]
+    },
+    {
+      "id": 4668019229,
+      "number": 30,
+      "title": "Before you contribute",
+      "repo": "fluxerapp/fluxer-meta",
+      "html_url": "https://github.com/fluxerapp/fluxer-meta/issues/30",
+      "reward": "Cash/USDC",
+      "created_at": "2026-06-15T18:59:52Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4582381597,
+      "number": 9,
+      "title": "Bot Commands - (Dev Bounty: $500)",
+      "repo": "fluxerapp/fluxer-meta",
+      "html_url": "https://github.com/fluxerapp/fluxer-meta/issues/9",
+      "reward": "$500",
+      "created_at": "2026-06-03T17:58:46Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "Desktop",
+        "Mobile",
+        "Server"
+      ]
+    },
+    {
+      "id": 3799993761,
+      "number": 318,
+      "title": "Create \"Middleware\" article in \"Internals\"",
+      "repo": "yiisoft/docs",
+      "html_url": "https://github.com/yiisoft/docs/issues/318",
+      "reward": "Cash/USDC",
+      "created_at": "2026-01-10T16:14:31Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 435381203,
+      "number": 8607,
+      "title": "[Bounty $50] [Feature request] \"Most Played\" tab (content sorted based on playtime log)",
+      "repo": "libretro/RetroArch",
+      "html_url": "https://github.com/libretro/RetroArch/issues/8607",
+      "reward": "$50",
+      "created_at": "2019-04-20T10:14:24Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "feature request"
+      ]
+    },
+    {
+      "id": 2805530638,
+      "number": 6249,
+      "title": "Add Support for SimpleLogin-Compatible API for Automated Alias Creation",
+      "repo": "mailcow/mailcow-dockerized",
+      "html_url": "https://github.com/mailcow/mailcow-dockerized/issues/6249",
+      "reward": "Cash/USDC",
+      "created_at": "2025-01-22T23:15:53Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "id": 2676622226,
+      "number": 6,
+      "title": "test pledge",
+      "repo": "omarsoufiane/test",
+      "html_url": "https://github.com/omarsoufiane/test/issues/6",
+      "reward": "Cash/USDC",
+      "created_at": "2024-11-20T17:28:00Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4884836374,
+      "number": 12397,
+      "title": "[FR] Add Next and Previous Icon to switch easily between 2 objects",
+      "repo": "inventree/InvenTree",
+      "html_url": "https://github.com/inventree/InvenTree/issues/12397",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-14T16:00:38Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "enhancement",
+        "help wanted",
+        "question",
+        "User Interface",
+        "Seeking Funding"
+      ]
+    },
+    {
+      "id": 4590338444,
+      "number": 22,
+      "title": "Advanced Calendar - (Dev Bounty: $125)",
+      "repo": "fluxerapp/fluxer-meta",
+      "html_url": "https://github.com/fluxerapp/fluxer-meta/issues/22",
+      "reward": "$125",
+      "created_at": "2026-06-04T16:20:15Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 5005349859,
+      "number": 348,
+      "title": "Most HTML-scraping connectors bypass stealth entirely — standardise on ox-browser POST /fetch",
+      "repo": "anatolykoptev/go-job",
+      "html_url": "https://github.com/anatolykoptev/go-job/issues/348",
+      "reward": "Cash/USDC",
+      "created_at": "2026-07-29T04:12:56Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "followup"
+      ]
+    },
+    {
+      "id": 4735571260,
+      "number": 770,
+      "title": "[BOUNTY $100] 🐜The Memanto Bug & Exploit Challenge",
+      "repo": "moorcheh-ai/memanto",
+      "html_url": "https://github.com/moorcheh-ai/memanto/issues/770",
+      "reward": "$100",
+      "created_at": "2026-06-24T14:09:09Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty"
+      ]
+    },
+    {
+      "id": 2504229716,
+      "number": 42,
+      "title": "[BOUNTY] Controls and keybinds $150+",
+      "repo": "SPLURT-Station/S.P.L.U.R.T-tg",
+      "html_url": "https://github.com/SPLURT-Station/S.P.L.U.R.T-tg/issues/42",
+      "reward": "$150",
+      "created_at": "2024-09-04T03:35:04Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "bounty"
+      ]
+    },
+    {
+      "id": 2802604160,
+      "number": 7,
+      "title": "promised bounty",
+      "repo": "omarsoufiane/test",
+      "html_url": "https://github.com/omarsoufiane/test/issues/7",
+      "reward": "Cash/USDC",
+      "created_at": "2025-01-21T19:06:07Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4582377053,
+      "number": 2,
+      "title": "Polls - (Dev Bounty: $500)",
+      "repo": "fluxerapp/fluxer-meta",
+      "html_url": "https://github.com/fluxerapp/fluxer-meta/issues/2",
+      "reward": "$500",
+      "created_at": "2026-06-03T17:58:12Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": [
+        "Desktop",
+        "Mobile",
+        "Server"
+      ]
+    },
+    {
+      "id": 412498438,
+      "number": 10088,
+      "title": "User Interface to create and manage scheduled toot's",
+      "repo": "mastodon/mastodon",
+      "html_url": "https://github.com/mastodon/mastodon/issues/10088",
+      "reward": "Cash/USDC",
+      "created_at": "2019-02-20T15:55:00Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    },
+    {
+      "id": 4590317979,
+      "number": 19,
+      "title": "Community Events - (Dev Bounty $250*)",
+      "repo": "fluxerapp/fluxer-meta",
+      "html_url": "https://github.com/fluxerapp/fluxer-meta/issues/19",
+      "reward": "$250",
+      "created_at": "2026-06-04T16:17:16Z",
+      "payout_destination": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+      "labels": []
+    }
+  ]
+}
