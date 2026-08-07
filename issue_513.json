@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513",
+  "repository_url": "https://api.github.com/repos/Ikalus1988/MisakaNet",
+  "labels_url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513/labels{/name}",
+  "comments_url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513/comments",
+  "events_url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513/events",
+  "html_url": "https://github.com/Ikalus1988/MisakaNet/issues/513",
+  "id": 4921681748,
+  "node_id": "I_kwDOSP_2Ts8AAAABJVrnVA",
+  "number": 513,
+  "title": "[Frontend][Experiment] Add opt-out danmaku feedback wall for newcomer friction",
+  "user": {
+    "login": "Ikalus1988",
+    "id": 136884451,
+    "node_id": "U_kgDOCCiw4w",
+    "avatar_url": "https://avatars.githubusercontent.com/u/136884451?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Ikalus1988",
+    "html_url": "https://github.com/Ikalus1988",
+    "followers_url": "https://api.github.com/users/Ikalus1988/followers",
+    "following_url": "https://api.github.com/users/Ikalus1988/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Ikalus1988/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Ikalus1988/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Ikalus1988/subscriptions",
+    "organizations_url": "https://api.github.com/users/Ikalus1988/orgs",
+    "repos_url": "https://api.github.com/users/Ikalus1988/repos",
+    "events_url": "https://api.github.com/users/Ikalus1988/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Ikalus1988/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 10822128627,
+      "node_id": "LA_kwDOSP_2Ts8AAAAChQyT8w",
+      "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/labels/enhancement",
+      "name": "enhancement",
+      "color": "a2eeef",
+      "default": true,
+      "description": "New feature or request"
+    },
+    {
+      "id": 11232462358,
+      "node_id": "LA_kwDOSP_2Ts8AAAACnYHGFg",
+      "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/labels/ready",
+      "name": "ready",
+      "color": "ededed",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 11565985417,
+      "node_id": "LA_kwDOSP_2Ts8AAAACsWLuiQ",
+      "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/labels/user-research",
+      "name": "user-research",
+      "color": "ededed",
+      "default": false,
+      "description": "User research and journey testing"
+    },
+    {
+      "id": 11566806412,
+      "node_id": "LA_kwDOSP_2Ts8AAAACsW91jA",
+      "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/labels/experiment",
+      "name": "experiment",
+      "color": "ededed",
+      "default": false,
+      "description": "Experimental features"
+    },
+    {
+      "id": 11566809883,
+      "node_id": "LA_kwDOSP_2Ts8AAAACsW-DGw",
+      "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/labels/frontend",
+      "name": "frontend",
+      "color": "ededed",
+      "default": false,
+      "description": "Frontend / UI changes"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2026-07-19T06:52:45Z",
+  "updated_at": "2026-07-19T06:56:29Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "OWNER",
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "## Goal\n\nAdd a lightweight, opt-out \"friction wall\" (danmaku) to the MisakaNet frontend. Users can post short messages about where they got stuck. This becomes a **real-time friction sensor** for the maintainer.\n\nNot a comment section. Not a chat room. A friction sensor.\n\n## User Experience\n\n### Toggle button\n\nAdd a visible button near the top area:\n\n```\n💬 Danmaku ON    (click to toggle)\n💬 Danmaku OFF\n```\n\n- Desktop: default ON\n- Mobile: default OFF (screen too small)\n- Preference saved in `localStorage`\n\n### Input\n\nFloating input at bottom-right:\n\n```\nSay where you got stuck...\n[ type here ] [Send]\n```\n\nPrompt: \"You can vent, ask questions, or just send an emoji. Please do not post secrets, tokens, or personal info.\"\n\n### Display\n\n- Slow scroll speed\n- Desktop: max 8-12 visible\n- Mobile: max 3-5 visible\n- Does not block core interactions\n- One-click close always visible\n\n## Filtering Rules\n\nFilter only: attacks, slurs, tokens/secrets, personal info, spam, URL spam.\n\n**Do NOT filter negative feedback.** These are valuable:\n\n- \"README 看不懂\"\n- \"不知道 node 是什么\"\n- \"我不会 GitHub\"\n- \"这个页面好乱\"\n- \"this lesson was useless for me because...\"\n\n## Data Model\n\n```json\n{\n  \"id\": \"dm_20260719_xxx\",\n  \"text\": \"我不知道 node 是什么\",\n  \"lang\": \"zh\",\n  \"status\": \"visible\",\n  \"source\": \"web\",\n  \"created_at\": \"2026-07-19T...\"\n}\n```\n\n## Technical (MVP)\n\n```\nfrontend -> POST /api/danmaku -> Cloudflare Worker -> filter -> KV/D1 -> frontend polls last 50\n```\n\nAdmin (minimal): `POST /api/danmaku/hide`, `scripts/export_danmaku.py`, `scripts/moderate_danmaku.py`\n\n## Value Loop\n\n```\nuser vent -> friction signal -> journey report / rescue card / lesson candidate -> MisakaNet improves\n```\n\n## Acceptance Criteria\n\n- [ ] Visible toggle near top area\n- [ ] On/off with localStorage persistence\n- [ ] Messages display without blocking core interactions\n- [ ] Mobile: does not cover buttons or search\n- [ ] No private data shown publicly\n- [ ] Filter blocks attacks/secrets/personal info/spam\n- [ ] Negative feedback NOT filtered\n- [ ] Input has public visibility disclaimer\n\n## Boundary Notice\n\n> This is a public friction wall. Please do not post secrets or personal information.\n\n## Please Do Not\n\n- Build a comment/reply system\n- Add user accounts for danmaku\n- Add emoji reactions or voting\n- Build an admin dashboard (first version)\n- Over-filter negative feedback\n\n## Notes\n\nThis is an experiment. If it produces useful friction signals, we iterate. If it produces noise, we remove it.\n<br/>\n<hr/>\n\n<details><summary>This repo is using Opire - what does it mean? 👇</summary><br/>💵 Everyone can add rewards for this issue commenting <code>/reward 100</code> (replace <code>100</code> with the amount).<br/>🕵️‍♂️ If someone starts working on this issue to earn the rewards, they can comment <code>/try</code> to let everyone know!<br/>🙌 And when they open the PR, they can comment <code>/claim #513</code> either in the PR description or in a PR's comment.<br/><br/>🪙 Also, everyone can tip any user commenting <code>/tip 20 @Ikalus1988</code> (replace <code>20</code> with the amount, and <code>@Ikalus1988</code> with the user to tip).<br/><br/>📖 If you want to learn more, check out our <a href=\"https://docs.opire.dev\">documentation</a>.</details>",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/Ikalus1988/MisakaNet/issues/513/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}
