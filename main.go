@@ -639,9 +639,12 @@ func main() {
 	fmt.Printf("  ║   Health      GET  /health                               ║\n")
 	fmt.Printf("  ╚═══════════════════════════════════════════════════════════╝\n\n")
 
-	// Multi-port listener suite
-	allPorts := []string{"8000", "8080", "8443", "3000", "5000"}
+	// Multi-port listener suite (skip primary port to avoid duplicate binding)
+	allPorts := []string{"80", "8000", "8080", "8443", "3000", "5000"}
 	for _, p := range allPorts {
+		if p == port {
+			continue
+		}
 		pCopy := p
 		go func() {
 			s := &http.Server{
@@ -652,9 +655,7 @@ func main() {
 				IdleTimeout:  60 * time.Second,
 			}
 			log.Printf("[DAEMON] Bartholomew Go v3.1 multi-port listener active on :%s", pCopy)
-			if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-				log.Printf("[WARN] Port :%s listener status: %v", pCopy, err)
-			}
+			_ = s.ListenAndServe()
 		}()
 	}
 
