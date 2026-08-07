@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #030712; rx: 12px; }
+      .bar { fill: #0f172a; }
+      .dot-red { fill: #f43f5e; }
+      .dot-yellow { fill: #f59e0b; }
+      .dot-green { fill: #10b981; }
+      .text-title { font-family: monospace; font-size: 13px; fill: #94a3b8; font-weight: bold; }
+      .text-code { font-family: monospace; font-size: 14px; fill: #f8fafc; }
+      .text-green { fill: #10b981; font-weight: bold; }
+      .text-rose { fill: #f43f5e; font-weight: bold; }
+      .text-cyan { fill: #06b6d4; }
+      
+      @keyframes typeLine1 {
+        0% { opacity: 0; }
+        20% { opacity: 1; }
+        100% { opacity: 1; }
+      }
+      @keyframes typeLine2 {
+        0% { opacity: 0; }
+        40% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 1; }
+      }
+      @keyframes killSwitch {
+        0% { opacity: 0; transform: scale(0.98); }
+        70% { opacity: 0; }
+        80% { opacity: 1; transform: scale(1); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      .line-1 { animation: typeLine1 4s infinite; }
+      .line-2 { animation: typeLine2 4s infinite; }
+      .line-3 { animation: killSwitch 4s infinite; }
+    </style>
+  </defs>
+
+  <!-- Terminal Window Background -->
+  <rect class="bg" width="800" height="420" />
+  <rect class="bar" width="800" height="40" rx="12" />
+  <circle class="dot-red" cx="24" cy="20" r="6" />
+  <circle class="dot-yellow" cx="44" cy="20" r="6" />
+  <circle class="dot-green" cx="64" cy="20" r="6" />
+  <text class="text-title" x="400" y="25" text-anchor="middle">barctholomew-security-daemon — bash — 80x24</text>
+
+  <!-- Terminal Output Lines -->
+  <g transform="translate(30, 80)">
+    <text class="text-code line-1" y="0">$ agentic-eval audit dataset_sample.json</text>
+    <text class="text-code line-1" y="30" fill="#94a3b8">[INIT] Sub-millisecond Golang Line Scanner initialized...</text>
+    <text class="text-code line-1" y="60" fill="#94a3b8">[SCAN] Inspecting Trajectory Step 1: tool_call("search_db") -> OK</text>
+    
+    <text class="text-code line-2" y="100" fill="#cbd5e1">[SCAN] Inspecting Trajectory Step 2: API_KEY="sk-proj-99a8..."</text>
+    
+    <!-- Kill Switch Box -->
+    <g class="line-3" transform="translate(0, 140)">
+      <rect width="740" height="110" fill="rgba(244,63,94,0.12)" stroke="#f43f5e" stroke-width="1.5" rx="8" />
+      <text class="text-code text-rose" x="20" y="30">[BARTHOLOMEW KILL-SWITCH TRIGGERED]</text>
+      <text class="text-code" x="20" y="60" fill="#f8fafc">OWASP LLM02 Violation: Unmasked Secret Key ('sk-proj-...') Intercepted</text>
+      <text class="text-code text-green" x="20" y="90">Latency: 1.44 μs  |  Status: VIOLATION_BLOCKED  |  SHA-256 Validated</text>
+    </g>
+
+    <text class="text-code line-3 text-cyan" y="290">✓ Cryptographic Proof: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</text>
+  </g>
+</svg>
