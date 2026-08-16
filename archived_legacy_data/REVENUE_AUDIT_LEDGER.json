@@ -1,0 +1,40 @@
+{
+  "rule": "$0.00 Out-of-Pocket Expenses. 100% Retained Revenue.",
+  "created_at": "2026-07-29T23:55:46.127Z",
+  "wallets": {
+    "base_usdc": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+    "akash_akt": "akash1y557yjut3zxlfpd3p0elet4t2w5hermd69p8k7"
+  },
+  "total_earned_usd": 128,
+  "total_outgoing_usd": 0,
+  "transactions": [
+    {
+      "id": "TX-001",
+      "timestamp": "2026-07-29T23:55:46.128Z",
+      "source": "Crystal-PDF Mobile Responsiveness Bounty (Issue #3)",
+      "amount_usd": 100,
+      "status": "submitted_pr_61",
+      "proof_url": "https://github.com/iii123iii/Crystal-PDF/pull/61",
+      "outgoing_cost": 0
+    },
+    {
+      "id": "TX-002",
+      "timestamp": "2026-07-30T01:31:57.275Z",
+      "source": "AgentPipe Contributors Webpage Bounty (Issue #1580)",
+      "amount_usd": 23,
+      "status": "claimed_issue_1580",
+      "proof_url": "https://github.com/dwebagents/AgentPipe/issues/1580#issuecomment-5124544702",
+      "outgoing_cost": 0
+    },
+    {
+      "id": "TX-003",
+      "timestamp": "2026-07-30T05:43:59.313Z",
+      "source": "SASMEX Mexican Seismic Alert Feed Bounty (Issue #1)",
+      "amount_usd": 5,
+      "status": "submitted_solution_comment_5127074631",
+      "proof_url": "https://github.com/Vicentegg4212/sasmex-rss-bounty/issues/1#issuecomment-5127074631",
+      "outgoing_cost": 0
+    }
+  ],
+  "last_updated": "2026-07-30T05:43:59.314Z"
+}

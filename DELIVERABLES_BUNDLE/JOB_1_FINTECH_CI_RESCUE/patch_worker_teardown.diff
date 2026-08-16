@@ -1,0 +1,8 @@
+--- a/src/worker.py
++++ b/src/worker.py
+@@ -42,6 +42,9 @@
+ async def stop_worker():
+-    loop.close()
++    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
++    for t in tasks: t.cancel()
++    await asyncio.gather(*tasks, return_exceptions=True)

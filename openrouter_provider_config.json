@@ -1,0 +1,31 @@
+{
+  "provider": "ACN Compute Mesh",
+  "api_type": "openai-compatible",
+  "base_urls": [
+    "https://acn-backend-444129982305.us-central1.run.app",
+    "https://acn-backend-east-444129982305.us-east1.run.app",
+    "https://acn-backend-west-444129982305.us-west1.run.app",
+    "https://acn-backend-eu-444129982305.europe-west1.run.app",
+    "https://acn-backend-asia-444129982305.asia-east1.run.app"
+  ],
+  "models": [
+    {
+      "id": "acn/gemini-2.0-flash-batch",
+      "name": "ACN Gemini 2.0 Flash Continuous Batch",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.0000001",
+        "completion": "0.0000004"
+      }
+    },
+    {
+      "id": "acn/local-rule-engine",
+      "name": "ACN Resilient Local Rule Engine",
+      "context_length": 32768,
+      "pricing": {
+        "prompt": "0.00000005",
+        "completion": "0.0000001"
+      }
+    }
+  ]
+}

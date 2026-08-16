@@ -1,0 +1,58 @@
+interface LogoProps {
+  size?: number
+  className?: string
+  showText?: boolean
+  textSize?: string
+}
+
+export function BartholomewLogo({ size = 32, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <defs>
+        <linearGradient id="shieldGradLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#10b981" />
+          <stop offset="50%" stopColor="#06b6d4" />
+          <stop offset="100%" stopColor="#3b82f6" />
+        </linearGradient>
+        <filter id="shieldGlowLogo" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#10b981" floodOpacity="0.4" />
+        </filter>
+      </defs>
+      {/* Shield Outer Body */}
+      <path
+        d="M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z"
+        fill="url(#shieldGradLogo)"
+        filter="url(#shieldGlowLogo)"
+      />
+      {/* Inner Shield Overlay */}
+      <path
+        d="M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z"
+        fill="#030b1a"
+        fillOpacity="0.3"
+        stroke="rgba(255,255,255,0.3)"
+        strokeWidth="1"
+      />
+      {/* Bold Letter 'B' Inside Shield */}
+      <path
+        d="M13 10.5H18.8C20.8 10.5 22.3 11.6 22.3 13.2C22.3 14.4 21.4 15.3 20.1 15.7C21.7 16.1 22.8 17.2 22.8 18.9C22.8 20.8 21.1 22.2 18.8 22.2H13V10.5ZM16.2 12.6V15.1H18.4C19.3 15.1 20 14.5 20 13.8C20 13.1 19.3 12.6 18.4 12.6H16.2ZM16.2 17.2V20.1H18.6C19.7 20.1 20.5 19.4 20.5 18.6C20.5 17.8 19.7 17.2 18.6 17.2H16.2Z"
+        fill="#ffffff"
+      />
+    </svg>
+  )
+}
+
+export default function Logo({ size = 32, className = '', showText = true, textSize = 'text-base' }: LogoProps) {
+  return (
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      <BartholomewLogo size={size} />
+      {showText && (
+        <span
+          className={`font-bold tracking-tight ${textSize}`}
+          style={{ color: '#f1f5f9', fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+        >
+          Bartholomew
+        </span>
+      )}
+    </div>
+  )
+}

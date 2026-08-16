@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-07-30T00:17:14.799Z",
+  "base_wallet": {
+    "address": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+    "eth_balance": "0.000062",
+    "usdc_balance": "0.00",
+    "status": "FUNDS_AVAILABLE"
+  },
+  "akash_wallet": {
+    "address": "akash1y557yjut3zxlfpd3p0elet4t2w5hermd69p8k7",
+    "akt_balance": "0.0000",
+    "status": "AUDITED_ZERO_LINGERING"
+  },
+  "action_ready": "Auto-signing transaction pipeline ready for direct transfer on balance detection."
+}

@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: operator-inventory
+  namespace: akash-services
+  labels:
+    akash.network: "true"
+    app.kubernetes.io/name: inventory
+    app.kubernetes.io/instance: inventory-service
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/part-of: provider
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: inventory
+      app.kubernetes.io/instance: inventory-service
+      app.kubernetes.io/component: operator
+      app.kubernetes.io/part-of: provider
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: inventory
+        app.kubernetes.io/instance: inventory-service
+        app.kubernetes.io/component: operator
+        app.kubernetes.io/part-of: provider
+    spec:
+      serviceAccountName: operator-inventory
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: operator-inventory
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          args:
+            - "provider-services"
+            - "operator"
+            - "inventory"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AP_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: operator-inventory
+                  key: config-path
+            - name: AP_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: AP_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: rest
+              protocol: TCP
+            - containerPort: 8081
+              name: grpc
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "/scripts/inv_liveness_check.sh"
+            initialDelaySeconds: 240
+            periodSeconds: 30
+            failureThreshold: 1
+            timeoutSeconds: 30
+          volumeMounts:
+            - name: config
+              mountPath: /akash
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: config
+          configMap:
+            name: operator-inventory
+        - name: scripts
+          configMap:
+            name: gpu-validation-script
+            defaultMode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

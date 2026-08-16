@@ -1,0 +1,33 @@
+{
+  "mandate": "Continuously discover authorized opportunities in connected worlds. Rank by expected owner value relative to compute cost. Investigate only opportunities supported by sufficient evidence.",
+  "started_at_utc": "2026-08-14T20:46:44Z",
+  "last_cycle_timestamp_utc": "2026-08-14T20:46:49Z",
+  "cycle": 6,
+  "cash_spent_usd": 2.149999999999999,
+  "confirmed_value_usd": 0.0,
+  "pending_value_usd": 0.0,
+  "external_sources_queried_count": 18,
+  "opportunities_screened": 4,
+  "opportunities_rejected": 0,
+  "actions_attempted": 1,
+  "actions_reverted": 0,
+  "actions_verified": 1,
+  "external_outcomes_count": 0,
+  "active_worker_model": "Gemini-1.5-Pro",
+  "worker_usage_counts": {
+    "Gemini-1.5-Pro": 6,
+    "Claude-3.5-Sonnet": 0,
+    "GPT-4o": 0,
+    "Local-Llama-3": 0
+  },
+  "causal_lessons": [
+    "Investigated github_ecosystem:urllib3/urllib3 ('Unstripped CR-LF control sequence in cookie handler'). EMV: +$380.40."
+  ],
+  "last_verified_state": {
+    "opp_id": "GH_URLLIB_01",
+    "target": "urllib3/urllib3",
+    "verified": true
+  },
+  "known_file_hashes": {},
+  "kill_switch_engaged": false
+}

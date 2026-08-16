@@ -1,0 +1,9 @@
+{
+  "agent_name": "CLIAgent",
+  "steps": [
+    {
+      "type": "thought",
+      "content": "Executing local CLI audit"
+    }
+  ]
+}

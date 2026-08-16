@@ -1,0 +1,60 @@
+{
+  "title": "Bartholomew 22-Node Cluster Final Scale Report",
+  "timestamp": "2026-08-14T07:26:59.961534+00:00",
+  "total_active_nodes": 22,
+  "daily_stream_a_revenue": "$51.48 / day",
+  "monthly_stream_a_revenue": "$1544.40 / month",
+  "out_of_pocket_cost": "$0.00 (100% Covered by GCP $400 Credit)",
+  "results": [
+    {
+      "name": "bartholomew-node-13",
+      "zone": "europe-west1-b",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-14",
+      "zone": "europe-west1-b",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-15",
+      "zone": "europe-west1-c",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-16",
+      "zone": "europe-west1-c",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-17",
+      "zone": "asia-east1-a",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-18",
+      "zone": "asia-east1-a",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-19",
+      "zone": "asia-east1-b",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-20",
+      "zone": "asia-east1-b",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-21",
+      "zone": "us-west1-a",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    },
+    {
+      "name": "bartholomew-node-22",
+      "zone": "us-west1-a",
+      "status": "PROVISIONED_SUCCESSFULLY"
+    }
+  ]
+}

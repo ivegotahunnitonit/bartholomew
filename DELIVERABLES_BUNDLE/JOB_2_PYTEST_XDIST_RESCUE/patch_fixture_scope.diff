@@ -1,0 +1,6 @@
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -15,4 +15,4 @@
+-@pytest.fixture(scope='session')
++@pytest.fixture(scope='function')
+ def auth_service():

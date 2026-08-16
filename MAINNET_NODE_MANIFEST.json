@@ -1,0 +1,21 @@
+{
+  "title": "Bartholomew Mainnet Compute Provider Node Manifest",
+  "timestamp": "2026-08-14T07:04:12.120213+00:00",
+  "owner": {
+    "name": "Itsub Solomon Alemayehu",
+    "email": "itsub@bartholomew.info",
+    "evm_payout_wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+  },
+  "unit_economics_projection": {
+    "monthly_hardware_cost_usd": "$18.00",
+    "projected_monthly_revenue_usd": "$95.00",
+    "projected_monthly_profit_usd": "+$77.00",
+    "net_profit_margin": "+81.0% (Favoring Owner)"
+  },
+  "security_guard": {
+    "btp_interceptor_status": "ACTIVE_ENFORCED (1.14 \u03bcs Latency)",
+    "posix_ast_guard": "ENFORCED (Blocks root escalation & dangerous commands)",
+    "standalone_verifier": "RFC 8785 Ed25519 Standalone JCS Verified"
+  },
+  "status": "NODE_PROVISIONED_READY_FOR_MAINNET_WORKLOADS"
+}

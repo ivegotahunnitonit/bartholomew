@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+  annotations:
+    secrets.doppler.com/reload: 'true'
+spec:
+  replicas: {{ .Values.backgroundJobs.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+          image: ghcr.io/akash-network/console-api:{{ .Values.appVersion }}
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 3000
+              name: api-port
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ .Chart.Name }}-{{ .Values.chain }}-secret
+            - configMapRef:
+                name: {{ .Chart.Name }}-{{ .Values.chain }}-config
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: {{ .Chart.Name }}-{{ .Values.chain }}-bg-jobs
+            - name: INTERFACE
+              value: "background-jobs"
+          resources:
+            {{- toYaml .Values.backgroundJobs.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /v1/healthz/readiness
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /v1/healthz/liveness
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3

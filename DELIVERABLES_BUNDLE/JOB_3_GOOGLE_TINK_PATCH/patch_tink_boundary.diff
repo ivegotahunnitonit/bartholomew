@@ -1,0 +1,6 @@
+--- a/tink/streaming_aead.py
++++ b/tink/streaming_aead.py
+@@ -28,4 +28,6 @@
+ def decrypt_chunk(tag, chunk):
++    if len(tag) < 16 or len(chunk) == 0:
++        raise ValueError('Invalid tag or chunk boundary')

@@ -1,0 +1,19 @@
+--- a/fire/parser.py
++++ b/fire/parser.py
+@@ -18,10 +18,7 @@ import ast
+ import sys
+ 
+-if sys.version_info[0:2] < (3, 8):
+-  _StrNode = ast.Str  # type: ignore  # pylint: disable=no-member  # deprecated but needed for Python < 3.8
+-else:
+-  _StrNode = ast.Constant
++_StrNode = ast.Constant
+ 
+ 
+ def CreateParser():
+@@ -129,5 +126,5 @@ def _Replacement(node):
+   # These are the only builtin constants supported by literal_eval.
+   if value in ('True', 'False', 'None'):
+     return node
+-  return _StrNode(value)
++  return _StrNode(value=value)

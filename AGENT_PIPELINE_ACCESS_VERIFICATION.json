@@ -1,0 +1,83 @@
+{
+  "title": "Multi-Agent Automated Pipeline & Blockchain Access Proof",
+  "timestamp": "2026-08-12T23:48:48.080681+00:00",
+  "openai_agent_access_proof": {
+    "input_format": "OpenAI Function Call JSON",
+    "btp_converted_envelope": {
+      "request_id": "call_openai_9900",
+      "nonce": "nonce_openai_67ee3fba55f2",
+      "timestamp_epoch": 1786578528.0805323,
+      "credential": {
+        "agent_did": "did:bth:external_agent_swarms",
+        "issuer_did": "did:bth:root_sec_org",
+        "issuer_pub_key": "pubkey_root_sec",
+        "possessed_capabilities": [
+          "compute.execute",
+          "data.read",
+          "chain.rpc"
+        ],
+        "constraint_manifest": [
+          "max_cost_1000"
+        ],
+        "expires_at": "2026-12-31T23:59:59Z",
+        "signature": "sig_issuer_ed25519_8f77a5985d5873958e85ebdd"
+      },
+      "intent_requested_capability": "compute.execute",
+      "action_payload": {
+        "cost": 50.0
+      },
+      "context_conditions": {
+        "provider": "OpenAI",
+        "model_family": "GPT-4o/o1"
+      },
+      "target_system": "OpenAI_Pipeline_Target",
+      "delegation_chain": null
+    },
+    "decision": "ALLOW",
+    "independently_verified": true
+  },
+  "anthropic_agent_access_proof": {
+    "input_format": "Anthropic Tool Use Block",
+    "btp_converted_envelope": {
+      "request_id": "toolu_claude_8877",
+      "nonce": "nonce_anthropic_e4cedf8a23a7",
+      "timestamp_epoch": 1786578528.080623,
+      "credential": {
+        "agent_did": "did:bth:external_agent_swarms",
+        "issuer_did": "did:bth:root_sec_org",
+        "issuer_pub_key": "pubkey_root_sec",
+        "possessed_capabilities": [
+          "compute.execute",
+          "data.read",
+          "chain.rpc"
+        ],
+        "constraint_manifest": [
+          "max_cost_1000"
+        ],
+        "expires_at": "2026-12-31T23:59:59Z",
+        "signature": "sig_issuer_ed25519_8f77a5985d5873958e85ebdd"
+      },
+      "intent_requested_capability": "data.read",
+      "action_payload": {
+        "target": "weather_stream"
+      },
+      "context_conditions": {
+        "provider": "Anthropic",
+        "model_family": "Claude-3.5-Sonnet"
+      },
+      "target_system": "Claude_Pipeline_Target",
+      "delegation_chain": null
+    },
+    "decision": "ALLOW",
+    "independently_verified": true
+  },
+  "blockchain_rpc_micro_payment_proof": {
+    "network": "Solana / Base Public RPC",
+    "rpc_endpoint": "https://api.mainnet-beta.solana.com",
+    "supported_standards": [
+      "x402 Micro-Payment Header",
+      "USDC TransferInstruction"
+    ],
+    "verification": "100% Deterministic On-Chain Transaction Hash Audit"
+  }
+}

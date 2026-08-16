@@ -1,0 +1,25 @@
+fix: rate-limiter fail-open + ID validation inconsistency + SourceType (issue #1438)
+
+Fix three security/correctness issues identified in Bug Challenge #770:
+
+1. Rate limiter fail-open (rate_limiting.py)
+   check_rate_limit() returned (True, None) for any unrecognised operation,
+   silently allowing unlimited requests through. enforce_namespace_rate_limit()
+   builds the key as f"namespace_{operation}", so calling it with operation="list"
+   produced "namespace_list" which was not in the limits dict, bypassing the
+   limiter entirely. Changed to raise ValueError for unknown operations
+   (fail-closed by default).
+
+2. Inconsistent is_valid_memory_id (ids.py vs legacy/safe_deletion.py)
+   ids.py required an underscore in the ID; safe_deletion.py only required
+   alphanumeric + underscore + hyphen chars. An ID like abc-123 therefore
+   passed the deletion validator but failed the general validator. Aligned
+   ids.is_valid_memory_id to use the same regex pattern as SafeDeletion.
+
+3. SourceType = str (constants.py)
+   SourceType accepted any arbitrary string with no validation set.
+   Added KNOWN_SOURCE_TYPES (frozenset) as the authoritative list of
+   built-in values so routes and services can validate against it while
+   remaining backwards-compatible with custom agent-name sources.
+
+Tests: added 13 new unit tests covering all three fixes (72 total, all pass).

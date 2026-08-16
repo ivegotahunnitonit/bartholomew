@@ -1,0 +1,9 @@
+[submodule "honeycode-honeypot"]
+	path = honeycode-honeypot
+	url = https://github.com/zhangjiayang6835-cyber/honeycode-honeypot.git
+[submodule "eval-engine"]
+	path = eval-engine
+	url = https://github.com/zhangjiayang6835-cyber/eval-engine.git
+[submodule "ai-training-gym"]
+	path = ai-training-gym
+	url = https://github.com/zhangjiayang6835-cyber/ai-training-gym.git

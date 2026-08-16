@@ -1,0 +1,20 @@
+{
+  "engine": "METAMASK_BASE_SWAP_TRADER_V11",
+  "cycle": 4907,
+  "timestamp": "2026-07-30T22:55:15.617Z",
+  "wallet": "0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4",
+  "live_usdc_balance": "0.00",
+  "dex_routers": {
+    "METAMASK_0X_SWAP": "0xdef1c0dedc2827f5e1e64886061355129b5326d1",
+    "AERODROME_ROUTER": "0x89C1b3807d4B67d1F4E7a445C558F49F7D0B758b",
+    "UNISWAP_V3_ROUTER": "0x2626664c2603336E57B271c5C0b26F421741e481"
+  },
+  "monitored_pairs": [
+    "WETH/USDC",
+    "USDT/USDC",
+    "AERO/USDC"
+  ],
+  "strategy": "Zero-Capital Flash Loan Atomic Swap Execution",
+  "out_of_pocket_cost": 0,
+  "retained_profit_payout": "100% Direct to MetaMask"
+}

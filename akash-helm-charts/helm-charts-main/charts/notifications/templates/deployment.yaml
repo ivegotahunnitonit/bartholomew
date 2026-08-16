@@ -1,0 +1,64 @@
+
+{{- $interfaces := list "rest" "chain-events" "alert-events" "notifications-events" }}
+{{- range $interface := $interfaces }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Chart.Name }}-{{ $interface }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ $.Chart.Name }}-{{ $interface }}
+  annotations:
+    secrets.doppler.com/reload: 'true'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $.Chart.Name }}-{{ $interface }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Chart.Name }}-{{ $interface }}
+    spec:
+      containers:
+        - name: {{ $.Chart.Name }}-{{ $interface }}
+          image: "ghcr.io/akash-network/notifications:{{ $.Values.appVersion }}"
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 3000
+              name: api-port
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ $.Chart.Name }}-secret
+            - configMapRef:
+                name: {{ $.Chart.Name }}-config
+          env:
+            - name: PORT
+              value: "3000"
+            - name: INTERFACE
+              value: "{{ $interface }}"
+            - name: OTEL_SERVICE_NAME
+              value: {{ $.Chart.Name }}-{{ $interface }}
+            - name: DEPLOYMENT_ENV
+              value: {{ $.Values.deploymentEnv }}
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: 3000
+            initialDelaySeconds: 35
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz/liveness
+              port: 3000
+            initialDelaySeconds: 35
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 9
+{{- end }}

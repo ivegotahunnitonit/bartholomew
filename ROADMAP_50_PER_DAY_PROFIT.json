@@ -1,0 +1,30 @@
+{
+  "title": "Bartholomew $50/Day Net Profit Execution Roadmap",
+  "timestamp": "2026-08-14T07:21:07.959657+00:00",
+  "daily_target": "$50.00 / day ($1,500.00 / month)",
+  "owner": {
+    "name": "Itsub Solomon Alemayehu",
+    "email": "itsub@bartholomew.info",
+    "evm_payout_wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+  },
+  "gcp_credit_status": {
+    "total_credit_available": "$400.00 USD",
+    "active_node_1": "bartholomew-node-1 (34.63.91.195) - ACTIVE RUNNING"
+  },
+  "path_1_gcp_node_scaling": {
+    "single_node_daily_revenue": "$2.34 / day",
+    "nodes_needed_for_50_daily": "22 GCP Compute VM Instances",
+    "scaled_daily_revenue": "$51.48 / day",
+    "scaled_monthly_revenue": "$1544.40 / month"
+  },
+  "path_2_b2b_sales_scaling": {
+    "audits_needed_monthly": "3 Client Audits @ $500 avg = $1,500 / month ($50.00 / day)",
+    "outreach_campaign_volume": "1,000 Enterprise Proposals Dispatched"
+  },
+  "recommended_combined_strategy": {
+    "gcp_nodes": "10 Active VM Instances ($23.40 / day)",
+    "b2b_audits": "2 Converted Audits / Month ($33.33 / day)",
+    "combined_net_daily_profit": "$56.73 / day ($1,701.90 / month)",
+    "out_of_pocket_cost": "$0.00 (100% Covered by GCP $400 Credit & Client Pre-payments)"
+  }
+}

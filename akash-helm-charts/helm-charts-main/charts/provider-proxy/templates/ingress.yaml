@@ -1,0 +1,36 @@
+{{- $hostNames := default (list) .Values.hostNames }}
+
+{{- if gt (len $hostNames) 0 }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.chain }}-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "140"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "140"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "140"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    {{- range $hostNames }}
+    - host: {{ . }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ $.Chart.Name }}-{{ $.Values.chain }}-service
+                port:
+                  name: api-port
+            path: /
+            pathType: Prefix
+    {{- end }}
+  tls:
+    - hosts:
+        {{- range $hostNames }}
+        - {{ . }}
+        {{- end }}
+      secretName: {{ .Chart.Name }}-{{ .Release.Namespace }}-akash-network-tls
+{{- end }}

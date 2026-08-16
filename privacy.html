@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Bartholomew AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --text: #f0f4fc;
+      --muted: #8ea2c6;
+      --accent: #00f2fe;
+      --border: rgba(66, 133, 244, 0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .effective-date {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    h2 {
+      font-size: 18px;
+      color: var(--accent);
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+    p, li {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+    ul {
+      margin-left: 24px;
+      margin-bottom: 16px;
+    }
+    strong {
+      color: #fff;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+      font-size: 13.5px;
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">⚡ Bartholomew AI</div>
+      <h1>Privacy Policy</h1>
+      <div class="effective-date">Last Updated: August 15, 2026</div>
+    </div>
+
+    <section>
+      <h2>1. Overview</h2>
+      <p><strong>Bartholomew AI</strong> ("we", "our", or "the Extension") is an autonomous developer copilot designed to help software engineers diagnose CI/CD failures, synthesize reproduction tests, and refactor code directly within the browser and GitHub.</p>
+      <p>We respect your privacy and are committed to protecting your personal data. This Privacy Policy outlines our data collection, usage, and storage practices.</p>
+    </section>
+
+    <section>
+      <h2>2. Data Collection & Privacy First Architecture</h2>
+      <p>Bartholomew AI is built on a <strong>privacy-first, client-side evaluation model</strong>:</p>
+      <ul>
+        <li><strong>No Personal Identifiable Information (PII):</strong> We do not collect, store, sell, or monetize your personal information, browsing history, identity, or private credentials.</li>
+        <li><strong>No Background Tracking:</strong> The extension does not track your general browsing activity. Content scripts activate exclusively on explicit developer interactions (such as clicking the diagnosis badge or highlighting code on GitHub).</li>
+        <li><strong>No Remote Code Execution:</strong> All extension logic is packaged and verified locally within the browser bundle.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Permissions & Data Usage Disclosures</h2>
+      <ul>
+        <li><code>activeTab</code>: Used strictly when you trigger a diagnostic command on a GitHub tab to parse visible error logs or pull request diffs.</li>
+        <li><code>storage</code>: Used locally in your browser to retain user interface preferences and selected assistant mode.</li>
+        <li><code>sidePanel</code>: Used to render the interactive developer companion inside your browser's native side panel.</li>
+        <li><code>contextMenus</code>: Used to provide quick right-click actions ("Ask Bartholomew to Explain Code").</li>
+        <li><code>host_permissions</code>: Required to interact with GitHub pages upon user invocation and connect to your local Bartholomew daemon at <code>http://localhost:8080</code>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Third-Party Data Sharing</h2>
+      <p>We do not share, sell, transfer, or distribute any user code, tokens, or repository metadata to third parties, advertising networks, or data brokers.</p>
+    </section>
+
+    <section>
+      <h2>5. Open Source & Transparency</h2>
+      <p>Bartholomew is developed openly. You can review the architecture, repository files, and release artifacts directly on GitHub at <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">github.com/ivegotahunnitonit/bartholomew</a>.</p>
+    </section>
+
+    <section>
+      <h2>6. Contact</h2>
+      <p>If you have any questions or feedback regarding this Privacy Policy, you can open an issue on our official repository or contact us via GitHub: <a href="https://github.com/ivegotahunnitonit" target="_blank">@ivegotahunnitonit</a>.</p>
+    </section>
+
+    <div class="footer">
+      &copy; 2026 Bartholomew AI. All rights reserved.
+    </div>
+  </div>
+
+</body>
+</html>

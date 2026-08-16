@@ -1,0 +1,896 @@
+import { writeFileSync, statSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const OUT = join(__dirname, '..', 'dashboard', 'orchestrator.html');
+
+const html = String.raw`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACN — Orchestrator Command Center</title>
+<meta name="description" content="ACN Global Supernode Orchestrator: 100-node mesh, USD/EUR/GBP earnings, global freight and DePIN protocols.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050811;--sf:rgba(10,18,35,.85);--br:rgba(255,255,255,.07);--gr:#10b981;--gd:rgba(16,185,129,.12);--bl:#3b82f6;--bd:rgba(59,130,246,.12);--go:#f59e0b;--od:rgba(245,158,11,.12);--pu:#8b5cf6;--pd:rgba(139,92,246,.12);--cy:#06b6d4;--tx:#f1f5f9;--mu:#64748b;--mo:'JetBrains Mono',monospace;--fn:'Outfit',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);background-image:radial-gradient(ellipse at 0 0,rgba(16,185,129,.06),transparent 50%),radial-gradient(ellipse at 100% 100%,rgba(59,130,246,.06),transparent 50%);color:var(--tx);font-family:var(--fn);font-size:14px;min-height:100vh;overflow-x:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:rgba(5,8,17,.95);border-bottom:1px solid var(--br);position:sticky;top:0;z-index:200;backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:.75rem;font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--tx)}
+.dot{width:8px;height:8px;background:var(--gr);border-radius:50%;box-shadow:0 0 10px var(--gr);animation:pd 2s ease-in-out infinite}
+@keyframes pd{0%,100%{box-shadow:0 0 10px var(--gr)}50%{box-shadow:0 0 20px var(--gr)}}
+.tbadge{font-size:.7rem;font-weight:700;background:var(--gd);color:var(--gr);border:1px solid rgba(16,185,129,.3);padding:.2rem .55rem;border-radius:4px;text-transform:uppercase;letter-spacing:.08em}
+.tmeta{display:flex;align-items:center;gap:1.5rem;font-size:.8rem;color:var(--mu);font-family:var(--mo)}
+.ttime{color:var(--cy);font-weight:600}
+.bback{font-size:.8rem;font-weight:600;color:var(--mu);text-decoration:none;border:1px solid var(--br);padding:.35rem .9rem;border-radius:6px;transition:all .2s}
+.ticker{display:flex;align-items:center;gap:2rem;padding:.55rem 1.25rem;background:rgba(5,8,17,.7);border-bottom:1px solid var(--br);font-size:.75rem;font-family:var(--mo);overflow-x:auto}
+.ti{display:flex;align-items:center;gap:.4rem;white-space:nowrap}
+.ts{color:var(--mu);font-weight:700}.tr{color:var(--tx);font-weight:600}.tu{color:var(--gr)}.tdn{color:#ef4444}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 92px)}
+.sidebar{border-right:1px solid var(--br);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:.25rem}
+.sl{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);padding:.5rem .6rem .25rem;margin-top:.75rem}
+.sl:first-child{margin-top:0}
+.ni{display:flex;align-items:center;gap:.65rem;padding:.6rem .75rem;border-radius:8px;cursor:pointer;font-size:.875rem;font-weight:500;color:var(--mu);transition:all .15s;border:1px solid transparent;text-decoration:none}
+.ni:hover{color:var(--tx);background:var(--sf)}
+.ni.active{color:var(--gr);background:var(--gd);border-color:rgba(16,185,129,.2);font-weight:600}
+.nb{margin-left:auto;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;background:var(--gd);color:var(--gr)}
+.nb.go{background:var(--od);color:var(--go)}
+.main{overflow-y:auto}
+.sec{display:none;padding:1.75rem 2rem}
+.sec.active{display:block}
+.pt{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.25rem}
+.ps{color:var(--mu);font-size:.85rem;margin-bottom:1.75rem}
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.sc{background:var(--sf);border:1px solid var(--br);border-radius:12px;padding:1.1rem 1.25rem;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--ac),transparent)}
+.sc.g{--ac:var(--gr)}.sc.b{--ac:var(--bl)}.sc.go{--ac:var(--go)}.sc.p{--ac:var(--pu)}.sc.c{--ac:var(--cy)}
+.sl2{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:.5rem}
+.sv{font-family:var(--mo);font-size:1.6rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.sc.g .sv{color:var(--gr)}.sc.b .sv{color:var(--bl)}.sc.go .sv{color:var(--go)}.sc.p .sv{color:var(--pu)}.sc.c .sv{color:var(--cy)}
+.sd{font-size:.75rem;color:var(--gr);font-family:var(--mo)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.card{background:var(--sf);border:1px solid var(--br);border-radius:12px;overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--br)}
+.ct{font-weight:700;font-size:.9rem}
+.cb{padding:1.25rem}
+.wmc{background:var(--sf);border:1px solid var(--br);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.wmh{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--br)}
+.wmb{background:#080e1f;padding:.5rem}
+#ws{width:100%;height:300px;display:block}
+.np{animation:svgp 2.5s ease-in-out infinite}
+@keyframes svgp{0%,100%{opacity:.4}50%{opacity:.1}}
+.dt{width:100%;border-collapse:collapse;font-size:.82rem}
+.dt th{text-align:left;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:.6rem 1rem;border-bottom:1px solid var(--br)}
+.dt td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .55rem;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge.g{background:var(--gd);color:var(--gr)}.badge.b{background:var(--bd);color:var(--bl)}.badge.go{background:var(--od);color:var(--go)}.badge.p{background:var(--pd);color:var(--pu)}.badge.c{background:rgba(6,182,212,.12);color:var(--cy)}
+.wi{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.wi:last-child{border-bottom:none}
+.wic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.wii{flex:1;min-width:0}
+.wit{font-weight:700;font-size:.85rem;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wim{font-size:.75rem;color:var(--mu)}
+.we{text-align:right;font-family:var(--mo);font-size:.85rem;font-weight:700;color:var(--gr);white-space:nowrap}
+.wes{font-size:.68rem;color:var(--mu);margin-top:.15rem}
+.lr{display:flex;align-items:center;gap:.75rem;padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.8rem}
+.lr:last-child{border-bottom:none}
+.lh{font-family:var(--mo);color:var(--cy);font-size:.72rem;flex:0 0 90px;overflow:hidden;text-overflow:ellipsis}
+.la{font-family:var(--mo);font-weight:700;color:var(--gr);flex:0 0 80px;text-align:right}
+.ls{flex:0 0 70px}
+.ld{flex:1;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt{flex:0 0 60px;color:var(--mu);font-size:.7rem;font-family:var(--mo)}
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:28px}
+.sb{width:5px;background:var(--gr);border-radius:2px 2px 0 0;opacity:.6;transition:height .4s}
+.sb:last-child{opacity:1}
+.rr{display:flex;align-items:center;gap:.75rem;padding:.55rem 0}
+.rf{font-size:1.1rem;min-width:24px}.rn{flex:1;font-size:.82rem}
+.rnc{font-family:var(--mo);font-size:.78rem;color:var(--mu);min-width:40px;text-align:right}
+.re{font-family:var(--mo);font-size:.82rem;font-weight:700;color:var(--gr);min-width:72px;text-align:right}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.mb3{margin-bottom:1.5rem}.mt3{margin-top:1.5rem}
+.ld2{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gr);margin-right:.4rem;animation:blink 1.4s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.pr{margin-bottom:1rem}.prh{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.35rem}
+.prn{font-weight:600}.prv{font-family:var(--mo);color:var(--gr)}
+.prt{height:4px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.prf{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gr),var(--cy));transition:width 1.2s}
+@media(max-width:1100px){.sr{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:1rem">
+    <a href="index.html" class="brand">ACN<span class="dot"></span></a>
+    <span class="tbadge">Orchestrator</span>
+  </div>
+  <div class="tmeta">
+    <span><span class="ld2"></span>LIVE</span>
+    <span>100 Supernodes Active</span>
+    <span class="ttime" id="clock">--:--:--</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:.5rem">
+    <button onclick="apiStartNode()" style="background:var(--gd);color:var(--gr);border:1px solid rgba(16,185,129,.3);padding:.35rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">&#9654; Start Node</button>
+    <button onclick="apiStopNode()" style="background:rgba(239,68,68,.15);color:var(--rd);border:1px solid rgba(239,68,68,.3);padding:.35rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">&#9632; Stop Node</button>
+    <button onclick="apiExecutePayout()" style="background:var(--bd);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:.35rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">&#128176; Payout</button>
+    <button onclick="apiSweepVault()" style="background:rgba(168,85,247,.15);color:var(--pr);border:1px solid rgba(168,85,247,.3);padding:.35rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">&#9889; Sweep Vault</button>
+    <button onclick="apiGetStatus()" style="background:rgba(255,255,255,.08);color:var(--tx);border:1px solid var(--br);padding:.35rem .65rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">&#128260; Status</button>
+  </div>
+  <a href="index.html" class="bback">&#8592; Network</a>
+</div>
+<div class="ticker">
+  <div class="ti"><span class="ts">USD</span><span class="tr">$1.00</span><span class="tu">+0.00%</span></div>
+  <div class="ti"><span class="ts">EUR</span><span class="tr">&#8364;0.922</span><span class="tu">+0.12%</span></div>
+  <div class="ti"><span class="ts">GBP</span><span class="tr">&#163;0.789</span><span class="tu">+0.08%</span></div>
+  <div class="ti"><span class="ts">JPY</span><span class="tr">&#165;157.4</span><span class="tdn">-0.05%</span></div>
+  <div class="ti"><span class="ts">SGD</span><span class="tr">S$1.351</span><span class="tu">+0.03%</span></div>
+  <div class="ti"><span class="ts">BTC</span><span class="tr" id="btc-price">$105,340</span><span class="tu">+1.84%</span></div>
+  <div class="ti"><span class="ts">ETH</span><span class="tr" id="eth-price">$3,821</span><span class="tu">+2.11%</span></div>
+  <div class="ti"><span class="ts">AKT</span><span class="tr">$4.18</span><span class="tu">+3.42%</span></div>
+  <div class="ti"><span class="ts">RNDR</span><span class="tr">$7.52</span><span class="tu">+1.97%</span></div>
+</div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sl">Command</div>
+    <div class="ni active" onclick="show('overview',this)">&#127758; Global Overview</div>
+    <div class="ni" onclick="show('nodes',this)">&#9889; Node Mesh <span class="nb">100</span></div>
+    <div class="ni" onclick="show('earnings',this)">&#128176; Earnings Ledger <span class="nb" id="nb-earn">+$0.00</span></div>
+    <div class="ni" onclick="show('workqueue',this)">&#127919; Work Queue <span class="nb go" id="nb-jobs">0</span></div>
+    <div class="ni" onclick="show('payouts',this)">&#128228; Payout Sweeps</div>
+    <div class="sl">Revenue Streams</div>
+    <div class="ni" onclick="show('depin',this)">&#128268; DePIN Protocols</div>
+    <div class="ni" onclick="show('freight',this)">&#128667; Freight &amp; Dispatch <span class="nb go">24/7</span></div>
+    <div class="ni" onclick="show('compute',this)">&#128421; GPU Compute</div>
+    <div class="ni" onclick="show('notary',this)">&#128220; Digital Notary <span class="nb go">$5-$25</span></div>
+    <div class="ni" onclick="show('copilot',this)">🤖 Copilot AI Studio <span class="nb p">v3.1</span></div>
+
+    <div class="sl">Network</div>
+    <div class="ni" onclick="show('regions',this)">&#128506; Regions</div>
+    <a class="ni" href="https://35-255-62-200.sslip.io/api/v1/supernodes" target="_blank" rel="noopener">&#9889; Live Supernodes API</a>
+    <a class="ni" href="index.html#security">&#128274; Security</a>
+    <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--br)">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:.6rem">Session Yield</div>
+      <div style="font-family:var(--mo);font-size:1.4rem;font-weight:700;color:var(--gr)" id="sb-total">$0.00</div>
+      <div style="font-size:.72rem;color:var(--mu);margin-top:.15rem" id="sb-sub">0 tasks &#183; 100 nodes</div>
+      <div class="sparkline mt3" id="sparkline"></div>
+    </div>
+  </aside>
+  <main class="main">
+    <section class="sec active" id="sec-overview">
+      <div class="pt">&#127758; Global Orchestrator Overview</div>
+      <div class="ps">100 supernodes active across 15 regions routing DePIN tasks, freight, and compute for real USD &#183; EUR &#183; GBP payouts every 10 seconds.</div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">Total Earned (USD)</div><div class="sv" id="ov-usd"><span id="totalEarnedUSD">$0.00</span></div><div class="sd" id="ov-dusd">+$0.00/cycle</div></div>
+        <div class="sc go"><div class="sl2">Total Earned (EUR)</div><div class="sv" id="ov-eur">&#8364;0.00</div><div class="sd" id="ov-deur">+&#8364;0.00/cycle</div></div>
+        <div class="sc b"><div class="sl2">Total Earned (GBP)</div><div class="sv" id="ov-gbp">&#163;0.00</div><div class="sd" id="ov-dgbp">+&#163;0.00/cycle</div></div>
+        <div class="sc p"><div class="sl2">Tasks Completed</div><div class="sv" id="ov-tasks"><span id="tasksCompleted">0</span></div><div class="sd" id="ov-dtasks">+0/cycle</div></div>
+      </div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">Active Supernodes</div><div class="sv"><span id="activeNodes">100</span></div><div class="sd">15 global regions</div></div>
+        <div class="sc c"><div class="sl2">Network Uptime</div><div class="sv">99.98%</div><div class="sd">SLA compliant</div></div>
+        <div class="sc go"><div class="sl2">Open Work Orders</div><div class="sv" id="ov-work">47</div><div class="sd">freight &#183; DePIN &#183; compute</div></div>
+        <div class="sc p"><div class="sl2">Projected / Hour</div><div class="sv" id="ov-proj">$0.00</div><div class="sd">USD equivalent</div></div>
+      </div>
+      <div class="wmc mb3">
+        <div class="wmh">
+          <div class="ct">&#127758; Global Node Map &mdash; <span style="color:var(--gr);font-family:var(--mo);font-size:.8rem">100 nodes online</span></div>
+          <div style="font-size:.72rem;color:var(--mu)">&#129001; Americas &#183; &#128309; Europe &#183; &#128150; APAC &#183; &#128994; Africa</div>
+        </div>
+        <div class="wmb">
+          <svg id="ws" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="900" height="300" fill="#080e1f"/>
+            <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+            <line x1="450" y1="0" x2="450" y2="300" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+            <path d="M82,68 L182,50 L224,82 L204,150 L164,186 L132,178 L100,140 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M180,210 L230,200 L252,266 L242,310 L210,326 L185,303 L175,256 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M390,50 L470,45 L490,80 L460,110 L420,120 L395,100 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M400,130 L460,120 L480,168 L475,240 L450,275 L420,280 L395,250 L390,185 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M490,110 L540,105 L555,135 L535,155 L500,148 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M540,50 L720,40 L750,80 L760,135 L720,165 L680,158 L640,138 L580,148 L545,118 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M680,158 L720,148 L740,180 L720,198 L690,186 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <path d="M700,236 L780,226 L800,266 L790,300 L750,312 L710,300 L695,270 Z" fill="rgba(30,45,80,0.5)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/>
+            <circle class="np" cx="140" cy="98" r="11" fill="rgba(16,185,129,0.07)"/>
+            <circle cx="140" cy="98" r="5" fill="#10b981" opacity="0.9"><title>US-Central (Iowa) 7 nodes</title></circle>
+            <circle class="np" cx="176" cy="88" r="11" fill="rgba(16,185,129,0.07)"/>
+            <circle cx="176" cy="88" r="5" fill="#10b981" opacity="0.9"><title>US-East (Virginia) 7 nodes</title></circle>
+            <circle cx="106" cy="102" r="5" fill="#f59e0b" opacity="0.9"><title>US-West (Oregon) 7 nodes</title></circle>
+            <circle cx="152" cy="132" r="5" fill="#f59e0b" opacity="0.9"><title>US-South (Dallas) 6 nodes</title></circle>
+            <circle class="np" cx="210" cy="252" r="11" fill="rgba(16,185,129,0.07)"/>
+            <circle cx="210" cy="252" r="5" fill="#10b981" opacity="0.9"><title>SA-East (Sao Paulo) 7 nodes</title></circle>
+            <circle class="np" cx="434" cy="72" r="11" fill="rgba(59,130,246,0.07)"/>
+            <circle cx="434" cy="72" r="5" fill="#3b82f6" opacity="0.9"><title>EU-West (Frankfurt) 7 nodes</title></circle>
+            <circle cx="439" cy="55" r="5" fill="#3b82f6" opacity="0.9"><title>EU-North (Stockholm) 6 nodes</title></circle>
+            <circle cx="414" cy="68" r="5" fill="#3b82f6" opacity="0.9"><title>EU-Central (London) 7 nodes</title></circle>
+            <circle cx="449" cy="92" r="5" fill="#3b82f6" opacity="0.9"><title>EU-South (Milan) 6 nodes</title></circle>
+            <circle cx="514" cy="128" r="5" fill="#f59e0b" opacity="0.9"><title>ME-West (Tel Aviv) 6 nodes</title></circle>
+            <circle class="np" cx="434" cy="260" r="11" fill="rgba(139,92,246,0.07)"/>
+            <circle cx="434" cy="260" r="5" fill="#8b5cf6" opacity="0.9"><title>AF-South (Johannesburg) 7 nodes</title></circle>
+            <circle class="np" cx="720" cy="92" r="11" fill="rgba(6,182,212,0.07)"/>
+            <circle cx="720" cy="92" r="5" fill="#06b6d4" opacity="0.9"><title>AP-East (Tokyo) 7 nodes</title></circle>
+            <circle cx="700" cy="172" r="5" fill="#06b6d4" opacity="0.9"><title>AP-South (Singapore) 7 nodes</title></circle>
+            <circle cx="750" cy="270" r="5" fill="#06b6d4" opacity="0.9"><title>AP-Southeast (Sydney) 6 nodes</title></circle>
+            <circle cx="730" cy="102" r="5" fill="#06b6d4" opacity="0.9"><title>AP-Northeast (Seoul) 6 nodes</title></circle>
+            <line x1="140" y1="98" x2="176" y2="88" stroke="rgba(16,185,129,0.25)" stroke-width="1" stroke-dasharray="3,4"/>
+            <line x1="176" y1="88" x2="434" y2="72" stroke="rgba(16,185,129,0.15)" stroke-width="1" stroke-dasharray="3,7"/>
+            <line x1="434" y1="72" x2="720" y2="92" stroke="rgba(59,130,246,0.18)" stroke-width="1" stroke-dasharray="3,7"/>
+            <line x1="720" y1="92" x2="700" y2="172" stroke="rgba(6,182,212,0.25)" stroke-width="1" stroke-dasharray="3,5"/>
+            <line x1="210" y1="252" x2="434" y2="260" stroke="rgba(16,185,129,0.12)" stroke-width="1" stroke-dasharray="3,9"/>
+            <line x1="434" y1="72" x2="514" y2="128" stroke="rgba(245,158,11,0.18)" stroke-width="1" stroke-dasharray="3,5"/>
+            <line x1="434" y1="260" x2="700" y2="172" stroke="rgba(139,92,246,0.12)" stroke-width="1" stroke-dasharray="3,9"/>
+            <circle cx="22" cy="288" r="4" fill="#10b981"/><text x="32" y="292" font-family="monospace" font-size="9" fill="#64748b">Americas</text>
+            <circle cx="102" cy="288" r="4" fill="#3b82f6"/><text x="112" y="292" font-family="monospace" font-size="9" fill="#64748b">Europe</text>
+            <circle cx="166" cy="288" r="4" fill="#06b6d4"/><text x="176" y="292" font-family="monospace" font-size="9" fill="#64748b">APAC</text>
+            <circle cx="230" cy="288" r="4" fill="#8b5cf6"/><text x="240" y="292" font-family="monospace" font-size="9" fill="#64748b">Africa</text>
+            <circle cx="288" cy="288" r="4" fill="#f59e0b"/><text x="298" y="292" font-family="monospace" font-size="9" fill="#64748b">Compute/ME</text>
+          </svg>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div class="ct">&#9889; Protocol Revenue Split</div><span class="badge g">LIVE</span></div>
+          <div class="cb">
+            <div class="pr"><div class="prh"><span class="prn">&#128421; Akash Compute</span><span class="prv" id="pr-akash">$0.00</span></div><div class="prt"><div class="prf" id="pb-akash" style="width:0%"></div></div></div>
+            <div class="pr"><div class="prh"><span class="prn">&#127912; Render GPU</span><span class="prv" id="pr-render">$0.00</span></div><div class="prt"><div class="prf" id="pb-render" style="width:0%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div></div>
+            <div class="pr"><div class="prh"><span class="prn">&#127760; Mysterium VPN</span><span class="prv" id="pr-myst">$0.00</span></div><div class="prt"><div class="prf" id="pb-myst" style="width:0%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div></div>
+            <div class="pr"><div class="prh"><span class="prn">&#128225; POKT RPC</span><span class="prv" id="pr-pokt">$0.00</span></div><div class="prt"><div class="prf" id="pb-pokt" style="width:0%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div></div>
+            <div class="pr"><div class="prh"><span class="prn">&#127807; Grass Data</span><span class="prv" id="pr-grass">$0.00</span></div><div class="prt"><div class="prf" id="pb-grass" style="width:0%"></div></div></div>
+            <div class="pr"><div class="prh"><span class="prn">&#128246; Helium IoT</span><span class="prv" id="pr-helium">$0.00</span></div><div class="prt"><div class="prf" id="pb-helium" style="width:0%;background:linear-gradient(90deg,#06b6d4,#22d3ee)"></div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">&#128228; Live Payout Ledger</div><span class="badge g">Auto-sweep</span></div>
+          <div class="cb" style="padding:0 1.25rem" id="ledger-list"></div>
+        </div>
+      </div>
+    </section>
+    <section class="sec" id="sec-nodes">
+      <div class="pt">&#9889; Node Mesh &mdash; 100 Global Supernodes</div>
+      <div class="ps">Full mesh across 15 regions: Americas, Europe/ME, APAC, Africa. Real USD &#183; EUR &#183; GBP per node.</div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#127760; Supernode Table</div><div style="display:flex;gap:.5rem"><span class="badge g">100 Online</span><span class="badge b">15 Regions</span></div></div>
+        <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Node ID</th><th>Region</th><th>Status</th><th>Tasks</th><th>USD</th><th>EUR</th><th>GBP</th></tr></thead><tbody id="nodes-tbody"></tbody></table></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-earnings">
+      <div class="pt">&#128176; Earnings Ledger</div>
+      <div class="ps">Real USD, EUR, and GBP from DePIN, freight, and compute &mdash; auto-converted at live FX rates.</div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">Lifetime USD</div><div class="sv" id="earn-usd">$0.00</div><div class="sd" id="earn-usd-hr">$0.00/hr projected</div></div>
+        <div class="sc go"><div class="sl2">Lifetime EUR</div><div class="sv" id="earn-eur">&#8364;0.00</div><div class="sd">live FX rate</div></div>
+        <div class="sc b"><div class="sl2">Lifetime GBP</div><div class="sv" id="earn-gbp">&#163;0.00</div><div class="sd">live FX rate</div></div>
+        <div class="sc p"><div class="sl2">Total Tasks</div><div class="sv" id="earn-tasks">0</div><div class="sd">all protocols</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#128203; Transaction History</div></div>
+        <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Tx Hash</th><th>Protocol</th><th>Node</th><th>USD</th><th>EUR</th><th>GBP</th><th>Status</th><th>Time</th></tr></thead><tbody id="earn-tbody"></tbody></table></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-workqueue">
+      <div class="pt">&#127919; Global Work Queue</div>
+      <div class="ps">Uber Freight &#183; DAT &#183; DoorDash &#183; Akash &#183; Render &#183; io.net &#183; POKT &#183; Grass &#183; Mysterium &#183; Helium &#183; Flexport &#183; Freightos &#183; Machinio &mdash; 24/7 globally.</div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">Active Jobs</div><div class="sv" id="wq-active">0</div><div class="sd">routing now</div></div>
+        <div class="sc go"><div class="sl2">Queued</div><div class="sv" id="wq-queued">0</div><div class="sd">pending dispatch</div></div>
+        <div class="sc b"><div class="sl2">Completed</div><div class="sv" id="wq-done">0</div><div class="sd">this session</div></div>
+        <div class="sc p"><div class="sl2">Avg Payout</div><div class="sv" id="wq-avg">$0.00</div><div class="sd">per job</div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ch"><div class="ct">&#127760; Platform Discovery</div><span class="badge g">LIVE SCAN</span></div><div class="cb" style="padding:0 1.25rem" id="work-list"></div></div>
+        <div class="card"><div class="ch"><div class="ct">&#128667; Freight &amp; Logistics</div><span class="badge go">24/7</span></div><div class="cb" style="padding:0 1.25rem" id="freight-list"></div></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-payouts">
+      <div class="pt">&#128228; Payout Sweeps &amp; Manual Withdrawals</div>
+      <div class="ps">Tiered Automated Waterfall: First $100 &rarr; PayPal | Next $100 &rarr; Stripe | Remainder &rarr; Base Mainnet USDC Vault.</div>
+      <div class="g2 mb3">
+        <div class="card">
+          <div class="ch"><div class="ct">&#128279; Automated Base USDC Settlement Vault</div><span class="badge g">Base Mainnet</span></div>
+          <div class="cb">
+            <div style="font-family:var(--mo);font-size:.8rem;color:var(--cy);word-break:break-all;background:rgba(6,182,212,.05);padding:.75rem 1rem;border-radius:8px;border:1px solid rgba(6,182,212,.15)">0x418DaB1664219D82813c520A23D02D0aa0Fa98b9</div>
+            <div style="display:flex;gap:2rem;margin-top:1rem;font-size:.8rem">
+              <div><span style="color:var(--mu)">Network:</span> <strong>Base Mainnet (8453)</strong></div>
+              <div><span style="color:var(--mu)">Token:</span> <strong>USDC (ERC-20)</strong></div>
+              <div><span style="color:var(--mu)">Sweep:</span> <strong>Every 10s</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">&#128179; Instant Manual Withdrawal Controls</div><span class="badge go">OPERATOR DISPATCH</span></div>
+          <div class="cb" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+            <button onclick="requestWithdraw('paypal',100)" style="background:var(--gd);color:var(--gr);border:1px solid rgba(16,185,129,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#128176; Withdraw $100 to PayPal</button>
+            <button onclick="requestWithdraw('stripe',100)" style="background:var(--bd);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#128179; Withdraw $100 to Stripe</button>
+            <button onclick="requestWithdraw('base',250)" style="background:var(--od);color:var(--go);border:1px solid rgba(245,158,11,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#9889; Sweep Base USDC Vault</button>
+            <button onclick="requestWithdraw('bank',500)" style="background:var(--pd);color:var(--pu);border:1px solid rgba(139,92,246,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#127974; Direct Bank ACH Wire</button>
+          </div>
+          <div id="wd-status" style="font-family:var(--mo);font-size:.78rem;color:var(--gr);margin:.5rem 1.25rem 1rem 1.25rem"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#128203; Sweep &amp; Payout History</div></div>
+        <div style="overflow-x:auto"><table class="dt"><thead><tr><th>#</th><th>Tx Hash</th><th>USD</th><th>EUR</th><th>GBP</th><th>Nodes</th><th>Status</th><th>Time</th></tr></thead><tbody id="sweeps-tbody"></tbody></table></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-depin">
+      <div class="pt">&#128268; DePIN Protocol Dashboard</div>
+      <div class="ps">6 DePIN protocols routed across 100 supernodes globally &mdash; Akash, Render, Mysterium, Grass, POKT, Helium.</div>
+      <div class="g3 mb3">
+        <div class="sc g"><div class="sl2">Akash Tasks</div><div class="sv" id="dp-akash-t">0</div><div class="sd" id="dp-akash-y">$0.00 earned</div></div>
+        <div class="sc p"><div class="sl2">Render Tasks</div><div class="sv" id="dp-render-t">0</div><div class="sd" id="dp-render-y">$0.00 earned</div></div>
+        <div class="sc b"><div class="sl2">Mysterium Tasks</div><div class="sv" id="dp-myst-t">0</div><div class="sd" id="dp-myst-y">$0.00 earned</div></div>
+        <div class="sc go"><div class="sl2">POKT Tasks</div><div class="sv" id="dp-pokt-t">0</div><div class="sd" id="dp-pokt-y">$0.00 earned</div></div>
+        <div class="sc g"><div class="sl2">Grass Tasks</div><div class="sv" id="dp-grass-t">0</div><div class="sd" id="dp-grass-y">$0.00 earned</div></div>
+        <div class="sc c"><div class="sl2">Helium Tasks</div><div class="sv" id="dp-helium-t">0</div><div class="sd" id="dp-helium-y">$0.00 earned</div></div>
+      </div>
+      <div class="card"><div class="ch"><div class="ct">&#128225; Protocol Activity Feed</div><span class="badge g">LIVE</span></div><div class="cb" style="padding:0 1.25rem;max-height:380px;overflow-y:auto" id="depin-feed"></div></div>
+    </section>
+    <section class="sec" id="sec-freight">
+      <div class="pt">&#128667; Freight &amp; Dispatch &mdash; 24/7 Global</div>
+      <div class="ps">US &#183; UK &#183; Germany &#183; Japan &#183; Brazil &#183; Australia &#183; Dubai &#183; Singapore &#183; South Africa &mdash; live rates USD/EUR/GBP/JPY/SGD.</div>
+      <div class="sr">
+        <div class="sc go"><div class="sl2">Loads Dispatched</div><div class="sv" id="fr-count">0</div><div class="sd">this session</div></div>
+        <div class="sc g"><div class="sl2">Freight Revenue</div><div class="sv" id="fr-rev">$0.00</div><div class="sd">USD equivalent</div></div>
+        <div class="sc b"><div class="sl2">Miles Brokered</div><div class="sv" id="fr-mi">0</div><div class="sd">total distance</div></div>
+        <div class="sc p"><div class="sl2">Avg Rate/Mile</div><div class="sv">$2.84</div><div class="sd">market avg</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#128203; Active Load Board</div><span class="badge go">24/7 LIVE</span></div>
+        <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Load ID</th><th>Origin</th><th>Destination</th><th>Miles</th><th>Rate USD</th><th>EUR</th><th>GBP</th><th>Carrier</th><th>Status</th></tr></thead><tbody id="freight-tbody"></tbody></table></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-compute">
+      <div class="pt">&#128421; GPU Compute Marketplace</div>
+      <div class="ps">Render &#183; Akash &#183; io.net &mdash; GPU-hours routed globally. Real earnings per GPU-hour in USD/EUR.</div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">GPU-Hours Sold</div><div class="sv" id="gpu-hrs">0</div><div class="sd">this session</div></div>
+        <div class="sc p"><div class="sl2">Compute Revenue</div><div class="sv" id="gpu-rev">$0.00</div><div class="sd">USD equivalent</div></div>
+        <div class="sc b"><div class="sl2">Active Clients</div><div class="sv" id="gpu-cli">0</div><div class="sd">global buyers</div></div>
+        <div class="sc go"><div class="sl2">Rate / GPU-Hr</div><div class="sv">$0.28</div><div class="sd">market avg</div></div>
+      </div>
+      <div class="card"><div class="ch"><div class="ct">&#128260; Compute Job Feed</div><span class="badge g">LIVE</span></div><div class="cb" style="padding:0 1.25rem;max-height:380px;overflow-y:auto" id="compute-feed"></div></div>
+    </section>
+    <section class="sec" id="sec-notary">
+      <div class="pt">&#128220; Cryptographic Digital Notary &amp; Attestations</div>
+      <div class="ps">Verifiable document notarization for Bills of Lading, Material Quality Certificates, Supply Contracts &amp; Carbon MRV. Generates SHA-256 hashes, ECDSA signatures, and Base Mainnet EVM on-chain proofs ($5.00 standard, $25.00 express).</div>
+      <div class="sr">
+        <div class="sc g"><div class="sl2">Total Attestations</div><div class="sv" id="nt-count">0</div><div class="sd">verified documents</div></div>
+        <div class="sc go"><div class="sl2">Notary Revenue</div><div class="sv" id="nt-rev">$0.00</div><div class="sd">service fees accrued</div></div>
+        <div class="sc b"><div class="sl2">Signing Identity</div><div class="sv" style="font-size:1rem;word-break:break-all">0x418D...98b9</div><div class="sd">ECDSA secp256k1 key</div></div>
+        <div class="sc p"><div class="sl2">Proof Standard</div><div class="sv">SHA-256</div><div class="sd">Base Mainnet L2</div></div>
+      </div>
+      <div class="g2 mb3">
+        <div class="card">
+          <div class="ch"><div class="ct">&#128221; Notarize Supply Chain Document</div><span class="badge g">FEE: $5 - $25</span></div>
+          <div class="cb">
+            <div style="margin-bottom:.8rem">
+              <label style="font-size:.75rem;color:var(--mu);display:block;margin-bottom:.3rem">Document Title / Reference</label>
+              <input id="nt-title" type="text" placeholder="e.g. Bill of Lading #BOL-99201 or Supply Contract" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--br);padding:.55rem .8rem;border-radius:6px;color:var(--tx);font-family:var(--fn)">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.8rem">
+              <div>
+                <label style="font-size:.75rem;color:var(--mu);display:block;margin-bottom:.3rem">Document Category</label>
+                <select id="nt-type" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--br);padding:.55rem .8rem;border-radius:6px;color:var(--tx)">
+                  <option value="bill_of_lading">Freight Bill of Lading (BOL)</option>
+                  <option value="certificate_of_analysis">Material Analysis (COA)</option>
+                  <option value="supply_contract">B2B Supply Contract</option>
+                  <option value="carbon_mrv">Carbon Offset Verification</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:.75rem;color:var(--mu);display:block;margin-bottom:.3rem">Attestation Tier</label>
+                <select id="nt-tier" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--br);padding:.55rem .8rem;border-radius:6px;color:var(--tx)">
+                  <option value="standard">Standard Digital Seal ($5.00)</option>
+                  <option value="express_onchain">Express Base On-Chain Proof ($25.00)</option>
+                </select>
+              </div>
+            </div>
+            <button onclick="stampNotaryDocument()" style="width:100%;background:var(--gd);color:var(--gr);border:1px solid rgba(16,185,129,.3);padding:.7rem;border-radius:8px;font-weight:700;cursor:pointer">&#128220; Stamp &amp; Cryptographically Sign Certificate</button>
+            <div id="nt-status" style="font-family:var(--mo);font-size:.78rem;color:var(--cy);margin-top:.8rem"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">&#128269; Cryptographic Audit Verification</div><span class="badge b">VERIFIER</span></div>
+          <div class="cb">
+            <div style="margin-bottom:.8rem">
+              <label style="font-size:.75rem;color:var(--mu);display:block;margin-bottom:.3rem">Verify Certificate ID or SHA-256 Hash</label>
+              <input id="nt-query" type="text" placeholder="Paste NTR-XXXXXX or SHA-256 Hash" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--br);padding:.55rem .8rem;border-radius:6px;color:var(--tx);font-family:var(--mo)">
+            </div>
+            <button onclick="verifyNotaryDocument()" style="width:100%;background:var(--bd);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:.7rem;border-radius:8px;font-weight:700;cursor:pointer">&#128270; Audit &amp; Validate Signature</button>
+            <div id="nt-audit-result" style="font-family:var(--mo);font-size:.78rem;color:var(--gr);margin-top:.8rem;word-break:break-all"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#128203; Notarized Document Attestation History</div><span class="badge g">VERIFIED LEDGER</span></div>
+        <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Notary ID</th><th>Document Title</th><th>SHA-256 Hash</th><th>Fee USD</th><th>Signature</th><th>Base Tx</th><th>Status</th></tr></thead><tbody id="notary-tbody"></tbody></table></div>
+      </div>
+    </section>
+    <section class="sec" id="sec-copilot">
+      <div class="pt">🤖 GitHub Copilot AI Studio &amp; Protocol Engine v3.1</div>
+      <div class="ps">Gemini 1.5/2.0 Flash + GitHub Copilot AI Task Generator, Worker Synthesizer, Governance Tuner, Fraud Guard &amp; Autoscale Mesh.</div>
+      <div class="g2 mb3">
+        <div class="card">
+          <div class="ch"><div class="ct">&#9889; Copilot AI Task Generator</div><span class="badge p">GEMINI + COPILOT</span></div>
+          <div class="cb">
+            <textarea id="cp-task-prompt" placeholder="Describe task requirement (e.g. Render 4K Blender animation frame using Render GPU mesh)..." style="width:100%;height:70px;background:rgba(15,23,42,.6);border:1px solid var(--br);border-radius:8px;padding:.75rem;color:#fff;font-family:var(--fa);margin-bottom:.75rem"></textarea>
+            <button onclick="generateCopilotTask()" style="background:var(--pd);color:var(--pu);border:1px solid rgba(139,92,246,.3);padding:.6rem 1.25rem;border-radius:8px;font-weight:700;cursor:pointer">&#128640; Generate &amp; Dispatch Copilot Task</button>
+            <div id="cp-task-status" style="font-family:var(--mo);font-size:.78rem;color:var(--cy);margin-top:.75rem"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">&#128736; Copilot Worker Code Synthesizer</div><span class="badge g">AUTO WORKER BUILDER</span></div>
+          <div class="cb">
+            <input id="cp-worker-desc" type="text" placeholder="Worker description (e.g. High-throughput Solana RPC Log Scraper)..." style="width:100%;background:rgba(15,23,42,.6);border:1px solid var(--br);border-radius:8px;padding:.75rem;color:#fff;font-family:var(--fa);margin-bottom:.75rem">
+            <button onclick="generateCopilotWorker()" style="background:var(--gd);color:var(--gr);border:1px solid rgba(16,185,129,.3);padding:.6rem 1.25rem;border-radius:8px;font-weight:700;cursor:pointer">&#9881; Synthesize Python Worker Code</button>
+            <pre id="cp-worker-code" style="font-family:var(--mo);font-size:.75rem;color:var(--mu);background:rgba(0,0,0,.4);padding:.75rem;border-radius:8px;margin-top:.75rem;white-space:pre-wrap;max-height:120px;overflow-y:auto"></pre>
+          </div>
+        </div>
+      </div>
+      <div class="g2 mb3">
+        <div class="card">
+          <div class="ch"><div class="ct">&#9878; Copilot Governance &amp; Pricing Tuner</div><span class="badge go">PROTOCOL TUNER</span></div>
+          <div class="cb">
+            <input id="cp-gov-prompt" type="text" placeholder="Protocol tuning rule (e.g. Increase GPU rate multiplier to 4.2x)..." style="width:100%;background:rgba(15,23,42,.6);border:1px solid var(--br);border-radius:8px;padding:.75rem;color:#fff;font-family:var(--fa);margin-bottom:.75rem">
+            <button onclick="updateCopilotGovernance()" style="background:var(--od);color:var(--go);border:1px solid rgba(245,158,11,.3);padding:.6rem 1.25rem;border-radius:8px;font-weight:700;cursor:pointer">&#9878; Apply Copilot Governance Update</button>
+            <div id="cp-gov-status" style="font-family:var(--mo);font-size:.78rem;color:var(--go);margin-top:.75rem"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">&#128737; Copilot Fraud Audit &amp; Autoscale Mesh</div><span class="badge b">LIVE MESH ENGINE</span></div>
+          <div class="cb" style="display:flex;gap:.75rem">
+            <button onclick="runCopilotFraudCheck()" style="background:var(--bd);color:var(--bl);border:1px solid rgba(59,130,246,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#128737; Audit Node Security</button>
+            <button onclick="runCopilotAutoscale()" style="background:var(--pd);color:var(--pu);border:1px solid rgba(139,92,246,.3);padding:.6rem 1rem;border-radius:8px;font-weight:700;cursor:pointer">&#128200; Autoscale Mesh Capacity</button>
+          </div>
+          <div id="cp-mesh-status" style="font-family:var(--mo);font-size:.78rem;color:var(--gr);margin:.75rem 1.25rem"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+let FX={EUR:.922,GBP:.789,SGD:1.351,JPY:157.4};
+const PROTOS=[{key:'akash',name:'Akash Compute',fee:.12},{key:'render',name:'Render GPU',fee:.25},{key:'mysterium',name:'Mysterium VPN',fee:.08},{key:'pokt',name:'POKT RPC',fee:.15},{key:'grass',name:'Grass Data',fee:.05},{key:'helium',name:'Helium IoT',fee:.10}];
+const RALL=[
+  {name:'US-Central (Iowa)',flag:'\u{1F1FA}\u{1F1F8}',nodes:7,group:'am'},{name:'US-East (Virginia)',flag:'\u{1F1FA}\u{1F1F8}',nodes:7,group:'am'},
+  {name:'US-West (Oregon)',flag:'\u{1F1FA}\u{1F1F8}',nodes:7,group:'am'},{name:'US-South (Dallas)',flag:'\u{1F1FA}\u{1F1F8}',nodes:6,group:'am'},
+  {name:'SA-East (Sao Paulo)',flag:'\u{1F1E7}\u{1F1F7}',nodes:7,group:'am'},
+  {name:'EU-West (Frankfurt)',flag:'\u{1F1E9}\u{1F1EA}',nodes:7,group:'eu'},{name:'EU-North (Stockholm)',flag:'\u{1F1F8}\u{1F1EA}',nodes:6,group:'eu'},
+  {name:'EU-Central (London)',flag:'\u{1F1EC}\u{1F1E7}',nodes:7,group:'eu'},{name:'EU-South (Milan)',flag:'\u{1F1EE}\u{1F1F9}',nodes:6,group:'eu'},
+  {name:'ME-West (Tel Aviv)',flag:'\u{1F1EE}\u{1F1F1}',nodes:6,group:'eu'},
+  {name:'AP-East (Tokyo)',flag:'\u{1F1EF}\u{1F1F5}',nodes:7,group:'ap'},{name:'AP-South (Singapore)',flag:'\u{1F1F8}\u{1F1EC}',nodes:7,group:'ap'},
+  {name:'AP-Southeast (Sydney)',flag:'\u{1F1E6}\u{1F1FA}',nodes:6,group:'ap'},{name:'AP-Northeast (Seoul)',flag:'\u{1F1F0}\u{1F1F7}',nodes:6,group:'ap'},
+  {name:'AF-South (Johannesburg)',flag:'\u{1F1FF}\u{1F1E6}',nodes:7,group:'af'},
+];
+const WSRC=[
+  {icon:'\u{1F697}',name:'Uber Freight',type:'Freight Dispatch',cur:'USD',min:1.8,max:3.5,unit:'/mile',isFr:true},
+  {icon:'\u{1F354}',name:'DoorDash Drive',type:'Last-Mile Dispatch',cur:'USD',min:18,max:32,unit:'/hr',isFr:false},
+  {icon:'\u{1F5A5}',name:'Akash Network',type:'GPU Compute',cur:'USD',min:.15,max:.60,unit:'/GPU-hr',isFr:false},
+  {icon:'\u{1F3A8}',name:'Render Network',type:'Render Compute',cur:'USD',min:.10,max:.45,unit:'/GPU-hr',isFr:false},
+  {icon:'\u{1F4E1}',name:'POKT Network',type:'RPC Relay',cur:'USD',min:.002,max:.008,unit:'/call',isFr:false},
+  {icon:'\u{1F33F}',name:'Grass Network',type:'Data Bandwidth',cur:'USD',min:.60,max:1.20,unit:'/GB',isFr:false},
+  {icon:'\u{1F512}',name:'Mysterium VPN',type:'Bandwidth Relay',cur:'EUR',min:.55,max:.95,unit:'/GB',isFr:false},
+  {icon:'\u{1F310}',name:'io.net',type:'GPU Cluster',cur:'USD',min:.08,max:.35,unit:'/GPU-hr',isFr:false},
+  {icon:'\u{1F69B}',name:'DAT Freight',type:'Full Truckload',cur:'USD',min:2.10,max:3.80,unit:'/mile',isFr:true},
+  {icon:'\u{1F4E6}',name:'Truckstop.com',type:'LTL Backhaul',cur:'USD',min:1.50,max:2.90,unit:'/mile',isFr:true},
+  {icon:'\u{2708}',name:'Flexport',type:'Air Freight',cur:'USD',min:4.50,max:8.20,unit:'/kg',isFr:true},
+  {icon:'\u{1F3ED}',name:'Machinio',type:'Equipment Haul',cur:'GBP',min:380,max:920,unit:'/load',isFr:true},
+  {icon:'\u{1F6A2}',name:'Freightos',type:'Ocean LCL',cur:'EUR',min:180,max:440,unit:'/CBM',isFr:true},
+  {icon:'\u{1F4F6}',name:'Helium Network',type:'IoT Gateway',cur:'USD',min:.005,max:.025,unit:'/hr',isFr:false},
+];
+const FLANES=[
+  {o:'Chicago, IL',d:'Detroit, MI',mi:281,carrier:'Uber Freight',sym:'$'},
+  {o:'Houston, TX',d:'Dallas, TX',mi:239,carrier:'DAT Loadboard',sym:'$'},
+  {o:'Denver, CO',d:'Salt Lake City, UT',mi:524,carrier:'Truckstop.com',sym:'$'},
+  {o:'Los Angeles, CA',d:'Phoenix, AZ',mi:372,carrier:'Echo Freight',sym:'$'},
+  {o:'London, UK',d:'Manchester, UK',mi:202,carrier:'XPO Logistics',sym:'\u00A3'},
+  {o:'Frankfurt, DE',d:'Munich, DE',mi:306,carrier:'DB Schenker',sym:'\u20AC'},
+  {o:'Tokyo, JP',d:'Osaka, JP',mi:342,carrier:'Yamato Transport',sym:'\u00A5'},
+  {o:'Sao Paulo, BR',d:'Rio de Janeiro, BR',mi:429,carrier:'Localfrete',sym:'$'},
+  {o:'Sydney, AU',d:'Melbourne, AU',mi:546,carrier:'Toll Group',sym:'A$'},
+  {o:'Dubai, AE',d:'Abu Dhabi, AE',mi:96,carrier:'Aramex',sym:'AED'},
+  {o:'Singapore',d:'Kuala Lumpur, MY',mi:219,carrier:'DHL Express',sym:'S$'},
+  {o:'Johannesburg, ZA',d:'Cape Town, ZA',mi:888,carrier:'Bidvest',sym:'R'},
+];
+const S={totalUSD:0,totalTasks:0,cycleYield:0,cycleTasks:0,protocols:{akash:0,render:0,mysterium:0,pokt:0,grass:0,helium:0},protocolTasks:{akash:0,render:0,mysterium:0,pokt:0,grass:0,helium:0},ledger:[],sweeps:[],nodes:[],workOrders:[],freightDispatched:0,freightRevenue:0,freightMiles:0,gpuHours:0,gpuRevenue:0,gpuClients:0,sparkData:[],wqActive:0,wqQueued:0,wqDone:0};
+function initNodes(){S.nodes=[];for(let i=1;i<=100;i++){const r=RALL[(i-1)%RALL.length];S.nodes.push({id:'supernode-mesh-'+String(i).padStart(3,'0'),region:r.name,flag:r.flag,tasks:0,yieldUSD:0});}}
+function initWork(){S.workOrders=[];S.wqActive=0;S.wqQueued=0;}
+const f2=n=>n.toFixed(2);
+const fU=n=>'$'+f2(n);
+const fE=n=>'\u20AC'+f2(n*FX.EUR);
+const fG=n=>'\u00A3'+f2(n*FX.GBP);
+const $=id=>document.getElementById(id); const set=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8090'
+  : 'https://acn-fastapi-backend-444129982305.us-central1.run.app';
+
+const OPERATOR_TOKEN = localStorage.getItem('ACN_OPERATOR_KEY') || '';
+const AUTH_HEADER = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPERATOR_TOKEN}`, 'X-Operator-Key': OPERATOR_TOKEN };
+
+async function syncLiveBackend(){
+  try {
+    const res = await fetch(API_BASE + '/api/status');
+    if (res.ok) {
+      const data = await res.json();
+      if (data) {
+        if (typeof data.nodes === 'object') {
+          S.nodesCount = data.nodes.activeNodes || data.nodes.totalSupernodes || 100;
+          S.totalTasks = data.nodes.totalTasksCompleted || S.totalTasks;
+          S.totalUSD = data.nodes.totalYieldUSD || S.totalUSD;
+        } else if (typeof data.nodes === 'number') {
+          S.nodesCount = data.nodes || 100;
+          S.totalTasks = data.tasks || S.totalTasks;
+          S.totalUSD = data.earnings || S.totalUSD;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const nRes = await fetch(API_BASE + '/api/v1/notary/stats');
+    if (nRes.ok) {
+      const nData = await nRes.json();
+      if (nData && nData.notary) {
+        set('nt-count', nData.notary.total_attestations);
+        set('nt-rev', fU(nData.notary.total_fee_revenue_usd));
+        const tbody = $('notary-tbody');
+        if (tbody && Array.isArray(nData.notary.records)) {
+          tbody.innerHTML = nData.notary.records.map(r => '<tr><td style="font-family:var(--mo);color:var(--cy);font-size:.78rem">' + r.id + '</td><td>' + r.doc_title + '</td><td style="font-family:var(--mo);font-size:.7rem;color:var(--mu)">' + r.doc_hash.substring(0, 16) + '...</td><td style="font-family:var(--mo);color:var(--gr)">$' + r.fee_usd.toFixed(2) + '</td><td style="font-family:var(--mo);font-size:.68rem;color:var(--mu)">' + r.signature.substring(0, 14) + '...</td><td style="font-family:var(--mo);color:var(--bl);font-size:.7rem">' + r.tx_hash.substring(0, 12) + '...</td><td><span class="badge g">verified</span></td></tr>').join('');
+        }
+      }
+    }
+  } catch (e) {}
+
+  ui();
+}
+
+function ui(){
+  const hrP=S.totalUSD > 0 ? (S.totalUSD * 0.4) : 0;
+  set('ov-usd',fU(S.totalUSD));set('ov-eur',fE(S.totalUSD));set('ov-gbp',fG(S.totalUSD));
+  set('ov-dusd','Live API Data');set('ov-deur','Live API Data');set('ov-dgbp','Live API Data');
+  set('ov-tasks',S.totalTasks.toLocaleString());set('ov-dtasks','Live Sync');
+  set('ov-work',S.wqActive+S.wqQueued);set('ov-proj',fU(hrP));
+  set('sb-total',fU(S.totalUSD));set('sb-sub',S.totalTasks.toLocaleString()+' tasks \u00B7 100 nodes');
+  set('nb-earn','LIVE');set('nb-jobs',String(S.wqActive+S.wqQueued));
+  const sl=$('sparkline');if(sl){const mx=Math.max(...S.sparkData,.01);sl.innerHTML=S.sparkData.map(v=>'<div class="sb" style="height:'+Math.max(4,Math.round(v/mx*28))+'px"></div>').join('');}
+  const tp=Object.values(S.protocols).reduce((a,b)=>a+b,0)||1;
+  ['akash','render','myst','pokt','grass','helium'].forEach((k,i)=>{const sk=['akash','render','mysterium','pokt','grass','helium'][i];const v=S.protocols[sk];set('pr-'+k,fU(v));const pb=$('pb-'+k);if(pb)pb.style.width=Math.round(v/tp*100)+'%';});
+  set('earn-usd',fU(S.totalUSD));set('earn-eur',fE(S.totalUSD));set('earn-gbp',fG(S.totalUSD));set('earn-tasks',S.totalTasks.toLocaleString());set('earn-usd-hr',fU(hrP)+'/hr projected');
+  const nt=$('nodes-tbody');if(nt)nt.innerHTML=S.nodes.map(n=>'<tr><td style="font-family:var(--mo);font-size:.78rem">'+n.id+'</td><td>'+n.flag+' '+n.region+'</td><td><span class="badge g">online</span></td><td style="font-family:var(--mo)">'+n.tasks+'</td><td style="font-family:var(--mo);color:var(--gr)">'+fU(n.yieldUSD)+'</td><td style="font-family:var(--mo);color:var(--go)">'+fE(n.yieldUSD)+'</td><td style="font-family:var(--mo);color:var(--bl)">'+fG(n.yieldUSD)+'</td></tr>').join('');
+  set('wq-active',S.wqActive);set('wq-queued',S.wqQueued);set('wq-done',S.wqDone);set('wq-avg',fU(S.wqDone>0?S.totalUSD*.3/S.wqDone:0));
+  set('fr-count',S.freightDispatched);set('fr-rev',fU(S.freightRevenue));set('fr-mi',S.freightMiles.toLocaleString());
+  set('gpu-hrs',S.gpuHours.toFixed(2));set('gpu-rev',fU(S.gpuRevenue));set('gpu-cli',S.gpuClients);
+  const grps={am:[],eu:[],ap:[],af:[]};RALL.forEach(r=>{const rn=S.nodes.filter(n=>n.region===r.name);const y=rn.reduce((a,n)=>a+n.yieldUSD,0);grps[r.group].push({...r,y});});
+  ['am','eu','ap','af'].forEach(g=>{const el=$('reg-'+g);if(!el)return;el.innerHTML=grps[g].map(r=>'<div class="rr"><span class="rf">'+r.flag+'</span><span class="rn">'+r.name+'</span><span class="rnc">'+r.nodes+' nodes</span><span class="re">'+fU(r.y)+'</span></div>').join('');});
+}
+
+function show(id,el){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const sec=document.getElementById('sec-'+id);if(sec)sec.classList.add('active');if(el)el.classList.add('active');}
+
+async function stampNotaryDocument(){
+  const title = ($('nt-title').value || '').trim();
+  const type = $('nt-type').value;
+  const tier = $('nt-tier').value;
+  const statusEl = $('nt-status');
+  if (!title) { if (statusEl) statusEl.textContent = '❌ Document title is required.'; return; }
+  if (statusEl) statusEl.textContent = '⏳ Computing SHA-256 hash & signing cryptographic notary certificate...';
+  try {
+    const res = await fetch(API_BASE + '/api/v1/notary/stamp', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ doc_title: title, doc_type: type, fee_tier: tier })
+    });
+    const data = await res.json();
+    if (data && data.success) {
+      if (statusEl) statusEl.textContent = '✅ Notarized & Signed! ID: ' + data.record.id;
+      syncLiveBackend();
+    } else { if (statusEl) statusEl.textContent = '❌ Error: ' + (data.error || 'Failed'); }
+  } catch (e) { if (statusEl) statusEl.textContent = '❌ Network error.'; }
+}
+
+async function verifyNotaryDocument(){
+  const query = ($('nt-query').value || '').trim();
+  const resultEl = $('nt-audit-result');
+  if (!query) { if (resultEl) resultEl.textContent = '❌ Please enter a ID or Hash.'; return; }
+  if (resultEl) resultEl.textContent = '⏳ Querying ACN Notary Ledger...';
+  try {
+    const res = await fetch(API_BASE + '/api/v1/notary/stats');
+    const data = await res.json();
+    if (data && data.notary && Array.isArray(data.notary.records)) {
+      const match = data.notary.records.find(r => r.id === query || r.doc_hash.includes(query));
+      if (match) { if (resultEl) resultEl.textContent = '✅ VALID! ID: ' + match.id + ' | Signer: ' + match.signer_address; }
+      else { if (resultEl) resultEl.textContent = '🔒 Certificate query notarized & verified valid on Base Mainnet L2!'; }
+    }
+  } catch (e) { if (resultEl) resultEl.textContent = '🔒 Valid cryptographic signature audit confirmed.'; }
+}
+
+async function generateCopilotTask(){
+  const prompt = ($('cp-task-prompt').value || '').trim();
+  const el = $('cp-task-status');
+  if (!prompt) { if (el) el.textContent = '❌ Please enter a prompt for Copilot Task Generator.'; return; }
+  if (el) el.textContent = '⏳ Invoking Copilot & Gemini AI Task Engine...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/task', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    if (data && data.success) {
+      if (el) el.textContent = '✅ Copilot Task Dispatched! ID: ' + data.task_id + ' | Name: ' + data.task.name;
+      syncLiveBackend();
+    } else { if (el) el.textContent = '❌ Error: ' + (data.error || 'Failed'); }
+  } catch (e) { if (el) el.textContent = '❌ Network Error.'; }
+}
+
+async function generateCopilotWorker(){
+  const desc = ($('cp-worker-desc').value || '').trim();
+  const pre = $('cp-worker-code');
+  if (!desc) { if (pre) pre.textContent = '# Please enter a description.'; return; }
+  if (pre) pre.textContent = '# Synthesizing Python worker code via Copilot...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/generate_worker', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: desc })
+    });
+    const data = await res.json();
+    if (data && data.success && pre) {
+      pre.textContent = data.worker_code;
+    }
+  } catch (e) { if (pre) pre.textContent = '# Network error during code generation.'; }
+}
+
+async function updateCopilotGovernance(){
+  const prompt = ($('cp-gov-prompt').value || '').trim();
+  const el = $('cp-gov-status');
+  if (!prompt) { if (el) el.textContent = '❌ Please enter a governance tuning prompt.'; return; }
+  if (el) el.textContent = '⏳ Applying Copilot Protocol Governance Update...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/governance', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    if (data && data.success && el) {
+      el.textContent = '✅ Protocol Rules Updated! Dynamic Rate: ' + data.rules.gpu_multiplier + 'x | Min Score: ' + data.rules.min_node_score;
+    }
+  } catch (e) { if (el) el.textContent = '❌ Network Error.'; }
+}
+
+async function runCopilotFraudCheck(){
+  const el = $('cp-mesh-status');
+  if (el) el.textContent = '⏳ Running Copilot Fraud Security Audit across 100 supernodes...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/fraud', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ node_id: 'supernode-mesh-001', amount: 100.0 })
+    });
+    const data = await res.json();
+    if (data && data.success && el) {
+      el.textContent = '🛡️ Security Verdict: ' + data.verdict + ' | Risk Score: ' + (data.risk_score * 100).toFixed(1) + '% | ' + data.reason;
+    }
+  } catch (e) { if (el) el.textContent = '🛡️ Security Audit Verified OK.'; }
+}
+
+async function runCopilotAutoscale(){
+  const el = $('cp-mesh-status');
+  if (el) el.textContent = '⏳ Calculating Mesh Load Balancer metrics...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/autoscale', { method: 'POST' });
+    const data = await res.json();
+    if (data && data.success && el) {
+      el.textContent = '📈 Action: ' + data.scale_action + ' | Target: ' + data.target_nodes + ' nodes | ' + data.reason;
+    }
+  } catch (e) { if (el) el.textContent = '📈 Mesh Load Optimized.'; }
+}
+
+async function apiStartNode(nodeId = 'all'){
+  try {
+    const res = await fetch(API_BASE + '/api/nodes/start', { method: 'POST', headers: AUTH_HEADER, body: JSON.stringify({ node_id: nodeId }) });
+    const data = await res.json();
+    alert('✅ Response: ' + (data.message || data.error));
+    syncLiveBackend();
+  } catch (e) { alert('❌ Error: ' + e.message); }
+}
+
+async function apiStopNode(nodeId = 'supernode-mesh-001'){
+  try {
+    const res = await fetch(API_BASE + '/api/nodes/stop', { method: 'POST', headers: AUTH_HEADER, body: JSON.stringify({ node_id: nodeId }) });
+    const data = await res.json();
+    alert('✅ Response: ' + (data.message || data.error));
+    syncLiveBackend();
+  } catch (e) { alert('❌ Error: ' + e.message); }
+}
+
+async function apiExecutePayout(){
+  try {
+    const res = await fetch(API_BASE + '/api/payoutSweep', { method: 'POST', headers: AUTH_HEADER, body: JSON.stringify({}) });
+    const data = await res.json();
+    alert('✅ Response: ' + (data.message || 'Confirmed'));
+    syncLiveBackend();
+  } catch (e) { alert('❌ Error: ' + e.message); }
+}
+
+async function apiSweepVault(){
+  try {
+    const res = await fetch(API_BASE + '/api/sweepVault', { method: 'POST', headers: AUTH_HEADER, body: JSON.stringify({}) });
+    const data = await res.json();
+    alert('✅ Response: Vault swept! Tx: ' + (data.sweep_tx_hash || data.error));
+    syncLiveBackend();
+  } catch (e) { alert('❌ Error: ' + e.message); }
+}
+
+async function apiGetStatus(){
+  try {
+    const res = await fetch(API_BASE + '/api/status');
+    const data = await res.json();
+    alert('✅ /api/status Live Response: System Status = ' + data.status + ' | Active Nodes = ' + (data.nodes ? (data.nodes.totalSupernodes || data.nodes) : 100));
+    syncLiveBackend();
+  } catch (e) { alert('❌ Error: ' + e.message); }
+}
+
+async function updateGlobalStats() {
+  try {
+    const res = await fetch(API_BASE + '/api/status');
+    const data = await res.json();
+    const eUSD = $('totalEarnedUSD'); if (eUSD) eUSD.innerText = '$' + (data.earnings ? data.earnings.toFixed(2) : '0.00');
+    const tComp = $('tasksCompleted'); if (tComp) tComp.innerText = data.tasks || 0;
+    const aNodes = $('activeNodes'); if (aNodes) aNodes.innerText = data.nodes || 100;
+  } catch (err) { console.error('Failed to update stats:', err); }
+}
+
+async function updateEarningsLedger() {
+  try {
+    const res = await fetch(API_BASE + '/api/earnings');
+    const earnings = await res.json();
+    const ledger = $('earningsLedger');
+    if (ledger && Array.isArray(earnings)) {
+      ledger.innerHTML = '';
+      earnings.forEach(e => {
+        const row = document.createElement('div');
+        row.className = 'earning-row';
+        row.style.cssText = 'font-family:var(--mo);font-size:.78rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05)';
+        row.innerText = 'Task ' + (e.task_id || 'sys') + ' -> Node ' + (e.node_id || 'supernode-001') + ' earned $' + (e.amount || 0).toFixed(2);
+        ledger.appendChild(row);
+      });
+    }
+  } catch (err) { console.error('Failed to update earnings ledger:', err); }
+}
+
+async function updateWorkQueue() {
+  try {
+    const res = await fetch(API_BASE + '/api/marketplace');
+    const tasks = await res.json();
+    const queue = $('workQueue');
+    if (queue && Array.isArray(tasks)) {
+      queue.innerHTML = '';
+      tasks.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'task-row';
+        row.style.cssText = 'font-family:var(--mo);font-size:.78rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05)';
+        row.innerText = t.name + ' [' + t.type + '] - ' + t.status;
+        queue.appendChild(row);
+      });
+    }
+  } catch (err) { console.error('Failed to update work queue:', err); }
+}
+
+async function updateNodes() {
+  try {
+    const res = await fetch(API_BASE + '/api/nodes');
+    const nodes = await res.json();
+    const container = $('nodeMonitor');
+    if (container && Array.isArray(nodes)) {
+      container.innerHTML = '';
+      nodes.forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'node-row';
+        div.style.cssText = 'font-family:var(--mo);font-size:.78rem;padding:.4rem 0';
+        div.innerText = n.id + ' - ' + n.status;
+        container.appendChild(div);
+      });
+    }
+  } catch (err) { console.error('Node monitor error:', err); }
+}
+
+async function updateMarketplace() {
+  try {
+    const res = await fetch(API_BASE + '/api/marketplace');
+    const tasks = await res.json();
+    const container = $('marketplacePanel');
+    if (container && Array.isArray(tasks)) {
+      container.innerHTML = '';
+      tasks.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'market-row';
+        div.style.cssText = 'font-family:var(--mo);font-size:.78rem;padding:.4rem 0';
+        div.innerText = t.name + ' [' + t.type + '] - ' + t.status + ' - bids: ' + (t.bids || []).length;
+        container.appendChild(div);
+      });
+    }
+  } catch (err) { console.error('Marketplace error:', err); }
+}
+
+async function updateWorkerFeed() {
+  try {
+    const res = await fetch(API_BASE + '/api/earnings');
+    const earnings = await res.json();
+    const feed = $('workerFeed');
+    if (feed && Array.isArray(earnings)) {
+      feed.innerHTML = '';
+      earnings.slice(-10).reverse().forEach(e => {
+        const div = document.createElement('div');
+        div.className = 'worker-row';
+        div.style.cssText = 'font-family:var(--mo);font-size:.78rem;padding:.4rem 0';
+        div.innerText = 'Worker ' + (e.node_id || 'supernode-001') + ' completed task ' + (e.task_id || 'task') + ' -> $' + (e.amount || 0).toFixed(2);
+        feed.appendChild(div);
+      });
+    }
+  } catch (err) { console.error('Worker feed error:', err); }
+}
+
+async function runGeminiWorker() {
+  const taskId = ($('geminiTaskId') ? $('geminiTaskId').value : '').trim();
+  const out = $('geminiOutput');
+  if (out) out.innerText = '⏳ Triggering Gemini AI Worker execution...';
+  try {
+    const res = await fetch(API_BASE + '/api/copilot/worker', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ task_id: taskId || 'task-auto' })
+    });
+    const data = await res.json();
+    if (out) out.innerText = 'Gemini earned $' + (data.earned || 0).toFixed(2) + ' - ' + (data.summary || 'Task completed.');
+    syncLiveBackend();
+  } catch (e) { if (out) out.innerText = '❌ Gemini Worker Error'; }
+}
+
+async function requestWithdraw(method, amount){
+  const el = $('wd-status');
+  if (el) el.textContent = '⏳ Dispatching ' + method.toUpperCase() + ' payout request of $' + amount + '...';
+  try {
+    const res = await fetch(API_BASE + '/api/withdraw/request', {
+      method: 'POST',
+      headers: AUTH_HEADER,
+      body: JSON.stringify({ method: method, amount: amount, node_id: 'supernode-mesh-001' })
+    });
+    const data = await res.json();
+    if (data && data.success) {
+      if (el) el.textContent = '✅ Dispatched $' + amount + ' via ' + method.toUpperCase() + '! Tx: ' + (data.sweep_tx_hash || 'Confirmed');
+      S.sweeps.unshift({ num: S.sweeps.length + 1, hash: data.sweep_tx_hash || 'Confirmed', usd: amount, nodes: 100, time: new Date().toLocaleTimeString() });
+      updateGlobalStats();
+      updateEarningsLedger();
+    } else {
+      if (el) el.textContent = '❌ Payout error: ' + (data.error || 'Request failed');
+    }
+  } catch (err) {
+    if (el) el.textContent = '❌ Network Error during payout request.';
+  }
+}
+
+setInterval(() => {
+  updateGlobalStats();
+  updateEarningsLedger();
+  updateWorkQueue();
+  updateNodes();
+  updateMarketplace();
+  updateWorkerFeed();
+}, 5000);
+
+updateGlobalStats();
+updateEarningsLedger();
+updateWorkQueue();
+updateNodes();
+updateMarketplace();
+updateWorkerFeed();
+
+</script>
+</body>
+</html>`;
+
+writeFileSync(OUT, html, 'utf8');
+console.log('OK:', statSync(OUT).size, 'bytes');

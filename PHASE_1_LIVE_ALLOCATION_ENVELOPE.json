@@ -1,0 +1,30 @@
+{
+  "protocol": "Bartholomew Trust Protocol (BTP v0.1)",
+  "request_type": "BTP_RESOURCE_CAPITAL_ALLOCATION_REQUEST",
+  "human_gate_decision": "APPROVED_OPTION_B",
+  "timestamp": "2026-08-13T02:11:37.006350+00:00",
+  "agent_did": "did:bth:autonomous_operator_01",
+  "financial_terms": {
+    "allocated_capital_usd": "$10.00",
+    "maximum_downside_risk_usd": "$10.00",
+    "fee_protection_status": "FEE_PROTECTED",
+    "fee_percentage": "1.00%",
+    "target_vendor": "Telemetry & Market Data API Provider",
+    "purpose": "Acquire high-throughput API access token to unlock live subscriber aggregator pipeline on acn-26670.web.app",
+    "expected_gross_revenue_usd": "$38.00",
+    "expected_net_proceeds_usd": "$28.00",
+    "gross_revenue_multiple": "3.80x",
+    "net_proceeds_multiple": "2.80x"
+  },
+  "safety_guarantees": [
+    "Single-use hard limit ($10.00 max). Zero access to bank accounts.",
+    "Zero recurring subscriptions or auto-renewals.",
+    "External Settlement Rule: Net proceeds ($28.00) locked until Stripe/Bank TX clears externally.",
+    "Auto-Rollback: If 0 external transactions clear within 48h, auto-revoke access key."
+  ],
+  "funding_input_instructions": {
+    "recommended_method": "Single-Use Virtual Card (Privacy.com / Stripe) with hard $10.00 limit",
+    "alternative_method_1": "10 USDC to pre-funded sub-wallet",
+    "alternative_method_2": "Pre-funded $10 API credit key"
+  }
+}

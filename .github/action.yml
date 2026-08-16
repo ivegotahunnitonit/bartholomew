@@ -1,0 +1,51 @@
+name: 'Bartholomew AI Agent Security & Trajectory Auditor'
+description: 'Sub-millisecond OWASP LLM Top 10 security audit, AST taint analysis, and sovereign memory guard for AI agents.'
+author: 'Itsub Solomon Alemayehu <itsub@bartholomew.info>'
+branding:
+  icon: 'shield'
+  color: 'green'
+
+inputs:
+  secret-key:
+    description: 'Bartholomew signing secret key for SHA-256 attestation'
+    required: false
+    default: 'bartholomew-github-action-secret'
+  fail-on-violation:
+    description: 'Fail CI build if high-severity OWASP LLM violation or credential leak is detected'
+    required: false
+    default: 'true'
+  scan-path:
+    description: 'Path to Python/JavaScript codebase or trajectory files to audit'
+    required: false
+    default: '.'
+
+outputs:
+  audit-status:
+    description: 'SOC2 compliance status (SOC2_PASSED / CRITICAL_VIOLATION)'
+  attestation-hash:
+    description: 'SHA-256 chained audit attestation hash'
+  total-violations:
+    description: 'Total OWASP violations detected'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Bartholomew PyPI Package
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        if [ -d "pypi_package" ]; then
+          python -m pip install -e ./pypi_package
+        else
+          python -m pip install bartholomew-eval
+        fi
+
+    - name: Run Bartholomew Security & Trajectory Audit
+      shell: bash
+      run: |
+        python -m bartholomew_eval.cli --scan-path "${{ inputs.scan-path }}" --secret-key "${{ inputs.secret-key }}"

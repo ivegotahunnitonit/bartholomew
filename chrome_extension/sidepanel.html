@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bartholomew AI Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+
+  <div class="sidepanel-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-circle">⚡</div>
+        <div>
+          <h2>Bartholomew</h2>
+          <span class="version-tag">Autonomous Copilot</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="server-status" id="server-status" title="Local Server Status">
+          <span class="status-dot online"></span>
+          <span class="status-text">Connected</span>
+        </div>
+        <button class="icon-btn" id="settings-toggle-btn" title="Model & API Key Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settings-modal" style="display: none;">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h3>⚙️ AI Provider Settings</h3>
+          <span class="close-settings" id="close-settings-btn">×</span>
+        </div>
+        <div class="settings-body">
+          <div class="form-group">
+            <label for="ai-provider-select">AI Provider:</label>
+            <select id="ai-provider-select">
+              <option value="gemini" selected>Google Gemini (Recommended / Free)</option>
+              <option value="ollama">Local Ollama (Offline / localhost:11434)</option>
+              <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
+              <option value="local">Bartholomew Autonomous Engine (Built-in)</option>
+            </select>
+          </div>
+          <div class="form-group" id="api-key-group">
+            <label for="api-key-input">API Key:</label>
+            <input type="password" id="api-key-input" placeholder="AIzaSy... or sk-...">
+            <small>Stored locally in your browser only. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent-cyan)">Get free Gemini key →</a></small>
+          </div>
+          <div class="form-group" id="model-select-group">
+            <label for="model-name-input">Model Name:</label>
+            <input type="text" id="model-name-input" value="gemini-2.0-flash">
+          </div>
+          <button class="save-settings-btn" id="save-settings-btn">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <nav class="mode-tabs">
+      <button class="tab-btn active" data-mode="ci-rescue">⚡ CI Rescue</button>
+      <button class="tab-btn" data-mode="code-audit">🔍 Audit & Refactor</button>
+      <button class="tab-btn" data-mode="assistant">💬 Chat</button>
+    </nav>
+
+    <!-- Context Bar (shows active repo/page) -->
+    <div class="context-bar" id="context-bar">
+      <span class="context-icon">🌐</span>
+      <span class="context-text" id="active-tab-title">Inspecting Active GitHub Tab...</span>
+    </div>
+
+    <!-- Main Message / Output Area -->
+    <main class="chat-area" id="chat-messages">
+      <!-- Welcome Message -->
+      <div class="message system-msg">
+        <div class="avatar">⚡</div>
+        <div class="msg-body">
+          <p><strong>Hello! I am Bartholomew.</strong></p>
+          <p>I'm your autonomous developer companion. When you encounter a failing CI run, broken test, or complex code on GitHub, I can:</p>
+          <ul>
+            <li>Synthesize standalone reproduction tests</li>
+            <li>Diagnose async leaks, mock collisions & AST bugs</li>
+            <li>Generate verified passing pull request diffs</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <!-- Quick Action Pills -->
+    <div class="quick-pills">
+      <button class="pill" id="pill-diagnose">🔍 Diagnose Failing CI</button>
+      <button class="pill" id="pill-repro">🧪 Generate Reproducer</button>
+      <button class="pill" id="pill-refactor">🛠️ Refactor Code</button>
+    </div>
+
+    <!-- Input Bar -->
+    <footer class="input-container">
+      <div class="input-wrap">
+        <textarea id="user-input" placeholder="Ask Bartholomew or paste an error log..." rows="1"></textarea>
+        <button id="send-btn" title="Send (Enter)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

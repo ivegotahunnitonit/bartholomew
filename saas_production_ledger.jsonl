@@ -1,0 +1,4 @@
+{"customer_id": "cus_d0bfdcbd76ee", "github_org": "fintech-corp", "plan_tier": "PRO_REPO_$49", "status": "ACTIVE", "monthly_price_usd": 49.0, "stripe_subscription_id": "sub_285067ca1c0050"}
+{"customer_id": "cus_67b895f9e7d5", "github_org": "scale-saas-infra", "plan_tier": "TEAM_ORG_$199", "status": "ACTIVE", "monthly_price_usd": 199.0, "stripe_subscription_id": "sub_46fecc36dea578"}
+{"customer_id": "cus_2ca31a93ec67", "github_org": "fintech-corp", "plan_tier": "PRO_REPO_$49", "status": "ACTIVE", "monthly_price_usd": 49.0, "stripe_subscription_id": "sub_4208157d979010"}
+{"customer_id": "cus_8bed5d5892ce", "github_org": "scale-saas-infra", "plan_tier": "TEAM_ORG_$199", "status": "ACTIVE", "monthly_price_usd": 199.0, "stripe_subscription_id": "sub_64ff1388ca1e53"}

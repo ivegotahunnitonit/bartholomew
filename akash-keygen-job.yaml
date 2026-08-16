@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: akash-keygen
+  namespace: akash-services
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: keygen
+        image: ghcr.io/akash-network/provider:0.16.0
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          HOME_DIR=/tmp/akash-keys
+          mkdir -p $HOME_DIR
+          provider-services keys add provider \
+            --home=$HOME_DIR \
+            --keyring-backend=test \
+            --output=json 2>&1
+          echo "---ADDRESS---"
+          provider-services keys show provider -a \
+            --home=$HOME_DIR \
+            --keyring-backend=test
+          echo "---EXPORT---"
+          echo "providerpass" | provider-services keys export provider \
+            --home=$HOME_DIR \
+            --keyring-backend=test 2>&1
+          echo "---DONE---"

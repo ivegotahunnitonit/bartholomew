@@ -1,0 +1,51 @@
+appVersion: "0.1.0"
+
+deploymentEnv: staging
+chain: sandbox
+
+replicas: 1
+
+otel:
+  enabled: true
+
+service:
+  type: ClusterIP  # or NodePort
+# When type is NodePort, optionally pin the node port (30000-32767).
+# Omit to let Kubernetes auto-assign one.
+# nodePort: 30123
+
+resources:
+  limits:
+    cpu: 1
+    ephemeral-storage: 200Mi
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    ephemeral-storage: 100Mi
+    memory: 512Mi
+
+providersSync:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1
+      ephemeral-storage: 200Mi
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      ephemeral-storage: 100Mi
+      memory: 256Mi
+
+migrations:
+  command: ["npm", "run", "migration:exec"]
+  backoffLimit: 1
+  # dopplerConfig: ""  # defaults to "{Release.Namespace}-migrations"
+  resources:
+    limits:
+      cpu: 200m
+      ephemeral-storage: 100Mi
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      ephemeral-storage: 50Mi
+      memory: 100Mi

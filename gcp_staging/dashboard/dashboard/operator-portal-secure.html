@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bartholomew — Autonomous Circularity Network</title>
+  <meta name="description" content="Bartholomew ACN Node — manage circular economy listings, matches, wallet settlements, and cognitive agents.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- LEFT SIDEBAR NAV                                               -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Bartholomew B monogram -->
+        <rect x="4" y="3" width="2" height="18" rx="1"/>
+        <path d="M6 3 h6 a4 4 0 0 1 0 8 H6"/>
+        <path d="M6 11 h7 a4 4 0 0 1 0 8 H6"/>
+      </svg>
+      <div>
+        <div class="sidebar-logo-title">Bartholomew</div>
+        <div class="sidebar-logo-sub">ACN Node v1.0</div>
+      </div>
+    </div>
+
+    <div class="sidebar-status">
+      <span class="status-dot"></span>
+      <span class="sidebar-node-id" id="sidebar-node-id">CONNECTING...</span>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="#dashboard"   class="nav-link active" data-page="dashboard"   id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Circularity Command
+      </a></li>
+      <li><a href="#marketplace" class="nav-link" data-page="marketplace" id="nav-marketplace">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Resource Marketplace
+      </a></li>
+      <li><a href="#matches"     class="nav-link" data-page="matches"     id="nav-matches">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Circular Matches
+        <span class="nav-badge" id="nav-matches-badge" style="display:none;">0</span>
+      </a></li>
+      <li><a href="#wallet"      class="nav-link" data-page="wallet"      id="nav-wallet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
+        Bartholomew Treasury
+      </a></li>
+      <li><a href="#network"     class="nav-link" data-page="network"     id="nav-network">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="20" r="2"/></svg>
+        P2P Peering Hub
+      </a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-stat">
+        <span class="sf-label">Earnings</span>
+        <span class="sf-value" id="sf-earnings">$0.00</span>
+      </div>
+      <div class="sidebar-stat">
+        <span class="sf-label">Savings</span>
+        <span class="sf-value" id="sf-savings">$0.00</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- MAIN CONTENT AREA                                              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h2 class="page-title" id="page-title">Command Center</h2>
+        <span class="page-breadcrumb" id="page-breadcrumb">ACN / Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-stat">
+          <span class="ts-label">Listings</span>
+          <span class="ts-val" id="stat-listings">0</span>
+        </div>
+        <div class="topbar-stat">
+          <span class="ts-label">Pending</span>
+          <span class="ts-val" id="stat-pending-earnings">$0.00</span>
+        </div>
+        <div class="node-status-pill">
+          <span class="status-dot"></span>
+          <span id="header-node-id">CONNECTING...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─────────────────────────────────── PAGE: COMMAND CENTER ─── -->
+    <section class="page active" id="page-dashboard">
+      <!-- Stats Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Earnings</span>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="stat-value" id="stat-earnings">$0.00</div>
+          <div class="stat-sub">Confirmed settlements</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Resource Savings</span>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="stat-value" id="stat-savings">$0.00</div>
+          <div class="stat-sub">Circular economy value</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Active Matches</span>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </div>
+          <div class="stat-value" id="stat-matches">0</div>
+          <div class="stat-sub">Proposed &amp; awaiting settlement</div>
+        </div>
+      </div>
+
+      <!-- Quick-action row -->
+      <div class="quick-actions">
+        <button class="btn btn-secondary" onclick="navigateTo('wallet')">Open Ledger</button>
+      </div>
+
+      <!-- Node Configuration -->
+      <div class="panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <h2>Node Operational Control</h2>
+          <span class="badge">Active</span>
+        </div>
+        <div class="panel-content" style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+          <div class="form-group" style="margin:0;">
+            <label for="intake-mode" style="display:block; font-size:0.8rem; color:var(--text-muted); margin-bottom:0.5rem;">Marketplace Intake Mode</label>
+            <select id="intake-mode" onchange="saveIntakeMode()" style="width:100%;">
+              <option value="manual">Manual Approval (Strict)</option>
+              <option value="hybrid">Hybrid (Auto-Scout opportunities)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <label style="display:block; font-size:0.8rem; color:var(--text-muted); margin-bottom:0.25rem;">Auto-Settle Matches</label>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin:0;">Automatically execute payout settlement upon accepting matches.</p>
+            </div>
+            <label class="paypal-toggle" style="margin-left:1rem;">
+              <input type="checkbox" id="paypal-auto-settle" onchange="toggleAutoSettle()" aria-label="Auto-Settle on Match">
+              <span class="paypal-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Credentials & Billing Gating -->
+      <div class="panel" style="margin-bottom:1.5rem; display:none;">
+        <div class="panel-header">
+          <h2>Bartholomew API Access Gate</h2>
+          <span class="badge" id="api-keys-badge">0 Keys</span>
+        </div>
+        <div class="panel-content">
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+            Generate cryptographic API keys for external startups or client applications querying Bartholomew pricing trend intelligence.
+          </p>
+          <div style="display:flex; gap:1rem; margin-bottom:1.25rem;">
+            <input type="text" id="api-key-label" placeholder="Enter key description (e.g. Acme Corp)" style="flex:1; padding:0.5rem; font-size:0.85rem; background:rgba(0,0,0,0.2); border:1px solid var(--panel-border); border-radius:4px; color:white;">
+            <button class="btn btn-primary" onclick="generateApiKey()">Generate Key</button>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--panel-border); text-align:left; color:var(--text-muted);">
+                <th style="padding:8px 10px;">Label</th>
+                <th style="padding:8px 10px;">API Key</th>
+                <th style="padding:8px 10px;">Created</th>
+                <th style="padding:8px 10px;">Queries</th>
+                <th style="padding:8px 10px; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="api-keys-table-body">
+              <tr>
+                <td colspan="5" style="padding:12px 10px; text-align:center; color:var(--text-muted);">No active API credentials found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Network Traffic Monitor -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Network Health</h2>
+          <span class="badge">Live</span>
+        </div>
+        <div class="panel-content">
+          <div class="network-traffic-monitor">
+            <div><span class="traffic-light green"></span> gossip route alpha-beta: online</div>
+            <div><span class="traffic-light green"></span> gossip route alpha-gamma: online</div>
+            <div><span class="traffic-light green"></span> gossip route gamma-delta: online</div>
+            <!-- Solana RPC archived/disabled -->
+            <div><span class="traffic-light green"></span> blockchain rpc: Base L2 reachable</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ─────────────────────────────────── PAGE: MARKETPLACE ─── -->
+    <section class="page" id="page-marketplace">
+      <div class="workspace-layout">
+        <!-- Listings Table -->
+        <div class="primary-column">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Active Listings</h2>
+              <span class="badge" id="listings-badge">0</span>
+            </div>
+            <div class="panel-content">
+              <div class="listings-table-container">
+                <table class="data-table" id="listings-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Resource</th>
+                      <th>Qty</th>
+                      <th>Price/Unit</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="listings-tbody">
+                    <tr><td colspan="6" class="text-center"><div class="empty-state">No listings yet.</div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post Listing Form -->
+        <div class="sidebar-column">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Post Listing</h2>
+            </div>
+            <div class="panel-content">
+              <form class="form-container" id="listing-form">
+                <div class="form-group">
+                  <label for="listing-type">Type</label>
+                  <select id="listing-type" name="type" required>
+                    <option value="waste">Waste (Have)</option>
+                    <option value="need">Need (Want)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="listing-resource">Resource Name</label>
+                  <input type="text" id="listing-resource" name="resource" placeholder="e.g. Spent Brewer Grain" required>
+                </div>
+                <div class="form-group-row">
+                  <div class="form-group">
+                    <label for="listing-quantity">Quantity</label>
+                    <input type="number" id="listing-quantity" name="quantity" placeholder="500" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="listing-unit">Unit</label>
+                    <input type="text" id="listing-unit" name="unit" placeholder="kg" required>
+                  </div>
+                </div>
+                 <div class="form-group">
+                   <label for="listing-price">Price per Unit (USD)</label>
+                   <input type="number" id="listing-price" name="price" step="0.01" placeholder="0.10" required>
+                   <div id="pricing-recommendation" style="font-size: 0.8rem; margin-top: 0.4rem; line-height: 1.4; display: none;"></div>
+                 </div>
+                <div class="form-group">
+                  <label>Coordinates</label>
+                  <div class="coords-row">
+                    <input type="number" id="listing-lat" name="lat" placeholder="Latitude" step="0.0001" required>
+                    <input type="number" id="listing-lng" name="lng" placeholder="Longitude" step="0.0001" required>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-secondary w-full" id="btn-fill-loc" style="margin-top:0.5rem;">Use Node Location</button>
+                </div>
+                <button type="submit" class="btn btn-success w-full">Submit Listing</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PAGE: MATCHES -->
+    <section class="page" id="page-matches">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Circular Matches &amp; Discovery Receipts</h2>
+          <div class="tab-bar">
+            <button class="tab-btn active" id="match-tab-matches" onclick="switchMatchTab('matches', this)">Proposed Matches</button>
+            <button class="tab-btn" id="match-tab-receipts" onclick="switchMatchTab('receipts', this)">Source Receipts</button>
+          </div>
+        </div>
+        <div class="panel-content scrollable" id="matches-container" style="display:block;">
+          <div class="empty-state">No matching opportunities found yet.</div>
+        </div>
+        <div class="panel-content scrollable" id="receipts-container" style="display:none;">
+          <div class="empty-state">No discovery receipts yet. Scout cycles every 45s.</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ────────────────────────────── PAGE: TREASURY & LEDGER ─── -->
+    <section class="page" id="page-wallet">
+      <div class="paypal-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+        
+        <!-- Column 1: Wallets & Balances -->
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+          <div class="paypal-card paypal-card-balance" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
+              Treasury Balance Sheet
+            </div>
+            <div class="paypal-balance-list">
+              <div class="paypal-balance-item">
+                <span class="paypal-balance-label">⚡ Lightning (BOLT11)</span>
+                <span class="paypal-balance-value" id="pp-bal-lightning">$0.00</span>
+              </div>
+              <div class="paypal-balance-item">
+                <span class="paypal-balance-label">🛡 Base USDC (Layer 2)</span>
+                <span class="paypal-balance-value" id="pp-bal-base">$0.00</span>
+              </div>
+              <div class="paypal-balance-item">
+                <span class="paypal-balance-label">₿ Bitcoin (SegWit)</span>
+                <span class="paypal-balance-value" id="pp-bal-bitcoin">$0.00</span>
+              </div>
+              <div class="paypal-balance-item">
+                <span class="paypal-balance-label"> PayPal Balance</span>
+                <span class="paypal-balance-value" id="pp-bal-paypal">$0.00</span>
+              </div>
+              <div class="paypal-balance-divider"></div>
+              <div class="paypal-balance-item paypal-balance-total">
+                <span class="paypal-balance-label">Total Liquid Capital</span>
+                <span class="paypal-balance-value" id="pp-bal-total">$0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wallet Addresses Card -->
+          <div class="paypal-card" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Deposit Credentials
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+              <div>
+                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;">⚡ Lightning Invoice Address</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:6px; padding:0.4rem 0.6rem;">
+                  <span id="wallet-addr-lightning" style="font-family:var(--font-mono); font-size:0.75rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:80%;">loading...</span>
+                  <button class="btn btn-sm btn-secondary" onclick="copyToClipboard('wallet-addr-lightning')">Copy</button>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;">🛡 Base USDC Wallet</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:6px; padding:0.4rem 0.6rem;">
+                  <span id="wallet-addr-base" style="font-family:var(--font-mono); font-size:0.75rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:80%;">loading...</span>
+                  <button class="btn btn-sm btn-secondary" onclick="copyToClipboard('wallet-addr-base')">Copy</button>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;">₿ Bitcoin SegWit Deposit</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:6px; padding:0.4rem 0.6rem;">
+                  <span id="wallet-addr-bitcoin" style="font-family:var(--font-mono); font-size:0.75rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:80%;">loading...</span>
+                  <button class="btn btn-sm btn-secondary" onclick="copyToClipboard('wallet-addr-bitcoin')">Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <!-- Column 2: Withdrawal Actions & Sweeps -->
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+          <div class="paypal-card paypal-card-withdraw" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              Manual Withdrawal
+            </div>
+            <div class="paypal-form-group">
+              <label for="paypal-amount">Amount (USD)</label>
+              <div class="paypal-input-row">
+                <span class="paypal-currency-sign">$</span>
+                <input type="number" id="paypal-amount" placeholder="0.00" min="0.01" step="0.01">
+              </div>
+            </div>
+            <div class="paypal-form-group">
+              <label for="paypal-method">Withdrawal Method</label>
+              <select id="paypal-method">
+                <option value="paypal">PayPal</option>
+                <option value="electrum">Newton Wallet (Bitcoin)</option>
+              </select>
+            </div>
+            <button class="btn btn-paypal" id="btn-paypal-withdraw" onclick="handlePayPalWithdraw()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 21h2l1.5-7H15c3.5 0 5.5-2.5 6-5.5S19.5 3 16 3H9L7 21z"/></svg>
+              Withdraw Now
+            </button>
+            <div class="paypal-status" id="paypal-status"></div>
+          </div>
+
+          <!-- Auto-Withdraw Card -->
+          <div class="paypal-card paypal-card-auto" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Auto-Withdraw Settings
+            </div>
+            <p class="paypal-auto-desc">Automatically sweep confirmed balance to Newton BTC wallet when earnings exceed the threshold.</p>
+            
+            <div class="paypal-toggle-row">
+              <span>Enable Auto-Withdraw</span>
+              <label class="paypal-toggle">
+                <input type="checkbox" id="auto-withdraw-enabled" onchange="saveAutoWithdrawSettings()" aria-label="Enable Auto-Withdraw">
+                <span class="paypal-toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="paypal-form-group" style="margin-top:1rem; text-align:left;">
+              <label for="auto-withdraw-method" style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Withdrawal Destination</label>
+              <select id="auto-withdraw-method" onchange="saveAutoWithdrawSettings()" aria-label="Auto-Withdraw Method">
+                <option value="electrum">Newton BTC Wallet</option>
+                <option value="paypal">PayPal Payout</option>
+              </select>
+            </div>
+
+            <div class="paypal-form-group" style="margin-top:0.75rem; text-align:left;">
+              <label for="auto-withdraw-threshold" style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Threshold (USD)</label>
+              <div class="paypal-input-row">
+                <span class="paypal-currency-sign" style="color:var(--text-muted); font-size:0.9rem;">$</span>
+                <input type="number" id="auto-withdraw-threshold" value="10.00" min="0.10" step="0.50" onchange="saveAutoWithdrawSettings()" style="width:100%;">
+              </div>
+            </div>
+            <div class="paypal-status" id="auto-withdraw-status"></div>
+          </div>
+
+          <!-- PayPal API Credentials Card -->
+          <div class="paypal-card" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              PayPal Payout Settings
+            </div>
+            <p class="paypal-auto-desc">Configure your PayPal API credentials to enable fiat withdrawals.</p>
+            
+            <div class="paypal-form-group" style="margin-top:0.75rem; text-align:left;">
+              <label for="paypal-me-link" style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">PayPal.me Link (Optional)</label>
+              <input type="text" id="paypal-me-link" placeholder="paypal.me/yourname" style="width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--panel-border); color:white; padding:0.4rem; border-radius:4px; font-size:0.8rem;">
+            </div>
+
+            <div class="paypal-form-group" style="margin-top:0.75rem; text-align:left;">
+              <label for="paypal-client-id" style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Client ID</label>
+              <input type="password" id="paypal-client-id" placeholder="Enter PayPal Client ID" style="width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--panel-border); color:white; padding:0.4rem; border-radius:4px; font-size:0.8rem;">
+            </div>
+
+            <div class="paypal-form-group" style="margin-top:0.75rem; text-align:left;">
+              <label for="paypal-client-secret" style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Client Secret</label>
+              <input type="password" id="paypal-client-secret" placeholder="Enter PayPal Client Secret" style="width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--panel-border); color:white; padding:0.4rem; border-radius:4px; font-size:0.8rem;">
+            </div>
+
+            <button class="btn btn-primary" onclick="savePayPalSettings()" style="margin-top:1rem; width:100%;">Save Credentials</button>
+            <div class="paypal-status" id="paypal-settings-status" style="margin-top:0.5rem;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Ledger & Withdrawal History -->
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem; margin-top:1.5rem;">
+        
+        <!-- Transaction Ledger -->
+        <div class="panel" style="margin:0;">
+          <div class="panel-header">
+            <h2>Settlement Ledger</h2>
+            <div class="tab-bar">
+              <button class="tab-btn active" onclick="switchLedgerTab('all', this)">All</button>
+              <button class="tab-btn" onclick="switchLedgerTab('confirmed', this)">Confirmed</button>
+              <button class="tab-btn" onclick="switchLedgerTab('pending', this)">Pending</button>
+              <button class="tab-btn" onclick="switchLedgerTab('failed', this)">Failed</button>
+            </div>
+          </div>
+          <div class="panel-content scrollable" id="transactions-container" style="max-height: 400px; overflow-y: auto;">
+            <div class="empty-state">No transactions recorded yet.</div>
+          </div>
+        </div>
+
+        <!-- Withdrawal History Panel -->
+        <div class="panel" style="margin:0;">
+          <div class="panel-header">
+            <h2>Withdrawals History</h2>
+            <span class="badge">Recent</span>
+          </div>
+          <div class="panel-content scrollable" id="paypal-history-container" style="max-height: 400px; overflow-y: auto;">
+            <div class="empty-state">No withdrawals recorded yet.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ────────────────────────────── PAGE: ORCHESTRATOR & MINERS ─── -->
+    <section class="page" id="page-orchestrator">
+      
+      <!-- Combined Mining & Cluster Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Cluster Sub-Nodes</span>
+            <span class="badge" style="background-color:#4299e1;" id="orchestrator-active-count">0 Nodes</span>
+          </div>
+          <div class="stat-value" id="orchestrator-nodes-count">0</div>
+          <div class="stat-sub">Sprouted active peer processes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Avg Peer Connections</span>
+            <span class="badge" style="background-color:#10b981;" id="miner-proxy-status">Supernode</span>
+          </div>
+          <div class="stat-value" id="orchestrator-avg-peers">0</div>
+          <div class="stat-sub">Active connections across cluster</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Facilitated Matches</span>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-value" id="orchestrator-total-matches">0</div>
+          <div class="stat-sub">Matches computed by cluster</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem; margin-top:1.5rem;">
+        
+        <!-- Governing Body Controller -->
+        <div class="panel" style="margin:0;">
+          <div class="panel-header">
+            <h2>Governing Cluster Controller</h2>
+            <div style="display:flex; gap:10px;">
+              <input type="number" id="spawn-port-input" placeholder="Port (e.g. 8081)" style="width:140px; background:#1a202c; border:1px solid #4a5568; color:white; border-radius:4px; padding:0 10px;" aria-label="Spawn Peer Node Port" />
+              <button class="btn btn-primary" onclick="handleSpawnSubNode()">+ Spawn Peer Node</button>
+            </div>
+          </div>
+          <div class="panel-content scrollable" style="max-height: 400px; overflow-y: auto;">
+            <table class="table" style="width:100%; border-collapse:collapse; margin-top:10px;">
+              <thead>
+                <tr style="text-align:left; color:#a0aec0; border-bottom:1px solid #2d3748;">
+                  <th style="padding:10px;">Node ID / PID</th>
+                  <th style="padding:10px;">Port</th>
+                  <th style="padding:10px;">Status</th>
+                  <th style="padding:10px;">Peers</th>
+                  <th style="padding:10px;">Listings</th>
+                  <th style="padding:10px;">Matches</th>
+                  <th style="padding:10px;">Uptime</th>
+                  <th style="padding:10px; text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cluster-nodes-tbody">
+                <tr>
+                  <td colspan="8" style="padding:20px; text-align:center; color:#718096;">No sub-nodes spawned yet. Enter a port and click Spawn Peer Node!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Hashing Proxy Outsourcing -->
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+          <div class="paypal-card" style="margin:0;">
+            <div class="paypal-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+              Stratum Proxy Server
+            </div>
+            <p style="margin-top:0.5rem; font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
+              Node A runs an active Stratum Proxy on port <strong id="miner-proxy-address">7914</strong>. External mobile or IoT mining hardware can connect directly to pool hashing power.
+            </p>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); padding:0.75rem; border-radius:6px; margin-top:0.75rem; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-main);">
+              <strong>Host:</strong> <code id="mining-ip-display">localhost</code><br>
+              <strong>Port:</strong> <code id="mining-port-display">7914</code><br>
+              <strong>Worker:</strong> <code>sleepywoody</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────── PAGE: P2P NETWORK ─── -->
+    <section class="page" id="page-network">
+      <div class="workspace-layout">
+        <div class="primary-column">
+          <!-- Gossip Console -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>P2P Peering Hub</h2>
+              <span class="badge">Live Feed</span>
+            </div>
+            <div class="panel-content">
+              <div class="console-container" id="console-container">
+                <div class="console-line">
+                  <span class="console-timestamp">[--:--:--]</span>
+                  <span class="console-category system">SYSTEM</span>
+                  <span class="console-message">P2P console initializing...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-column">
+          <!-- Peer Connections -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Connected Peers</h2>
+              <span class="badge" id="peers-badge">0</span>
+            </div>
+            <div class="panel-content">
+              <form class="peer-connect-row" id="peer-connect-form">
+                <input type="text" id="peer-url" placeholder="http://peer-node:8080" />
+                <button type="submit" class="btn btn-secondary">Connect</button>
+              </form>
+              <div class="peers-list" id="peers-container">
+                <div class="empty-state">No peers connected.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── PAGE: SETTINGS ─── -->
+    <section class="page" id="page-settings">
+      <div class="workspace-layout">
+        <div class="primary-column">
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Node Configuration</h2>
+            </div>
+            <div class="panel-content">
+              <table class="explorer-details-table">
+                <tr><td>Node ID</td><td id="settings-node-id">-</td></tr>
+                <tr><td>Port</td><td id="settings-port">-</td></tr>
+                <tr><td>Latitude</td><td id="settings-lat">-</td></tr>
+                <tr><td>Longitude</td><td id="settings-lng">-</td></tr>
+                <tr><td>Max Radius</td><td id="settings-radius">-</td></tr>
+                <tr><td>Fee Rate</td><td id="settings-fee">-</td></tr>
+                <tr><td>Auto-Accept</td><td id="settings-autoaccept">-</td></tr>
+                <tr><td>Auto-Accept Threshold</td><td id="settings-threshold">-</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:1.5rem;">
+            <div class="panel-header">
+              <h2>Opportunity Pipeline Config</h2>
+            </div>
+            <div class="panel-content">
+              <div class="form-group" style="margin-bottom:1rem;">
+                <label for="settings-intake-mode">Scout Intake Mode</label>
+                <select id="settings-intake-mode" class="form-select w-full" style="background:var(--panel-bg);color:var(--text-primary);border:1px solid var(--panel-border);padding:0.4rem;font-family:var(--font);margin-top:0.25rem;">
+                  <option value="autonomous">Autonomous (Unlimited Intake)</option>
+                  <option value="balanced">Balanced (Basic Filtering + Pacing)</option>
+                  <option value="hybrid">Hybrid Priority (ROI + Circularity Logic)</option>
+                </select>
+                <p style="font-size:0.65rem;color:var(--text-muted);margin-top:0.4rem;text-transform:uppercase;">
+                  Hybrid mode rejects low-ROI tasks and focuses compute power on sustainable, high-matching feedstocks.
+                </p>
+                <button class="btn btn-sm btn-primary" onclick="updateIntakeMode()" style="margin-top:0.5rem;">Apply Intake Settings</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:1.5rem;">
+            <div class="panel-header">
+              <h2>Node Operating Mode</h2>
+            </div>
+            <div class="panel-content">
+              <div class="form-group" style="margin-bottom:1rem;">
+                <label for="settings-network-mode">Operating Network Mode</label>
+                <select id="settings-network-mode" class="form-select w-full" style="background:var(--panel-bg);color:var(--text-primary);border:1px solid var(--panel-border);padding:0.4rem;font-family:var(--font);margin-top:0.25rem;">
+                  <option value="sandbox">Sandbox (Simulated Payouts)</option>
+                  <option value="mainnet" selected>Mainnet (Live On-Chain Mode)</option>
+                </select>
+                <p style="font-size:0.65rem;color:var(--text-muted);margin-top:0.4rem;text-transform:uppercase;">
+                  Mainnet mode performs real-time queries for wallet balances and validates transactions using public RPC layers.
+                </p>
+                <button class="btn btn-sm btn-primary" onclick="updateNetworkMode()" style="margin-top:0.5rem;">Set Mode</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:1.5rem;">
+            <div class="panel-header">
+              <h2>Pipeline Diagnostics</h2>
+              <span class="badge">Stats</span>
+            </div>
+            <div class="panel-content">
+              <table class="explorer-details-table">
+                <tr><td>Analyzed Opportunities</td><td id="diag-processed">0</td></tr>
+                <tr><td>Filtered (Rejected)</td><td id="diag-filtered" style="color:var(--accent-red);">0</td></tr>
+                <tr><td>Converted Listings</td><td id="diag-converted" style="color:var(--accent-green);">0</td></tr>
+                <tr><td>Conversion Rate</td><td id="diag-rate">0.0%</td></tr>
+              </table>
+              <h3 style="font-size:0.8rem;color:var(--text-secondary);margin-top:1rem;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:1px;">Intake Breakdown</h3>
+              <table class="explorer-details-table">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--panel-border);"><th style="text-align:left;padding-bottom:0.25rem;color:var(--text-muted);">Stream</th><th style="color:var(--text-muted);">Analyzed</th><th style="color:var(--text-muted);">Filtered</th><th style="color:var(--text-muted);">Converted</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Tasks</td><td id="diag-tasks-processed">0</td><td id="diag-tasks-filtered">0</td><td id="diag-tasks-converted">0</td></tr>
+                  <tr><td>Materials</td><td id="diag-materials-processed">0</td><td id="diag-materials-filtered">0</td><td id="diag-materials-converted">0</td></tr>
+                  <tr><td>Challenges</td><td id="diag-challenges-processed">0</td><td id="diag-challenges-filtered">0</td><td id="diag-challenges-converted">0</td></tr>
+                  <tr><td>Compute</td><td id="diag-compute-processed">0</td><td id="diag-compute-filtered">0</td><td id="diag-compute-converted">0</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-column">
+          <div class="panel">
+            <div class="panel-header"><h2>Wallet Overrides</h2></div>
+            <div class="panel-content">
+              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;text-transform:uppercase;">
+                To use real withdrawable addresses, add these to your <code>.env</code> file and restart the node:
+              </p>
+              <div class="form-group" style="margin-bottom:0.75rem;display:none;">
+                <label>SOLANA_WALLET_ADDRESS</label>
+                <input type="text" placeholder="Your real Solana address" id="settings-sol-override" readonly>
+              </div>
+              <div class="form-group">
+                <label>BASE_WALLET_ADDRESS</label>
+                <input type="text" placeholder="Your real Base L2 / ETH address" id="settings-base-override" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:1.5rem;">
+            <div class="panel-header">
+              <h2>On-Chain Balances</h2>
+              <span class="badge" id="settings-network-badge" style="background-color:var(--accent-green);">Mainnet</span>
+            </div>
+            <div class="panel-content">
+              <table class="explorer-details-table">
+                 <tr style="display:none;"><td>Solana Wallet</td><td id="balance-real-sol" style="color:var(--accent-green);font-weight:bold;">0.0000 SOL</td></tr>
+                <tr><td>Base L2 Wallet</td><td id="balance-real-base" style="color:var(--accent-green);font-weight:bold;">0.0000 ETH</td></tr>
+                <tr><td>Bitcoin Wallet (Electrum)</td><td id="balance-real-btc" style="color:var(--accent-green);font-weight:bold;">0.0000 BTC</td></tr>
+              </table>
+              <p style="font-size:0.6rem;color:var(--text-muted);margin-top:0.5rem;text-transform:uppercase;">
+                * Live balances fetched from public mainnet RPC nodes and Blockstream API.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /main-content -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- MODALS                                                         -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- MODAL: Payment Settlement -->
+  <div class="modal-overlay" id="payment-modal">
+    <div class="modal-content-panel" style="max-width:500px;">
+      <div class="modal-title-bar">
+        <h3>Settle Match Contract</h3>
+        <button class="btn-close-modal" onclick="closeModal('payment-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step tracker -->
+        <div class="payment-step-tracker">
+          <div class="payment-step active" id="step-node-1">
+            <div class="step-number">1</div><span>Select Network</span>
+          </div>
+          <div class="payment-step" id="step-node-2">
+            <div class="step-number">2</div><span>Broadcast</span>
+          </div>
+          <div class="payment-step" id="step-node-3">
+            <div class="step-number">3</div><span>Confirm</span>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="payment-summary-block">
+          <div class="summary-row"><span>Net Savings:</span><strong id="modal-savings-usd">$0.00</strong></div>
+          <div class="summary-row total-fee"><span>Circularity Fee:</span><strong id="modal-fee-usd">$0.00</strong></div>
+          <div class="summary-row" id="modal-crypto-conv-row">
+            <span>Token Value:</span><strong id="modal-crypto-value">0.00</strong>
+          </div>
+        </div>
+
+        <!-- Network selector -->
+        <div id="network-selectors-container">
+          <div class="payment-network-selector">
+            <div class="network-select-btn active" id="net-btn-lightning" onclick="selectNetwork('lightning')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Lightning
+            </div>
+            <div class="network-select-btn" id="net-btn-solana" onclick="selectNetwork('solana')" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              Solana
+            </div>
+            <div class="network-select-btn" id="net-btn-base" onclick="selectNetwork('base')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4.5v9L12 20l-9-4.5v-9L12 2z"/></svg>
+              Base L2
+            </div>
+            <div class="network-select-btn" id="net-btn-bitcoin" onclick="selectNetwork('bitcoin')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2H7v7h2.5M7 9h3a2 2 0 0 1 0 4H7m0 0h3.5a2 2 0 0 1 0 4H7m0-4v4m0-11V2"/></svg>
+              Bitcoin
+            </div>
+            <div class="network-select-btn" id="net-btn-paypal" onclick="selectNetwork('paypal')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
+              PayPal
+            </div>
+          </div>
+        </div>
+
+        <!-- Invoice display -->
+        <div class="invoice-display-container" id="invoice-display-block" style="display:none;">
+          <div class="mock-qr-code">
+            <div class="mock-qr-canvas"></div>
+            <div class="mock-qr-logo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            </div>
+          </div>
+          <textarea class="invoice-textarea" id="invoice-textarea" readonly></textarea>
+        </div>
+
+        <!-- Real hash input -->
+        <div id="modal-real-tx-hash-container" style="display:none;margin-bottom:1rem;">
+          <label style="font-size:0.7rem;color:var(--text-secondary);display:block;margin-bottom:0.35rem;text-transform:uppercase;">
+            Paste Blockchain Tx Hash (Base):
+          </label>
+          <input type="text" id="modal-input-tx-hash" placeholder="e.g. 0x8a... (Base)">
+        </div>
+
+        <button class="btn btn-success w-full" id="btn-modal-action" onclick="simulatePaymentWorkflow()">Broadcast Payment Transaction</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Blockchain Explorer -->
+  <div class="modal-overlay" id="explorer-modal">
+    <div class="modal-content-panel" style="max-width:580px;">
+      <div class="modal-title-bar">
+        <h3>ACN Blockchain Settlement Explorer</h3>
+        <button class="btn-close-modal" onclick="closeModal('explorer-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="explorer-details-table">
+          <tr><td>Transaction ID</td><td id="explorer-tx-id">-</td></tr>
+          <tr><td>Status</td><td id="explorer-status">-</td></tr>
+          <tr><td>Network</td><td id="explorer-network">-</td></tr>
+          <tr><td>Tx Signature Hash</td><td id="explorer-tx-hash" class="hash-link">-</td></tr>
+          <tr><td>Block Height</td><td id="explorer-block-height">-</td></tr>
+          <tr><td>Confirmations</td><td id="explorer-confirmations">-</td></tr>
+          <tr><td>Network Gas Fee</td><td id="explorer-gas-fee">-</td></tr>
+          <tr><td>Match ID Reference</td><td id="explorer-match-id">-</td></tr>
+          <tr><td>USD Value</td><td id="explorer-value">-</td></tr>
+          <tr><td>Finalized Time</td><td id="explorer-time">-</td></tr>
+        </table>
+        <button class="btn btn-secondary w-full" style="margin-top:1rem;" onclick="closeModal('explorer-modal')">Close Explorer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Agent Detail & Delegation -->
+  <div class="modal-overlay" id="agent-detail-modal">
+    <div class="modal-content-panel" style="max-width:500px;">
+      <div class="modal-title-bar">
+        <h3 id="modal-agent-name">Agent Overview</h3>
+        <button class="btn-close-modal" onclick="closeModal('agent-detail-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="payment-summary-block" style="text-align:left;line-height:1.5;">
+          <div style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.35rem;">Purpose &amp; Capabilities</div>
+          <div id="modal-agent-purpose" style="font-size:0.78rem;color:var(--text-secondary);white-space:pre-wrap;"></div>
+        </div>
+
+        <!-- Jester special controls -->
+        <div id="modal-jester-controls" style="display:none;">
+          <button class="btn btn-sm w-full" style="border-color:#ff6b35;color:#ff6b35;margin-bottom:0.5rem;" onclick="roastNetwork()">🔥 Roast the Network</button>
+          <div id="jester-roast-output" style="font-size:0.75rem;color:var(--accent-amber);min-height:2rem;padding:0.5rem;border:1px dashed var(--panel-border);"></div>
+        </div>
+
+        <!-- Zeta site map controls -->
+        <div id="modal-zeta-controls" style="display:none;">
+          <div style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.5rem;">Live Page Routes</div>
+          <div id="zeta-sitemap"></div>
+        </div>
+
+        <!-- Standard delegation controls -->
+        <div id="modal-agent-delegation-controls" style="text-align:left;">
+          <label style="font-size:0.7rem;text-transform:uppercase;color:var(--text-secondary);font-weight:700;display:block;margin-bottom:0.5rem;">
+            Delegate / Sprout Worker Node:
+          </label>
+          <div style="display:flex;gap:0.5rem;">
+            <select id="modal-delegated-task-type" aria-label="Delegated Task Type">
+              <option value="route">Route Analysis</option>
+              <option value="audit">Price Audit</option>
+              <option value="gossip">Feed Sync</option>
+            </select>
+            <button class="btn btn-success" id="btn-modal-spawn" onclick="delegateAgentTask()">Sprout</button>
+          </div>
+          <span style="font-size:0.6rem;color:var(--text-muted);display:block;margin-top:0.35rem;text-transform:uppercase;">
+            * Workers auto-terminate after completing their task.
+          </span>
+        </div>
+
+        <button class="btn btn-secondary w-full" style="margin-top:1rem;" onclick="closeModal('agent-detail-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=1.2"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{
+  "protocol_version": "BTP v0.1",
+  "specification_reference": "BTP_SPECIFICATION.md",
+  "pinned_root_keys": {
+    "did:bth:org_a_root": "pubkey_org_a_ed25519_key_101",
+    "did:bth:org_b_root": "pubkey_org_b_ed25519_key_202"
+  },
+  "test_vectors": [
+    {
+      "vector_id": "VEC_001_VALID_EVIDENCE",
+      "description": "Standard valid evidence artifact generated for Org A agent targeting Org C resource",
+      "artifact": {
+        "artifact_id": "art_bth_test_vector_001",
+        "issued_at": "2026-08-12T12:00:00Z",
+        "expires_at": "2026-12-31T23:59:59Z",
+        "agent_did": "did:bth:org_a_agent_alpha",
+        "issuer_did": "did:bth:org_a_root",
+        "target_system": "Org_C_Resource_Server",
+        "requested_capability": "resource_c.access",
+        "decision": "ALLOW",
+        "delegation_chain_verified": true,
+        "ed25519_proof": "proof_ed25519_ef39c717d6c42776",
+        "tampered": false
+      },
+      "canonical_payload": "{\"agent_did\":\"did:bth:org_a_agent_alpha\",\"artifact_id\":\"art_bth_test_vector_001\",\"decision\":\"ALLOW\",\"issuer_did\":\"did:bth:org_a_root\",\"requested_capability\":\"resource_c.access\",\"target_system\":\"Org_C_Resource_Server\"}",
+      "expected_verification_result": true,
+      "expected_reason": "100% Independently Verified"
+    },
+    {
+      "vector_id": "VEC_002_TAMPERED_ONE_BYTE",
+      "description": "Evidence artifact where decision was tampered from DENY to ALLOW",
+      "artifact": {
+        "artifact_id": "art_bth_test_vector_002",
+        "issued_at": "2026-08-12T12:00:00Z",
+        "expires_at": "2026-12-31T23:59:59Z",
+        "agent_did": "did:bth:org_a_agent_alpha",
+        "issuer_did": "did:bth:org_a_root",
+        "target_system": "Org_C_Resource_Server",
+        "requested_capability": "resource_c.access",
+        "decision": "ALLOW",
+        "delegation_chain_verified": true,
+        "ed25519_proof": "proof_ed25519_INVALID_TAMPERED_PROOF",
+        "tampered": true
+      },
+      "expected_verification_result": false,
+      "expected_reason": "Proof mismatch"
+    },
+    {
+      "vector_id": "VEC_003_UNPINNED_ISSUER_ROOT",
+      "description": "Evidence artifact issued by an unpinned root DID",
+      "artifact": {
+        "artifact_id": "art_bth_test_vector_003",
+        "issued_at": "2026-08-12T12:00:00Z",
+        "expires_at": "2026-12-31T23:59:59Z",
+        "agent_did": "did:bth:untrusted_agent",
+        "issuer_did": "did:bth:untrusted_attacker_root",
+        "target_system": "Org_C_Resource_Server",
+        "requested_capability": "resource_c.access",
+        "decision": "ALLOW",
+        "delegation_chain_verified": false,
+        "ed25519_proof": "proof_ed25519_1122334455667788",
+        "tampered": false
+      },
+      "expected_verification_result": false,
+      "expected_reason": "Issuer DID not in pinned root trust store"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "title": "Bartholomew Payout Routing & Financial Origin Audit",
+  "timestamp": "2026-08-12T23:46:16.015150+00:00",
+  "inbound_fund_origins": [
+    {
+      "channel": "Stripe Merchant Gateway (Card Checkout)",
+      "origin_type": "External Third-Party Credit/Debit Card",
+      "inbound_processor": "Stripe Payments Inc.",
+      "verification_status": "AUTHENTICATED_STRIPE_CHARGE"
+    },
+    {
+      "channel": "Agentic M2M Micro-Payments (USDC)",
+      "origin_type": "External Machine Wallet Address",
+      "inbound_processor": "Public Blockchain Network (Solana / Base)",
+      "verification_status": "AUTHENTICATED_ONCHAIN_TX"
+    }
+  ],
+  "net_profit_destinations": {
+    "fiat_usd_destination": {
+      "destination": "YOUR Linked Bank Account (ACH Direct Deposit)",
+      "linked_account_id": "acct_owner_primary",
+      "payout_schedule": "Automatic Daily Rolling Payout",
+      "verified": true
+    },
+    "crypto_usdc_destination": {
+      "destination": "YOUR Self-Custodial Wallet Address",
+      "linked_wallet_address": "0xOwnerPrimaryWalletAddress",
+      "agent_private_key_access": false,
+      "verified": true
+    }
+  },
+  "agent_permission_audit": {
+    "can_receive_inbound_payments": true,
+    "can_initiate_withdrawals_from_owner_bank": false,
+    "can_access_owner_private_keys": false,
+    "financial_isolation_status": "100% READ_ONLY_PAYOUT_ROUTING"
+  }
+}

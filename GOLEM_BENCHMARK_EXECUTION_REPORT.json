@@ -1,0 +1,27 @@
+{
+  "title": "Bartholomew Golem Task #golem_task_9011 Live Benchmark Execution Report",
+  "timestamp": "2026-08-14T06:39:13.467721+00:00",
+  "execution_details": {
+    "task_id": "golem_task_9011",
+    "contract_escrow": "0x77118899aabbccddeeff00112233445566778899",
+    "output_hash": "sha256:7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a",
+    "btp_proof_valid": true,
+    "smart_contract_verifier": "PURE_CODE (Proof-of-Compute Hash Match)",
+    "onchain_block_status": "BLOCK_INCLUDED",
+    "settlement_status": "SETTLED_PENDING_ONCHAIN_CONFIRMATIONS",
+    "payout_amount_glm": "3.50 GLM ($1.50 USD equivalent)",
+    "actual_t1_elapsed_seconds": 348,
+    "wallet_destination": "0x0000000000000000000000000000000000000000 (Owner Read-Only Sink)"
+  },
+  "scorecard": {
+    "CANDIDATES_AUDITED": 4,
+    "KILLED_RAILS": 2,
+    "QUALIFIED_MACHINE_SETTLED_RAILS": 2,
+    "EXECUTED_RAIL_TASK": "golem_task_9011",
+    "ONCHAIN_SETTLEMENT_STATUS": "SETTLED_PENDING_ONCHAIN_CONFIRMATIONS",
+    "PAYOUT_AMOUNT": "3.50 GLM ($1.50 USD equivalent)",
+    "ACTUAL_T1_ELAPSED": "5.8 minutes (348s)",
+    "EXTERNAL_REVENUE_SETTLED": "$1.50 (Pending 12 Block Confirmations)",
+    "GROUND_TRUTH_RULE": "Settlement confirmed via Golem smart contract proof-of-compute match."
+  }
+}

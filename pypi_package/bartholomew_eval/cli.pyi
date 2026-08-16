@@ -1,0 +1,3 @@
+from typing import List, Optional
+
+def main(args: Optional[List[str]] = ...) -> int: ...

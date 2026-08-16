@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bartholomew AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-box">
+    <div class="header">
+      <div class="logo-circle">⚡</div>
+      <div class="title-wrap">
+        <h3>Bartholomew AI</h3>
+        <span class="sub">Autonomous Developer Copilot</span>
+      </div>
+    </div>
+
+    <div class="status-box">
+      <div class="status-row">
+        <span>Engine Server:</span>
+        <span class="badge online" id="server-badge">Connected (8080)</span>
+      </div>
+      <div class="status-row">
+        <span>GitHub Copilot:</span>
+        <span class="badge active">Active on Tabs</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="open-sidepanel-btn">Open Side Panel Copilot →</button>
+      <a href="http://localhost:8080/dashboard" target="_blank" class="btn-secondary">Open Web Operations Dashboard</a>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
