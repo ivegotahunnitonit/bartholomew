@@ -23,10 +23,6 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
-        },
-        {
-          "source": "**",
-          "destination": "/index.html"
         }
       ],
       "headers": [
@@ -75,10 +71,6 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
-        },
-        {
-          "source": "**",
-          "destination": "/index.html"
         }
       ]
     }
