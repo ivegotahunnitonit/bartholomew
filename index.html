@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew | Autonomous CI/CD Failure Auto-Fix for GitHub</title>
-  <meta name="description" content="The autonomous engineering agent that fixes broken CI pipelines and failing tests on GitHub with verified reproduction before opening a Pull Request.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Bartholomew | Autonomous CI/CD Failure Auto-Fix & Developer Copilot</title>
+  <meta name="description" content="The autonomous engineering copilot and GitHub App that diagnoses failing tests, synthesizes deterministic reproduction proofs, and opens verified green PRs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #090d16;
-      --bg-card: rgba(18, 26, 44, 0.75);
-      --border-color: rgba(66, 133, 244, 0.2);
+      --bg-dark: #070a12;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(66, 133, 244, 0.18);
       --accent-cyan: #00f2fe;
       --accent-blue: #4facfe;
       --accent-green: #00e676;
@@ -21,162 +21,419 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    html, body {
       background-color: var(--bg-dark);
       color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
+      width: 100%;
       line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
     }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 28px);
+    }
 
-    /* Header */
+    /* Header & Navigation */
     header {
-      padding: 24px 0;
+      padding: clamp(14px, 2.5vw, 20px) 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(9, 13, 22, 0.85);
+      background: rgba(7, 10, 18, 0.88);
     }
-    .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 28px; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text-main); }
-    .btn-primary {
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #050c1a;
-      padding: 10px 22px;
+      font-weight: 900;
+      font-size: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .logo-text {
+      font-size: clamp(18px, 3.5vw, 22px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff, #8ea2c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(12px, 2.5vw, 24px);
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14.5px;
+      font-weight: 500;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: #ffffff; }
+    
+    .btn-nav {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a !important;
+      padding: 8px 18px;
       border-radius: 8px;
       font-weight: 700;
+      font-size: 13.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-nav:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(0, 242, 254, 0.35);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: clamp(48px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      color: var(--accent-cyan);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    h1 {
+      font-size: clamp(30px, 6vw, 54px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: -1px;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 19px);
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 30px;
+      line-height: 1.55;
+    }
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a;
+      padding: clamp(12px, 2.5vw, 14px) clamp(24px, 4vw, 32px);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: clamp(15px, 2vw, 17px);
       text-decoration: none;
       transition: transform 0.2s, box-shadow 0.2s;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79, 172, 254, 0.4); }
-
-    /* Hero */
-    .hero { padding: 90px 0 60px; text-align: center; }
-    .badge {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
-      background: rgba(0, 242, 254, 0.1);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      color: var(--accent-cyan);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
     }
-    h1 { font-size: 56px; font-weight: 800; line-height: 1.15; margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto; }
-    h1 span { background: linear-gradient(135deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 20px; color: var(--text-muted); max-width: 720px; margin: 0 auto 36px; }
-
-    /* Terminal Preview */
-    .terminal-card {
-      background: #0d1322;
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      max-width: 920px;
-      margin: 40px auto 0;
+      color: var(--text-main);
+      padding: clamp(12px, 2.5vw, 14px) clamp(20px, 3.5vw, 26px);
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: clamp(14px, 2vw, 16px);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Terminal Window */
+    .terminal-card {
+      background: #090e1b;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: clamp(16px, 3vw, 24px);
+      max-width: 860px;
+      margin: 0 auto;
       text-align: left;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      font-size: clamp(11.5px, 2vw, 13.5px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-    .term-header { display: flex; gap: 8px; margin-bottom: 16px; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .term-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 10px;
+    }
+    .term-dots { display: flex; gap: 7px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
     .dot.red { background: #ff5f56; }
     .dot.yellow { background: #ffbd2e; }
     .dot.green { background: #27c93f; }
-    .term-code { color: #8ea2c6; }
-    .term-code .highlight { color: var(--accent-cyan); font-weight: 700; }
-    .term-code .success { color: var(--accent-green); font-weight: 700; }
+    .term-title { font-size: 11px; color: var(--text-muted); }
+    .term-code { color: #8ea2c6; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .term-code .highlight { color: var(--accent-cyan); font-weight: 600; }
+    .term-code .success { color: var(--accent-green); font-weight: 600; }
 
     /* How It Works Section */
-    .how-it-works { padding: 90px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-    .section-title { text-align: center; margin-bottom: 60px; }
-    .section-title h2 { font-size: 38px; font-weight: 800; }
-    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .how-it-works {
+      padding: clamp(50px, 8vw, 80px) 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: clamp(32px, 5vw, 50px);
+    }
+    .section-title h2 {
+      font-size: clamp(26px, 4.5vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .section-title p {
+      color: var(--text-muted);
+      font-size: clamp(14px, 2vw, 16px);
+      margin-top: 6px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: clamp(14px, 2.5vw, 22px);
+    }
     .step-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 32px 24px;
+      border-radius: 14px;
+      padding: clamp(20px, 3.5vw, 28px);
       text-align: left;
-      position: relative;
       transition: transform 0.2s, border-color 0.2s;
     }
-    .step-card:hover { transform: translateY(-4px); border-color: var(--accent-cyan); }
+    .step-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-cyan);
+    }
     .step-num {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: rgba(0, 242, 254, 0.15);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(0, 242, 254, 0.12);
       color: var(--accent-cyan);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 18px;
-      margin-bottom: 20px;
+      font-size: 15px;
+      margin-bottom: 16px;
       font-family: 'JetBrains Mono', monospace;
     }
-    .step-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-    .step-card p { color: var(--text-muted); font-size: 15px; }
+    .step-card h3 {
+      font-size: clamp(17px, 2.5vw, 19px);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-card p {
+      color: var(--text-muted);
+      font-size: clamp(13.5px, 2vw, 14.5px);
+      line-height: 1.5;
+    }
 
-    /* Tech Stack Support */
-    .tech-stack { padding: 40px 0 80px; text-align: center; }
-    .stack-badges { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+    /* Stack Badges */
+    .tech-stack {
+      padding: clamp(30px, 5vw, 60px) 0;
+      text-align: center;
+    }
+    .tech-stack h3 {
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .stack-badges {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
     .stack-badge {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: clamp(12px, 2vw, 13.5px);
       color: var(--text-main);
       font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
     }
 
     /* Pricing Section */
-    .pricing { padding: 90px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 880px; margin: 0 auto; }
+    .pricing {
+      padding: clamp(50px, 8vw, 80px) 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: clamp(20px, 3.5vw, 28px);
+      max-width: 860px;
+      margin: 0 auto;
+    }
     .pricing-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 40px;
+      padding: clamp(24px, 4vw, 36px);
       text-align: left;
-      backdrop-filter: blur(10px);
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .pricing-card.featured { border-color: var(--accent-cyan); box-shadow: 0 10px 35px rgba(0, 242, 254, 0.15); }
-    .price { font-size: 48px; font-weight: 800; margin: 20px 0; }
-    .price span { font-size: 16px; color: var(--text-muted); font-weight: 500; }
-    .features-list { list-style: none; margin: 28px 0; }
-    .features-list li { margin-bottom: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-size: 15px; }
-    .features-list li::before { content: "✓"; color: var(--accent-green); font-weight: 800; }
+    .pricing-card.featured {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 40px rgba(0, 242, 254, 0.15);
+    }
+    .pricing-card h3 {
+      font-size: clamp(20px, 3vw, 24px);
+      font-weight: 800;
+    }
+    .pricing-card .subtext {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    .price {
+      font-size: clamp(38px, 6vw, 46px);
+      font-weight: 900;
+      margin: 18px 0;
+      font-family: 'Outfit', sans-serif;
+    }
+    .price span {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .features-list {
+      list-style: none;
+      margin: 20px 0 28px;
+    }
+    .features-list li {
+      margin-bottom: 10px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: clamp(13px, 2vw, 14.5px);
+    }
+    .features-list li::before {
+      content: "[✓]";
+      color: var(--accent-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12px;
+    }
 
     /* Footer */
-    footer { padding: 40px 0; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 14px; }
+    footer {
+      padding: clamp(30px, 5vw, 44px) 0;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* Mobile Media Queries (iPhone & iPad responsive snugness) */
+    @media (max-width: 680px) {
+      .nav-wrap { flex-direction: column; align-items: stretch; }
+      .nav-links { justify-content: space-between; overflow-x: auto; padding-top: 4px; }
+      .hero-cta-group { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .terminal-card { border-radius: 10px; padding: 14px 12px; }
+    }
   </style>
 </head>
 <body>
 
   <header>
     <div class="container nav-wrap">
-      <div class="logo">BARTHOLOMEW</div>
+      <a href="/" class="logo-wrap">
+        <div class="logo-mark">B</div>
+        <div class="logo-text">BARTHOLOMEW</div>
+      </a>
       <nav class="nav-links">
-        <a href="#how-it-works">How It Works</a>
-        <a href="#supported-languages">Supported Stacks</a>
-        <a href="#pricing">Pricing</a>
+        <a href="/operations">Operations</a>
+        <a href="/simulator">Simulator</a>
         <a href="/dashboard">Dashboard</a>
-        <a href="#pricing" class="btn-primary">Install GitHub App</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/dashboard" class="btn-nav">Start Free Trial</a>
       </nav>
     </div>
   </header>
@@ -186,108 +443,117 @@
     <section class="hero container">
       <div class="badge">Autonomous CI Auto-Fix Engine</div>
       <h1>Your CI build just failed.<br><span>Bartholomew already fixed it.</span></h1>
-      <p>The autonomous engineering agent that catches failing tests on GitHub, synthesizes a standalone deterministic reproduction test, applies the minimal surgical fix, and opens a passing PR in 60 seconds.</p>
-      <a href="#pricing" class="btn-primary" style="font-size: 18px; padding: 14px 36px;">Start 14-Day Free Trial</a>
+      <p class="hero-sub">The autonomous developer copilot and GitHub App that catches failing tests, synthesizes standalone deterministic reproduction proofs, applies the minimal surgical patch, and opens a verified green Pull Request.</p>
+      
+      <div class="hero-cta-group">
+        <a href="/dashboard" class="btn-primary">Start 14-Day Free Trial</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-secondary">View on GitHub</a>
+      </div>
 
       <div class="terminal-card">
         <div class="term-header">
-          <div class="dot red"></div>
-          <div class="dot yellow"></div>
-          <div class="dot green"></div>
+          <div class="term-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <div class="term-title">bartholomew-agent-runner v1.0.0</div>
         </div>
-        <div class="term-code">
-          <div>$ <span class="highlight">github-webhook:</span> workflow_run.completed (conclusion: failure)</div>
-          <div>> Target Repository: <span class="highlight">fintech-corp/payments-core</span> [Commit: d4e5f67]</div>
-          <div>> Error Diagnosed: <span style="color:#ff5f56;">RuntimeError: Event loop is closed during worker teardown</span></div>
-          <div>> Synthesizing isolated reproduction test: <span class="highlight">test_reproduce_ci_failure.py</span></div>
-          <div>> Applying minimal surgical fix to worker teardown lifecycle...</div>
-          <div>> Mechanical verification: <span class="success">100% PASSING (Zero regressions across 48 tests)</span></div>
-          <div>> Dispatched Pull Request: <span class="success">https://github.com/fintech-corp/payments-core/pull/170</span></div>
-          <div>> Total resolution time: <span class="highlight">1.2 seconds</span></div>
-        </div>
+        <div class="term-code">$ <span class="highlight">github-webhook:</span> workflow_run.completed (conclusion: failure)
+> Target Repository: <span class="highlight">fintech-corp/payments-core</span> [Commit: d4e5f67]
+> Error Diagnosed: <span style="color:#ff5f56;">RuntimeError: Event loop is closed during worker teardown</span>
+> Synthesizing reproduction proof: <span class="highlight">test_reproduce_ci_failure.py</span>
+> Applying minimal surgical fix to worker teardown lifecycle...
+> Verification: <span class="success">100% PASSING (Zero regressions across 48 tests)</span>
+> Dispatched Pull Request: <span class="success">github.com/fintech-corp/payments-core/pull/170</span>
+> Resolution latency: <span class="highlight">1.2 seconds</span></div>
       </div>
     </section>
 
     <!-- How It Works Section -->
     <section id="how-it-works" class="how-it-works container">
       <div class="section-title">
-        <h2>How Bartholomew Works Under the Hood</h2>
-        <p style="color: var(--text-muted); margin-top: 8px;">No hallucinations. Strict verification before any pull request is opened.</p>
+        <h2>How Bartholomew Works</h2>
+        <p>No hallucinations. Strict verification before any pull request is opened.</p>
       </div>
 
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-num">01</div>
-          <h3>1-Click GitHub Connect</h3>
-          <p>Install the GitHub App on your repo or organization. Bartholomew listens to <code>workflow_run</code> and <code>pull_request</code> failure webhooks.</p>
+          <h3>GitHub Ingestion</h3>
+          <p>Installs directly on your repository. Listens to <code>workflow_run</code> and <code>pull_request</code> failure webhooks in real time.</p>
         </div>
 
         <div class="step-card">
           <div class="step-num">02</div>
           <h3>Isolate & Reproduce</h3>
-          <p>Clones the failing commit into an isolated workspace and synthesizes a standalone reproduction script proving the exact failure mechanism.</p>
+          <p>Clones the failing commit into an isolated runtime and synthesizes a standalone reproduction test proving the defect.</p>
         </div>
 
         <div class="step-card">
           <div class="step-num">03</div>
           <h3>Surgical Fix & Verify</h3>
-          <p>Generates the minimal fix diff and runs your entire test suite locally to verify 100% clean passes with zero regressions.</p>
+          <p>Generates the minimal AST diff and runs your full test suite locally to verify 100% clean passes with zero regressions.</p>
         </div>
 
         <div class="step-card">
           <div class="step-num">04</div>
           <h3>Dispatched Auto-PR</h3>
-          <p>Opens a verified Pull Request directly on GitHub with the root-cause diagnosis, reproduction proof, and green CI status.</p>
+          <p>Opens a verified Pull Request directly on GitHub with the root-cause analysis, reproduction script, and green status.</p>
         </div>
       </div>
     </section>
 
     <!-- Supported Languages -->
     <section id="supported-languages" class="tech-stack container">
-      <h3 style="font-size: 22px; font-weight: 700;">Supported Languages & CI Environments</h3>
+      <h3>Supported Languages & CI Environments</h3>
       <div class="stack-badges">
-        <div class="stack-badge">🐍 Python (Pytest / Unittest / Asyncio)</div>
-        <div class="stack-badge">⚡ Node.js (Jest / Vitest / Mocha)</div>
-        <div class="stack-badge">🔵 Go (go test)</div>
-        <div class="stack-badge">🦀 Rust (cargo test)</div>
-        <div class="stack-badge">🐙 GitHub Actions / GitLab CI / CircleCI</div>
+        <div class="stack-badge">Python (Pytest / Unittest / Asyncio)</div>
+        <div class="stack-badge">Node.js (Jest / Vitest / Mocha)</div>
+        <div class="stack-badge">Go (go test)</div>
+        <div class="stack-badge">Rust (cargo test)</div>
+        <div class="stack-badge">GitHub Actions / GitLab CI / CircleCI</div>
       </div>
     </section>
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing container">
       <div class="section-title">
-        <h2>Transparent Pricing for Modern Engineering Teams</h2>
-        <p style="color: var(--text-muted); margin-top: 8px;">Zero setup fees. Cancel anytime.</p>
+        <h2>Transparent Pricing for Engineering Teams</h2>
+        <p>Zero setup fees. Cancel anytime.</p>
       </div>
 
       <div class="grid-2">
         <div class="pricing-card">
-          <h3>Pro Repo</h3>
-          <p style="color: var(--text-muted);">For solo developers and single production repos.</p>
-          <div class="price">$49 <span>/ month</span></div>
-          <ul class="features-list">
-            <li>1 Active GitHub Repository</li>
-            <li>Unlimited Automated CI Fixes</li>
-            <li>Deterministic Reproduction Tests</li>
-            <li>Python, Node.js, Go & Rust Support</li>
-            <li>Direct Auto-Fix Pull Requests</li>
-          </ul>
+          <div>
+            <h3>Pro Repo</h3>
+            <p class="subtext">For solo developers and single production repositories.</p>
+            <div class="price">$49 <span>/ month</span></div>
+            <ul class="features-list">
+              <li>1 Active GitHub Repository</li>
+              <li>Unlimited Automated CI Fixes</li>
+              <li>Deterministic Reproduction Tests</li>
+              <li>Python, Node.js, Go and Rust Support</li>
+              <li>Direct Auto-Fix Pull Requests</li>
+            </ul>
+          </div>
           <a href="/dashboard" class="btn-primary" style="width: 100%; text-align: center;">Subscribe Pro ($49/mo)</a>
         </div>
 
         <div class="pricing-card featured">
-          <div class="badge" style="margin-bottom: 12px;">Most Popular</div>
-          <h3>Team Organization</h3>
-          <p style="color: var(--text-muted);">For fast-moving teams scaling multiple microservices.</p>
-          <div class="price">$199 <span>/ month</span></div>
-          <ul class="features-list">
-            <li>Unlimited GitHub Repositories</li>
-            <li>Priority Parallel Fix Queue</li>
-            <li>Flaky Test Isolation & Quarantining</li>
-            <li>Team Slack & Discord Notifications</li>
-            <li>Dedicated Webhook Endpoints</li>
-          </ul>
+          <div>
+            <div class="badge" style="margin-bottom: 10px;">Most Popular</div>
+            <h3>Team Organization</h3>
+            <p class="subtext">For fast-moving teams scaling multiple microservices.</p>
+            <div class="price">$199 <span>/ month</span></div>
+            <ul class="features-list">
+              <li>Unlimited GitHub Repositories</li>
+              <li>Priority Parallel Fix Queue</li>
+              <li>Flaky Test Isolation & Quarantining</li>
+              <li>Team Slack & Discord Notifications</li>
+              <li>Dedicated Webhook Endpoints</li>
+            </ul>
+          </div>
           <a href="/dashboard" class="btn-primary" style="width: 100%; text-align: center; background: linear-gradient(135deg, #00e676, #00f2fe);">Subscribe Team ($199/mo)</a>
         </div>
       </div>
@@ -296,7 +562,12 @@
 
   <footer>
     <div class="container">
-      &copy; 2026 Bartholomew Autonomous Systems. All rights reserved.
+      <div class="footer-links">
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">GitHub</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <p>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved.</p>
     </div>
   </footer>
 
