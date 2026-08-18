@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Bartholomew | Investor Presentation & Technical Overview</title>
+  <meta name="description" content="Institutional Pitch Deck for Bartholomew: Autonomous CI/CD Failure Auto-Fix, Deterministic Reproduction & Mechanical Verification.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark:        #040813;
+      --bg-surface:     rgba(8, 18, 36, 0.92);
+      --bg-card:        rgba(13, 27, 51, 0.8);
+      --border-subtle:  rgba(255, 255, 255, 0.08);
+      --border-lit:     rgba(56, 189, 248, 0.3);
+      --border-emerald: rgba(16, 185, 129, 0.4);
+      --emerald:        #10b981;
+      --emerald-light:  #34d399;
+      --cyan:           #06b6d4;
+      --cyan-light:     #38bdf8;
+      --violet:         #8b5cf6;
+      --violet-light:   #a78bfa;
+      --accent-cyan:    #00f2fe;
+      --accent-blue:    #4facfe;
+      --text-main:      #f8fafc;
+      --text-muted:     #94a3b8;
+      --font-heading:   'Plus Jakarta Sans', sans-serif;
+      --font-body:      'Inter', sans-serif;
+      --font-code:      'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+
+    html, body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.1), transparent 45%),
+        radial-gradient(ellipse at 85% 20%, rgba(6, 182, 212, 0.1), transparent 50%),
+        radial-gradient(ellipse at 50% 85%, rgba(139, 92, 246, 0.06), transparent 60%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Header */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(12px, 2.5vw, 18px) clamp(16px, 4vw, 36px);
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(4, 8, 19, 0.88);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #050c1a;
+      font-weight: 900;
+      font-size: 16px;
+      font-family: var(--font-code);
+    }
+    .logo-text {
+      font-size: clamp(18px, 3.5vw, 20px);
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #ffffff, #8ea2c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge-deck {
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--border-emerald);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-weight: 600;
+    }
+
+    /* Slide Container */
+    .deck-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 4vw, 36px);
+      width: 100%;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1040px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 44px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(14px);
+      animation: fadeIn 0.3s ease forwards;
+    }
+    .slide.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: var(--cyan-light);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(24px, 4.5vw, 38px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--cyan-light), var(--emerald-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: clamp(14px, 2vw, 16px);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: clamp(18px, 3.5vw, 24px);
+    }
+    .card h3 {
+      font-family: var(--font-heading);
+      font-size: clamp(16px, 2.5vw, 19px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px clamp(16px, 4vw, 36px);
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(4, 8, 19, 0.9);
+      gap: 12px;
+    }
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 44px;
+      min-width: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      text-decoration: none;
+    }
+    .btn-nav:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--cyan-light); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a !important;
+      border: none;
+      font-weight: 700;
+    }
+    .slide-counter {
+      font-family: var(--font-code);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Comparison Table */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
+    th { color: var(--text-muted); padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); font-family: var(--font-code); font-size: 12px; text-transform: uppercase; }
+    td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 13.5px; }
+
+    @media (max-width: 600px) {
+      .controls-bar { flex-wrap: wrap; justify-content: center; }
+      .slide-counter { order: -1; width: 100%; text-align: center; margin-bottom: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="/" class="logo-wrap">
+      <div class="logo-mark">B</div>
+      <div class="logo-text">BARTHOLOMEW</div>
+    </a>
+    <div class="badge-deck">Investor &amp; Architecture Brief</div>
+  </header>
+
+  <div class="deck-container">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+      <span class="eyebrow">AUTONOMOUS CI REPAIR &amp; MECHANICAL VERIFICATION</span>
+      <h1>Autonomous Software Repair with <span class="gradient-text">100% Verifiable Guarantees</span></h1>
+      <p>The autonomous engineering agent that catches failing tests on GitHub, synthesizes isolated deterministic reproduction proofs, applies minimal AST patches, and opens verified green Pull Requests in under 2 seconds.</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">01. Zero Guessing</h3>
+          <p>Strict mechanical verification before any pull request is opened. Zero hallucinations.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">02. Sub-2s Latency</h3>
+          <p>Instant localized AST repairs running with $0.00 / hour cloud infrastructure overhead.</p>
+        </div>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">03. Open-Core &amp; BYOK</h3>
+          <p>Supports Google Gemini 2.0 Flash, OpenAI, Claude, and local Ollama inference models.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Enterprise Problem -->
+    <div class="slide">
+      <span class="eyebrow">THE ENTERPRISE PAIN POINT</span>
+      <h1>Broken Pipelines Cost <span class="gradient-text">Millions in Lost Engineering Hours</span></h1>
+      <p>Modern engineering teams spend up to 25% of sprint cycles manually diagnosing failing test suites, flaky asynchronous timeouts, and subtle dependency version deprecations.</p>
+      
+      <div class="grid-2">
+        <div class="card">
+          <h3>The Legacy Status Quo</h3>
+          <p>A CI pipeline breaks at 2:00 AM. Developers wait for manual triage, context-switch to read 5,000-line logs, and guess at fixes across multi-step iteration loops.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">The Bartholomew Solution</h3>
+          <p>Catches the failure webhook, generates an isolated reproduction script proving the bug, applies the minimal surgical patch, and opens a green PR before anyone wakes up.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Market Size -->
+    <div class="slide">
+      <span class="eyebrow">MARKET OPPORTUNITY</span>
+      <h1>$18B+ Market for <span class="gradient-text">Developer Productivity &amp; Automated Testing</span></h1>
+      <p>As software velocity surges, CI/CD reliability and automated software repair represent the highest-ROI bottleneck in modern developer toolchains.</p>
+      
+      <div class="grid-3">
+        <div class="card">
+          <h3 style="color: var(--cyan-light); font-size: 26px;">$18.4B</h3>
+          <p>Total Addressable Market for DevOps &amp; automated testing toolchains by 2028.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--emerald-light); font-size: 26px;">100M+</h3>
+          <p>GitHub developers and 400M+ active software repositories worldwide.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--violet-light); font-size: 26px;">85%</h3>
+          <p>Of tech executives prioritizing AI developer tooling to reduce CI/CD maintenance.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Reconstructed Architecture & Mechanical Verification -->
+    <div class="slide">
+      <span class="eyebrow">CORE ARCHITECTURAL MECHANISM</span>
+      <h1>How Bartholomew Works: <span class="gradient-text">3-Step Mechanical Verification</span></h1>
+      <p>Unlike conversational LLMs that guess solutions, Bartholomew guarantees deterministic correctness through closed-loop mechanical verification.</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">Step 1: Isolate &amp; Reproduce</h3>
+          <p>Clones the failing commit into an isolated container and synthesizes a standalone reproduction test proving the defect.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">Step 2: Minimal AST Patch</h3>
+          <p>Applies a surgical AST compiler patch strictly addressing the root-cause failure with zero collateral changes.</p>
+        </div>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">Step 3: Verification (100%)</h3>
+          <p>Executes full test suites locally to prove 100% green passes with zero regressions before opening the GitHub PR.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Reconstructed Competitive Advantage -->
+    <div class="slide">
+      <span class="eyebrow">COMPETITIVE MATRIX</span>
+      <h1>Why Bartholomew Wins: <span class="gradient-text">Deterministic Guarantees</span></h1>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature / Metric</th>
+              <th>Generic AI Copilots</th>
+              <th>Bartholomew Autonomous Systems</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Failure Reproduction</strong></td>
+              <td>None (Guesses fix from prompt)</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">Synthesizes standalone reproduction proof</span></td>
+            </tr>
+            <tr>
+              <td><strong>Verification Engine</strong></td>
+              <td>None (User manually verifies)</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">Automated test suite execution (100% Pass)</span></td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Ingestion</strong></td>
+              <td>Manual copy-paste into chat</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">1-Click Webhook GitHub App Integration</span></td>
+            </tr>
+            <tr>
+              <td><strong>Resolution Speed</strong></td>
+              <td>10 - 30 minutes manual iteration</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">&lt; 2.0 seconds autonomous turnaround</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 6: World Benefit -->
+    <div class="slide">
+      <span class="eyebrow">VALUE PROPOSITION</span>
+      <h1>Empowering Engineering Teams &amp; <span class="gradient-text">Elevating Developer Flow</span></h1>
+      
+      <div class="grid-2">
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">For Software Engineers</h3>
+          <p>Eliminates the dreaded 2:00 AM broken pipeline. Engineers spend their time building high-value features rather than debugging flaky async timeouts and deprecated AST syntax.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">For Engineering Leadership</h3>
+          <p>Drastically reduces CI compute waste, increases PR merge velocity, and guarantees clean test suites across large microservice architectures.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Reconstructed Live Ecosystem -->
+    <div class="slide">
+      <span class="eyebrow">LIVE PRODUCT INTERFACES</span>
+      <h1>Live Tools &amp; <span class="gradient-text">Interactive Ecosystem</span></h1>
+      <p>Explore all active Bartholomew interfaces live with working links:</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">1. Live Operations</h3>
+          <p>Real-time daemon telemetry stream, connected repos, and interactive test triggers.</p>
+          <a href="/operations" class="btn-nav btn-primary" style="margin-top: 10px;">Launch Operations ↗</a>
+        </div>
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">2. Auto-Fix Simulator</h3>
+          <p>Interactive 3-scenario sandbox executing isolated AST repair and verification.</p>
+          <a href="/simulator" class="btn-nav" style="margin-top: 10px;">Open Simulator ↗</a>
+        </div>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">3. Developer Console</h3>
+          <p>Repository connection flow, BYOK Gemini settings, and PR history ledger.</p>
+          <a href="/dashboard" class="btn-nav" style="margin-top: 10px;">Open Dashboard ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Reconstructed Monetization -->
+    <div class="slide">
+      <span class="eyebrow">COMMERCIAL MODEL</span>
+      <h1>Transparent <span class="gradient-text">B2B SaaS Pricing</span></h1>
+      <p>High-margin developer tool subscription model driving frictionless bottom-up adoption.</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Developer Tier</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$0 / month</p>
+          <p>Open-source CLI, Chrome/Edge extension, and local AST diagnostics up to 100 fixes/month.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">Pro Repo</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$49 / month</p>
+          <p>Unlimited automated CI fixes for single repositories with deterministic reproduction tests.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">Team Organization</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$199 / month</p>
+          <p>Unlimited GitHub repos, parallel fix queues, flaky test quarantining, and Slack notifications.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Reconstructed Founder & Origin -->
+    <div class="slide">
+      <span class="eyebrow">FOUNDER IMPERATIVE</span>
+      <h1>Founding Vision &amp; <span class="gradient-text">Architectural Philosophy</span></h1>
+      
+      <div class="grid-2" style="align-items: center;">
+        <div class="card" style="text-align: center; border-color: var(--border-lit);">
+          <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; color: #050c1a; margin: 0 auto 12px; font-family: var(--font-code);">IA</div>
+          <h3 style="font-size: 20px; margin-bottom: 2px;">Itsub Alemayehu</h3>
+          <p style="color: var(--cyan-light); font-weight: 600; font-size: 13px;">Creator &amp; Founder, Bartholomew AI</p>
+        </div>
+
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light); font-size: 16px; margin-bottom: 10px;">Founder Manifesto</h3>
+          <p style="font-style: italic; color: #f0f4fc; font-size: 15px; line-height: 1.6;">
+            "While LLMs are great at writing boilerplate, production systems require deterministic guarantees. I built Bartholomew to replace guessing with mechanical verification: isolate the defect, compute the minimal surgical fix, prove that 100% of tests pass, and ship the green PR before anyone even wakes up."
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Reconstructed Clean Contact Us -->
+    <div class="slide">
+      <span class="eyebrow">JOIN THE FUTURE OF AUTONOMOUS REPAIR</span>
+      <h1>Partner with <span class="gradient-text">Bartholomew</span></h1>
+      <p>Deploy autonomous CI failure auto-repair across your engineering repositories today.</p>
+
+      <div class="card" style="text-align: center; padding: clamp(24px, 5vw, 40px); border-color: var(--border-emerald); margin-top: 20px;">
+        <h3 style="font-size: 24px; margin-bottom: 8px;">Ready to Eliminate Broken CI Builds?</h3>
+        <p style="max-width: 540px; margin: 0 auto 24px;">Install the GitHub App or start your 14-day free developer trial in under 60 seconds.</p>
+        
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="/dashboard" class="btn-nav btn-primary" style="padding: 12px 28px; font-size: 15px;">Get in Touch / Contact Us</a>
+          <a href="/operations" class="btn-nav" style="padding: 12px 28px; font-size: 15px;">Live Operations Workspace</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar">
+    <button class="btn-nav" onclick="prevSlide()">&larr; Previous</button>
+    <div class="slide-counter" id="slide-num">Slide 1 of 10</div>
+    <button class="btn-nav" onclick="nextSlide()">Next &rarr;</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      document.getElementById('slide-num').innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>

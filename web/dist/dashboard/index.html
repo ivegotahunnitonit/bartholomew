@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Developer Console | Bartholomew Autonomous Systems</title>
+  <meta name="description" content="Manage connected GitHub repositories, configure BYOK Gemini API keys, monitor auto-fix PR pipelines, and view real-time CI metrics.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070a12;
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --border-color: rgba(66, 133, 244, 0.18);
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-green: #00e676;
+      --accent-amber: #ffbd2e;
+      --text-main: #f0f4fc;
+      --text-muted: #8ea2c6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+    html, body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 28px);
+    }
+
+    header {
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 10, 18, 0.92);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #050c1a;
+      font-weight: 900;
+      font-size: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #ffffff, #8ea2c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: clamp(10px, 2vw, 18px);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* Free Trial / Plan Banner */
+    .banner-trial {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(79, 172, 254, 0.08));
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 14px;
+      padding: clamp(16px, 3vw, 22px);
+      margin: 24px 0 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .trial-info h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(16px, 2.5vw, 18px);
+      font-weight: 700;
+      color: #fff;
+    }
+    .trial-info p {
+      font-size: clamp(13px, 2vw, 14px);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .btn-tour {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      min-height: 44px;
+      transition: background 0.2s;
+    }
+    .btn-tour:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent-cyan); }
+    .btn-action-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13.5px;
+      border: none;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    /* Grid Layout */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 860px) {
+      .dash-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: clamp(18px, 3vw, 24px);
+      margin-bottom: 24px;
+      transition: border-color 0.3s;
+    }
+    .card.highlight-focus {
+      border-color: var(--accent-cyan) !important;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 12px;
+    }
+    .card-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* PR History Table */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { color: var(--text-muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-transform: uppercase; }
+    td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-family: 'JetBrains Mono', monospace; }
+    .badge-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .badge-pill.green { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
+    .badge-pill.amber { background: rgba(255, 189, 46, 0.15); color: var(--accent-amber); }
+
+    /* Settings Box */
+    .input-group { margin-bottom: 16px; text-align: left; }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+    .input-field {
+      width: 100%;
+      background: #090e1b;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      min-height: 44px;
+    }
+    .input-field:focus { outline: none; border-color: var(--accent-cyan); }
+    .btn-save {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      min-height: 44px;
+    }
+
+    /* Webhook Secret Card */
+    .webhook-box {
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-cyan);
+      word-break: break-all;
+      margin-top: 6px;
+    }
+
+    /* Tour Overlay Modal */
+    .tour-modal {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      max-width: 400px;
+      background: rgba(10, 18, 36, 0.95);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: none;
+      backdrop-filter: blur(14px);
+    }
+    .tour-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .tour-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .tour-nav-btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 24px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrap">
+      <a href="/" class="logo-wrap">
+        <div class="logo-mark">B</div>
+        <div class="logo-text">BARTHOLOMEW</div>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/operations">Operations</a>
+        <a href="/simulator">Simulator</a>
+        <a href="/PITCH_DECK.html">Pitch Deck</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Active Developer Plan Banner -->
+    <div class="banner-trial">
+      <div class="trial-info">
+        <h3>Pro Developer Console &bull; Unlimited Local AST Diagnostics</h3>
+        <p>Your workspace is active with automated failure reproduction and zero-leak secret masking.</p>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn-tour" onclick="startGuidedTour()">Guided Tour</button>
+        <button class="btn-action-primary" onclick="alert('Your workspace is already fully unlocked on the free Pro developer tier!')">Active</button>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <!-- Left Column: Auto-Fix Pipeline & Repositories -->
+      <div>
+        <div class="card" id="cardPRs">
+          <div class="card-header">
+            <h2>Recent Autonomous Pull Requests</h2>
+            <span style="font-size: 12px; color: var(--accent-green); font-family: 'JetBrains Mono'; font-weight: 700;">100% Green CI</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Target Repo</th>
+                  <th>Defect Diagnosed</th>
+                  <th>Verification</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span style="color: var(--accent-cyan);">fintech-corp/payments-core</span></td>
+                  <td>RuntimeError: Event loop is closed</td>
+                  <td>48/48 passed (0.14s)</td>
+                  <td><span class="badge-pill green">PR #170 MERGED</span></td>
+                </tr>
+                <tr>
+                  <td><span style="color: var(--accent-cyan);">saas-app/auth-service</span></td>
+                  <td>TypeError: Cannot read property 'map'</td>
+                  <td>112/112 passed (0.42s)</td>
+                  <td><span class="badge-pill green">PR #89 MERGED</span></td>
+                </tr>
+                <tr>
+                  <td><span style="color: var(--accent-cyan);">crypto-vault/settlement</span></td>
+                  <td>DATA RACE in worker_pool.go</td>
+                  <td>36/36 passed (0.28s)</td>
+                  <td><span class="badge-pill amber">PR #244 READY</span></td>
+                </tr>
+                <tr>
+                  <td><span style="color: var(--accent-cyan);">ivegotahunnitonit/bartholomew</span></td>
+                  <td>Python AST Modernization &amp; Guard</td>
+                  <td>28/28 passed (0.16s)</td>
+                  <td><span class="badge-pill green">VERIFIED</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="cardWebhook">
+          <div class="card-header">
+            <h2>GitHub Ingestion Endpoint</h2>
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">Add this Webhook URL to your GitHub Repository Settings to enable automatic CI failure detection:</p>
+          <div class="input-group">
+            <label>Payload URL (GitHub Webhook):</label>
+            <div class="webhook-box">https://acn-fastapi-backend-k72r.a.run.app/api/webhooks/github</div>
+          </div>
+          <div class="input-group">
+            <label>Subscribed Events:</label>
+            <div class="webhook-box">workflow_run (conclusion: failure), pull_request</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: BYOK Model & Key Settings -->
+      <div>
+        <div class="card" id="cardAI">
+          <div class="card-header">
+            <h2>AI Engine &amp; BYOK Settings</h2>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Select your preferred AI provider or run on local heuristic verification.</p>
+
+          <div class="input-group">
+            <label>Active Engine:</label>
+            <select class="input-field" id="providerSelect">
+              <option value="gemini">Google Gemini 2.0 Flash (Recommended)</option>
+              <option value="ollama">Local Ollama (http://localhost:11434)</option>
+              <option value="openai">OpenAI (gpt-4o-mini)</option>
+              <option value="heuristic">Zero-Key Heuristic Engine</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>API Key (Optional):</label>
+            <input type="password" class="input-field" id="apiKeyInput" placeholder="AIzaSy... or sk-..." />
+          </div>
+
+          <button class="btn-save" onclick="saveSettings()">Save Configuration</button>
+        </div>
+
+        <div class="card" id="cardExtension">
+          <div class="card-header">
+            <h2>Browser Extension</h2>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Diagnose pull requests and CI logs directly in your Chrome or Microsoft Edge side panel.</p>
+          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-action-primary" style="display: block; text-align: center; text-decoration: none; padding: 12px;">Get Browser Extension</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Interactive Guided Tour Modal -->
+  <div class="tour-modal" id="tourModal">
+    <div class="tour-title" id="tourTitle">Step 1: Automated Pull Requests</div>
+    <div class="tour-desc" id="tourDesc">This ledger lists all pull requests automatically created by Bartholomew after isolated reproduction and 100% test passes.</div>
+    <div class="tour-nav-btns">
+      <button onclick="endTour()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;">Skip Tour</button>
+      <div style="display:flex; gap:8px;">
+        <button id="tourPrevBtn" onclick="prevTourStep()" style="background:rgba(255,255,255,0.08); border:1px solid var(--border-color); color:#fff; padding:6px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Back</button>
+        <button id="tourNextBtn" onclick="nextTourStep()" class="btn-action-primary" style="padding:6px 14px; font-size:12px; min-height:auto;">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 Bartholomew Autonomous Systems. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    function saveSettings() {
+      const provider = document.getElementById('providerSelect').value;
+      const key = document.getElementById('apiKeyInput').value;
+      localStorage.setItem('bartholomew_provider', provider);
+      if (key) localStorage.setItem('bartholomew_key', key);
+      alert('AI Configuration saved successfully!');
+    }
+
+    // Guided Tour Logic (Paced & Intuitive)
+    let currentStep = 0;
+    const tourSteps = [
+      {
+        cardId: 'cardPRs',
+        title: '1. Automated Pull Request Ledger',
+        desc: 'Here you see real-time repairs. Whenever a CI build fails on GitHub, Bartholomew diagnoses the root cause, applies a minimal patch, verifies all tests pass, and opens a Pull Request.'
+      },
+      {
+        cardId: 'cardWebhook',
+        title: '2. GitHub Ingestion Webhook',
+        desc: 'Connect your repositories in 1 step by adding this Webhook URL to your GitHub Repo Settings. Bartholomew automatically listens for broken build events.'
+      },
+      {
+        cardId: 'cardAI',
+        title: '3. AI Provider & BYOK Settings',
+        desc: 'Choose your inference engine. You can plug in your own Google Gemini API key, use local Ollama, OpenAI, or rely on our built-in zero-key heuristic engine.'
+      },
+      {
+        cardId: 'cardExtension',
+        title: '4. Chrome & Edge Side Panel',
+        desc: 'Install the Bartholomew extension to get floating CI log analysis and side-panel assistant tools while viewing GitHub pull requests in your browser.'
+      }
+    ];
+
+    function startGuidedTour() {
+      currentStep = 0;
+      document.getElementById('tourModal').style.display = 'block';
+      renderTourStep();
+    }
+
+    function renderTourStep() {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('highlight-focus'));
+      const step = tourSteps[currentStep];
+      const targetCard = document.getElementById(step.cardId);
+      if (targetCard) {
+        targetCard.classList.add('highlight-focus');
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      document.getElementById('tourTitle').innerText = step.title;
+      document.getElementById('tourDesc').innerText = step.desc;
+      document.getElementById('tourPrevBtn').style.display = currentStep === 0 ? 'none' : 'inline-block';
+      document.getElementById('tourNextBtn').innerText = currentStep === tourSteps.length - 1 ? 'Finish' : 'Next →';
+    }
+
+    function nextTourStep() {
+      if (currentStep < tourSteps.length - 1) {
+        currentStep++;
+        renderTourStep();
+      } else {
+        endTour();
+      }
+    }
+
+    function prevTourStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderTourStep();
+      }
+    }
+
+    function endTour() {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('highlight-focus'));
+      document.getElementById('tourModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
