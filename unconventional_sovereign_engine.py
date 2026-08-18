@@ -12,7 +12,7 @@ Play 2: BTP Security Protocol Infrastructure Licensing
 - Licenses Bartholomew's sub-microsecond (1.14 μs) AST interceptor to agent swarms
 - Enterprise Contract Value: $25,000 - $100,000 / year per enterprise
 
-Owner: Itsub Solomon Alemayehu (itsub@bartholomew.info)
+Owner: Itsub Alemayehu (itsub@bartholomew.info)
 Wallet EVM: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 Solana Sink: B7Lx...LLRYo (Confidential & Masked)
 """
@@ -32,7 +32,7 @@ class UnconventionalSovereignEngine:
     """
 
     def __init__(self):
-        self.owner_name = "Itsub Solomon Alemayehu"
+        self.owner_name = "Itsub Alemayehu"
         self.owner_email = "itsub@bartholomew.info"
         self.evm_wallet = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
         

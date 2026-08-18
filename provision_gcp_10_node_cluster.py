@@ -4,7 +4,7 @@ Bartholomew 10-Node GCP Cluster Auto-Provisioner (Stream A Pure Compute Revenue)
 Provisions 10 GCP Compute instances (bartholomew-node-1 .. 10) on project acn-26670.
 Scales Stream A revenue to $23.40 / day ($702.00 / month) using $400 GCP credit.
 
-Owner: Itsub Solomon Alemayehu (itsub@bartholomew.info)
+Owner: Itsub Alemayehu (itsub@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 
@@ -77,7 +77,7 @@ def provision_cluster() -> Dict[str, Any]:
         "timestamp": now_iso,
         "project_id": project_id,
         "owner": {
-            "name": "Itsub Solomon Alemayehu",
+            "name": "Itsub Alemayehu",
             "email": "itsub@bartholomew.info",
             "wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
         },

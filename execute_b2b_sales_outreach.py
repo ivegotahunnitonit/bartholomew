@@ -19,7 +19,7 @@ def execute_live_b2b_sales_campaign():
         "title": "Bartholomew Live B2B Sales & Client Onboarding Package",
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "founder": {
-            "name": "Itsub Solomon Alemayehu",
+            "name": "Itsub Alemayehu",
             "email": "itsub@bartholomew.info"
         },
         "pricing_tiers": {

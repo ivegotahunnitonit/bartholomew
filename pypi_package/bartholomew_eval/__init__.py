@@ -41,7 +41,7 @@ from .linux_adapter import LinuxExecutionAdapter, LinuxExecutionViolation
 from .linux_master import LinuxMasterEngine, LinuxSecurityViolation
 
 __version__ = "9.1.0"
-__author__ = "Itsub Solomon Alemayehu"
+__author__ = "Itsub Alemayehu"
 __all__ = [
     "LinuxExecutionAdapter",
     "LinuxExecutionViolation",

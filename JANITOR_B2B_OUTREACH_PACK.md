@@ -35,7 +35,7 @@ This package provides turnkey B2B outreach templates, pilot client audit package
 > **Live Operations Workspace:** `https://acn-26670.web.app/operations`  
 >
 > Best regards,  
-> **Itsub Solomon Alemayehu** | Founder & Creator, Bartholomew  
+> **Itsub Alemayehu** | Founder & Creator, Bartholomew  
 > `itsub@bartholomew.info`
 
 ---

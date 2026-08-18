@@ -4,7 +4,7 @@ Bartholomew Final 10-Node Expansion (Nodes 13 to 22)
 Provisions nodes 13 to 22 across europe-west1, asia-east1, and us-west1 on acn-26670.
 Completes the 22-Node Cluster to hit $51.48 / day Stream A revenue.
 
-Owner: Itsub Solomon Alemayehu (itsub@bartholomew.info)
+Owner: Itsub Alemayehu (itsub@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 

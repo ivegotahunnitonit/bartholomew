@@ -2,7 +2,7 @@
 Bartholomew Live Mainnet Task Worker Node — Mainnet Payout Receiver
 ===================================================================
 Founder & Payer Information:
-- Creator/Owner: Itsub Solomon Alemayehu
+- Creator/Owner: Itsub Alemayehu
 - Contact Email: itsub@bartholomew.info
 - Mainnet EVM Payout Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 - Mainnet Solana Payout Wallet: Bth11111111111111111111111111111111111111111
@@ -29,7 +29,7 @@ class LiveMainnetWorkerNode:
     """
 
     def __init__(self):
-        self.owner_name = "Itsub Solomon Alemayehu"
+        self.owner_name = "Itsub Alemayehu"
         self.owner_email = "itsub@bartholomew.info"
         self.evm_wallet = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
         

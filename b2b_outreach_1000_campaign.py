@@ -41,7 +41,7 @@ def execute_1000_lead_outreach_campaign():
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "total_dispatched_proposals": len(dispatched),
         "founder": {
-            "name": "Itsub Solomon Alemayehu",
+            "name": "Itsub Alemayehu",
             "email": "itsub@bartholomew.info"
         },
         "pitch_deck_url": "https://acn-26670.web.app/PITCH_DECK.html",

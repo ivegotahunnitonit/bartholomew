@@ -1,7 +1,7 @@
 """
 Bartholomew Background Google Account Email Dispatcher
 ======================================================
-Sender Account: Itsub Solomon Alemayehu (itsub@bartholomew.info)
+Sender Account: Itsub Alemayehu (itsub@bartholomew.info)
 Dispatches B2B outreach proposals to enterprise security leads in background micro-batches.
 """
 
@@ -21,7 +21,7 @@ class GCPBackgroundEmailDispatcher:
     """
 
     def __init__(self, sender_email: str = "itsub@bartholomew.info"):
-        self.sender_name = "Itsub Solomon Alemayehu"
+        self.sender_name = "Itsub Alemayehu"
         self.sender_email = sender_email
         self.pitch_deck_url = "https://acn-26670.web.app/PITCH_DECK.html"
         self.operations_url = "https://acn-26670.web.app/operations"

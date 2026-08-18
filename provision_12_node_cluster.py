@@ -4,7 +4,7 @@ Bartholomew 12-Node GCP Cluster Provisioner
 Provisions 11 new e2-standard-2 instances across us-central1 and us-east1 on acn-26670.
 Scales Stream A revenue to $28.08 / day ($842.40 / month) using $400 GCP credit.
 
-Owner: Itsub Solomon Alemayehu (itsub@bartholomew.info)
+Owner: Itsub Alemayehu (itsub@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 

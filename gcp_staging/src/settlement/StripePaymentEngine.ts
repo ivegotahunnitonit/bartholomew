@@ -1,5 +1,5 @@
 // StripePaymentEngine.ts
-// Handles Stripe Direct Payouts (/v1/payouts) to Itsub Solomon Alemayehu's
+// Handles Stripe Direct Payouts (/v1/payouts) to Itsub Alemayehu's
 // linked bank account (acct_1KCRy9DwLfE70w9S).
 
 import { config } from '../config.ts';

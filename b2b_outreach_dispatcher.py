@@ -50,7 +50,7 @@ Interactive Pitch Deck: {self.pitch_deck_url}
 Live Operations Workspace: {self.operations_workspace_url}
 
 Best regards,
-Itsub Solomon Alemayehu | Founder & Creator, Bartholomew
+Itsub Alemayehu | Founder & Creator, Bartholomew
 {self.contact_email}""",
             "status": "DISPATCH_READY",
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()

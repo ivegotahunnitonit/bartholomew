@@ -4,7 +4,7 @@ Version: 1.0.0
 Summary: Sub-millisecond AI agent trajectory security: 1-line @guard decorator for OWASP LLM kill-switches, secret redaction, and SHA-256 audit attestation.
 Home-page: https://github.com/ivegotahunnitonit/acn-security-action
 Author: Autonomous Circularity Network (ACN)
-Author-email: Itsub Solomon Alemayehu <invest@bartholomew.ai>
+Author-email: Itsub Alemayehu <invest@bartholomew.ai>
 License: MIT
 Project-URL: Homepage, https://bartholomew.ai
 Project-URL: Repository, https://github.com/itsub-solomon/bartholomew-eval

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="bartholomew-eval",
     version="7.0.0",
-    author="Itsub Solomon Alemayehu",
+    author="Itsub Alemayehu",
     author_email="itsub@bartholomew.info",
     description="Sub-millisecond OWASP LLM Top 10 Security Guard, Sovereign AES-256 Memory & Universal Swarm Federation Engine for AI Agents",
     long_description=open("README.md", "r", encoding="utf-8").read(),
