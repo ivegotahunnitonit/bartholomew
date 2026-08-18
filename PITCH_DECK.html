@@ -2,48 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew — Sub-Microsecond AI Trajectory Security & Zero-Trust Protocol</title>
-  <meta name="description" content="Institutional Pitch Deck & Investor Brief for Bartholomew: The Sub-Microsecond Zero-Trust AI Agent Control Plane & BTP Protocol.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Bartholomew | Investor Presentation & Technical Overview</title>
+  <meta name="description" content="Institutional Pitch Deck for Bartholomew: Autonomous CI/CD Failure Auto-Fix, Deterministic Reproduction & Mechanical Verification.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark:        #020813;
-      --bg-surface:     rgba(6, 20, 40, 0.92);
-      --bg-card:        rgba(10, 28, 53, 0.8);
+      --bg-dark:        #040813;
+      --bg-surface:     rgba(8, 18, 36, 0.92);
+      --bg-card:        rgba(13, 27, 51, 0.8);
       --border-subtle:  rgba(255, 255, 255, 0.08);
       --border-lit:     rgba(56, 189, 248, 0.3);
-      --border-emerald: rgba(16, 185, 129, 0.45);
+      --border-emerald: rgba(16, 185, 129, 0.4);
       --emerald:        #10b981;
       --emerald-light:  #34d399;
       --cyan:           #06b6d4;
       --cyan-light:     #38bdf8;
       --violet:         #8b5cf6;
       --violet-light:   #a78bfa;
-      --amber:          #f59e0b;
-      --amber-light:    #fbbf24;
-      --rose:           #f43f5e;
-      --rose-light:     #fb7185;
+      --accent-cyan:    #00f2fe;
+      --accent-blue:    #4facfe;
       --text-main:      #f8fafc;
       --text-muted:     #94a3b8;
-      --text-dim:       #475569;
       --font-heading:   'Plus Jakarta Sans', sans-serif;
       --font-body:      'Inter', sans-serif;
       --font-code:      'JetBrains Mono', monospace;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
 
-    body {
+    html, body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.12), transparent 45%),
-        radial-gradient(ellipse at 85% 20%, rgba(6, 182, 212, 0.12), transparent 50%),
-        radial-gradient(ellipse at 50% 85%, rgba(139, 92, 246, 0.08), transparent 60%);
+        radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.1), transparent 45%),
+        radial-gradient(ellipse at 85% 20%, rgba(6, 182, 212, 0.1), transparent 50%),
+        radial-gradient(ellipse at 50% 85%, rgba(139, 92, 246, 0.06), transparent 60%);
       color: var(--text-main);
       font-family: var(--font-body);
       min-height: 100vh;
@@ -51,610 +48,440 @@
       flex-direction: column;
       justify-content: space-between;
       overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
+    /* Header */
     .header-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.1rem 2.5rem;
+      padding: clamp(12px, 2.5vw, 18px) clamp(16px, 4vw, 36px);
       border-bottom: 1px solid var(--border-subtle);
-      background: rgba(2, 8, 19, 0.95);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
+      background: rgba(4, 8, 19, 0.88);
+      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 100;
     }
-
-    .brand {
+    .logo-wrap {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-family: var(--font-heading);
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: var(--text-main);
+      gap: 10px;
       text-decoration: none;
     }
-
-    .b-logo-svg {
+    .logo-mark {
       width: 32px;
       height: 32px;
-      flex-shrink: 0;
-    }
-
-    .deck-title {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 700;
+      min-width: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #050c1a;
+      font-weight: 900;
+      font-size: 16px;
       font-family: var(--font-code);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    }
+    .logo-text {
+      font-size: clamp(18px, 3.5vw, 20px);
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #ffffff, #8ea2c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge-deck {
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--border-emerald);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-weight: 600;
     }
 
-    .slide-container {
+    /* Slide Container */
+    .deck-container {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2.25rem 2.5rem;
+      padding: clamp(16px, 4vw, 36px);
+      width: 100%;
     }
 
     .slide {
       display: none;
       width: 100%;
-      max-width: 1120px;
-      animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 1040px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 44px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(14px);
+      animation: fadeIn 0.3s ease forwards;
     }
-
     .slide.active { display: block; }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: 99px;
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--emerald-light);
-      border: 1px solid var(--border-emerald);
-      font-size: 0.75rem;
-      font-weight: 800;
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: var(--cyan-light);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 1.1rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 700;
     }
 
     h1 {
       font-family: var(--font-heading);
-      font-size: 2.6rem;
-      font-weight: 900;
-      line-height: 1.18;
-      margin-bottom: 1.1rem;
-      letter-spacing: -0.02em;
+      font-size: clamp(24px, 4.5vw, 38px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
     }
-
     .gradient-text {
-      background: linear-gradient(135deg, #34d399 0%, #38bdf8 50%, #a78bfa 100%);
+      background: linear-gradient(135deg, var(--cyan-light), var(--emerald-light));
       -webkit-background-clip: text;
-      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     p {
       color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.65;
-      margin-bottom: 1.25rem;
+      font-size: clamp(14px, 2vw, 16px);
+      line-height: 1.6;
+      margin-bottom: 16px;
     }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 1.25rem; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-top: 1.25rem; }
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
 
     .card {
-      background: var(--bg-surface);
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 1.4rem;
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      transition: border-color 0.2s;
+      border-radius: 14px;
+      padding: clamp(18px, 3.5vw, 24px);
     }
-
-    .card:hover { border-color: var(--border-lit); }
-
     .card h3 {
       font-family: var(--font-heading);
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--emerald-light);
-      margin-bottom: 0.45rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-size: clamp(16px, 2.5vw, 19px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
     }
 
-    .card p {
-      font-size: 0.86rem;
-      margin-bottom: 0;
-      line-height: 1.55;
-    }
-
-    .proof-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: #030a17;
-      border: 1px solid var(--border-lit);
-      padding: 0.4rem 0.75rem;
-      border-radius: 8px;
-      font-family: var(--font-code);
-      font-size: 0.76rem;
-      color: var(--cyan-light);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.25rem;
-      font-size: 0.84rem;
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 0.85rem 1.1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    th {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      color: var(--emerald-light);
-      background: rgba(6, 20, 40, 0.95);
-    }
-
-    td { background: rgba(10, 28, 53, 0.4); }
-
-    .badge-check {
-      color: var(--emerald-light);
-      font-weight: 800;
-    }
-
+    /* Controls Bar */
     .controls-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.1rem 2.5rem;
+      padding: 14px clamp(16px, 4vw, 36px);
       border-top: 1px solid var(--border-subtle);
-      background: rgba(2, 8, 19, 0.95);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
+      background: rgba(4, 8, 19, 0.9);
+      gap: 12px;
     }
-
     .btn-nav {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      padding: 0.55rem 1.35rem;
-      border-radius: 10px;
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.85rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      min-height: 44px;
+      min-width: 44px;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
       text-decoration: none;
     }
-
-    .btn-nav:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
+    .btn-nav:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--cyan-light); }
     .btn-primary {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #030b1a;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #050c1a !important;
       border: none;
-      font-weight: 800;
+      font-weight: 700;
     }
-    .btn-primary:hover { background: linear-gradient(135deg, #34d399, #10b981); }
-
     .slide-counter {
       font-family: var(--font-code);
-      font-size: 0.85rem;
+      font-size: 13px;
       color: var(--text-muted);
-      font-weight: 700;
+    }
+
+    /* Comparison Table */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
+    th { color: var(--text-muted); padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); font-family: var(--font-code); font-size: 12px; text-transform: uppercase; }
+    td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 13.5px; }
+
+    @media (max-width: 600px) {
+      .controls-bar { flex-wrap: wrap; justify-content: center; }
+      .slide-counter { order: -1; width: 100%; text-align: center; margin-bottom: 6px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header Bar -->
-  <div class="header-bar">
-    <a href="/" class="brand">
-      <svg class="b-logo-svg" width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="b-shield-grad-deck" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#10b981" stop-opacity="0.4"/>
-            <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.3"/>
-          </linearGradient>
-          <linearGradient id="b-stroke-grad-deck" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#34d399"/>
-            <stop offset="50%" stop-color="#38bdf8"/>
-            <stop offset="100%" stop-color="#a78bfa"/>
-          </linearGradient>
-          <filter id="b-glow-deck" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.5" result="blur"/>
-            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-          </filter>
-        </defs>
-        <path d="M20 2L35 8.5V20C35 29.5 28.5 36.8 20 39C11.5 36.8 5 29.5 5 20V8.5L20 2Z" fill="url(#b-shield-grad-deck)" stroke="url(#b-stroke-grad-deck)" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M13 11H23C26.5 11 28.5 12.8 28.5 15C28.5 16.8 27 18.2 25 18.8C27.5 19.5 29 21.2 29 23.5C29 26 26.8 28 23 28H13V11Z" stroke="url(#b-stroke-grad-deck)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#b-glow-deck)"/>
-        <circle cx="13" cy="11" r="1.8" fill="#34d399"/>
-        <circle cx="13" cy="19.5" r="1.8" fill="#38bdf8"/>
-        <circle cx="13" cy="28" r="1.8" fill="#a78bfa"/>
-        <circle cx="23" cy="11" r="1.6" fill="#34d399"/>
-        <circle cx="23" cy="28" r="1.6" fill="#a78bfa"/>
-        <path d="M18 19.5L24 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <span>Bartholomew</span>
+  <header class="header-bar">
+    <a href="/" class="logo-wrap">
+      <div class="logo-mark">B</div>
+      <div class="logo-text">BARTHOLOMEW</div>
     </a>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <a href="/operations" class="btn-nav btn-primary" style="padding: 0.45rem 1rem;">Live Operations Workspace</a>
-      <a href="/#simulator" class="btn-nav" style="color: var(--cyan-light); border-color: var(--border-lit);">Trajectory Simulator</a>
-      <div class="deck-title">Executive Pitch & Architecture Brief</div>
-    </div>
-  </div>
+    <div class="badge-deck">Investor &amp; Architecture Brief</div>
+  </header>
 
-  <!-- Slide Container -->
-  <div class="slide-container">
-    
-    <!-- Slide 1: What We Are & What We Do -->
+  <div class="deck-container">
+
+    <!-- Slide 1: Title -->
     <div class="slide active">
-      <span class="eyebrow">SUB-MICROSECOND ZERO-TRUST CONTROL PLANE (1.14 μs / 28/28 TESTS PASSING)</span>
-      <h1>What We Are &amp; <span class="gradient-text">What We Do</span></h1>
-      <p style="font-size: 1.25rem; color: var(--emerald-light); font-weight: 700; margin-bottom: 0.85rem;">
-        Bartholomew is the vendor-neutral zero-trust trajectory security daemon, sovereign cognitive memory system, and BTP machine protocol.
-      </p>
-      <p>
-        We intercept autonomous AI agent trajectories inline, scrub credential leaks in 1.14 microseconds, enforce fine-grained authority boundaries (DID + Scope Manifest), and generate RFC 8785 tamper-proof Ed25519 attestation proofs for enterprise compliance.
-      </p>
-      <div class="grid-3" style="margin-top: 1.5rem;">
-        <div class="card">
-          <h3>1. Sub-Microsecond Interceptor</h3>
-          <p>Scans agent thoughts, tool parameters, and POSIX execution boundaries in 1.14 μs with zero model latency penalty.</p>
-        </div>
-        <div class="card">
-          <h3 style="color: var(--cyan-light);">2. BTP Zero-Trust Protocol</h3>
-          <p>Standardizes identity (DID), delegated capability envelopes, nonce replay protection, and offline Ed25519 verification.</p>
-        </div>
-        <div class="card">
-          <h3 style="color: var(--violet-light);">3. Standalone Verification</h3>
-          <p>Zero Bartholomew server dependency. Independent Python, Node.js, and Go scripts verify evidence artifacts offline.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 2: How We Started & How We're Going -->
-    <div class="slide">
-      <span class="eyebrow">ORIGIN &amp; CONTINUOUS TRAJECTORY</span>
-      <h1>How We Started &amp; <span class="gradient-text">How We're Going</span></h1>
-      <div class="grid-2">
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">How We Started</h3>
-          <p style="margin-bottom: 0.75rem;">
-            Bartholomew emerged directly from real-world vulnerability research across bug bounty platforms (Immunefi, Google Bug Hunters, public GitHub repositories).
-          </p>
-          <p style="margin-bottom: 0;">
-            Uncovering raw API keys (`sk-proj`, `ghp`), runaway loop billing spikes ($10k/hr), and unmonitored agent tool execution forced a realization: <em>AI agents are transitioning from chatbots to high-velocity infrastructure operators, but CISOs are completely blind inside runtime trajectory loops.</em>
-          </p>
-        </div>
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">How We're Going</h3>
-          <p style="margin-bottom: 0.75rem;">
-            Today, Bartholomew is a live, production-tested zero-trust daemon deployed on GCP Cloud Run and Firebase Hosting (`acn-26670.web.app` / `bartholomew.info`).
-          </p>
-          <div class="proof-badge" style="margin-top: 0.5rem; display: block;">
-            ✓ 28 / 28 Automated Test Suites Passing in 0.24s<br>
-            ✓ 67 CIS Ubuntu 24.04 Benchmark Level 1 Controls Evaluated<br>
-            ✓ Standalone RFC 8785 JCS Offline Verifiers (Python / JS / Go)<br>
-            ✓ Enforced POSIX AST Interceptor & Authority Boundary Checks
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 3: The Moat (Tooling, Speed & Zero-Trust Protocol) -->
-    <div class="slide">
-      <span class="eyebrow">OUR COMPETITIVE MOAT &amp; ARCHITECTURAL REALITY</span>
-      <h1>It's Not Just Model Intelligence: <span class="gradient-text">It's Tooling &amp; Execution Speed</span></h1>
-      <p style="font-size: 1.05rem; margin-bottom: 1.25rem;">
-        Model intelligence alone cannot prevent rogue agent execution or unauthorized financial spend. Bartholomew's moat lies in its specialized zero-trust execution machinery:
-      </p>
-
+      <span class="eyebrow">AUTONOMOUS CI REPAIR &amp; MECHANICAL VERIFICATION</span>
+      <h1>Autonomous Software Repair with <span class="gradient-text">100% Verifiable Guarantees</span></h1>
+      <p>The autonomous engineering agent that catches failing tests on GitHub, synthesizes isolated deterministic reproduction proofs, applies minimal AST patches, and opens verified green Pull Requests in under 2 seconds.</p>
+      
       <div class="grid-3">
         <div class="card" style="border-color: var(--border-emerald);">
-          <h3>1. Sub-Microsecond Interceptor (1.14 μs)</h3>
-          <p>Zero LLM inference overhead. High-speed C/Go SIMD line scanner inspecting 11.98M audits/second inline.</p>
+          <h3 style="color: var(--emerald-light);">01. Zero Guessing</h3>
+          <p>Strict mechanical verification before any pull request is opened. Zero hallucinations.</p>
         </div>
         <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">2. BTP Authority Boundaries</h3>
-          <p>Strict DID-backed Delegation Envelopes with single-use Nonce Registries and 300s Timestamp Expiration Windows.</p>
+          <h3 style="color: var(--cyan-light);">02. Sub-2s Latency</h3>
+          <p>Instant localized AST repairs running with $0.00 / hour cloud infrastructure overhead.</p>
         </div>
-        <div class="card" style="border-color: var(--border-violet);">
-          <h3 style="color: var(--violet-light);">3. Native POSIX AST Interceptor</h3>
-          <p>Evaluates raw shell commands (`cat`, `curl`, `rm`, `chmod`) at the AST parsing layer before OS subprocess execution.</p>
-        </div>
-      </div>
-      
-      <div class="grid-2" style="margin-top: 1.25rem;">
-        <div class="card">
-          <h3 style="color: var(--amber-light);">4. 100% Standalone Offline Verification</h3>
-          <p>Third-party auditors verify Ed25519 signature proofs offline using standard `independent_verifier_standalone.py` without contacting our servers.</p>
-        </div>
-        <div class="card">
-          <h3 style="color: var(--rose-light);">5. Universal LLM Adapter Federation</h3>
-          <p>Normalizes tool calls across OpenAI (GPT-4o), Anthropic (Claude 3.5), Gemini, DeepSeek, AutoGen, and CrewAI swarms.</p>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">03. Open-Core &amp; BYOK</h3>
+          <p>Supports Google Gemini 2.0 Flash, OpenAI, Claude, and local Ollama inference models.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 4: The Machine-Settled Economic Rail Thesis -->
+    <!-- Slide 2: The Enterprise Problem -->
     <div class="slide">
-      <span class="eyebrow">EPIC RESEARCH BREAKTHROUGH &amp; MARKET INTERFACE THESIS</span>
-      <h1>Market A vs Market B: <span class="gradient-text">The Machine-Settled Economic Rail</span></h1>
-      <p style="margin-bottom: 1.1rem;">
-        Through empirical 24-hour diagnostic runs, Bartholomew proved a fundamental market interface principle:
-      </p>
+      <span class="eyebrow">THE ENTERPRISE PAIN POINT</span>
+      <h1>Broken Pipelines Cost <span class="gradient-text">Millions in Lost Engineering Hours</span></h1>
+      <p>Modern engineering teams spend up to 25% of sprint cycles manually diagnosing failing test suites, flaky asynchronous timeouts, and subtle dependency version deprecations.</p>
       
       <div class="grid-2">
-        <div class="card" style="border-color: var(--border-subtle); background: rgba(15, 23, 42, 0.6);">
-          <h3 style="color: var(--rose-light);">Market A: Human-Gated Market (Flawed for Agents)</h3>
-          <div style="font-family: var(--font-code); font-size: 0.76rem; color: var(--text-dim); margin-bottom: 0.5rem;">
-            Find → Qualify → Execute → Deliver → 🧑 Human Triage Review (3–7 Days) → Maybe Pay
-          </div>
-          <p style="font-size: 0.84rem;">
-            Traditional bug bounties cause execution bottlenecking. Even with 100% autonomous execution, time-to-dollar ($T_1$) is trapped behind human review queues.
-          </p>
+        <div class="card">
+          <h3>The Legacy Status Quo</h3>
+          <p>A CI pipeline breaks at 2:00 AM. Developers wait for manual triage, context-switch to read 5,000-line logs, and guess at fixes across multi-step iteration loops.</p>
         </div>
-        <div class="card" style="border-color: var(--border-emerald); background: rgba(16, 185, 129, 0.08);">
-          <h3 style="color: var(--emerald-light);">Market B: Machine-Settled Market (The Moat)</h3>
-          <div style="font-family: var(--font-code); font-size: 0.76rem; color: var(--emerald-light); margin-bottom: 0.5rem;">
-            Find → Qualify → Execute → 🤖 Algorithmic Verification → Immediate Settlement ($)
-          </div>
-          <p style="font-size: 0.84rem;">
-            Contract exists before arrival. Satisfying objective conditions triggers automated, machine-verified settlement with zero human gatekeeper.
-          </p>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">The Bartholomew Solution</h3>
+          <p>Catches the failure webhook, generates an isolated reproduction script proving the bug, applies the minimal surgical patch, and opens a green PR before anyone wakes up.</p>
         </div>
-      </div>
-
-      <div class="card" style="margin-top: 1.25rem; border-color: var(--border-lit);">
-        <h3 style="color: var(--cyan-light);">The 7-Point Economic Rail Filter</h3>
-        <p style="font-size: 0.86rem; margin-bottom: 0;">
-          Candidate opportunities are rejected unless all 7 are proven: <code>Payer</code> → <code>Obligation</code> → <code>Objective Trigger</code> → <code>Automated Verifier</code> → <code>Settlement Mechanism</code> → <code>Autonomous Execution</code> → <code>Independently Observable Payment</code>.
-        </p>
       </div>
     </div>
 
-    <!-- Slide 5: Measurable Proof for Pilots, Clients & Investors -->
+    <!-- Slide 3: Market Size -->
     <div class="slide">
-      <span class="eyebrow">VERIFIABLE EMPIRICAL PROOF METRICS</span>
-      <h1>Measurable Proof for <span class="gradient-text">Pilots, Clients &amp; Investors</span></h1>
-      <p style="margin-bottom: 1.25rem;">
-        Zero fluff. Every claim in Bartholomew is backed by automated, reproducible empirical test suites and benchmark measurements:
-      </p>
-
-      <div class="grid-4">
-        <div class="card" style="text-align: center;">
-          <div style="font-family: var(--font-code); font-size: 2.2rem; font-weight: 900; color: var(--emerald-light);">1.14 μs</div>
-          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-top: 0.3rem;">Intercept Latency</div>
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">Measured via in-memory stream scanner.</p>
+      <span class="eyebrow">MARKET OPPORTUNITY</span>
+      <h1>$18B+ Market for <span class="gradient-text">Developer Productivity &amp; Automated Testing</span></h1>
+      <p>As software velocity surges, CI/CD reliability and automated software repair represent the highest-ROI bottleneck in modern developer toolchains.</p>
+      
+      <div class="grid-3">
+        <div class="card">
+          <h3 style="color: var(--cyan-light); font-size: 26px;">$18.4B</h3>
+          <p>Total Addressable Market for DevOps &amp; automated testing toolchains by 2028.</p>
         </div>
-
-        <div class="card" style="text-align: center;">
-          <div style="font-family: var(--font-code); font-size: 2.2rem; font-weight: 900; color: var(--cyan-light);">67</div>
-          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-top: 0.3rem;">CIS Benchmark Controls</div>
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">58 PASS, 6 FAIL, 3 N/A on Ubuntu 24.04.</p>
+        <div class="card">
+          <h3 style="color: var(--emerald-light); font-size: 26px;">100M+</h3>
+          <p>GitHub developers and 400M+ active software repositories worldwide.</p>
         </div>
-
-        <div class="card" style="text-align: center;">
-          <div style="font-family: var(--font-code); font-size: 2.2rem; font-weight: 900; color: var(--violet-light);">28 / 28</div>
-          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-top: 0.3rem;">Test Suites Passing</div>
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">Passing in 0.24s across pytest suite.</p>
-        </div>
-
-        <div class="card" style="text-align: center;">
-          <div style="font-family: var(--font-code); font-size: 2.2rem; font-weight: 900; color: var(--amber-light);">RFC 8785</div>
-          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-top: 0.3rem;">JCS Serialization</div>
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem;">Canonical JSON &amp; offline Ed25519 proofs.</p>
+        <div class="card">
+          <h3 style="color: var(--violet-light); font-size: 26px;">85%</h3>
+          <p>Of tech executives prioritizing AI developer tooling to reduce CI/CD maintenance.</p>
         </div>
       </div>
-
-      <table style="margin-top: 1.25rem;">
-        <thead>
-          <tr>
-            <th>Security &amp; Performance Dimension</th>
-            <th>Industry Baseline / Legacy APM</th>
-            <th>Bartholomew Benchmark</th>
-            <th>Empirical Verification Method</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Trajectory Inspection Speed</td>
-            <td>32.5 ms – 58.2 ms</td>
-            <td><strong class="badge-check">1.14 μs</strong></td>
-            <td>`MICROSECOND_SCAN_BENCHMARK.json`</td>
-          </tr>
-          <tr>
-            <td>Credential Leak Protection</td>
-            <td>Post-hoc log search</td>
-            <td><strong class="badge-check">Zero-leak inline scrubbing</strong></td>
-            <td>`test_linux_master.py` &amp; `test_llm_adapters.py`</td>
-          </tr>
-          <tr>
-            <td>Financial Fee Leakage Limit</td>
-            <td>Unbounded API spend</td>
-            <td><strong class="badge-check">Blocked if fee &gt; 3.0%</strong></td>
-            <td>`pypi_package/bartholomew_eval/linux_adapter.py`</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
-    <!-- Slide 6: How Help Benefits Us & How We Benefit the World -->
+    <!-- Slide 4: Reconstructed Architecture & Mechanical Verification -->
     <div class="slide">
-      <span class="eyebrow">MUTUAL BENEFIT &amp; WORLD-CHANGING VALUE</span>
-      <h1>Where We Need Help &amp; <span class="gradient-text">How We Benefit the World</span></h1>
+      <span class="eyebrow">CORE ARCHITECTURAL MECHANISM</span>
+      <h1>How Bartholomew Works: <span class="gradient-text">3-Step Mechanical Verification</span></h1>
+      <p>Unlike conversational LLMs that guess solutions, Bartholomew guarantees deterministic correctness through closed-loop mechanical verification.</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-color: var(--border-lit);">
+          <h3 style="color: var(--cyan-light);">Step 1: Isolate &amp; Reproduce</h3>
+          <p>Clones the failing commit into an isolated container and synthesizes a standalone reproduction test proving the defect.</p>
+        </div>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">Step 2: Minimal AST Patch</h3>
+          <p>Applies a surgical AST compiler patch strictly addressing the root-cause failure with zero collateral changes.</p>
+        </div>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">Step 3: Verification (100%)</h3>
+          <p>Executes full test suites locally to prove 100% green passes with zero regressions before opening the GitHub PR.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Reconstructed Competitive Advantage -->
+    <div class="slide">
+      <span class="eyebrow">COMPETITIVE MATRIX</span>
+      <h1>Why Bartholomew Wins: <span class="gradient-text">Deterministic Guarantees</span></h1>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature / Metric</th>
+              <th>Generic AI Copilots</th>
+              <th>Bartholomew Autonomous Systems</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Failure Reproduction</strong></td>
+              <td>None (Guesses fix from prompt)</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">Synthesizes standalone reproduction proof</span></td>
+            </tr>
+            <tr>
+              <td><strong>Verification Engine</strong></td>
+              <td>None (User manually verifies)</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">Automated test suite execution (100% Pass)</span></td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Ingestion</strong></td>
+              <td>Manual copy-paste into chat</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">1-Click Webhook GitHub App Integration</span></td>
+            </tr>
+            <tr>
+              <td><strong>Resolution Speed</strong></td>
+              <td>10 - 30 minutes manual iteration</td>
+              <td><span style="color: var(--emerald-light); font-weight: 700;">&lt; 2.0 seconds autonomous turnaround</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 6: World Benefit -->
+    <div class="slide">
+      <span class="eyebrow">VALUE PROPOSITION</span>
+      <h1>Empowering Engineering Teams &amp; <span class="gradient-text">Elevating Developer Flow</span></h1>
       
       <div class="grid-2">
         <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">Where We Could Use Help &amp; How It Benefits Us</h3>
-          <p style="margin-bottom: 0.75rem;">
-            We are actively seeking strategic pilot partners (Fintechs, AI Agent Platforms, Enterprise CISOs), Security Researchers, and Seed/Grant Capital:
-          </p>
-          <ul style="color: var(--text-muted); font-size: 0.85rem; padding-left: 1.2rem; line-height: 1.6;">
-            <li><strong>Enterprise Pilot Deployments</strong>: Integrates Bartholomew inline with production AI agent clusters to test live enclaves.</li>
-            <li><strong>Machine Settlement Rail Partners</strong>: Connects BTP authority verification to automated DePIN, compute, and API settlement rails.</li>
-            <li><strong>Seed &amp; Grant Capital</strong>: Accelerates formal SOC2 Type II, ISO 27001, and SCIF air-gap defense compliance packages.</li>
-          </ul>
+          <h3 style="color: var(--cyan-light);">For Software Engineers</h3>
+          <p>Eliminates the dreaded 2:00 AM broken pipeline. Engineers spend their time building high-value features rather than debugging flaky async timeouts and deprecated AST syntax.</p>
         </div>
-
         <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">How We Benefit the World &amp; Our Value Proposition</h3>
-          <p style="margin-bottom: 0.75rem;">
-            As AI agents transition into sovereign economic actors, Bartholomew prevents catastrophic agent failure while enabling safe commerce:
-          </p>
-          <ul style="color: var(--text-muted); font-size: 0.85rem; padding-left: 1.2rem; line-height: 1.6;">
-            <li><strong>Protects Human Infrastructure</strong>: Prevents unauthorized spending, data wiping, credential leaks, and runaway billing loops.</li>
-            <li><strong>Enables Safe Machine Commerce</strong>: Standardizes machine identity (DID) and cryptographic evidence for agent-to-agent transactions.</li>
-            <li><strong>Restores CISO Trust</strong>: Gives enterprises mathematical proof that AI agents operate strictly within approved authority envelopes.</li>
-          </ul>
+          <h3 style="color: var(--emerald-light);">For Engineering Leadership</h3>
+          <p>Drastically reduces CI compute waste, increases PR merge velocity, and guarantees clean test suites across large microservice architectures.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 7: Live Product Links & Developer Ecosystem -->
+    <!-- Slide 7: Reconstructed Live Ecosystem -->
     <div class="slide">
-      <span class="eyebrow">DEVELOPER ECOSYSTEM &amp; LIVE PRODUCT INTERFACES</span>
-      <h1>Live Tools, Simulator &amp; <span class="gradient-text">Developer Ecosystem</span></h1>
-      <p style="margin-bottom: 1.25rem;">
-        Explore all Bartholomew interfaces live with working links and zero dead ends:
-      </p>
+      <span class="eyebrow">LIVE PRODUCT INTERFACES</span>
+      <h1>Live Tools &amp; <span class="gradient-text">Interactive Ecosystem</span></h1>
+      <p>Explore all active Bartholomew interfaces live with working links:</p>
 
       <div class="grid-3">
         <div class="card" style="border-color: var(--border-emerald);">
-          <h3>1. Interactive Trajectory Simulator</h3>
-          <p style="margin-bottom: 0.75rem;">Audit agent trajectories, run policy-tree algorithm synthesis, or test emergency key nullification live.</p>
-          <a href="/#simulator" class="btn-nav btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.78rem;">Launch Simulator ↗</a>
+          <h3 style="color: var(--emerald-light);">1. Live Operations</h3>
+          <p>Real-time daemon telemetry stream, connected repos, and interactive test triggers.</p>
+          <a href="/operations" class="btn-nav btn-primary" style="margin-top: 10px;">Launch Operations ↗</a>
         </div>
-
         <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">2. PyPI Package (`bartholomew-eval`)</h3>
-          <p style="margin-bottom: 0.75rem;">Zero-dependency Python package enforcing `@guard` trajectory decoration and offline proof verification.</p>
-          <a href="https://pypi.org/project/bartholomew-eval/" target="_blank" rel="noopener noreferrer" class="btn-nav" style="padding: 0.4rem 0.85rem; font-size: 0.78rem; color: var(--cyan-light); border-color: var(--border-lit);">Inspect PyPI Package ↗</a>
+          <h3 style="color: var(--cyan-light);">2. Auto-Fix Simulator</h3>
+          <p>Interactive 3-scenario sandbox executing isolated AST repair and verification.</p>
+          <a href="/simulator" class="btn-nav" style="margin-top: 10px;">Open Simulator ↗</a>
         </div>
-
-        <div class="card" style="border-color: var(--border-violet);">
-          <h3 style="color: var(--violet-light);">3. BTP Test Vectors &amp; Protocol Spec</h3>
-          <p style="margin-bottom: 0.75rem;">Language-neutral BTP test vectors and standard specs for Python, JavaScript, and Go verifiers.</p>
-          <a href="/api/v1/btp/test-vectors" target="_blank" rel="noopener noreferrer" class="btn-nav" style="padding: 0.4rem 0.85rem; font-size: 0.78rem; color: var(--violet-light); border-color: var(--border-violet);">View BTP Test Vectors ↗</a>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top: 1.25rem; background: rgba(3, 10, 23, 0.9); border-color: var(--border-emerald);">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h4 style="font-family: var(--font-heading); font-size: 0.95rem; color: var(--emerald-light); font-weight: 800;">Quickstart Terminal Command</h4>
-            <p style="font-size: 0.8rem; margin: 0; color: var(--text-muted);">Install via PyPI or test standalone offline verifier locally:</p>
-          </div>
-          <div style="font-family: var(--font-code); font-size: 0.82rem; color: var(--text-main); background: #020810; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-            pip install bartholomew-eval &amp;&amp; python independent_verifier_standalone.py
-          </div>
+        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
+          <h3 style="color: var(--violet-light);">3. Developer Console</h3>
+          <p>Repository connection flow, BYOK Gemini settings, and PR history ledger.</p>
+          <a href="/dashboard" class="btn-nav" style="margin-top: 10px;">Open Dashboard ↗</a>
         </div>
       </div>
     </div>
 
-    <!-- Slide 8: Commercial Licensing & Monetization -->
+    <!-- Slide 8: Reconstructed Monetization -->
     <div class="slide">
-      <span class="eyebrow">COMMERCIAL LICENSING &amp; MONETIZATION MODEL</span>
-      <h1>Tiered B2B Software Licensing</h1>
-      <p style="font-size:1.05rem; color:var(--text-muted); margin-bottom:1.25rem;">
-        Bartholomew monetizes via a high-margin enterprise licensing model: developer open-core adoption driving paid per-node annual runtime subscriptions for regulated B2B microservices.
-      </p>
+      <span class="eyebrow">COMMERCIAL MODEL</span>
+      <h1>Transparent <span class="gradient-text">B2B SaaS Pricing</span></h1>
+      <p>High-margin developer tool subscription model driving frictionless bottom-up adoption.</p>
+
       <div class="grid-3">
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">Developer Tier (Open-Core Free)</h3>
-          <p style="font-size:0.82rem; margin-bottom:0.5rem;"><strong style="color:#fff;">$0 / month</strong></p>
-          <p>Local Go daemon binary &amp; Python <code style="color:var(--emerald-light);">@guard()</code> SDK up to 1M trajectory audits/month for developer adoption.</p>
+        <div class="card">
+          <h3>Developer Tier</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$0 / month</p>
+          <p>Open-source CLI, Chrome/Edge extension, and local AST diagnostics up to 100 fixes/month.</p>
         </div>
         <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">Enterprise Microservice License</h3>
-          <p style="font-size:0.82rem; margin-bottom:0.5rem;"><strong style="color:#fff;">$25k – $100k / year</strong></p>
-          <p>Per-node subscription for fintech &amp; healthcare runtimes. Includes live CISO dashboard, SIEM connectors (Splunk/Datadog), and pre-deploy fuzzer.</p>
+          <h3 style="color: var(--cyan-light);">Pro Repo</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$49 / month</p>
+          <p>Unlimited automated CI fixes for single repositories with deterministic reproduction tests.</p>
         </div>
-        <div class="card" style="border-color: var(--border-violet);">
-          <h3 style="color: var(--violet-light);">Sovereign Defense License</h3>
-          <p style="font-size:0.82rem; margin-bottom:0.5rem;"><strong style="color:#fff;">$150k – $500k / year</strong></p>
-          <p>Annual license for air-gapped SCIF, NSA IL5, and FedRAMP High defense enclaves with hardware-rooted TPM 2.0 / HSM attestations.</p>
+        <div class="card" style="border-color: var(--border-emerald);">
+          <h3 style="color: var(--emerald-light);">Team Organization</h3>
+          <p style="color: #fff; font-weight: 800; font-size: 20px;">$199 / month</p>
+          <p>Unlimited GitHub repos, parallel fix queues, flaky test quarantining, and Slack notifications.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 9: Founder & Architectural Origin -->
+    <!-- Slide 9: Reconstructed Founder & Origin -->
     <div class="slide">
-      <span class="eyebrow">FOUNDER &amp; ARCHITECTURAL ORIGIN</span>
-      <h1>Founding Credibility &amp; Vulnerability Research</h1>
-      <div style="display: grid; grid-template-columns: 180px 1fr 1fr; gap: 1.5rem; align-items: center; margin-top: 1.25rem;">
-        <div style="text-align: center;">
-          <div style="width: 160px; height: 160px; border-radius: 20px; background: #060c1a; border: 2px solid var(--border-cyan); overflow: hidden; box-shadow: 0 0 30px rgba(6, 182, 212, 0.25); margin: 0 auto; cursor:pointer;" onclick="openFounderPhotoModal()" title="Click to view full photo">
-            <img src="founder_avatar.jpg" alt="Itsub Solomon Alemayehu" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-          </div>
-          <div style="font-family: var(--font-heading); font-weight: 800; font-size: 0.95rem; color: var(--text-main); margin-top: 0.6rem;">Itsub Solomon Alemayehu</div>
-          <div style="font-size: 0.76rem; color: var(--cyan-light); font-weight: 700;">Creator &amp; Founder</div>
-        </div>
-
-        <div class="card" style="border-color: var(--border-cyan);">
-          <h3 style="color: var(--cyan-light);">Vulnerability Research Origin</h3>
-          <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6;">
-            Bartholomew emerged from vulnerability research across bug bounty platforms including Immunefi, Google Bug Hunters, Bugcrowd, and public GitHub security trackers. Uncovering unmasked secret leaks and unmonitored tool loop traps in autonomous agents led directly to building Bartholomew.
-          </p>
+      <span class="eyebrow">FOUNDER IMPERATIVE</span>
+      <h1>Founding Vision &amp; <span class="gradient-text">Architectural Philosophy</span></h1>
+      
+      <div class="grid-2" style="align-items: center;">
+        <div class="card" style="text-align: center; border-color: var(--border-lit);">
+          <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; color: #050c1a; margin: 0 auto 12px; font-family: var(--font-code);">IA</div>
+          <h3 style="font-size: 20px; margin-bottom: 2px;">Itsub Alemayehu</h3>
+          <p style="color: var(--cyan-light); font-weight: 600; font-size: 13px;">Creator &amp; Founder, Bartholomew AI</p>
         </div>
 
         <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">Founder Imperative</h3>
-          <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6; font-style: italic;">
-            "Every engineer knows the friction of a 2:00 AM broken CI pipeline—a brittle flaky test or a subtle version mismatch that blocks an entire sprint. While LLMs are great at writing boilerplate, production systems require deterministic guarantees. I built Bartholomew to replace guessing with mechanical verification: isolate the defect, compute the minimal surgical fix, prove that 100% of tests pass, and ship the green PR before anyone even wakes up."
+          <h3 style="color: var(--emerald-light); font-size: 16px; margin-bottom: 10px;">Founder Manifesto</h3>
+          <p style="font-style: italic; color: #f0f4fc; font-size: 15px; line-height: 1.6;">
+            "While LLMs are great at writing boilerplate, production systems require deterministic guarantees. I built Bartholomew to replace guessing with mechanical verification: isolate the defect, compute the minimal surgical fix, prove that 100% of tests pass, and ship the green PR before anyone even wakes up."
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 10: Schedule Architecture Review & Contact -->
+    <!-- Slide 10: Reconstructed Clean Contact Us -->
     <div class="slide">
-      <span class="eyebrow">JOIN THE FUTURE OF AI SECURITY</span>
-      <h1>Schedule Technical Architecture Review</h1>
-      <p>Partner with Bartholomew to secure your autonomous AI microservices and agent runtimes.</p>
-      <div class="card" style="text-align:center; padding: 2.5rem; border-color: var(--border-emerald); background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(6,20,40,0.95));">
-        <h3 style="font-size: 1.5rem; justify-content:center;">Enterprise &amp; Investor Contact</h3>
-        <p style="color: var(--emerald-light); font-weight: 800; font-family: var(--font-code); font-size: 1.25rem; margin-top: 0.5rem; margin-bottom: 1.25rem;">itsub@bartholomew.info</p>
-        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-          <a href="mailto:itsub@bartholomew.info" class="btn-nav btn-primary" style="padding:0.75rem 1.6rem; font-size:0.9rem;">Contact Security Team</a>
-          <a href="/operations" class="btn-nav" style="color:var(--cyan-light); border-color:var(--border-lit); padding:0.75rem 1.6rem; font-size:0.9rem;">Live Operations Workspace</a>
-          <a href="/simulator" class="btn-nav" style="color:var(--emerald-light); border-color:var(--border-emerald); padding:0.75rem 1.6rem; font-size:0.9rem;">Trajectory Simulator</a>
+      <span class="eyebrow">JOIN THE FUTURE OF AUTONOMOUS REPAIR</span>
+      <h1>Partner with <span class="gradient-text">Bartholomew</span></h1>
+      <p>Deploy autonomous CI failure auto-repair across your engineering repositories today.</p>
+
+      <div class="card" style="text-align: center; padding: clamp(24px, 5vw, 40px); border-color: var(--border-emerald); margin-top: 20px;">
+        <h3 style="font-size: 24px; margin-bottom: 8px;">Ready to Eliminate Broken CI Builds?</h3>
+        <p style="max-width: 540px; margin: 0 auto 24px;">Install the GitHub App or start your 14-day free developer trial in under 60 seconds.</p>
+        
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="/dashboard" class="btn-nav btn-primary" style="padding: 12px 28px; font-size: 15px;">Get in Touch / Contact Us</a>
+          <a href="/operations" class="btn-nav" style="padding: 12px 28px; font-size: 15px;">Live Operations Workspace</a>
         </div>
       </div>
     </div>
@@ -663,9 +490,9 @@
 
   <!-- Controls Bar -->
   <div class="controls-bar">
-    <button class="btn-nav" onclick="prevSlide()">&larr; Previous Slide</button>
+    <button class="btn-nav" onclick="prevSlide()">&larr; Previous</button>
     <div class="slide-counter" id="slide-num">Slide 1 of 10</div>
-    <button class="btn-nav" onclick="nextSlide()">Next Slide &rarr;</button>
+    <button class="btn-nav" onclick="nextSlide()">Next &rarr;</button>
   </div>
 
   <script>
@@ -686,39 +513,6 @@
       if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
       if (e.key === 'ArrowLeft') prevSlide();
     });
-
-    function closeFounderPhotoModal() {
-      const modal = document.getElementById('founder-photo-modal');
-      if (modal) {
-        modal.style.opacity = '0';
-        setTimeout(() => { modal.style.display = 'none'; }, 250);
-      }
-    }
-
-    function openFounderPhotoModal() {
-      let modal = document.getElementById('founder-photo-modal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'founder-photo-modal';
-        modal.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(2,6,23,0.88); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); z-index:99999; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.25s ease; cursor:pointer;';
-        modal.onclick = closeFounderPhotoModal;
-        modal.innerHTML = `
-          <div style="position:relative; width:65vw; max-width:800px; min-width:380px; border-radius:24px; overflow:hidden; border:2px solid var(--border-lit); box-shadow:0 0 60px rgba(6,182,212,0.35); background:#060c1a; cursor:default;" onclick="event.stopPropagation()">
-            <img src="founder_avatar.jpg" alt="Itsub Solomon Alemayehu" style="width:100%; height:auto; display:block;">
-            <div style="padding:1.25rem 1.5rem; background:#030712; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <div style="font-family:var(--font-heading); font-weight:800; font-size:1.15rem; color:var(--text-main);">Itsub Solomon Alemayehu</div>
-                <div style="font-size:0.82rem; color:var(--cyan-light); font-weight:700;">Creator & Founder, Bartholomew AI</div>
-              </div>
-              <button onclick="closeFounderPhotoModal()" style="background:rgba(255,255,255,0.08); border:1px solid var(--border-subtle); color:var(--text-main); padding:0.45rem 1rem; border-radius:8px; font-weight:700; cursor:pointer;">Close</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(modal);
-      }
-      modal.style.display = 'flex';
-      setTimeout(() => { modal.style.opacity = '1'; }, 10);
-    }
   </script>
 </body>
 </html>
