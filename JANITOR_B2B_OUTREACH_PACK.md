@@ -6,7 +6,7 @@ This package provides turnkey B2B outreach templates, pilot client audit package
 
 ## 🎯 Target Persona & ICP (Ideal Client Profile)
 - **Target Roles:** CISO, Head of Security, VP of Platform Engineering, Lead AI Architect, Fintech Founders.
-- **Target Channels:** Executive LinkedIn, CISO Security Summits, Direct Email (`itsub@bartholomew.info`), GitHub Partner Proposals.
+- **Target Channels:** Executive LinkedIn, CISO Security Summits, Direct Email (`contact@bartholomew.info`), GitHub Partner Proposals.
 - **Core Pain Point:** Autonomous AI agents are executing multi-step tools in production, but security teams have zero inline visibility, risking raw API key leaks (`sk-proj`, `ghp`), POSIX command injections (`rm -rf`), and runaway billing loops ($10k/hr).
 
 ---
@@ -35,8 +35,8 @@ This package provides turnkey B2B outreach templates, pilot client audit package
 > **Live Operations Workspace:** `https://acn-26670.web.app/operations`  
 >
 > Best regards,  
-> **Itsub Alemayehu** | Founder & Creator, Bartholomew  
-> `itsub@bartholomew.info`
+> **Bartholomew AI Contributors** | Founder & Creator, Bartholomew  
+> `contact@bartholomew.info`
 
 ---
 
@@ -71,7 +71,7 @@ This package provides turnkey B2B outreach templates, pilot client audit package
 > Happy to run a 2-minute non-invasive trajectory audit for [Company Name].
 >
 > Pitch Deck: `https://acn-26670.web.app/PITCH_DECK.html`  
-> Direct Email: `itsub@bartholomew.info`
+> Direct Email: `contact@bartholomew.info`
 
 ---
 
@@ -95,4 +95,4 @@ This package provides turnkey B2B outreach templates, pilot client audit package
 >
 > Executive Pitch Deck: `https://acn-26670.web.app/PITCH_DECK.html`  
 > Live Operations Workspace: `https://acn-26670.web.app/operations`  
-> Contact: `itsub@bartholomew.info`
+> Contact: `contact@bartholomew.info`

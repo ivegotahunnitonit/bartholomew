@@ -4,7 +4,7 @@ Bartholomew $50/Day Net Profit Execution Engine
 Provisions GCP compute instances (bartholomew-node-1 .. 10) on project acn-26670
 using owner's $400 GCP credit to scale automated compute revenue to $50+/day.
 
-Owner: Itsub Alemayehu (itsub@bartholomew.info)
+Owner: Bartholomew AI Contributors (contact@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 
@@ -25,8 +25,8 @@ def calculate_50_per_day_roadmap() -> Dict[str, Any]:
         "timestamp": now_iso,
         "daily_target": "$50.00 / day ($1,500.00 / month)",
         "owner": {
-            "name": "Itsub Alemayehu",
-            "email": "itsub@bartholomew.info",
+            "name": "Bartholomew AI Contributors",
+            "email": "contact@bartholomew.info",
             "evm_payout_wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
         },
         "gcp_credit_status": {

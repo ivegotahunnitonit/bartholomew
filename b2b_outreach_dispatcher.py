@@ -23,7 +23,7 @@ class B2BOutreachDispatcher:
         self.test_suites_passing = "28 / 28 Test Suites (0.24s)"
         self.pitch_deck_url = "https://acn-26670.web.app/PITCH_DECK.html"
         self.operations_workspace_url = "https://acn-26670.web.app/operations"
-        self.contact_email = "itsub@bartholomew.info"
+        self.contact_email = "contact@bartholomew.info"
 
     def generate_personalized_ciso_proposal(self, ciso_name: str, company_name: str) -> Dict[str, Any]:
         proposal = {
@@ -50,7 +50,7 @@ Interactive Pitch Deck: {self.pitch_deck_url}
 Live Operations Workspace: {self.operations_workspace_url}
 
 Best regards,
-Itsub Alemayehu | Founder & Creator, Bartholomew
+Bartholomew AI Contributors | Founder & Creator, Bartholomew
 {self.contact_email}""",
             "status": "DISPATCH_READY",
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()

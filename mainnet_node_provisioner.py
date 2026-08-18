@@ -3,7 +3,7 @@ Bartholomew Mainnet Provider Node Auto-Provisioner
 =================================================
 Automates mainnet compute provider node configuration (Golem + Akash),
 enforces BTP zero-trust trajectory guard, and binds real token payouts to:
-Owner: Itsub Alemayehu (itsub@bartholomew.info)
+Owner: Bartholomew AI Contributors (contact@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 
@@ -22,8 +22,8 @@ class MainnetNodeProvisioner:
     """
 
     def __init__(self, wallet_address: str = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"):
-        self.owner_name = "Itsub Alemayehu"
-        self.owner_email = "itsub@bartholomew.info"
+        self.owner_name = "Bartholomew AI Contributors"
+        self.owner_email = "contact@bartholomew.info"
         self.wallet_address = wallet_address
         self.verifier = StandaloneBTPVerifier(pinned_root_keys={"did:bth:root_sec_org": "pubkey_root_sec"})
 

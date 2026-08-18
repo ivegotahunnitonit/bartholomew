@@ -1,7 +1,7 @@
 """
 Bartholomew Financial Legitimacy Audit & Returns Projection Engine
 ===================================================================
-Founder: Itsub Alemayehu (itsub@bartholomew.info)
+Founder: Bartholomew AI Contributors (contact@bartholomew.info)
 Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 Live GCP VM: bartholomew-node-1 (34.63.91.195, acn-26670)
 """

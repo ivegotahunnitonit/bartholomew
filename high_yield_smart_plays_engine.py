@@ -10,7 +10,7 @@ Play 1: GCP NVIDIA L4/T4 GPU AI Inference Node (vLLM / io.net / Render)
 Play 2: Solana Jito MEV & Pyth Oracle Sub-Second Verifier (BTP Engine)
 - Daily Tip Revenue: $45.00 / day
 
-Owner: Itsub Alemayehu (itsub@bartholomew.info)
+Owner: Bartholomew AI Contributors (contact@bartholomew.info)
 EVM Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 Solana Sink: 7xKX... (Awaiting Founder's Real Phantom/Solflare Address)
 """
@@ -39,8 +39,8 @@ def generate_high_yield_plays_matrix(solana_wallet: str = "Awaiting Founder Phan
         "title": "Bartholomew High-Yield Tested Plays Matrix (GPU Inference & Solana MEV)",
         "timestamp": now_iso,
         "owner": {
-            "name": "Itsub Alemayehu",
-            "email": "itsub@bartholomew.info",
+            "name": "Bartholomew AI Contributors",
+            "email": "contact@bartholomew.info",
             "evm_payout_wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
             "solana_mainnet_sink": solana_wallet
         },

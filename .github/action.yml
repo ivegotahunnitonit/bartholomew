@@ -1,6 +1,6 @@
 name: 'Bartholomew AI Agent Security & Trajectory Auditor'
 description: 'Sub-millisecond OWASP LLM Top 10 security audit, AST taint analysis, and sovereign memory guard for AI agents.'
-author: 'Itsub Alemayehu <itsub@bartholomew.info>'
+author: 'Bartholomew AI Contributors <contact@bartholomew.info>'
 branding:
   icon: 'shield'
   color: 'green'

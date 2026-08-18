@@ -16,7 +16,7 @@ We release security patches for the following versions of Bartholomew AI Agent S
 
 If you discover a security vulnerability, credential leak, or bypass in Bartholomew, please disclose it responsibly:
 
-- **Email:** `security@bartholomew.info` / `itsub@bartholomew.info`
+- **Email:** `security@bartholomew.info` / `contact@bartholomew.info`
 - **Response SLA:** Within 24 hours of receipt.
 - **Fix SLA:** Patch released within 72 hours for critical/high vulnerabilities.
 

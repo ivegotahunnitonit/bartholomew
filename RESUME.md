@@ -1,4 +1,4 @@
-# Itsub Alemayehu
+# Bartholomew AI Contributors
 ### Software Engineer | AI Systems & Autonomous Infrastructure
 
 **GitHub**: [github.com/ivegotahunnitonit](https://github.com/ivegotahunnitonit) | **Portfolio / Projects**: [github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)

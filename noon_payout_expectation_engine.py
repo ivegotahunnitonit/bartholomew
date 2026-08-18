@@ -3,7 +3,7 @@ Bartholomew Noon Payout Expectation Engine
 ==========================================
 Calculates exact expected token payout clearing into owner wallet by 12:00 PM (Noon).
 
-Owner: Itsub Alemayehu (itsub@bartholomew.info)
+Owner: Bartholomew AI Contributors (contact@bartholomew.info)
 EVM Payout Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 Solana Payout Sink: B7Lx...LLRYo (Confidential & Git-Ignored)
 """
@@ -33,8 +33,8 @@ def calculate_noon_payout_expectation():
         "target_deadline": "12:00 PM (Noon Today)",
         "elapsed_window_hours": f"{hours_until_noon:.2f} hours",
         "owner": {
-            "name": "Itsub Alemayehu",
-            "email": "itsub@bartholomew.info",
+            "name": "Bartholomew AI Contributors",
+            "email": "contact@bartholomew.info",
             "evm_payout_wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
             "solana_sink_masked": "B7Lx...LLRYo"
         },

@@ -112,7 +112,7 @@ python -m pytest -o pythonpath=pypi_package tests/
 
 ##  Author & Maintainer
 
-**Itsub Alemayehu**  
+**Bartholomew AI Contributors**  
 * **GitHub**: [@ivegotahunnitonit](https://github.com/ivegotahunnitonit)  
 * **Repository**: [github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
 

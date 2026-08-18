@@ -6,7 +6,7 @@ Registers 22 GCP Compute Node public IPs onto live mainnet provider networks:
 2. Akash Decentralized Compute Network (Provider Daemon)
 3. Polygon EVM Mainnet Escrow Contract (0x71C7656EC7ab88b098defB751B7401B5f6d8976F)
 
-Owner: Itsub Alemayehu (itsub@bartholomew.info)
+Owner: Bartholomew AI Contributors (contact@bartholomew.info)
 Payout Wallet: 0x71C7656EC7ab88b098defB751B7401B5f6d8976F
 """
 
@@ -26,8 +26,8 @@ class MainnetProviderRegistryDeployer:
     """
 
     def __init__(self):
-        self.owner_name = "Itsub Alemayehu"
-        self.owner_email = "itsub@bartholomew.info"
+        self.owner_name = "Bartholomew AI Contributors"
+        self.owner_email = "contact@bartholomew.info"
         self.wallet_evm = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
         self.solana_wallet = "Bth11111111111111111111111111111111111111111"
         self.verifier = StandaloneBTPVerifier(pinned_root_keys={"did:bth:root_sec_org": "pubkey_root_sec"})

@@ -53,4 +53,4 @@ Bartholomew is a vendor-neutral, sub-microsecond zero-trust protocol (BTP v0.1) 
 - **Live Operations Workspace**: [`/operations`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/web/src/components/OperationsWorkspace.tsx)
 - **Standalone Offline Verifier**: [`independent_verifier_standalone.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/independent_verifier_standalone.py)
 - **PyPI Package**: [`bartholomew-eval`](https://pypi.org/project/bartholomew-eval/)
-- **Contact Email**: `itsub@bartholomew.info`
+- **Contact Email**: `contact@bartholomew.info`

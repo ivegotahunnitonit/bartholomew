@@ -17,8 +17,8 @@ This document outlines the unit economics, ROI projection, and deployment automa
 ---
 
 ## 🔑 Payout Sink Wallet Address
-- **Owner / Creator**: Itsub Alemayehu
-- **Email**: `itsub@bartholomew.info`
+- **Owner / Creator**: Bartholomew AI Contributors
+- **Email**: `contact@bartholomew.info`
 - **EVM Mainnet Payout Wallet**: `0x71C7656EC7ab88b098defB751B7401B5f6d8976F`
 - **Solana Mainnet Payout Wallet**: `Bth11111111111111111111111111111111111111111`
 

@@ -20,7 +20,7 @@ const LINKS: Record<string, NavLink[]> = {
     { label: 'Executive Summary', href: '#executive-summary', ext: false },
     { label: 'Pitch Deck', href: '/PITCH_DECK.html', ext: false },
     { label: 'Operations Workspace', href: '/operations', ext: false },
-    { label: 'Contact Security Team', href: 'mailto:itsub@bartholomew.info', ext: true },
+    { label: 'Contact Security Team', href: 'mailto:contact@bartholomew.info', ext: true },
   ],
 }
 

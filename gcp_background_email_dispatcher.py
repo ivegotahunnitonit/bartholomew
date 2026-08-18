@@ -1,7 +1,7 @@
 """
 Bartholomew Background Google Account Email Dispatcher
 ======================================================
-Sender Account: Itsub Alemayehu (itsub@bartholomew.info)
+Sender Account: Bartholomew AI Contributors (contact@bartholomew.info)
 Dispatches B2B outreach proposals to enterprise security leads in background micro-batches.
 """
 
@@ -17,11 +17,11 @@ from typing import Dict, Any, List
 
 class GCPBackgroundEmailDispatcher:
     """
-    Background worker that dispatches B2B proposals on behalf of itsub@bartholomew.info.
+    Background worker that dispatches B2B proposals on behalf of contact@bartholomew.info.
     """
 
-    def __init__(self, sender_email: str = "itsub@bartholomew.info"):
-        self.sender_name = "Itsub Alemayehu"
+    def __init__(self, sender_email: str = "contact@bartholomew.info"):
+        self.sender_name = "Bartholomew AI Contributors"
         self.sender_email = sender_email
         self.pitch_deck_url = "https://acn-26670.web.app/PITCH_DECK.html"
         self.operations_url = "https://acn-26670.web.app/operations"

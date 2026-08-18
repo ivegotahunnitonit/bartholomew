@@ -107,4 +107,4 @@
   - **60%**: Core Golang & WASM Security Engineering.
   - **25%**: Enterprise Sales & Developer Relations.
   - **15%**: SOC2 Type II Certification & Institutional Audits.
-- **Contact**: `invest@bartholomew.ai`
+- **Contact**: `contact@bartholomew.info`

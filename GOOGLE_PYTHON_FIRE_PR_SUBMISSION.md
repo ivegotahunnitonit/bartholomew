@@ -1,7 +1,7 @@
 # Google `python-fire` Pull Request Submission Kit
 
 **Target Repository**: [`google/python-fire`](https://github.com/google/python-fire)  
-**Author / Contributor**: **Itsub Alemayehu** (`@ivegotahunnitonit`)  
+**Author / Contributor**: **Bartholomew AI Contributors** (`@ivegotahunnitonit`)  
 **Branch Name**: `modernize-ast-str-cleanup`  
 **PR Title**: `refactor(parser): Remove deprecated ast.Str fallback for Python 3.8+ compatibility`
 
@@ -82,6 +82,6 @@ Summary:
 Looking forward to your review and merging this upstream!
 
 Best regards,
-Itsub Alemayehu
+Bartholomew AI Contributors
 GitHub: @ivegotahunnitonit
 ```

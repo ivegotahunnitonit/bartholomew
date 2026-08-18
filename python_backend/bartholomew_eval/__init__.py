@@ -39,7 +39,7 @@ from .algorithm_synthesizer import AlgorithmSynthesizer
 from .epistemic_execution_engine import EpistemicExecutionEngine
 
 __version__ = "9.1.0"
-__author__ = "Itsub Alemayehu"
+__author__ = "Bartholomew AI Contributors"
 __all__ = [
     "guard",
     "GuardViolation",
