@@ -3,515 +3,347 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Bartholomew | Investor Presentation & Technical Overview</title>
-  <meta name="description" content="Institutional Pitch Deck for Bartholomew: Autonomous CI/CD Failure Auto-Fix, Deterministic Reproduction & Mechanical Verification.">
-  
+  <title>Bartholomew | Investor Presentation</title>
+  <meta name="description" content="Bartholomew: Autonomous CI/CD Failure Auto-Fix with deterministic mechanical verification.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark:        #040813;
-      --bg-surface:     rgba(8, 18, 36, 0.92);
-      --bg-card:        rgba(13, 27, 51, 0.8);
-      --border-subtle:  rgba(255, 255, 255, 0.08);
-      --border-lit:     rgba(56, 189, 248, 0.3);
-      --border-emerald: rgba(16, 185, 129, 0.4);
-      --emerald:        #10b981;
-      --emerald-light:  #34d399;
-      --cyan:           #06b6d4;
-      --cyan-light:     #38bdf8;
-      --violet:         #8b5cf6;
-      --violet-light:   #a78bfa;
-      --accent-cyan:    #00f2fe;
-      --accent-blue:    #4facfe;
-      --text-main:      #f8fafc;
-      --text-muted:     #94a3b8;
-      --font-heading:   'Plus Jakarta Sans', sans-serif;
-      --font-body:      'Inter', sans-serif;
-      --font-code:      'JetBrains Mono', monospace;
+      --cyan:#00f2fe; --blue:#4facfe; --green:#10b981; --green-l:#34d399;
+      --violet:#8b5cf6; --violet-l:#a78bfa;
+      --bg:#040813; --surface:rgba(10,18,36,0.92); --card:rgba(13,25,50,0.75);
+      --border:rgba(255,255,255,0.08); --border-c:rgba(56,189,248,0.3); --border-g:rgba(16,185,129,0.4);
+      --text:#f8fafc; --sub:#94a3b8; --muted:#64748b;
+      --fh:'Plus Jakarta Sans',sans-serif; --fb:'Inter',sans-serif; --fc:'JetBrains Mono',monospace;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
     html, body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(ellipse at 15% 10%, rgba(16, 185, 129, 0.1), transparent 45%),
-        radial-gradient(ellipse at 85% 20%, rgba(6, 182, 212, 0.1), transparent 50%),
-        radial-gradient(ellipse at 50% 85%, rgba(139, 92, 246, 0.06), transparent 60%);
-      color: var(--text-main);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow-x: hidden;
-      overflow-y: auto;
-      width: 100%;
-      -webkit-text-size-adjust: 100%;
+      background: var(--bg); color: var(--text); font-family: var(--fb);
+      min-height: 100vh; display: flex; flex-direction: column;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
     }
 
-    /* Header */
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: clamp(12px, 2.5vw, 18px) clamp(16px, 4vw, 36px);
-      border-bottom: 1px solid var(--border-subtle);
-      background: rgba(4, 8, 19, 0.88);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* HEADER */
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: clamp(12px,2.5vw,18px) clamp(16px,4vw,32px);
+      background: rgba(4,8,19,0.9); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px);
     }
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #050c1a;
-      font-weight: 900;
-      font-size: 16px;
-      font-family: var(--font-code);
-    }
-    .logo-text {
-      font-size: clamp(18px, 3.5vw, 20px);
-      font-weight: 800;
-      font-family: 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #ffffff, #8ea2c6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .badge-deck {
-      font-family: var(--font-code);
-      font-size: 12px;
-      color: var(--emerald-light);
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid var(--border-emerald);
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-weight: 600;
-    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: linear-gradient(135deg,var(--cyan),var(--blue)); display: flex; align-items: center; justify-content: center; color: #040813; font-weight: 900; font-size: 16px; font-family: var(--fc); }
+    .logo-text { font-size: 19px; font-weight: 800; font-family: var(--fh); background: linear-gradient(135deg,#fff,#94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .deck-badge { font-family: var(--fc); font-size: 11.5px; color: var(--green-l); background: rgba(16,185,129,0.12); border: 1px solid var(--border-g); padding: 5px 12px; border-radius: 16px; font-weight: 700; }
 
-    /* Slide Container */
-    .deck-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(16px, 4vw, 36px);
-      width: 100%;
-    }
-
-    .slide {
-      display: none;
-      width: 100%;
-      max-width: 1040px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: clamp(24px, 5vw, 44px);
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(14px);
-      animation: fadeIn 0.3s ease forwards;
-    }
+    /* SLIDE AREA */
+    .deck-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: clamp(16px,3vw,32px); }
+    .slide { display: none; width: 100%; max-width: 1020px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: clamp(24px,5vw,48px); box-shadow: 0 20px 70px rgba(0,0,0,0.65); backdrop-filter: blur(12px); animation: sIn 0.3s ease forwards; }
     .slide.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes sIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-    .eyebrow {
-      font-family: var(--font-code);
-      font-size: 12px;
-      color: var(--cyan-light);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 8px;
-      display: block;
-      font-weight: 700;
-    }
+    .eyebrow { display: block; font-family: var(--fc); font-size: 11.5px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 10px; }
+    h1, .slide-h1 { font-family: var(--fh); font-size: clamp(24px,4.5vw,40px); font-weight: 900; line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.5px; color: #fff; }
+    .grad { background: linear-gradient(135deg,#38bdf8,var(--green-l)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    p { color: var(--sub); font-size: clamp(14px,2vw,16px); line-height: 1.65; margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
 
-    h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(24px, 4.5vw, 38px);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
-    }
-    .gradient-text {
-      background: linear-gradient(135deg, var(--cyan-light), var(--emerald-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,280px),1fr)); gap: 16px; margin-top: 18px; }
+    .g3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,240px),1fr)); gap: 14px; margin-top: 18px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: clamp(18px,3.5vw,24px); transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+    .card:hover { border-color: rgba(0,242,254,0.2); transform: translateY(-2px); box-shadow: 0 0 18px rgba(0,242,254,0.08); }
+    .card h3 { font-family: var(--fh); font-size: clamp(15px,2.5vw,18px); font-weight: 700; color: #fff; margin-bottom: 8px; }
 
-    p {
-      color: var(--text-muted);
-      font-size: clamp(14px, 2vw, 16px);
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
+    /* TABLE */
+    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th { color: var(--muted); padding: 9px 12px; border-bottom: 1px solid var(--border); font-family: var(--fc); font-size: 11px; text-transform: uppercase; text-align: left; }
+    td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
 
-    /* Grid Layouts */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-      margin-top: 16px;
-    }
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
+    /* CONTROLS */
+    .controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: clamp(12px,2vw,16px) clamp(16px,4vw,32px); border-top: 1px solid var(--border); background: rgba(4,8,19,0.92); flex-wrap: wrap; }
+    .btn { background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: var(--text); padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none; }
+    .btn:hover { background: rgba(255,255,255,0.13); border-color: #38bdf8; }
+    .btn-p { background: linear-gradient(135deg,var(--cyan),var(--blue)); color: #040813 !important; border: none; font-weight: 700; }
+    .btn-p:hover { box-shadow: 0 0 18px rgba(0,242,254,0.3); transform: translateY(-1px); }
+    .counter { font-family: var(--fc); font-size: 13px; color: var(--muted); }
+    @media(max-width:500px) { .controls { justify-content: center; } .counter { width:100%; text-align:center; } }
 
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: clamp(18px, 3.5vw, 24px);
-    }
-    .card h3 {
-      font-family: var(--font-heading);
-      font-size: clamp(16px, 2.5vw, 19px);
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #fff;
-    }
+    /* Slide-specific highlights */
+    .big-num { font-family: var(--fc); font-size: clamp(28px,5vw,42px); font-weight: 800; margin-bottom: 4px; }
 
-    /* Controls Bar */
-    .controls-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px clamp(16px, 4vw, 36px);
-      border-top: 1px solid var(--border-subtle);
-      background: rgba(4, 8, 19, 0.9);
-      gap: 12px;
-    }
-    .btn-nav {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      min-height: 44px;
-      min-width: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-      text-decoration: none;
-    }
-    .btn-nav:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--cyan-light); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      color: #050c1a !important;
-      border: none;
-      font-weight: 700;
-    }
-    .slide-counter {
-      font-family: var(--font-code);
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+    /* Founder slide */
+    .founder-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,260px),1fr)); gap: 24px; align-items: center; margin-top: 20px; }
+    .founder-photo { border-radius: 16px; overflow: hidden; border: 2px solid rgba(0,242,254,0.3); }
+    .founder-photo img { width: 100%; height: auto; display: block; }
+    .founder-quote { background: var(--card); border: 1px solid var(--border-g); border-radius: 14px; padding: clamp(20px,4vw,28px); }
+    .founder-quote .name { font-family: var(--fh); font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 3px; }
+    .founder-quote .title { font-size: 13px; color: var(--cyan); font-weight: 600; margin-bottom: 16px; }
+    .founder-quote blockquote { font-size: clamp(14px,2vw,16px); line-height: 1.65; color: #e2e8f0; font-style: italic; border-left: 3px solid var(--green-l); padding-left: 16px; }
 
-    /* Comparison Table */
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 14px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
-    th { color: var(--text-muted); padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); font-family: var(--font-code); font-size: 12px; text-transform: uppercase; }
-    td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 13.5px; }
-
-    @media (max-width: 600px) {
-      .controls-bar { flex-wrap: wrap; justify-content: center; }
-      .slide-counter { order: -1; width: 100%; text-align: center; margin-bottom: 6px; }
-    }
+    /* Contact slide */
+    .contact-box { text-align: center; background: var(--card); border: 1px solid var(--border-g); border-radius: 16px; padding: clamp(28px,5vw,48px); margin-top: 24px; }
+    .contact-box h2 { font-family: var(--fh); font-size: clamp(22px,4vw,30px); font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .contact-box p { max-width: 520px; margin: 0 auto 28px; }
+    .cta-group { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-contact { background: linear-gradient(135deg,var(--cyan),var(--blue)); color: #040813; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 10px; text-decoration: none; min-height: 48px; display: inline-flex; align-items: center; transition: all 0.2s; }
+    .btn-contact:hover { box-shadow: 0 0 24px rgba(0,242,254,0.35); transform: translateY(-2px); }
+    .btn-contact-sec { background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: #e2e8f0; font-weight: 600; font-size: 15px; padding: 14px 28px; border-radius: 10px; text-decoration: none; min-height: 48px; display: inline-flex; align-items: center; transition: all 0.2s; }
+    .btn-contact-sec:hover { background: rgba(255,255,255,0.12); }
   </style>
 </head>
 <body>
 
-  <header class="header-bar">
-    <a href="/" class="logo-wrap">
-      <div class="logo-mark">B</div>
-      <div class="logo-text">BARTHOLOMEW</div>
-    </a>
-    <div class="badge-deck">Investor &amp; Architecture Brief</div>
-  </header>
+  <div class="top-bar">
+    <a href="/" class="logo-wrap"><div class="logo-mark">B</div><div class="logo-text">BARTHOLOMEW</div></a>
+    <div class="deck-badge">Investor Brief</div>
+  </div>
 
-  <div class="deck-container">
+  <div class="deck-area">
 
-    <!-- Slide 1: Title -->
+    <!-- SLIDE 1: Title -->
     <div class="slide active">
-      <span class="eyebrow">AUTONOMOUS CI REPAIR &amp; MECHANICAL VERIFICATION</span>
-      <h1>Autonomous Software Repair with <span class="gradient-text">100% Verifiable Guarantees</span></h1>
-      <p>The autonomous engineering agent that catches failing tests on GitHub, synthesizes isolated deterministic reproduction proofs, applies minimal AST patches, and opens verified green Pull Requests in under 2 seconds.</p>
-      
-      <div class="grid-3">
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">01. Zero Guessing</h3>
-          <p>Strict mechanical verification before any pull request is opened. Zero hallucinations.</p>
+      <span class="eyebrow">Autonomous CI Repair &amp; Mechanical Verification</span>
+      <h1>Autonomous Software Repair with <span class="grad">100% Verifiable Guarantees</span></h1>
+      <p>The autonomous developer copilot and GitHub App that catches failing tests, synthesizes isolated deterministic reproduction proofs, applies minimal surgical patches, and ships verified green Pull Requests in under two seconds.</p>
+      <div class="g3">
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">Zero Guessing</h3>
+          <p>Strict mechanical verification before any pull request is opened.</p>
         </div>
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">02. Sub-2s Latency</h3>
-          <p>Instant localized AST repairs running with $0.00 / hour cloud infrastructure overhead.</p>
+        <div class="card" style="border-color:var(--border-c);">
+          <h3 style="color:#38bdf8;">Sub-2s Latency</h3>
+          <p>End-to-end autonomous repair with zero cloud infrastructure overhead.</p>
         </div>
-        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
-          <h3 style="color: var(--violet-light);">03. Open-Core &amp; BYOK</h3>
-          <p>Supports Google Gemini 2.0 Flash, OpenAI, Claude, and local Ollama inference models.</p>
+        <div class="card" style="border-color:rgba(139,92,246,0.4);">
+          <h3 style="color:var(--violet-l);">Open-Core + BYOK</h3>
+          <p>Gemini 2.0 Flash, OpenAI, Claude, and local Ollama supported.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 2: The Enterprise Problem -->
+    <!-- SLIDE 2: Problem -->
     <div class="slide">
-      <span class="eyebrow">THE ENTERPRISE PAIN POINT</span>
-      <h1>Broken Pipelines Cost <span class="gradient-text">Millions in Lost Engineering Hours</span></h1>
-      <p>Modern engineering teams spend up to 25% of sprint cycles manually diagnosing failing test suites, flaky asynchronous timeouts, and subtle dependency version deprecations.</p>
-      
-      <div class="grid-2">
+      <span class="eyebrow">The Enterprise Pain Point</span>
+      <h1>Broken Pipelines Cost <span class="grad">Millions in Engineering Hours</span></h1>
+      <p>Modern engineering teams spend up to 25% of every sprint cycle manually diagnosing failing test suites, flaky async timeouts, and subtle dependency deprecations.</p>
+      <div class="g2">
         <div class="card">
           <h3>The Legacy Status Quo</h3>
-          <p>A CI pipeline breaks at 2:00 AM. Developers wait for manual triage, context-switch to read 5,000-line logs, and guess at fixes across multi-step iteration loops.</p>
+          <p>A CI pipeline breaks at 2:00 AM. Developers wait for manual triage, context-switch through 5,000-line logs, and iterate through guesses until something compiles.</p>
         </div>
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">The Bartholomew Solution</h3>
-          <p>Catches the failure webhook, generates an isolated reproduction script proving the bug, applies the minimal surgical patch, and opens a green PR before anyone wakes up.</p>
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">The Bartholomew Solution</h3>
+          <p>Catches the failure webhook, generates an isolated reproduction proof, applies the minimal surgical patch, and opens a green PR before anyone wakes up.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 3: Market Size -->
+    <!-- SLIDE 3: Market -->
     <div class="slide">
-      <span class="eyebrow">MARKET OPPORTUNITY</span>
-      <h1>$18B+ Market for <span class="gradient-text">Developer Productivity &amp; Automated Testing</span></h1>
+      <span class="eyebrow">Market Opportunity</span>
+      <h1><span class="grad">$18B+ Market</span> for Developer Productivity Tooling</h1>
       <p>As software velocity surges, CI/CD reliability and automated software repair represent the highest-ROI bottleneck in modern developer toolchains.</p>
-      
-      <div class="grid-3">
+      <div class="g3">
         <div class="card">
-          <h3 style="color: var(--cyan-light); font-size: 26px;">$18.4B</h3>
-          <p>Total Addressable Market for DevOps &amp; automated testing toolchains by 2028.</p>
+          <div class="big-num" style="color:#38bdf8;">$18.4B</div>
+          <p>Total Addressable Market for DevOps and automated testing by 2028.</p>
         </div>
         <div class="card">
-          <h3 style="color: var(--emerald-light); font-size: 26px;">100M+</h3>
+          <div class="big-num" style="color:var(--green-l);">100M+</div>
           <p>GitHub developers and 400M+ active software repositories worldwide.</p>
         </div>
         <div class="card">
-          <h3 style="color: var(--violet-light); font-size: 26px;">85%</h3>
-          <p>Of tech executives prioritizing AI developer tooling to reduce CI/CD maintenance.</p>
+          <div class="big-num" style="color:var(--violet-l);">85%</div>
+          <p>Of tech executives prioritizing AI developer tooling investment in 2025.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 4: Reconstructed Architecture & Mechanical Verification -->
+    <!-- SLIDE 4: Architecture -->
     <div class="slide">
-      <span class="eyebrow">CORE ARCHITECTURAL MECHANISM</span>
-      <h1>How Bartholomew Works: <span class="gradient-text">3-Step Mechanical Verification</span></h1>
-      <p>Unlike conversational LLMs that guess solutions, Bartholomew guarantees deterministic correctness through closed-loop mechanical verification.</p>
-      
-      <div class="grid-3">
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">Step 1: Isolate &amp; Reproduce</h3>
-          <p>Clones the failing commit into an isolated container and synthesizes a standalone reproduction test proving the defect.</p>
+      <span class="eyebrow">Core Architectural Mechanism</span>
+      <h1>Three Steps of <span class="grad">Mechanical Verification</span></h1>
+      <p>Unlike conversational LLMs that guess solutions, Bartholomew guarantees deterministic correctness through a closed-loop verification engine.</p>
+      <div class="g3">
+        <div class="card" style="border-color:var(--border-c);">
+          <h3 style="color:#38bdf8;">Step 1 &mdash; Isolate and Reproduce</h3>
+          <p>Clones the failing commit into a fully isolated sandbox and synthesizes a standalone reproduction script that proves the defect is real.</p>
         </div>
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">Step 2: Minimal AST Patch</h3>
-          <p>Applies a surgical AST compiler patch strictly addressing the root-cause failure with zero collateral changes.</p>
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">Step 2 &mdash; Minimal AST Patch</h3>
+          <p>Applies a surgical compiler-level AST patch strictly addressing the root-cause failure with zero collateral changes to surrounding code.</p>
         </div>
-        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
-          <h3 style="color: var(--violet-light);">Step 3: Verification (100%)</h3>
-          <p>Executes full test suites locally to prove 100% green passes with zero regressions before opening the GitHub PR.</p>
+        <div class="card" style="border-color:rgba(139,92,246,0.4);">
+          <h3 style="color:var(--violet-l);">Step 3 &mdash; 100% Verification</h3>
+          <p>Executes the full test suite locally to prove 100% green passes with zero regressions before any Pull Request is opened.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 5: Reconstructed Competitive Advantage -->
+    <!-- SLIDE 5: Competitive Matrix -->
     <div class="slide">
-      <span class="eyebrow">COMPETITIVE MATRIX</span>
-      <h1>Why Bartholomew Wins: <span class="gradient-text">Deterministic Guarantees</span></h1>
-      
-      <div class="table-wrap">
+      <span class="eyebrow">Competitive Matrix</span>
+      <h1>Why Bartholomew Wins: <span class="grad">Deterministic Guarantees</span></h1>
+      <div class="tbl-wrap">
         <table>
           <thead>
             <tr>
-              <th>Feature / Metric</th>
+              <th>Capability</th>
               <th>Generic AI Copilots</th>
-              <th>Bartholomew Autonomous Systems</th>
+              <th>Bartholomew</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>Failure Reproduction</strong></td>
-              <td>None (Guesses fix from prompt)</td>
-              <td><span style="color: var(--emerald-light); font-weight: 700;">Synthesizes standalone reproduction proof</span></td>
+              <td style="color:var(--muted);">None (guesses from prompt)</td>
+              <td style="color:var(--green-l); font-weight:700;">Synthesizes standalone reproduction proof</td>
             </tr>
             <tr>
               <td><strong>Verification Engine</strong></td>
-              <td>None (User manually verifies)</td>
-              <td><span style="color: var(--emerald-light); font-weight: 700;">Automated test suite execution (100% Pass)</span></td>
+              <td style="color:var(--muted);">None (user verifies manually)</td>
+              <td style="color:var(--green-l); font-weight:700;">Automated 100% test suite execution</td>
             </tr>
             <tr>
-              <td><strong>GitHub Ingestion</strong></td>
-              <td>Manual copy-paste into chat</td>
-              <td><span style="color: var(--emerald-light); font-weight: 700;">1-Click Webhook GitHub App Integration</span></td>
+              <td><strong>GitHub Integration</strong></td>
+              <td style="color:var(--muted);">Manual copy-paste into chat</td>
+              <td style="color:var(--green-l); font-weight:700;">1-Click Webhook GitHub App</td>
             </tr>
             <tr>
               <td><strong>Resolution Speed</strong></td>
-              <td>10 - 30 minutes manual iteration</td>
-              <td><span style="color: var(--emerald-light); font-weight: 700;">&lt; 2.0 seconds autonomous turnaround</span></td>
+              <td style="color:var(--muted);">10 to 30 minutes manual</td>
+              <td style="color:var(--green-l); font-weight:700;">Under 2.0 seconds autonomous</td>
+            </tr>
+            <tr>
+              <td><strong>Cloud Compute Cost</strong></td>
+              <td style="color:var(--muted);">API tokens per iteration</td>
+              <td style="color:var(--green-l); font-weight:700;">$0.00 per fix (local engine)</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Slide 6: World Benefit -->
+    <!-- SLIDE 6: Value -->
     <div class="slide">
-      <span class="eyebrow">VALUE PROPOSITION</span>
-      <h1>Empowering Engineering Teams &amp; <span class="gradient-text">Elevating Developer Flow</span></h1>
-      
-      <div class="grid-2">
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">For Software Engineers</h3>
-          <p>Eliminates the dreaded 2:00 AM broken pipeline. Engineers spend their time building high-value features rather than debugging flaky async timeouts and deprecated AST syntax.</p>
+      <span class="eyebrow">Value Proposition</span>
+      <h1>Empowering Teams to <span class="grad">Focus on What Matters</span></h1>
+      <div class="g2">
+        <div class="card" style="border-color:var(--border-c);">
+          <h3 style="color:#38bdf8;">For Individual Engineers</h3>
+          <p>Eliminates the 2:00 AM broken pipeline. Developers spend their time building high-value features rather than debugging flaky async timeouts and deprecated AST syntax.</p>
         </div>
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">For Engineering Leadership</h3>
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">For Engineering Leadership</h3>
           <p>Drastically reduces CI compute waste, increases PR merge velocity, and guarantees clean test suites across large microservice architectures.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 7: Reconstructed Live Ecosystem -->
+    <!-- SLIDE 7: Pricing -->
     <div class="slide">
-      <span class="eyebrow">LIVE PRODUCT INTERFACES</span>
-      <h1>Live Tools &amp; <span class="gradient-text">Interactive Ecosystem</span></h1>
-      <p>Explore all active Bartholomew interfaces live with working links:</p>
-
-      <div class="grid-3">
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">1. Live Operations</h3>
-          <p>Real-time daemon telemetry stream, connected repos, and interactive test triggers.</p>
-          <a href="/operations" class="btn-nav btn-primary" style="margin-top: 10px;">Launch Operations ↗</a>
-        </div>
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">2. Auto-Fix Simulator</h3>
-          <p>Interactive 3-scenario sandbox executing isolated AST repair and verification.</p>
-          <a href="/simulator" class="btn-nav" style="margin-top: 10px;">Open Simulator ↗</a>
-        </div>
-        <div class="card" style="border-color: rgba(139, 92, 246, 0.4);">
-          <h3 style="color: var(--violet-light);">3. Developer Console</h3>
-          <p>Repository connection flow, BYOK Gemini settings, and PR history ledger.</p>
-          <a href="/dashboard" class="btn-nav" style="margin-top: 10px;">Open Dashboard ↗</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 8: Reconstructed Monetization -->
-    <div class="slide">
-      <span class="eyebrow">COMMERCIAL MODEL</span>
-      <h1>Transparent <span class="gradient-text">B2B SaaS Pricing</span></h1>
-      <p>High-margin developer tool subscription model driving frictionless bottom-up adoption.</p>
-
-      <div class="grid-3">
+      <span class="eyebrow">Commercial Model</span>
+      <h1>Transparent <span class="grad">B2B SaaS Pricing</span></h1>
+      <p>High-margin developer tool subscription model with frictionless bottom-up adoption.</p>
+      <div class="g3">
         <div class="card">
-          <h3>Developer Tier</h3>
-          <p style="color: #fff; font-weight: 800; font-size: 20px;">$0 / month</p>
-          <p>Open-source CLI, Chrome/Edge extension, and local AST diagnostics up to 100 fixes/month.</p>
+          <h3>Developer</h3>
+          <div class="big-num" style="color:#fff; font-size:clamp(22px,3.5vw,30px);">$0 / mo</div>
+          <p>Open-source CLI, Chrome and Edge extension, local AST diagnostics up to 100 fixes per month.</p>
         </div>
-        <div class="card" style="border-color: var(--border-lit);">
-          <h3 style="color: var(--cyan-light);">Pro Repo</h3>
-          <p style="color: #fff; font-weight: 800; font-size: 20px;">$49 / month</p>
-          <p>Unlimited automated CI fixes for single repositories with deterministic reproduction tests.</p>
+        <div class="card" style="border-color:var(--border-c);">
+          <h3 style="color:#38bdf8;">Pro Repository</h3>
+          <div class="big-num" style="color:#fff; font-size:clamp(22px,3.5vw,30px);">$49 / mo</div>
+          <p>Unlimited automated CI fixes for a single repository with deterministic reproduction tests.</p>
         </div>
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light);">Team Organization</h3>
-          <p style="color: #fff; font-weight: 800; font-size: 20px;">$199 / month</p>
-          <p>Unlimited GitHub repos, parallel fix queues, flaky test quarantining, and Slack notifications.</p>
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">Team Organization</h3>
+          <div class="big-num" style="color:#fff; font-size:clamp(22px,3.5vw,30px);">$199 / mo</div>
+          <p>Unlimited GitHub repos, parallel fix queues, flaky test quarantining, and team notifications.</p>
         </div>
       </div>
     </div>
 
-    <!-- Slide 9: Reconstructed Founder & Origin -->
+    <!-- SLIDE 8: Live Ecosystem -->
     <div class="slide">
-      <span class="eyebrow">FOUNDER IMPERATIVE</span>
-      <h1>Founding Vision &amp; <span class="gradient-text">Architectural Philosophy</span></h1>
-      
-      <div class="grid-2" style="align-items: center;">
-        <div class="card" style="text-align: center; border-color: var(--border-lit);">
-          <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; color: #050c1a; margin: 0 auto 12px; font-family: var(--font-code);">IA</div>
-          <h3 style="font-size: 20px; margin-bottom: 2px;">Itsub Alemayehu</h3>
-          <p style="color: var(--cyan-light); font-weight: 600; font-size: 13px;">Creator &amp; Founder, Bartholomew AI</p>
+      <span class="eyebrow">Live Product Interfaces</span>
+      <h1>Explore the <span class="grad">Live Platform</span></h1>
+      <p>All Bartholomew interfaces are live and interactive today:</p>
+      <div class="g3" style="margin-top:22px;">
+        <div class="card" style="border-color:var(--border-g);">
+          <h3 style="color:var(--green-l);">Operations Workspace</h3>
+          <p>Real-time daemon telemetry, connected repository status, and interactive webhook triggers.</p>
+          <a href="/operations" class="btn btn-p" style="display:block; text-align:center; margin-top:14px; text-decoration:none;">Open Operations</a>
         </div>
+        <div class="card" style="border-color:var(--border-c);">
+          <h3 style="color:#38bdf8;">Auto-Fix Simulator</h3>
+          <p>Interactive 3-scenario sandbox demonstrating autonomous isolated reproduction and AST repair.</p>
+          <a href="/simulator" class="btn" style="display:block; text-align:center; margin-top:14px; text-decoration:none;">Open Simulator</a>
+        </div>
+        <div class="card" style="border-color:rgba(139,92,246,0.4);">
+          <h3 style="color:var(--violet-l);">Developer Console</h3>
+          <p>Repository connection, BYOK AI settings, and autonomous PR history ledger.</p>
+          <a href="/dashboard" class="btn" style="display:block; text-align:center; margin-top:14px; text-decoration:none;">Open Console</a>
+        </div>
+      </div>
+    </div>
 
-        <div class="card" style="border-color: var(--border-emerald);">
-          <h3 style="color: var(--emerald-light); font-size: 16px; margin-bottom: 10px;">Founder Manifesto</h3>
-          <p style="font-style: italic; color: #f0f4fc; font-size: 15px; line-height: 1.6;">
+    <!-- SLIDE 9: Founder -->
+    <div class="slide">
+      <span class="eyebrow">Founder Imperative</span>
+      <h1>The <span class="grad">Engineer Who Built It</span></h1>
+      <div class="founder-wrap">
+        <div class="founder-photo">
+          <img src="/founder_avatar.jpg" alt="Itsub Alemayehu, Founder of Bartholomew" loading="lazy">
+        </div>
+        <div class="founder-quote">
+          <div class="name">Itsub Alemayehu</div>
+          <div class="title">Creator and Founder, Bartholomew Autonomous Systems</div>
+          <blockquote>
             "While LLMs are great at writing boilerplate, production systems require deterministic guarantees. I built Bartholomew to replace guessing with mechanical verification: isolate the defect, compute the minimal surgical fix, prove that 100% of tests pass, and ship the green PR before anyone even wakes up."
-          </p>
+          </blockquote>
         </div>
       </div>
     </div>
 
-    <!-- Slide 10: Reconstructed Clean Contact Us -->
+    <!-- SLIDE 10: Contact Only -->
     <div class="slide">
-      <span class="eyebrow">JOIN THE FUTURE OF AUTONOMOUS REPAIR</span>
-      <h1>Partner with <span class="gradient-text">Bartholomew</span></h1>
-      <p>Deploy autonomous CI failure auto-repair across your engineering repositories today.</p>
-
-      <div class="card" style="text-align: center; padding: clamp(24px, 5vw, 40px); border-color: var(--border-emerald); margin-top: 20px;">
-        <h3 style="font-size: 24px; margin-bottom: 8px;">Ready to Eliminate Broken CI Builds?</h3>
-        <p style="max-width: 540px; margin: 0 auto 24px;">Install the GitHub App or start your 14-day free developer trial in under 60 seconds.</p>
-        
-        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-          <a href="/dashboard" class="btn-nav btn-primary" style="padding: 12px 28px; font-size: 15px;">Get in Touch / Contact Us</a>
-          <a href="/operations" class="btn-nav" style="padding: 12px 28px; font-size: 15px;">Live Operations Workspace</a>
+      <span class="eyebrow">Partner with Bartholomew</span>
+      <h1>Ready to <span class="grad">Eliminate Broken CI?</span></h1>
+      <div class="contact-box">
+        <h2>Get in Touch</h2>
+        <p>Deploy autonomous CI failure repair across your engineering repositories. Start your free developer trial or reach out to discuss enterprise partnerships and investor inquiries.</p>
+        <div class="cta-group">
+          <a href="/dashboard" class="btn-contact">Contact Us</a>
+          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-contact-sec">View on GitHub</a>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Controls Bar -->
-  <div class="controls-bar">
-    <button class="btn-nav" onclick="prevSlide()">&larr; Previous</button>
-    <div class="slide-counter" id="slide-num">Slide 1 of 10</div>
-    <button class="btn-nav" onclick="nextSlide()">Next &rarr;</button>
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="btn" onclick="prev()">&larr; Previous</button>
+    <div class="counter" id="ctr">Slide 1 of 10</div>
+    <button class="btn btn-p" onclick="next()">Next &rarr;</button>
   </div>
 
   <script>
-    let currentSlide = 0;
+    let cur = 0;
     const slides = document.querySelectorAll('.slide');
-
-    function showSlide(n) {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (n + slides.length) % slides.length;
-      slides[currentSlide].classList.add('active');
-      document.getElementById('slide-num').innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+    function show(n) {
+      slides[cur].classList.remove('active');
+      cur = ((n % slides.length) + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      document.getElementById('ctr').textContent = `Slide ${cur+1} of ${slides.length}`;
     }
-
-    function nextSlide() { showSlide(currentSlide + 1); }
-    function prevSlide() { showSlide(currentSlide - 1); }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-      if (e.key === 'ArrowLeft') prevSlide();
+    function next() { show(cur+1); }
+    function prev() { show(cur-1); }
+    document.addEventListener('keydown', e => {
+      if (e.key==='ArrowRight'||e.key===' ') next();
+      if (e.key==='ArrowLeft') prev();
     });
   </script>
 </body>

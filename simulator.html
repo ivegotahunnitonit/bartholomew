@@ -3,363 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>CI Auto-Fix Simulator | Bartholomew Autonomous Systems</title>
-  <meta name="description" content="Simulate real-time CI/CD test failures, deterministic reproduction synthesis, and autonomous green PR generation.">
+  <title>CI Auto-Fix Simulator | Bartholomew</title>
+  <meta name="description" content="Interactive sandbox: simulate real CI failures and watch Bartholomew's autonomous repair loop execute live.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-dark: #070a12;
-      --bg-card: rgba(15, 23, 42, 0.85);
-      --border-color: rgba(66, 133, 244, 0.18);
-      --accent-cyan: #00f2fe;
-      --accent-blue: #4facfe;
-      --accent-green: #00e676;
-      --accent-red: #ff5f56;
-      --text-main: #f0f4fc;
-      --text-muted: #8ea2c6;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+    :root { --cyan:#00f2fe; --blue:#4facfe; --green:#00e676; --red:#fb7185; --amber:#fbbf24; --border:rgba(255,255,255,0.08); --sub:#94a3b8; --muted:#64748b; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
     html, body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-      overflow-x: hidden;
-      overflow-y: auto;
-      width: 100%;
-      -webkit-text-size-adjust: 100%;
+      background: #040813; color: #f1f5f9; font-family: 'Inter', sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
     }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 clamp(14px,4vw,28px); width: 100%; }
 
-    .container {
-      width: 100%;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 clamp(16px, 4vw, 28px);
-    }
-
-    header {
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(7, 10, 18, 0.92);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .nav-wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #050c1a;
-      font-weight: 900;
-      font-size: 16px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .logo-text {
-      font-size: 20px;
-      font-weight: 800;
-      font-family: 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #ffffff, #8ea2c6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .nav-links {
-      display: flex;
-      gap: clamp(10px, 2vw, 18px);
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s;
-    }
+    header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(14px); background: rgba(4,8,19,0.88); border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: linear-gradient(135deg,var(--cyan),var(--blue)); display: flex; align-items: center; justify-content: center; color: #040813; font-weight: 900; font-size: 16px; font-family: 'JetBrains Mono', monospace; }
+    .logo-text { font-size: 18px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg,#fff,#94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .nav-links a { color: var(--sub); text-decoration: none; font-size: 14px; font-weight: 500; min-height: 44px; display: inline-flex; align-items: center; transition: color 0.2s; }
     .nav-links a:hover { color: #fff; }
 
-    .sim-hero {
-      padding: clamp(28px, 5vw, 44px) 0 20px;
-      text-align: center;
-    }
-    .badge {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 20px;
-      background: rgba(0, 242, 254, 0.1);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      color: var(--accent-cyan);
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-    h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(26px, 5vw, 40px);
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      margin-bottom: 10px;
-    }
-    h1 span {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .sim-sub {
-      color: var(--text-muted);
-      font-size: clamp(14px, 2vw, 16px);
-      max-width: 680px;
-      margin: 0 auto 24px;
-    }
+    .page-hero { text-align: center; padding: clamp(36px,6vw,60px) 0 clamp(24px,4vw,36px); }
+    .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.3); color: var(--cyan); font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .page-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(26px,5vw,44px); font-weight: 900; letter-spacing: -0.5px; color: #fff; margin-bottom: 12px; }
+    .page-hero h1 span { background: linear-gradient(135deg,var(--cyan),var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-hero p { color: var(--sub); font-size: clamp(14px,2vw,16px); max-width: 640px; margin: 0 auto; line-height: 1.6; }
 
-    /* Scenario Selector */
-    .scenario-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
-    }
+    /* SCENARIO PICKER */
+    .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; margin: clamp(24px,4vw,36px) 0; }
     .scenario-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: border-color 0.2s, background 0.2s;
+      background: rgba(13,20,40,0.8); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 18px; cursor: pointer; text-align: left;
+      transition: all 0.2s;
     }
-    .scenario-card.active {
-      border-color: var(--accent-cyan);
-      background: rgba(0, 242, 254, 0.06);
-    }
-    .scenario-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      margin-bottom: 4px;
-      color: #fff;
-    }
-    .scenario-desc {
-      color: var(--text-muted);
-      font-size: 12.5px;
-      font-family: 'JetBrains Mono', monospace;
-      word-break: break-word;
-    }
+    .scenario-card:hover { border-color: rgba(0,242,254,0.2); transform: translateY(-2px); }
+    .scenario-card.active { border-color: var(--cyan); background: rgba(0,242,254,0.07); box-shadow: 0 0 18px rgba(0,242,254,0.12); }
+    .sc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+    .sc-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 5px; }
+    .sc-error { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); word-break: break-word; }
 
-    /* Simulation Terminal */
-    .sim-terminal-wrap {
-      background: #090e1b;
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: clamp(16px, 3vw, 24px);
-      max-width: 960px;
-      margin: 0 auto 40px;
-      text-align: left;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-    }
-    .sim-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .btn-run {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      color: #050c1a;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: 14px;
-      cursor: pointer;
-      min-height: 44px;
-      transition: transform 0.2s;
-    }
-    .btn-run:hover { transform: translateY(-1px); }
+    /* TERMINAL */
+    .sim-box { background: #050a18; border: 1px solid rgba(0,242,254,0.18); border-radius: 16px; overflow: hidden; margin-bottom: 40px; box-shadow: 0 0 50px rgba(0,0,0,0.7), 0 0 30px rgba(0,242,254,0.06); }
+    .sim-topbar { background: #08111f; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .sim-dots { display: flex; gap: 6px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dr { background: #ff5f56; } .dy { background: #ffbd2e; } .dg { background: #27c93f; }
+    .sim-engine { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted); }
 
-    .stages-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
+    /* STAGE BAR */
+    .stages { display: flex; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: wrap; }
+    .stage {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      padding: 6px 12px; border-radius: 6px; white-space: nowrap;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); color: var(--muted);
+      transition: all 0.3s;
     }
-    .stage-badge {
-      font-size: 11.5px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .stage-badge.active {
-      background: rgba(0, 242, 254, 0.15);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-      font-weight: 700;
-    }
-    .stage-badge.done {
-      background: rgba(0, 230, 118, 0.15);
-      border-color: var(--accent-green);
-      color: var(--accent-green);
-      font-weight: 700;
-    }
+    .stage.active { background: rgba(0,242,254,0.12); border-color: var(--cyan); color: var(--cyan); font-weight: 700; }
+    .stage.done   { background: rgba(0,230,118,0.12); border-color: var(--green); color: var(--green); font-weight: 700; }
 
+    /* OUTPUT */
     .sim-output {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
-      color: var(--text-muted);
-      background: #050811;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 14px;
-      min-height: 220px;
-      max-height: 380px;
-      overflow-y: auto;
-      line-height: 1.6;
-      word-break: break-word;
+      padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: clamp(11.5px,1.6vw,13px);
+      color: var(--sub); min-height: 240px; max-height: 380px;
+      overflow-y: auto; line-height: 1.65; -webkit-overflow-scrolling: touch;
     }
-    .sim-line { margin-bottom: 6px; }
-    .sim-line .hl { color: var(--accent-cyan); font-weight: 600; }
-    .sim-line .sc { color: var(--accent-green); font-weight: 600; }
-    .sim-line .er { color: var(--accent-red); font-weight: 600; }
+    .o-line { margin-bottom: 7px; }
+    .hl  { color: var(--cyan); font-weight: 600; }
+    .sc-ok { color: var(--green); font-weight: 700; }
+    .sc-err { color: var(--red); font-weight: 600; }
 
-    footer {
-      margin-top: auto;
-      padding: 24px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 13px;
+    /* RUN BUTTON */
+    .sim-footer { display: flex; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .btn-run {
+      background: linear-gradient(135deg, var(--cyan), var(--blue)); color: #040813;
+      border: none; padding: 12px 28px; border-radius: 9px; font-weight: 800; font-size: 14px;
+      cursor: pointer; min-height: 44px; min-width: 44px; transition: all 0.2s;
     }
+    .btn-run:hover { box-shadow: 0 0 20px rgba(0,242,254,0.35); transform: translateY(-1px); }
+    .btn-run:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    footer { margin-top: auto; padding: 22px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="container nav-wrap">
-      <a href="/" class="logo-wrap">
-        <div class="logo-mark">B</div>
-        <div class="logo-text">BARTHOLOMEW</div>
-      </a>
-      <nav class="nav-links">
-        <a href="/">Home</a>
-        <a href="/operations">Operations</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/PITCH_DECK.html">Pitch Deck</a>
-        <a href="/privacy.html">Privacy</a>
-      </nav>
-    </div>
-  </header>
+  <header><div class="wrap nav-inner">
+    <a href="/" class="logo-wrap"><div class="logo-mark">B</div><div class="logo-text">BARTHOLOMEW</div></a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/operations">Operations</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/PITCH_DECK.html">Pitch Deck</a>
+    </nav>
+  </div></header>
 
-  <main class="container">
-    <div class="sim-hero">
-      <div class="badge">Interactive Simulation Sandbox</div>
-      <h1>Trajectory &amp; <span>CI Auto-Fix Simulator</span></h1>
-      <p class="sim-sub">Select a production failure scenario and watch Bartholomew's autonomous loop execute isolated reproduction, minimal AST patching, and mechanical verification.</p>
+  <main style="flex:1;">
+    <div class="wrap">
+      <div class="page-hero">
+        <div class="badge">Interactive Simulation Sandbox</div>
+        <h1>Trajectory &amp; <span>CI Auto-Fix Simulator</span></h1>
+        <p>Pick a real-world production failure below and watch the full autonomous repair loop execute — from webhook ingest to verified green PR.</p>
+      </div>
 
-      <!-- Scenarios -->
+      <!-- SCENARIO SELECTOR -->
       <div class="scenario-grid">
-        <div class="scenario-card active" onclick="selectScenario(0, this)">
-          <div class="scenario-title">1. Python Asyncio Teardown</div>
-          <div class="scenario-desc">RuntimeError: Event loop is closed in worker.py:64</div>
+        <div class="scenario-card active" onclick="selectScenario(0,this)">
+          <div class="sc-num">Scenario 01 / Python</div>
+          <div class="sc-title">Asyncio Event Loop Teardown</div>
+          <div class="sc-error">RuntimeError: Event loop is closed @ worker.py:64</div>
         </div>
-        <div class="scenario-card" onclick="selectScenario(1, this)">
-          <div class="scenario-title">2. TypeScript Vitest Mismatch</div>
-          <div class="scenario-desc">TypeError: Cannot read property 'map' of undefined in payment.ts:84</div>
+        <div class="scenario-card" onclick="selectScenario(1,this)">
+          <div class="sc-num">Scenario 02 / TypeScript</div>
+          <div class="sc-title">Vitest Undefined Map Error</div>
+          <div class="sc-error">TypeError: Cannot read property 'map' of undefined @ payment.ts:84</div>
         </div>
-        <div class="scenario-card" onclick="selectScenario(2, this)">
-          <div class="scenario-title">3. Go Concurrency Mutex Race</div>
-          <div class="scenario-desc">WARNING: DATA RACE on worker_pool.go:42</div>
+        <div class="scenario-card" onclick="selectScenario(2,this)">
+          <div class="sc-num">Scenario 03 / Go</div>
+          <div class="sc-title">Concurrent Goroutine Data Race</div>
+          <div class="sc-error">WARNING: DATA RACE on worker_pool.go:42</div>
         </div>
       </div>
 
-      <!-- Simulator Box -->
-      <div class="sim-terminal-wrap">
-        <div class="sim-controls">
-          <div>
-            <span style="font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono';">Engine: Bartholomew Autonomous Runtime v10.0</span>
-          </div>
-          <button class="btn-run" id="runBtn" onclick="runSimulation()">Run Full Auto-Fix Cycle</button>
+      <!-- SIMULATOR TERMINAL -->
+      <div class="sim-box">
+        <div class="sim-topbar">
+          <div class="sim-dots"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+          <div class="sim-engine">Bartholomew Autonomous Runtime v10.0 &mdash; Mechanical Verification Engine</div>
         </div>
 
-        <div class="stages-bar">
-          <div class="stage-badge active" id="stg1">1. Webhook Ingest</div>
-          <div class="stage-badge" id="stg2">2. Isolated Reproduction</div>
-          <div class="stage-badge" id="stg3">3. AST Minimal Patch</div>
-          <div class="stage-badge" id="stg4">4. Verification (100%)</div>
-          <div class="stage-badge" id="stg5">5. Green PR Dispatched</div>
+        <div class="stages" id="stagesBar">
+          <div class="stage active" id="stg1">1. Ingest Webhook</div>
+          <div class="stage" id="stg2">2. Isolate &amp; Reproduce</div>
+          <div class="stage" id="stg3">3. AST Minimal Patch</div>
+          <div class="stage" id="stg4">4. Verify 100% Tests</div>
+          <div class="stage" id="stg5">5. Ship Green PR</div>
         </div>
 
         <div class="sim-output" id="simOutput">
-          <div class="sim-line">> Ready. Click "Run Full Auto-Fix Cycle" above to test the autonomous repair loop.</div>
+          <div class="o-line">&gt; Ready. Select a scenario above, then click <span class="hl">Run Full Auto-Fix Cycle</span> to begin.</div>
+        </div>
+
+        <div class="sim-footer">
+          <button class="btn-run" id="runBtn" onclick="runSimulation()">Run Full Auto-Fix Cycle</button>
         </div>
       </div>
     </div>
   </main>
 
-  <footer>
-    <div class="container">
-      &copy; 2026 Bartholomew Autonomous Systems. All rights reserved.
-    </div>
-  </footer>
+  <footer><div class="wrap">&copy; 2026 Bartholomew Autonomous Systems. All rights reserved.</div></footer>
 
   <script>
     let currentScenario = 0;
     const scenarios = [
       {
-        repo: "fintech-corp/payments-core",
-        error: "RuntimeError: Event loop is closed during worker teardown in worker.py:64",
-        repro: "test_reproduce_ci_failure.py",
-        patch: "worker.py: replace asyncio.get_event_loop() with asyncio.get_running_loop() + safe teardown check",
-        tests: "48/48 passed in 0.14s",
-        pr: "https://github.com/fintech-corp/payments-core/pull/170"
+        repo: 'fintech-corp/payments-core',
+        error: 'RuntimeError: Event loop is closed during worker teardown at worker.py:64',
+        repro: 'test_reproduce_asyncio_teardown.py',
+        patch: 'worker.py &mdash; replace asyncio.get_event_loop() with asyncio.get_running_loop() + safe teardown guard',
+        tests: '48/48 passed in 0.14s',
+        pr: 'https://github.com/fintech-corp/payments-core/pull/170'
       },
       {
-        repo: "saas-app/auth-service",
+        repo: 'saas-app/auth-service',
         error: "TypeError: Cannot read property 'map' of undefined in payment.ts:84",
-        repro: "test_reproduce_payment_map.test.ts",
-        patch: "payment.ts: optional chaining + fallback array initializer on items payload",
-        tests: "112/112 passed in 0.42s",
-        pr: "https://github.com/saas-app/auth-service/pull/89"
+        repro: 'test_reproduce_payment_map.test.ts',
+        patch: 'payment.ts &mdash; optional chaining + fallback empty-array initializer on items payload',
+        tests: '112/112 passed in 0.42s',
+        pr: 'https://github.com/saas-app/auth-service/pull/89'
       },
       {
-        repo: "crypto-vault/settlement-engine",
-        error: "WARNING: DATA RACE on worker_pool.go:42 during concurrent batch settlement",
-        repro: "repro_race_test.go",
-        patch: "worker_pool.go: scoped sync.RWMutex lock guard on activeChannel map",
-        tests: "36/36 passed in 0.28s",
-        pr: "https://github.com/crypto-vault/settlement-engine/pull/244"
+        repo: 'crypto-vault/settlement-engine',
+        error: 'WARNING: DATA RACE on worker_pool.go:42 during concurrent batch settlement',
+        repro: 'repro_goroutine_race_test.go',
+        patch: 'worker_pool.go &mdash; scoped sync.RWMutex lock guard on activeChannel map write access',
+        tests: '36/36 passed in 0.28s',
+        pr: 'https://github.com/crypto-vault/settlement-engine/pull/244'
       }
     ];
 
@@ -367,14 +189,14 @@
       currentScenario = idx;
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
       elem.classList.add('active');
-      document.getElementById('simOutput').innerHTML = `<div class="sim-line">> Selected Scenario ${idx + 1}: <span class="hl">${scenarios[idx].repo}</span>. Click Run to simulate.</div>`;
-      resetBadges();
+      resetStages();
+      document.getElementById('simOutput').innerHTML = `<div class="o-line">&gt; Scenario ${idx+1} selected: <span class="hl">${scenarios[idx].repo}</span>. Click Run to execute the full repair cycle.</div>`;
     }
 
-    function resetBadges() {
-      for (let i = 1; i <= 5; i++) {
-        const b = document.getElementById('stg' + i);
-        b.className = 'stage-badge' + (i === 1 ? ' active' : '');
+    function resetStages() {
+      for (let i=1;i<=5;i++) {
+        const b=document.getElementById('stg'+i);
+        b.className='stage'+(i===1?' active':'');
       }
     }
 
@@ -382,42 +204,34 @@
       const sc = scenarios[currentScenario];
       const out = document.getElementById('simOutput');
       const btn = document.getElementById('runBtn');
-      btn.disabled = true;
-      btn.innerText = "Executing...";
-      out.innerHTML = "";
+      btn.disabled = true; btn.textContent = 'Executing...';
+      out.innerHTML = '';
+      resetStages();
 
       const steps = [
-        { msg: `[STAGE 1]: Ingesting webhook from <span class="hl">${sc.repo}</span>... Failure confirmed.`, badge: 'stg1' },
-        { msg: `[STAGE 2]: Diagnosed: <span class="er">${sc.error}</span>\n> Synthesizing isolated reproduction script: <span class="hl">${sc.repro}</span>... Reproduction 100% confirmed!`, badge: 'stg2' },
-        { msg: `[STAGE 3]: Applying minimal AST surgical patch: <span class="hl">${sc.patch}</span>`, badge: 'stg3' },
-        { msg: `[STAGE 4]: Mechanical Verification Suite: <span class="sc">${sc.tests} (Zero regressions)</span>`, badge: 'stg4' },
-        { msg: `[STAGE 5]: Dispatched verified Pull Request to GitHub: <span class="sc">${sc.pr}</span>\n> Total latency: <span class="hl">1.14s</span>. Cloud spend: <span class="sc">$0.00</span>.`, badge: 'stg5' }
+        { stg:'stg1', cls:'info', msg:`[STAGE 1] Webhook ingested from <span class="hl">${sc.repo}</span>. CI failure confirmed.` },
+        { stg:'stg2', cls:'warn', msg:`[STAGE 2] Isolated sandbox spawned in 0.12s. Reproducing failure...<br>&nbsp;&nbsp;&nbsp;&nbsp;Detected: <span class="sc-err">${sc.error}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;Reproduction script: <span class="hl">${sc.repro}</span> &mdash; confirmed 100%.` },
+        { stg:'stg3', cls:'info', msg:`[STAGE 3] Computing minimal AST patch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">${sc.patch}</span>` },
+        { stg:'stg4', cls:'ok',   msg:`[STAGE 4] Running full verification suite...<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sc-ok">${sc.tests} &mdash; zero regressions detected.</span>` },
+        { stg:'stg5', cls:'ok',   msg:`[STAGE 5] Verified green PR dispatched:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sc-ok">${sc.pr}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;Total latency: <span class="hl">1.14s</span> &bull; Cloud spend: <span class="sc-ok">$0.00</span>` }
       ];
 
       let idx = 0;
-      function nextStep() {
-        if (idx < steps.length) {
-          const s = steps[idx];
-          const div = document.createElement('div');
-          div.className = 'sim-line';
-          div.innerHTML = s.msg;
-          out.appendChild(div);
-          out.scrollTop = out.scrollHeight;
+      function next() {
+        if (idx >= steps.length) { btn.disabled=false; btn.textContent='Run Full Auto-Fix Cycle'; return; }
+        const s = steps[idx];
+        // update badge
+        if (idx > 0) document.getElementById(steps[idx-1].stg).className='stage done';
+        document.getElementById(s.stg).className='stage active';
 
-          const badge = document.getElementById(s.badge);
-          badge.className = 'stage-badge done';
-          if (idx + 1 < steps.length) {
-            document.getElementById(steps[idx+1].badge).className = 'stage-badge active';
-          }
-
-          idx++;
-          setTimeout(nextStep, 600);
-        } else {
-          btn.disabled = false;
-          btn.innerText = "Run Full Auto-Fix Cycle";
-        }
+        const div = document.createElement('div');
+        div.className='o-line'; div.innerHTML=s.msg;
+        out.appendChild(div);
+        out.scrollTop = out.scrollHeight;
+        idx++;
+        setTimeout(next, 700);
       }
-      nextStep();
+      next();
     }
   </script>
 </body>
