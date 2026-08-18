@@ -1,10 +1,10 @@
-# 🏛️ Bartholomew — Executive Summary
+#  Bartholomew — Executive Summary
 
 **Bartholomew** is the premier **Enterprise AI Security & Observability Platform**. Engineered with a native Golang core operating at **1.44 microseconds per trajectory scan (775,935 ops/sec)**, Bartholomew enables Fortune 500 enterprises, defense contractors, and high-growth AI companies to see inside any AI stack, any application, at any scale, anywhere.
 
 ---
 
-## 🎯 Executive Value Proposition
+##  Executive Value Proposition
 
 As autonomous AI agents assume critical business functions (financial trading, customer support, database administration, software engineering), legacy Application Performance Monitoring (APM) tools like Datadog, Dynatrace, and Sentry fail. Legacy APMs were built for static HTTP status codes and SQL latency — they cannot inspect multi-step AI reasoning loops, prompt injections, or secret leaks.
 
@@ -16,7 +16,7 @@ As autonomous AI agents assume critical business functions (financial trading, c
 
 ---
 
-## 📊 Market Opportunity & TAM
+##  Market Opportunity & TAM
 
 - **Global Observability & Security Market**: Projected to reach **$48.5 Billion by 2028**.
 - **Enterprise AI Agent Security TAM**: Estimated at **$12.4 Billion by 2027** as enterprise AI deployment scales 10x year-over-year.
@@ -24,7 +24,7 @@ As autonomous AI agents assume critical business functions (financial trading, c
 
 ---
 
-## ⚡ Technical Moat & Differentiators
+##  Technical Moat & Differentiators
 
 | Capability | Legacy APMs (Datadog/Sentry) | OpenTelemetry (OTel) | **Bartholomew Core** |
 |---|---|---|---|
@@ -36,7 +36,7 @@ As autonomous AI agents assume critical business functions (financial trading, c
 
 ---
 
-## 💰 Enterprise Business Model ($50k - $250k ACV)
+##  Enterprise Business Model ($50k - $250k ACV)
 
 Bartholomew operates exclusively on high-margin annual enterprise contracts ($50k - $250k ACV):
 
@@ -47,6 +47,6 @@ Bartholomew operates exclusively on high-margin annual enterprise contracts ($50
 
 ---
 
-## 🚀 Vision
+##  Vision
 
 Bartholomew is positioning to become the industry standard for enterprise AI security and observability — scaling toward a **$1B+ category-defining valuation**.

@@ -1,48 +1,48 @@
-# 🧠 BARTHOLOMEW v7.0 — Sovereign Swarm Federation & Universal Multi-Agent Consensus Architecture
+#  BARTHOLOMEW v7.0 — Sovereign Swarm Federation & Universal Multi-Agent Consensus Architecture
 **Engine Version:** v7.0.0-SWARM-FEDERATION | **Updated:** 2026-08-07
 
 ---
 
-## 🌐 1. System Architecture Overview
+##  1. System Architecture Overview
 
 Bartholomew v7.0 is an inline, sub-millisecond AI agent trajectory security daemon, sovereign cognitive memory system, and **Universal Multi-Agent Swarm Federation Engine**. It coordinates, arbitrates, and synthesizes optimal execution outcomes across **Google Gemini**, **OpenAI / GPT-4o**, **Anthropic Claude**, **LangChain**, **Microsoft AutoGen**, and **CrewAI** workspace agents.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│             BARTHOLOMEW v7.0 UNIVERSAL SWARM FEDERATION MATRIX              │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-         ┌─────────────────────────────┼─────────────────────────────┐
-         ▼                             ▼                             ▼
-┌──────────────────┐         ┌──────────────────┐          ┌──────────────────┐
-│  GEMINI / GOOGLE │         │ OPENAI / GPT-4O  │          │ ANTHROPIC CLAUDE │
-│  AGENT WORKSPACE │         │ AGENT WORKSPACE  │          │ AGENT WORKSPACE  │
-└────────┬─────────┘         └────────┬─────────┘          └────────┬─────────┘
-         │                            │                             │
-         └────────────────────────────┼─────────────────────────────┘
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│            BARTHOLOMEW SWARM FEDERATION & CONSENSUS ENGINE                  │
-│  - Cross-Framework Protocol Normalizer (Gemini / GPT-4o / Claude / AutoGen) │
-│  - Universal Outcome Matrix Evaluator (Security Penalty + Token Saliency)   │
-│  - AES-256-GCM Encrypted Sovereign Memory Storage                           │
-│  - Asynchronous Batch Pipeline (> 3,200 Steps / sec Throughput)             │
-│  - SHA-256 Cryptographic Swarm Consensus Attestation                        │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                    ┌──────────────────┴──────────────────┐
-                    ▼                                     ▼
-┌──────────────────────────────────────┐┌─────────────────────────────────────┐
-│   SOVEREIGN ENCRYPTED VECTOR DB      ││     AUTONOMOUS AGENT SCOUTER        │
-│  - AES-256-GCM Payload Encryption    ││  - Post-POSIX Direct Intent Synth   │
-│  - HKDF-SHA256 Key Derivation        ││  - Self-Assembling Enclave Topology │
-│  - Air-Gapped SQLite Vector Store    ││  - Continuous Dreaming Singularity  │
-└──────────────────────────────────────┘└─────────────────────────────────────┘
+
+             BARTHOLOMEW v7.0 UNIVERSAL SWARM FEDERATION MATRIX              
+
+                                       
+         
+                                                                   
+                   
+  GEMINI / GOOGLE           OPENAI / GPT-4O             ANTHROPIC CLAUDE 
+  AGENT WORKSPACE           AGENT WORKSPACE             AGENT WORKSPACE  
+                   
+                                                                  
+         
+                                      
+
+            BARTHOLOMEW SWARM FEDERATION & CONSENSUS ENGINE                  
+  - Cross-Framework Protocol Normalizer (Gemini / GPT-4o / Claude / AutoGen) 
+  - Universal Outcome Matrix Evaluator (Security Penalty + Token Saliency)   
+  - AES-256-GCM Encrypted Sovereign Memory Storage                           
+  - Asynchronous Batch Pipeline (> 3,200 Steps / sec Throughput)             
+  - SHA-256 Cryptographic Swarm Consensus Attestation                        
+
+                                       
+                    
+                                                         
+
+   SOVEREIGN ENCRYPTED VECTOR DB           AUTONOMOUS AGENT SCOUTER        
+  - AES-256-GCM Payload Encryption      - Post-POSIX Direct Intent Synth   
+  - HKDF-SHA256 Key Derivation          - Self-Assembling Enclave Topology 
+  - Air-Gapped SQLite Vector Store      - Continuous Dreaming Singularity  
+
 ```
 
 ---
 
-## 🔬 2. Core Labeled Subsystems
+##  2. Core Labeled Subsystems
 
 ### 1. Universal Swarm Federation & Consensus Engine (`swarm_federation.py`)
 - **Heterogeneous Node Registration**: Normalizes communication protocols across Google Gemini, OpenAI GPT-4o, Anthropic Claude, Microsoft AutoGen, and CrewAI agents.
@@ -64,7 +64,7 @@ Bartholomew v7.0 is an inline, sub-millisecond AI agent trajectory security daem
 
 ---
 
-## 📊 3. Performance & Security Metrics
+##  3. Performance & Security Metrics
 
 | Metric | Target | Verified Value |
 |---|---|---|

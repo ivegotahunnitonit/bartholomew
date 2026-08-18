@@ -1,36 +1,36 @@
-# 📚 Bartholomew — Product & Technical Documentation
+#  Bartholomew — Product & Technical Documentation
 
 Welcome to the official technical documentation for **Bartholomew**, the sub-millisecond AI-Powered Observability and Security Engine.
 
 ---
 
-## 🏗️ 1. Architecture Overview
+##  1. Architecture Overview
 
 Bartholomew combines a **native Golang daemon core** with high-level Python SDK bindings to deliver real-time AI agent trajectory evaluation:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    AI Agent Execution                       │
-│    (LangChain, CrewAI, AutoGPT, LlamaIndex, Custom Python)  │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ @guard() Decorator / cURL
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│             Bartholomew Golang Native Daemon                │
-│       (1.44 μs Latency | 775,935 ops/sec SIMD Regex)       │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-         ┌─────────────────────┴─────────────────────┐
-         ▼                                           ▼
-┌───────────────────────────┐           ┌───────────────────────────┐
-│ OWASP LLM 2026 Kill-Switch│           │ Cryptographic Attestation │
-│ (Scrub Keys, Block Loops) │           │ (SHA-256 PDF / SVG Badge) │
-└───────────────────────────┘           └───────────────────────────┘
+
+                    AI Agent Execution                       
+    (LangChain, CrewAI, AutoGPT, LlamaIndex, Custom Python)  
+
+                                @guard() Decorator / cURL
+                               
+
+             Bartholomew Golang Native Daemon                
+       (1.44 μs Latency | 775,935 ops/sec SIMD Regex)       
+
+                               
+         
+                                                    
+           
+ OWASP LLM 2026 Kill-Switch            Cryptographic Attestation 
+ (Scrub Keys, Block Loops)             (SHA-256 PDF / SVG Badge) 
+           
 ```
 
 ---
 
-## ⚡ 2. Golang Core vs Legacy Standards
+##  2. Golang Core vs Legacy Standards
 
 ### Bartholomew vs Datadog
 - **Datadog**: Captures HTTP request/response metrics. Cannot parse multi-step AI reasoning loops or evaluate step-by-step tool state changes.
@@ -46,7 +46,7 @@ Bartholomew combines a **native Golang daemon core** with high-level Python SDK 
 
 ---
 
-## 💻 3. SDK & CLI Integration
+##  3. SDK & CLI Integration
 
 ### Python SDK (`@guard()`)
 ```python
@@ -79,7 +79,7 @@ curl -X POST https://bartholomew.ai/api/janitor/audit \
 
 ---
 
-## 🛡️ 4. OWASP LLM 2026 Rule Matrix
+##  4. OWASP LLM 2026 Rule Matrix
 
 1. **LLM01: Prompt Injection**: Intercepts `ignore previous instructions` and system prompt override attempts.
 2. **LLM02: Sensitive Info Disclosure**: Scrubs OpenAI (`sk-`), AWS (`AKIA`), GitHub (`ghp_`), Stripe, and RSA keys.
@@ -94,7 +94,7 @@ curl -X POST https://bartholomew.ai/api/janitor/audit \
 
 ---
 
-## 🔐 5. Security Policy & Incident Post-Mortem Log
+##  5. Security Policy & Incident Post-Mortem Log
 
 For full security policies, pre-commit hook installation, and the official Incident Post-Mortem Log (`INC-2026-08-BEARER-LEAK`), see [SECURITY.md](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/SECURITY.md).
 

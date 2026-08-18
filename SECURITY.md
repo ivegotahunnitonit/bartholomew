@@ -1,4 +1,4 @@
-# 🔒 Security Policy & Vulnerability Disclosure Procedure
+#  Security Policy & Vulnerability Disclosure Procedure
 
 ## 1. Supported Versions
 

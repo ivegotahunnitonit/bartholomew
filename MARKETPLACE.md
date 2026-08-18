@@ -1,4 +1,4 @@
-# 🛡️ Bartholomew — AI Agent Security & Trajectory Auditor
+#  Bartholomew — AI Agent Security & Trajectory Auditor
 **Official GitHub Marketplace Action & Security App Listing**
 
 [![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Verified-green.svg)](https://github.com/marketplace/actions/bartholomew-ai-agent-security)
@@ -9,7 +9,7 @@ Bartholomew is a sub-millisecond, inline AI agent trajectory auditor and soverei
 
 ---
 
-## 🌟 Why Bartholomew on GitHub Marketplace?
+##  Why Bartholomew on GitHub Marketplace?
 
 | Feature | Bartholomew | Traditional APM / Linter |
 |---|---|---|
@@ -21,7 +21,7 @@ Bartholomew is a sub-millisecond, inline AI agent trajectory auditor and soverei
 
 ---
 
-## ⚡ Quick Start: Add 1 Line to Your GitHub Workflow
+##  Quick Start: Add 1 Line to Your GitHub Workflow
 
 Add Bartholomew to your `.github/workflows/ci.yml`:
 
@@ -42,7 +42,7 @@ jobs:
 
 ---
 
-## 🏷️ Pricing Tiers
+##  Pricing Tiers
 
 ### 1. Free Community Edition ($0 / month)
 - Open-Source Core PyPI Package (`bartholomew-eval`)
@@ -62,7 +62,7 @@ jobs:
 
 ---
 
-## 📞 Support & Enterprise Contact
+##  Support & Enterprise Contact
 - **Documentation & Live Dashboard:** [bartholomew.info](https://bartholomew.info)
 - **Enterprise Licensing:** `enterprise@bartholomew.info`
 - **GitHub Repository:** [ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)

@@ -1,4 +1,4 @@
-# 🎯 Bartholomew — Enterprise VC & CISO Pitch Deck
+#  Bartholomew — Enterprise VC & CISO Pitch Deck
 
 **Company**: Bartholomew Inc.  
 **Tagline**: *See Inside Any Stack, Any App, At Any Scale, Anywhere — Enterprise AI Security Platform.*  

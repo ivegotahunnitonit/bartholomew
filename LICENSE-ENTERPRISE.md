@@ -1,7 +1,7 @@
 # BARTHOLOMEW ENTERPRISE EDITION — Commercial Source-Available License (MS-EULA / BSL 1.1)
 
 **Version:** 5.0  
-**Licensor:** Bartholomew AI Security Inc. / Itsub Solomon Alemayehu  
+**Licensor:** Bartholomew AI Security Inc. / Itsub Alemayehu  
 **Effective Date:** August 7, 2026  
 
 ---
