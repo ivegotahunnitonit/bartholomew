@@ -1,0 +1,15 @@
+{
+  "benchmark_timestamp": 1787118246.0698903,
+  "iterations": 100000,
+  "elapsed_seconds": 20.54162350000115,
+  "throughput_ops_per_sec": 4868.164388272154,
+  "failures": 0,
+  "success_rate_percent": 100.0,
+  "latency_distribution_us": {
+    "mean": 204.445662,
+    "p50": 191.3,
+    "p90": 232.9,
+    "p99": 385.7,
+    "p99_9": 611.6
+  }
+}
