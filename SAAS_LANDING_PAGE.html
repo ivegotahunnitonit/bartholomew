@@ -4,24 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
   <title>Bartholomew | Autonomous CI/CD Failure Auto-Fix</title>
-  <meta name="description" content="The autonomous GitHub App that catches failing tests, synthesizes deterministic reproduction proofs, and opens verified green PRs.">
+  <meta name="description" content="The autonomous GitHub App that catches failing CI tests, synthesizes isolated deterministic reproduction proofs, applies surgical AST patches, and opens verified green PRs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --cyan: #00f2fe;
       --cyan-dim: rgba(0,242,254,0.15);
+      --cyan-glow: rgba(0,242,254,0.35);
       --blue: #4facfe;
       --green: #00e676;
+      --green-dim: rgba(0,230,118,0.15);
+      --amber: #fbbf24;
+      --red: #fb7185;
       --surface: rgba(13,20,40,0.85);
-      --border: rgba(255,255,255,0.08);
+      --surface-solid: #090f20;
+      --border: rgba(255,255,255,0.09);
+      --card: rgba(10,16,34,0.75);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
     html, body {
       background: #040813;
       color: #f1f5f9;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
       overflow-y: auto;
       width: 100%;
@@ -33,8 +39,9 @@
     header {
       position: sticky; top: 0; z-index: 100;
       width: 100%;
-      backdrop-filter: blur(14px);
-      background: rgba(4,8,19,0.80);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(4,8,19,0.85);
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
@@ -48,6 +55,7 @@
       background: linear-gradient(135deg, var(--cyan), var(--blue));
       display: flex; align-items: center; justify-content: center;
       color: #040813; font-weight: 900; font-size: 17px; font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 0 14px rgba(0,242,254,0.3);
     }
     .logo-text {
       font-size: 18px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif;
@@ -55,7 +63,7 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .nav-links-desktop {
-      display: flex; align-items: center; gap: clamp(12px,2.5vw,24px);
+      display: flex; align-items: center; gap: clamp(12px,2.2vw,24px);
     }
     .nav-links-desktop a {
       color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500;
@@ -66,11 +74,11 @@
       background: var(--cyan); color: #040813 !important;
       font-weight: 700 !important; padding: 8px 18px; border-radius: 8px;
       transition: all 0.2s !important;
-      box-shadow: 0 0 0 rgba(0,242,254,0);
+      box-shadow: 0 0 12px rgba(0,242,254,0.25);
     }
     .btn-nav-cta:hover {
       background: #38f5ff !important;
-      box-shadow: 0 0 18px rgba(0,242,254,0.4) !important;
+      box-shadow: 0 0 20px rgba(0,242,254,0.5) !important;
       transform: translateY(-1px);
     }
     .hamburger {
@@ -83,7 +91,7 @@
       display: none; flex-direction: column; gap: 6px;
       padding: 14px clamp(16px,4vw,28px) 20px;
       border-top: 1px solid var(--border);
-      background: rgba(4,8,19,0.95);
+      background: rgba(4,8,19,0.98);
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -106,26 +114,33 @@
     /* HERO */
     .hero {
       max-width: 1200px; margin: 0 auto;
-      padding: clamp(60px,10vw,100px) clamp(16px,4vw,28px) clamp(40px,7vw,70px);
+      padding: clamp(50px,9vw,90px) clamp(16px,4vw,28px) clamp(36px,6vw,60px);
       text-align: center; position: relative;
     }
     .hero-glow {
       position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 600px; max-width: 100%; height: 400px;
-      background: radial-gradient(ellipse, rgba(0,242,254,0.12) 0%, transparent 70%);
+      width: 700px; max-width: 100%; height: 450px;
+      background: radial-gradient(ellipse, rgba(0,242,254,0.14) 0%, transparent 70%);
       pointer-events: none; z-index: 0;
     }
     .hero > * { position: relative; z-index: 1; }
     .hero-badge {
-      display: inline-block; padding: 5px 14px; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px;
       background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.3);
       color: var(--cyan); font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px;
     }
+    .badge-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green); animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
     h1 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(32px,6vw,64px);
-      font-weight: 900; line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px;
+      font-size: clamp(32px,5.5vw,62px);
+      font-weight: 900; line-height: 1.12; letter-spacing: -1px; margin-bottom: 20px;
       color: #fff;
     }
     h1 .grad {
@@ -133,7 +148,7 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .hero-sub {
-      color: #94a3b8; font-size: clamp(15px,2.5vw,18px); max-width: 680px;
+      color: #94a3b8; font-size: clamp(15px,2.2vw,18px); max-width: 680px;
       margin: 0 auto 36px; line-height: 1.65;
     }
     .hero-cta-group { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
@@ -141,163 +156,207 @@
       background: linear-gradient(135deg, var(--cyan), var(--blue));
       color: #040813; font-weight: 700; font-size: 15px;
       padding: 13px 28px; border-radius: 10px; text-decoration: none;
-      min-height: 48px; display: inline-flex; align-items: center;
+      min-height: 48px; display: inline-flex; align-items: center; gap: 8px;
       transition: all 0.25s;
-      box-shadow: 0 0 0 rgba(0,242,254,0);
+      box-shadow: 0 0 16px rgba(0,242,254,0.3);
     }
     .btn-primary:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 0 24px rgba(0,242,254,0.35);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 28px rgba(0,242,254,0.5);
     }
     .btn-secondary {
       background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
       color: #e2e8f0; font-weight: 600; font-size: 15px;
       padding: 13px 28px; border-radius: 10px; text-decoration: none;
-      min-height: 48px; display: inline-flex; align-items: center;
+      min-height: 48px; display: inline-flex; align-items: center; gap: 8px;
       transition: all 0.2s;
     }
     .btn-secondary:hover { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.2); }
 
-    /* ANIMATED TERMINAL */
+    /* TERMINAL HUD */
     .terminal-wrap {
-      max-width: 740px; margin: clamp(32px,5vw,52px) auto 0;
+      max-width: 780px; margin: clamp(32px,5vw,52px) auto 0;
       background: #060d1e;
-      border: 1px solid rgba(0,242,254,0.2);
+      border: 1px solid rgba(0,242,254,0.22);
       border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 0 60px rgba(0,242,254,0.1), 0 24px 60px rgba(0,0,0,0.7);
+      text-align: left;
     }
     .terminal-topbar {
-      background: #0a1628; padding: 10px 16px;
+      background: #0a1628; padding: 12px 18px;
       display: flex; align-items: center; gap: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .dot { width: 11px; height: 11px; border-radius: 50%; }
     .dot-r { background: #ff5f56; } .dot-y { background: #ffbd2e; } .dot-g { background: #27c93f; }
-    .terminal-filename { margin-left: 10px; color: #64748b; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
-    .terminal-body { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: clamp(11px,1.5vw,13px); line-height: 1.7; }
-    .t-line { opacity: 0; animation: fadeInLine 0.4s forwards; }
-    .t-line:nth-child(1)  { animation-delay: 0.1s; }
-    .t-line:nth-child(2)  { animation-delay: 0.5s; }
-    .t-line:nth-child(3)  { animation-delay: 1.0s; }
-    .t-line:nth-child(4)  { animation-delay: 1.5s; }
-    .t-line:nth-child(5)  { animation-delay: 2.0s; }
-    .t-line:nth-child(6)  { animation-delay: 2.5s; }
-    .t-line:nth-child(7)  { animation-delay: 3.0s; }
-    .t-line:nth-child(8)  { animation-delay: 3.5s; }
-    @keyframes fadeInLine { to { opacity: 1; } }
-    .t-cmd { color: #94a3b8; }
+    .terminal-filename { margin-left: 10px; color: #94a3b8; font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .terminal-body { padding: 22px; font-family: 'JetBrains Mono', monospace; font-size: clamp(11.5px,1.6vw,13px); line-height: 1.75; }
+    .t-line { color: #cbd5e1; margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .t-cmd { color: #64748b; font-weight: 600; flex-shrink: 0; }
     .t-ok  { color: var(--green); font-weight: 700; }
-    .t-hl  { color: var(--cyan); }
-    .t-err { color: #fb7185; }
+    .t-hl  { color: var(--cyan); font-weight: 600; }
+    .t-err { color: #fb7185; font-weight: 700; }
 
-    /* BENTO SECTION */
+    /* SECTIONS */
     section { max-width: 1200px; margin: 0 auto; padding: clamp(48px,8vw,80px) clamp(16px,4vw,28px); }
     .section-label {
       text-align: center; font-family: 'JetBrains Mono', monospace;
       font-size: 12px; color: var(--cyan); text-transform: uppercase;
-      letter-spacing: 2px; margin-bottom: 14px; font-weight: 700;
+      letter-spacing: 2px; margin-bottom: 12px; font-weight: 700;
     }
     .section-title {
       text-align: center; font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: clamp(26px,4vw,40px); font-weight: 800;
       color: #fff; margin-bottom: 12px; letter-spacing: -0.5px;
     }
-    .section-sub { text-align: center; color: #94a3b8; font-size: clamp(14px,2vw,16px); margin-bottom: clamp(28px,4vw,44px); }
+    .section-sub { text-align: center; color: #94a3b8; font-size: clamp(14px,2vw,16px); margin-bottom: clamp(28px,4vw,44px); max-width: 620px; margin-left: auto; margin-right: auto; }
 
+    /* STATS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 16px; margin-bottom: clamp(30px,5vw,50px);
+    }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px; text-align: center;
+      transition: all 0.25s;
+    }
+    .stat-card:hover { border-color: rgba(0,242,254,0.3); transform: translateY(-2px); }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(26px,4vw,36px); font-weight: 800; color: #fff; display: block;
+      background: linear-gradient(135deg, #fff, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { color: #94a3b8; font-size: 13px; margin-top: 6px; font-weight: 500; }
+
+    /* BENTO */
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-      gap: 16px;
+      gap: 18px;
     }
     .bento-card {
-      background: rgba(13,20,40,0.8);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: clamp(20px,3.5vw,28px);
+      padding: clamp(22px,3.5vw,30px);
       transition: all 0.3s;
     }
     .bento-card:hover {
-      border-color: rgba(0,242,254,0.25);
+      border-color: rgba(0,242,254,0.3);
       transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(0,242,254,0.1);
+      box-shadow: 0 0 24px rgba(0,242,254,0.1);
     }
     .bento-card.featured {
       grid-column: span 2;
-      background: linear-gradient(135deg, rgba(0,242,254,0.06), rgba(79,172,254,0.04));
-      border-color: rgba(0,242,254,0.2);
+      background: linear-gradient(135deg, rgba(0,242,254,0.08), rgba(79,172,254,0.04));
+      border-color: rgba(0,242,254,0.25);
     }
-    @media (max-width: 640px) { .bento-card.featured { grid-column: span 1; } }
+    @media (max-width: 768px) { .bento-card.featured { grid-column: span 1; } }
     .bento-num {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px; color: var(--cyan); font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
     }
     .bento-card h3 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(17px,2.5vw,20px); font-weight: 700; color: #fff; margin-bottom: 8px;
+      font-size: clamp(18px,2.5vw,22px); font-weight: 800; color: #fff; margin-bottom: 10px;
     }
-    .bento-card p { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+    .bento-card p { color: #94a3b8; font-size: 14.5px; line-height: 1.65; }
 
-    /* STATS ROW */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-      gap: 16px; margin-bottom: clamp(40px,6vw,60px);
+    /* INTERACTIVE DEMO ACCORDION */
+    .demo-box {
+      background: var(--surface-solid); border: 1px solid rgba(0,242,254,0.2);
+      border-radius: 16px; padding: clamp(20px,3.5vw,30px); margin-top: 24px;
     }
-    .stat-card {
-      background: rgba(13,20,40,0.7); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px; padding: 22px; text-align: center;
+    .demo-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .demo-btn {
+      padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      cursor: pointer; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: #94a3b8; transition: all 0.2s; min-height: 40px; display: inline-flex; align-items: center;
     }
-    .stat-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(26px,4vw,36px); font-weight: 700; color: #fff; display: block;
+    .demo-btn.active, .demo-btn:hover {
+      background: rgba(0,242,254,0.15); border-color: var(--cyan); color: #fff;
     }
-    .stat-label { color: #64748b; font-size: 13px; margin-top: 4px; }
+    .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 700px) { .diff-grid { grid-template-columns: 1fr; } }
+    .diff-card {
+      background: #030712; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+      padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.6;
+    }
+    .diff-card-head {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .diff-bad { color: #fb7185; }
+    .diff-good { color: var(--green); }
+    .code-del { color: #fb7185; background: rgba(251,113,133,0.1); display: block; padding: 2px 4px; border-radius: 4px; }
+    .code-add { color: var(--green); background: rgba(0,230,118,0.1); display: block; padding: 2px 4px; border-radius: 4px; }
+
+    /* COMPARISON TABLE */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 20px; }
+    .comp-table {
+      width: 100%; border-collapse: collapse; text-align: left;
+      font-size: 14px; background: var(--card); border-radius: 14px;
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .comp-table th, .comp-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .comp-table th { background: rgba(255,255,255,0.03); color: #fff; font-weight: 700; }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table .hl-col { background: rgba(0,242,254,0.04); font-weight: 700; color: var(--cyan); }
 
     /* PRICING */
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-      gap: 18px;
+      gap: 20px;
     }
     .price-card {
-      background: rgba(13,20,40,0.8); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px; padding: clamp(22px,3.5vw,30px);
-      display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: clamp(22px,3.5vw,32px);
+      display: flex; flex-direction: column; justify-content: space-between; gap: 22px;
       transition: all 0.3s;
     }
-    .price-card:hover { border-color: rgba(0,242,254,0.2); transform: translateY(-2px); }
-    .price-card.featured-price { border-color: rgba(0,242,254,0.3); background: linear-gradient(135deg, rgba(0,242,254,0.07), rgba(79,172,254,0.04)); }
-    .price-card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
-    .price-card .price-val { font-size: clamp(28px,4vw,36px); font-weight: 800; color: #fff; font-family: 'JetBrains Mono', monospace; }
-    .price-card .price-val span { font-size: 14px; color: #64748b; font-weight: 400; }
-    .price-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .price-card li { color: #94a3b8; font-size: 14px; padding-left: 16px; position: relative; }
+    .price-card:hover { border-color: rgba(0,242,254,0.3); transform: translateY(-3px); }
+    .price-card.featured-price {
+      border-color: rgba(0,242,254,0.4);
+      background: linear-gradient(135deg, rgba(0,242,254,0.09), rgba(79,172,254,0.04));
+      box-shadow: 0 0 30px rgba(0,242,254,0.1);
+    }
+    .price-card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
+    .price-card .price-val { font-size: clamp(28px,4vw,38px); font-weight: 800; color: #fff; font-family: 'JetBrains Mono', monospace; }
+    .price-card .price-val span { font-size: 14px; color: #94a3b8; font-weight: 400; }
+    .price-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .price-card li { color: #94a3b8; font-size: 14px; padding-left: 18px; position: relative; }
     .price-card li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
     .btn-price {
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
       color: #e2e8f0; font-weight: 600; font-size: 14px;
-      padding: 12px; border-radius: 8px; text-decoration: none; text-align: center;
-      min-height: 44px; display: flex; align-items: center; justify-content: center;
+      padding: 13px; border-radius: 8px; text-decoration: none; text-align: center;
+      min-height: 46px; display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
-    .btn-price:hover { background: rgba(255,255,255,0.12); }
+    .btn-price:hover { background: rgba(255,255,255,0.12); color: #fff; }
     .btn-price.featured-btn {
       background: linear-gradient(135deg, var(--cyan), var(--blue));
       color: #040813; border: none; font-weight: 700;
+      box-shadow: 0 0 16px rgba(0,242,254,0.3);
     }
-    .btn-price.featured-btn:hover { box-shadow: 0 0 20px rgba(0,242,254,0.3); }
+    .btn-price.featured-btn:hover { box-shadow: 0 0 28px rgba(0,242,254,0.5); transform: translateY(-1px); }
 
+    /* FOOTER */
     footer {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 28px clamp(16px,4vw,28px);
-      text-align: center; color: #475569; font-size: 13px;
+      border-top: 1px solid var(--border);
+      padding: 36px clamp(16px,4vw,28px);
+      text-align: center; color: #64748b; font-size: 13px;
     }
-    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; align-items: center; }
     .footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-    .footer-links a { color: #64748b; text-decoration: none; font-size: 13px; transition: color 0.2s; min-height: 44px; display: inline-flex; align-items: center; }
-    .footer-links a:hover { color: #fff; }
+    .footer-links a { color: #94a3b8; text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color 0.2s; min-height: 44px; display: inline-flex; align-items: center; }
+    .footer-links a:hover { color: var(--cyan); }
   </style>
 </head>
 <body>
@@ -315,9 +374,10 @@
         <a href="/dashboard">Dashboard</a>
         <a href="/docs">Docs</a>
         <a href="/PITCH_DECK.html">Pitch Deck</a>
+        <a href="mailto:help@bartholomew.info">Support</a>
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-nav-cta">GitHub</a>
       </nav>
-      <button class="hamburger" id="menuBtn" onclick="toggleMenu()" aria-label="Open menu">
+      <button class="hamburger" id="menuBtn" onclick="toggleMenu()" aria-label="Open navigation menu">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -327,7 +387,8 @@
       <a href="/dashboard" onclick="closeMenu()">Dashboard</a>
       <a href="/docs" onclick="closeMenu()">Docs</a>
       <a href="/PITCH_DECK.html" onclick="closeMenu()">Pitch Deck</a>
-      <a href="/privacy.html" onclick="closeMenu()">Privacy</a>
+      <a href="/privacy.html" onclick="closeMenu()">Privacy Policy</a>
+      <a href="mailto:help@bartholomew.info" onclick="closeMenu()">Contact (help@bartholomew.info)</a>
       <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-mobile-cta" onclick="closeMenu()">View on GitHub</a>
     </nav>
   </header>
@@ -335,89 +396,184 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-glow"></div>
-    <div class="hero-badge">Autonomous CI Auto-Fix Engine</div>
+    <div class="hero-badge"><span class="badge-dot"></span>Autonomous CI Auto-Fix Engine</div>
     <h1>Your CI build just failed.<br><span class="grad">Bartholomew already fixed it.</span></h1>
     <p class="hero-sub">The autonomous developer copilot that catches failing tests, synthesizes isolated reproduction proofs, applies surgical AST patches, and ships a verified green PR before your team even opens Slack.</p>
     <div class="hero-cta-group">
-      <a href="/dashboard" class="btn-primary">Start Developer Trial</a>
-      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-secondary">View on GitHub</a>
+      <a href="/dashboard" class="btn-primary">
+        <span>Start Developer Trial</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/simulator" class="btn-secondary">
+        <span>Try Live Simulator</span>
+      </a>
+      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-secondary">
+        <span>View on GitHub</span>
+      </a>
     </div>
 
+    <!-- TERMINAL HUD PREVIEW -->
     <div class="terminal-wrap">
       <div class="terminal-topbar">
         <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-filename">bartholomew_agent.py &mdash; executing autonomous repair loop</span>
+        <span class="terminal-filename">bartholomew_agent.py &mdash; autonomous repair loop active</span>
       </div>
       <div class="terminal-body">
-        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Ingested webhook: <span class="t-hl">fintech-corp/payments-core</span> (CI failure)</div>
-        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Cloning failed commit into isolated sandbox...</div>
+        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Ingested webhook: <span class="t-hl">fintech-corp/payments-core</span> (CI failure detected)</div>
+        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Spawning isolated AST diagnostic sandbox container...</div>
         <div class="t-line"><span class="t-err">[ERROR]</span> RuntimeError: Event loop is closed at worker.py:64</div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Root cause: asyncio.get_event_loop() deprecated in 3.12+</div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Synthesizing minimal AST patch... <span class="t-hl">3 lines changed</span></div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Running verification suite: <span class="t-ok">48/48 passed (0.14s)</span></div>
-        <div class="t-line"><span class="t-cmd">[00:14:04]</span> Zero regressions detected. Dispatching PR...</div>
+        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Root cause: asyncio.get_event_loop() deprecated in Python 3.12+</div>
+        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Synthesizing minimal surgical AST patch... <span class="t-hl">3 lines modified</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Running verification test suite: <span class="t-ok">48/48 passed (0.14s)</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:04]</span> Zero regressions verified. Attaching reproduction evidence...</div>
         <div class="t-line"><span class="t-ok">[SUCCESS]</span> PR #170 opened &rarr; <span class="t-hl">fintech-corp/payments-core</span> (1.14s total)</div>
       </div>
     </div>
   </section>
 
-  <!-- STATS -->
+  <!-- STATS ROW -->
   <section>
     <div class="stats-row">
       <div class="stat-card"><span class="stat-val">&lt; 2s</span><div class="stat-label">End-to-End Repair Latency</div></div>
-      <div class="stat-card"><span class="stat-val">100%</span><div class="stat-label">Test Verification Rate</div></div>
-      <div class="stat-card"><span class="stat-val">$0.00</span><div class="stat-label">Cloud Compute Per Fix</div></div>
+      <div class="stat-card"><span class="stat-val">100%</span><div class="stat-label">Deterministic Verification</div></div>
+      <div class="stat-card"><span class="stat-val">$0.00</span><div class="stat-label">Cloud Compute Overhead</div></div>
       <div class="stat-card"><span class="stat-val">3 Lines</span><div class="stat-label">Average Patch Size (AST)</div></div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS - BENTO -->
+  <!-- MECHANICAL VERIFICATION ENGINE - BENTO -->
   <section>
     <div class="section-label">Mechanical Verification Engine</div>
     <h2 class="section-title">How Bartholomew Works</h2>
-    <p class="section-sub">Three deterministic steps replace guessing with guaranteed correctness.</p>
+    <p class="section-sub">Four deterministic steps replace LLM hallucination with guaranteed correctness.</p>
 
     <div class="bento-grid">
       <div class="bento-card featured">
-        <div class="bento-num">01 / Core Loop</div>
-        <h3>Catch, Isolate, and Reproduce the Exact Failure</h3>
-        <p>The moment your GitHub CI workflow fails, Bartholomew ingests the webhook and clones the broken commit into a fully isolated sandbox environment. It synthesizes a standalone reproduction script that proves the defect is real and reproducible &mdash; zero guessing.</p>
+        <div class="bento-num">01 / Ingest & Reproduce</div>
+        <h3>Catch, Isolate, and Reproduce the Exact Defect</h3>
+        <p>The moment your GitHub Actions or GitLab CI workflow fails, Bartholomew ingests the webhook and spins up an isolated sandbox. It executes a standalone reproduction proof that confirms the defect is real and reproducible with zero false positives.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-num">02 / Patch Engine</div>
+        <div class="bento-num">02 / Compiler AST Analysis</div>
         <h3>Minimal Surgical AST Patch</h3>
-        <p>Instead of rewriting entire files, Bartholomew uses compiler-level AST analysis to compute the smallest possible change that resolves the root cause with zero collateral modifications.</p>
+        <p>Instead of blindly rewriting files, Bartholomew uses compiler-level AST analysis to compute the exact minimal AST mutation required to solve the root defect without collateral changes.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-num">03 / Verification</div>
+        <div class="bento-num">03 / Pre-Flight Suite</div>
         <h3>100% Test Suite Confirmation</h3>
-        <p>Every single test in your suite runs against the proposed patch locally. Only when all tests pass with zero regressions does Bartholomew open the Pull Request.</p>
+        <p>Every test in your test suite executes against the synthesized patch. Only when all tests pass with zero regressions does Bartholomew approve the change.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-num">04 / Delivery</div>
-        <h3>Verified Green PR Ships Automatically</h3>
-        <p>A clean, reviewed, and instantly mergeable Pull Request appears in your repository with reproduction evidence attached. Your team wakes up to a resolved pipeline.</p>
+        <div class="bento-num">04 / Automated Green PR</div>
+        <h3>Verified PR Ships Automatically</h3>
+        <p>A clean, documented, mergeable Pull Request appears with full reproduction proof logs attached. Your team merges with absolute confidence.</p>
       </div>
+    </div>
+
+    <!-- LIVE DEMO INSPECTOR WIDGET -->
+    <div class="demo-box">
+      <div class="demo-controls">
+        <button class="demo-btn active" onclick="switchDemo(0, this)">Case 1: Async Event Loop Crash</button>
+        <button class="demo-btn" onclick="switchDemo(1, this)">Case 2: Python 3.14 AST Constant()</button>
+        <button class="demo-btn" onclick="switchDemo(2, this)">Case 3: Unhandled Socket Teardown</button>
+      </div>
+      <div class="diff-grid" id="diffView">
+        <div class="diff-card">
+          <div class="diff-card-head diff-bad">Failing CI Code (Broken Commit)</div>
+          <code>
+            def start_worker():<br>
+            <span class="code-del">- loop = asyncio.get_event_loop()</span><br>
+            <span class="code-del">- return loop.run_until_complete(fetch())</span>
+          </code>
+        </div>
+        <div class="diff-card">
+          <div class="diff-card-head diff-good">Bartholomew Surgical AST Patch (Verified Green)</div>
+          <code>
+            def start_worker():<br>
+            <span class="code-add">+ loop = asyncio.new_event_loop()</span><br>
+            <span class="code-add">+ asyncio.set_event_loop(loop)</span><br>
+            <span class="code-add">+ return loop.run_until_complete(fetch())</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section>
+    <div class="section-label">Enterprise Comparison</div>
+    <h2 class="section-title">Why Engineering Teams Choose Bartholomew</h2>
+    <p class="section-sub">See how autonomous mechanical verification compares to legacy tooling.</p>
+
+    <div class="table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Feature & Capability</th>
+            <th class="hl-col">Bartholomew</th>
+            <th>Copilot Workspace</th>
+            <th>Dependabot</th>
+            <th>Manual Engineer Triage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Autonomous CI Failure Ingestion</strong></td>
+            <td class="hl-col">Yes (Instant Webhook)</td>
+            <td>Manual Prompting</td>
+            <td>Dependency Version Only</td>
+            <td>Manual Slack Alert</td>
+          </tr>
+          <tr>
+            <td><strong>Isolated Defect Reproduction Proof</strong></td>
+            <td class="hl-col">Yes (Deterministic)</td>
+            <td>No</td>
+            <td>No</td>
+            <td>Hours of local setup</td>
+          </tr>
+          <tr>
+            <td><strong>Compiler AST Surgical Patching</strong></td>
+            <td class="hl-col">Yes (Minimal Delta)</td>
+            <td>LLM rewrite (Vulnerable)</td>
+            <td>Version bump only</td>
+            <td>Manual code edit</td>
+          </tr>
+          <tr>
+            <td><strong>100% Pre-Flight Test Verification</strong></td>
+            <td class="hl-col">Yes (Zero Regressions)</td>
+            <td>No guarantee</td>
+            <td>No local test run</td>
+            <td>Manual CI wait (15m+)</td>
+          </tr>
+          <tr>
+            <td><strong>Median Time to Verified Green PR</strong></td>
+            <td class="hl-col">&lt; 2.0 Seconds</td>
+            <td>5-15 Minutes</td>
+            <td>Hours / Daily cron</td>
+            <td>2-8 Hours</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <!-- PRICING -->
   <section>
-    <div class="section-label">Pricing</div>
-    <h2 class="section-title">Simple, Transparent Pricing</h2>
-    <p class="section-sub">Start free. Scale when you are ready.</p>
+    <div class="section-label">Transparent Pricing</div>
+    <h2 class="section-title">Simple, Predictable Plans</h2>
+    <p class="section-sub">Start free with open-source tooling. Upgrade when your repository scales.</p>
 
     <div class="pricing-grid">
       <div class="price-card">
         <div>
           <h3>Developer</h3>
           <div class="price-val">$0 <span>/ month</span></div>
-          <p style="color:#64748b; font-size:13px; margin: 8px 0 16px;">Open-source CLI and browser extension.</p>
+          <p style="color:#94a3b8; font-size:13px; margin: 8px 0 16px;">Open-source CLI and browser extension.</p>
           <ul>
             <li>100 autonomous fixes per month</li>
             <li>Chrome and Edge side panel</li>
             <li>Local AST diagnostic engine</li>
-            <li>BYOK Gemini or Ollama</li>
+            <li>BYOK Gemini or Ollama models</li>
           </ul>
         </div>
         <a href="/dashboard" class="btn-price">Get Started Free</a>
@@ -426,7 +582,7 @@
         <div>
           <h3 style="color: var(--cyan);">Pro Repository</h3>
           <div class="price-val">$49 <span>/ month</span></div>
-          <p style="color:#94a3b8; font-size:13px; margin: 8px 0 16px;">Unlimited automated CI repairs for one repo.</p>
+          <p style="color:#94a3b8; font-size:13px; margin: 8px 0 16px;">Unlimited automated CI repairs for one repository.</p>
           <ul>
             <li>Unlimited autonomous PR fixes</li>
             <li>Deterministic reproduction tests</li>
@@ -440,7 +596,7 @@
         <div>
           <h3>Team Organization</h3>
           <div class="price-val">$199 <span>/ month</span></div>
-          <p style="color:#64748b; font-size:13px; margin: 8px 0 16px;">Unlimited repos for engineering teams.</p>
+          <p style="color:#94a3b8; font-size:13px; margin: 8px 0 16px;">Unlimited repositories for fast-moving engineering orgs.</p>
           <ul>
             <li>Unlimited GitHub repositories</li>
             <li>Priority parallel fix queue</li>
@@ -448,23 +604,25 @@
             <li>Slack and Discord notifications</li>
           </ul>
         </div>
-        <a href="mailto:help@bartholomew.info" class="btn-price">Contact for Team (help@bartholomew.info)</a>
+        <a href="mailto:help@bartholomew.info" class="btn-price">Contact Team (help@bartholomew.info)</a>
       </div>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
       <div class="footer-links">
-        <a href="/docs">Getting Started</a>
-        <a href="/privacy.html">Privacy Policy</a>
-        <a href="/PITCH_DECK.html">Pitch Deck</a>
         <a href="/operations">Operations</a>
         <a href="/simulator">Simulator</a>
-        <a href="mailto:help@bartholomew.info">Contact (help@bartholomew.info)</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/docs">Docs</a>
+        <a href="/PITCH_DECK.html">Pitch Deck</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="mailto:help@bartholomew.info">Contact Support (help@bartholomew.info)</a>
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">GitHub</a>
       </div>
-      <div>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved.</div>
+      <div>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved. &bull; Contact: help@bartholomew.info</div>
     </div>
   </footer>
 
@@ -474,7 +632,39 @@
       m.classList.toggle('open');
     }
     function closeMenu() {
-      document.getElementById('mobileMenu').classList.remove('open');
+      const m = document.getElementById('mobileMenu');
+      if (m) m.classList.remove('open');
+    }
+
+    const demoCases = [
+      {
+        bad: 'def start_worker():<br><span class="code-del">- loop = asyncio.get_event_loop()</span><br><span class="code-del">- return loop.run_until_complete(fetch())</span>',
+        good: 'def start_worker():<br><span class="code-add">+ loop = asyncio.new_event_loop()</span><br><span class="code-add">+ asyncio.set_event_loop(loop)</span><br><span class="code-add">+ return loop.run_until_complete(fetch())</span>'
+      },
+      {
+        bad: 'def parse_node(node):<br><span class="code-del">- if isinstance(node, ast.Str):</span><br><span class="code-del">-     return node.s</span>',
+        good: 'def parse_node(node):<br><span class="code-add">+ if isinstance(node, ast.Constant):</span><br><span class="code-add">+     return node.value</span>'
+      },
+      {
+        bad: 'def cleanup_socket(sock):<br><span class="code-del">- sock.close()</span>',
+        good: 'def cleanup_socket(sock):<br><span class="code-add">+ if sock and not sock._closed:</span><br><span class="code-add">+     sock.shutdown(socket.SHUT_RDWR)</span><br><span class="code-add">+     sock.close()</span>'
+      }
+    ];
+
+    function switchDemo(idx, btn) {
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const c = demoCases[idx];
+      document.getElementById('diffView').innerHTML = `
+        <div class="diff-card">
+          <div class="diff-card-head diff-bad">Failing CI Code (Broken Commit)</div>
+          <code>${c.bad}</code>
+        </div>
+        <div class="diff-card">
+          <div class="diff-card-head diff-good">Bartholomew Surgical AST Patch (Verified Green)</div>
+          <code>${c.good}</code>
+        </div>
+      `;
     }
   </script>
 </body>
