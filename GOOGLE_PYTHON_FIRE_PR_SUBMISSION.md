@@ -10,7 +10,9 @@
 ## Pull Request Body (Copy-Paste to GitHub PR Description)
 
 ### Description
+
 In `fire/parser.py`, `_StrNode` maintained a legacy conditional check for Python < 3.8:
+
 ```python
 if sys.version_info[0:2] < (3, 8):
   # pylint: disable=no-member
@@ -24,6 +26,7 @@ This change modernizes `_StrNode` to check `isinstance(node, ast.Constant) and i
 ---
 
 ### Changes Made
+
 1. **`fire/parser.py`**:
    - Replaced legacy version-branching and `pylint: disable=no-member` in `_StrNode`.
    - Updated to clean, idiomatic `isinstance(node, ast.Constant) and isinstance(node.value, str)`.
@@ -34,6 +37,7 @@ This change modernizes `_StrNode` to check `isinstance(node, ast.Constant) and i
 ---
 
 ### Verification Output
+
 ```text
 $ python -m pytest fire/parser_test.py
 ============================= test session starts ==============================
@@ -49,6 +53,7 @@ fire/parser_test.py ................................................     [100%]
 ---
 
 ### Patch Diff
+
 ```diff
 --- a/fire/parser.py
 +++ b/fire/parser.py

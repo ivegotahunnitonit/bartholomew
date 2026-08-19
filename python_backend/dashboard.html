@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Bartholomew | Enterprise AI Security Command Center</title>
   <meta name="description" content="Bartholomew Developer Console — Sub-microsecond CI repair telemetry, active OWASP LLM kill-switch enforcement, trajectory fuzzing, and autonomous PR dispatch.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
       font-size: var(--font-scale);
       min-height: 100vh; display: flex; flex-direction: column;
       overflow-x: hidden; width: 100%; max-width: 100vw;
-      -webkit-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
@@ -50,7 +50,7 @@
     header {
       position: sticky; top: 0; z-index: 200;
       background: rgba(3,11,24,0.95);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
       width: 100%;
     }
@@ -103,8 +103,7 @@
     /* Scrollable Tab Strip */
     .tab-strip-wrap {
       max-width: 1400px; margin: 0 auto; width: 100%;
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
-    }
+      overflow-x: auto; }
     .tab-strip-wrap::-webkit-scrollbar { display: none; }
     .tab-nav {
       display: flex; align-items: center; gap: 2px;
@@ -152,7 +151,8 @@
       padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
       cursor: pointer; min-height: 40px; border: 1px solid var(--border);
       background: rgba(255,255,255,0.05); color: var(--sub);
-      transition: all 0.2s; white-space: nowrap; text-decoration: none; user-select: none;
+      transition: all 0.2s; white-space: nowrap; text-decoration: none; -webkit-user-select: none;
+      user-select: none;
     }
     .btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.15); }
     .btn:active { transform: scale(0.98); }
@@ -272,7 +272,7 @@
       padding: 12px 14px; font-family: 'JetBrains Mono', monospace;
       font-size: clamp(11px, 1.4vw, 12px); color: var(--sub);
       min-height: 220px; max-height: 300px; overflow-y: auto; line-height: 1.65;
-      -webkit-overflow-scrolling: touch; word-break: break-word; background: rgba(2,6,14,0.6);
+      word-break: break-word; background: rgba(2,6,14,0.6);
       border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);
     }
     .f-line { margin-bottom: 5px; animation: lineIn 0.2s ease-out; }
@@ -296,7 +296,7 @@
 
     /* OWASP Matrix List */
     .owasp-list {
-      max-height: 380px; overflow-y: auto; -webkit-overflow-scrolling: touch; width: 100%;
+      max-height: 380px; overflow-y: auto; width: 100%;
     }
     .owasp-item {
       display: flex; align-items: center; gap: 10px;
@@ -317,8 +317,7 @@
       overflow: hidden; margin-bottom: 18px; width: 100%;
     }
     .table-scroll {
-      width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
-    }
+      width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 580px; font-size: 12.5px; }
     thead th {
       font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted);
@@ -381,7 +380,7 @@
     /* Tour Modal */
     .tour-overlay {
       display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.8); -webkit-backdrop-filter: blur(8px);
       align-items: center; justify-content: center; padding: 16px;
     }
     .tour-overlay.open { display: flex; }

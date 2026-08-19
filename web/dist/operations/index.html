@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Live Operations Workspace | Bartholomew</title>
   <meta name="description" content="Real-time daemon telemetry, automated CI repair logs, and connected repository health monitoring.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,12 +20,12 @@
       background: #040813; color: var(--text);
       font-family: 'Inter', sans-serif;
       min-height: 100vh; display: flex; flex-direction: column;
-      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
     }
     .wrap { max-width: 1280px; margin: 0 auto; padding: 0 clamp(14px,4vw,28px); width: 100%; }
 
     /* HEADER */
-    header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(14px); background: rgba(4,8,19,0.88); border-bottom: 1px solid var(--border); }
+    header { position: sticky; top: 0; z-index: 100; -webkit-backdrop-filter: blur(14px); background: rgba(4,8,19,0.88); border-bottom: 1px solid var(--border); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
     .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .logo-mark { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--cyan), var(--blue)); display: flex; align-items: center; justify-content: center; color: #040813; font-weight: 900; font-size: 16px; font-family: 'JetBrains Mono', monospace; }
@@ -64,8 +64,7 @@
       padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: clamp(11px,1.5vw,12.5px);
       color: var(--sub); flex: 1; min-height: 260px; max-height: 360px;
       overflow-y: auto; line-height: 1.65; word-break: break-word;
-      -webkit-overflow-scrolling: touch;
-    }
+      }
     .log-line { margin-bottom: 7px; padding-left: 10px; border-left: 2px solid transparent; }
     .log-line.ok  { border-left-color: var(--green); color: #a7f3d0; }
     .log-line.warn{ border-left-color: var(--amber); color: #fde68a; }

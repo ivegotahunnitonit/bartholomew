@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Bartholomew | Investor Presentation</title>
   <meta name="description" content="Bartholomew: Autonomous CI/CD Failure Auto-Fix with deterministic mechanical verification.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
     html, body {
       background: var(--bg); color: var(--text); font-family: var(--fb);
       min-height: 100vh; display: flex; flex-direction: column;
-      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
     }
 
     /* HEADER */
@@ -29,7 +29,7 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: clamp(12px,2.5vw,18px) clamp(16px,4vw,32px);
       background: rgba(4,8,19,0.9); border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100; -webkit-backdrop-filter: blur(12px);
     }
     .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .logo-mark { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: linear-gradient(135deg,var(--cyan),var(--blue)); display: flex; align-items: center; justify-content: center; color: #040813; font-weight: 900; font-size: 16px; font-family: var(--fc); }
@@ -38,7 +38,7 @@
 
     /* SLIDE AREA */
     .deck-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: clamp(16px,3vw,32px); }
-    .slide { display: none; width: 100%; max-width: 1020px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: clamp(24px,5vw,48px); box-shadow: 0 20px 70px rgba(0,0,0,0.65); backdrop-filter: blur(12px); animation: sIn 0.3s ease forwards; }
+    .slide { display: none; width: 100%; max-width: 1020px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: clamp(24px,5vw,48px); box-shadow: 0 20px 70px rgba(0,0,0,0.65); -webkit-backdrop-filter: blur(12px); animation: sIn 0.3s ease forwards; }
     .slide.active { display: block; }
     @keyframes sIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
@@ -55,7 +55,7 @@
     .card h3 { font-family: var(--fh); font-size: clamp(15px,2.5vw,18px); font-weight: 700; color: #fff; margin-bottom: 8px; }
 
     /* TABLE */
-    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 14px; }
+    .tbl-wrap { overflow-x: auto; margin-top: 14px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     th { color: var(--muted); padding: 9px 12px; border-bottom: 1px solid var(--border); font-family: var(--fc); font-size: 11px; text-transform: uppercase; text-align: left; }
     td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -317,7 +317,7 @@
         <div class="cta-group">
           <a href="mailto:help@bartholomew.info" class="btn-contact">Contact Us (help@bartholomew.info)</a>
           <a href="/dashboard" class="btn-contact-sec">Open Console</a>
-          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-contact-sec">View on GitHub</a>
+          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn-contact-sec">View on GitHub</a>
         </div>
       </div>
     </div>

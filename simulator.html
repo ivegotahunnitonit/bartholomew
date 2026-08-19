@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CI Auto-Fix Simulator | Bartholomew</title>
   <meta name="description" content="Interactive sandbox: simulate real CI failures and watch Bartholomew's autonomous repair loop execute live.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,11 +14,11 @@
     html, body {
       background: #040813; color: #f1f5f9; font-family: 'Inter', sans-serif;
       min-height: 100vh; display: flex; flex-direction: column;
-      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
     }
     .wrap { max-width: 1100px; margin: 0 auto; padding: 0 clamp(14px,4vw,28px); width: 100%; }
 
-    header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(14px); background: rgba(4,8,19,0.88); border-bottom: 1px solid var(--border); }
+    header { position: sticky; top: 0; z-index: 100; -webkit-backdrop-filter: blur(14px); background: rgba(4,8,19,0.88); border-bottom: 1px solid var(--border); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
     .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .logo-mark { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: linear-gradient(135deg,var(--cyan),var(--blue)); display: flex; align-items: center; justify-content: center; color: #040813; font-weight: 900; font-size: 16px; font-family: 'JetBrains Mono', monospace; }
@@ -55,7 +55,7 @@
     .sim-engine { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted); }
 
     /* STAGE BAR */
-    .stages { display: flex; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: wrap; }
+    .stages { display: flex; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); overflow-x: auto; flex-wrap: wrap; }
     .stage {
       font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
       padding: 6px 12px; border-radius: 6px; white-space: nowrap;
@@ -69,8 +69,7 @@
     .sim-output {
       padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: clamp(11.5px,1.6vw,13px);
       color: var(--sub); min-height: 240px; max-height: 380px;
-      overflow-y: auto; line-height: 1.65; -webkit-overflow-scrolling: touch;
-    }
+      overflow-y: auto; line-height: 1.65; }
     .o-line { margin-bottom: 7px; }
     .hl  { color: var(--cyan); font-weight: 600; }
     .sc-ok { color: var(--green); font-weight: 700; }

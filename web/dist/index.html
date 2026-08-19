@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Bartholomew | Autonomous CI/CD Failure Auto-Fix</title>
   <meta name="description" content="The autonomous GitHub App that catches failing CI tests, synthesizes isolated deterministic reproduction proofs, applies surgical AST patches, and opens verified green PRs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       width: 100%;
-      -webkit-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
       scroll-behavior: smooth;
     }
 
@@ -39,7 +39,7 @@
     header {
       position: sticky; top: 0; z-index: 100;
       width: 100%;
-      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       background: rgba(4,8,19,0.85);
       border-bottom: 1px solid var(--border);
@@ -297,7 +297,7 @@
     .code-add { color: var(--green); background: rgba(0,230,118,0.1); display: block; padding: 2px 4px; border-radius: 4px; }
 
     /* COMPARISON TABLE */
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 20px; }
+    .table-wrap { overflow-x: auto; margin-top: 20px; }
     .comp-table {
       width: 100%; border-collapse: collapse; text-align: left;
       font-size: 14px; background: var(--card); border-radius: 14px;
@@ -375,7 +375,7 @@
         <a href="/docs">Docs</a>
         <a href="/PITCH_DECK.html">Pitch Deck</a>
         <a href="mailto:help@bartholomew.info">Support</a>
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-nav-cta">GitHub</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn-nav-cta">GitHub</a>
       </nav>
       <button class="hamburger" id="menuBtn" onclick="toggleMenu()" aria-label="Open navigation menu">
         <span></span><span></span><span></span>
@@ -389,7 +389,7 @@
       <a href="/PITCH_DECK.html" onclick="closeMenu()">Pitch Deck</a>
       <a href="/privacy.html" onclick="closeMenu()">Privacy Policy</a>
       <a href="mailto:help@bartholomew.info" onclick="closeMenu()">Contact (help@bartholomew.info)</a>
-      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-mobile-cta" onclick="closeMenu()">View on GitHub</a>
+      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn-mobile-cta" onclick="closeMenu()">View on GitHub</a>
     </nav>
   </header>
 
@@ -407,7 +407,7 @@
       <a href="/simulator" class="btn-secondary">
         <span>Try Live Simulator</span>
       </a>
-      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-secondary">
+      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn-secondary">
         <span>View on GitHub</span>
       </a>
     </div>
@@ -620,7 +620,7 @@
         <a href="/PITCH_DECK.html">Pitch Deck</a>
         <a href="/privacy.html">Privacy Policy</a>
         <a href="mailto:help@bartholomew.info">Contact Support (help@bartholomew.info)</a>
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">GitHub</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
       <div>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved. &bull; Contact: help@bartholomew.info</div>
     </div>

@@ -10,7 +10,7 @@ CRITICAL ARCHITECTURAL GUARANTEE:
 4. Executes 100% offline verification using pinned root public keys.
 */
 
-package main
+package verifier
 
 import (
 	"crypto/sha256"
@@ -113,7 +113,7 @@ func (v *StandaloneBTPVerifierGo) VerifyArtifact(artifact EvidenceArtifact) (boo
 	return true, "100% Independently Verified via BTP v0.1 Go Standalone Verifier using Pinned Root Keys."
 }
 
-func main() {
+func RunStandaloneVerifier() {
 	filePath := "btp_test_vectors.json"
 	if len(os.Args) > 1 {
 		filePath = os.Args[1]
