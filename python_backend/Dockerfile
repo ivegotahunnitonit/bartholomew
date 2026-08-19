@@ -18,8 +18,8 @@ COPY bartholomew_eval/ ./bartholomew_eval/
 # Copy application source code
 COPY app/ ./app/
 
-# Copy frontend assets served by serve_dashboard()
-COPY index.html ./index.html
+# Copy frontend assets served by serve_dashboard() and routes
+COPY *.html ./
 COPY dashboard/ ./dashboard/
 COPY web/dist/ ./web/dist/
 COPY bartholomew_dashboard_visual.png ./bartholomew_dashboard_visual.png

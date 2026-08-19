@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Getting Started | Bartholomew Autonomous Systems</title>
+  <meta name="description" content="Step-by-step guide to installing and testing Bartholomew — the autonomous CI failure auto-fix engine. From CLI install to live GitHub PR dispatch.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyan:#00f2fe; --blue:#4facfe; --green:#00e676; --amber:#fbbf24; --red:#fb7185;
+      --bg:#040813; --surface:rgba(13,20,40,0.85); --card:rgba(10,18,35,0.9);
+      --border:rgba(255,255,255,0.08); --border-c:rgba(0,242,254,0.25); --border-g:rgba(0,230,118,0.3);
+      --text:#f1f5f9; --sub:#94a3b8; --muted:#64748b;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+    html, body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+      overflow-x: hidden; overflow-y: auto; width: 100%; -webkit-text-size-adjust: 100%;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 clamp(16px,4vw,28px); width: 100%; }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(14px); background: rgba(4,8,19,0.88);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark {
+      width: 32px; height: 32px; min-width: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      color: #040813; font-weight: 900; font-size: 16px; font-family: 'JetBrains Mono', monospace;
+    }
+    .logo-text {
+      font-size: 18px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .nav-links a {
+      color: var(--sub); text-decoration: none; font-size: 14px; font-weight: 500;
+      min-height: 44px; display: inline-flex; align-items: center; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: var(--cyan); }
+
+    /* PAGE HERO */
+    .doc-hero {
+      padding: clamp(36px,6vw,64px) 0 clamp(24px,4vw,36px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: clamp(28px,5vw,48px);
+    }
+    .doc-hero .eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan);
+      text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 12px;
+      display: block;
+    }
+    .doc-hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(28px,5vw,46px); font-weight: 900; color: #fff;
+      letter-spacing: -0.5px; margin-bottom: 12px;
+    }
+    .doc-hero h1 span {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .doc-hero p { color: var(--sub); font-size: clamp(14px,2vw,16px); max-width: 640px; }
+    .copyright-notice {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+      padding: 7px 14px; border-radius: 8px;
+      background: rgba(0,230,118,0.08); border: 1px solid var(--border-g);
+      color: var(--green); font-size: 12px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* QUICK JUMP */
+    .toc {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: clamp(18px,3vw,24px); margin-bottom: 36px;
+    }
+    .toc h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .toc ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .toc li a {
+      color: var(--sub); text-decoration: none; font-size: 14px; transition: color 0.2s;
+      display: flex; align-items: center; gap: 8px; min-height: 36px;
+    }
+    .toc li a:hover { color: var(--cyan); }
+    .toc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--cyan); font-weight: 700; min-width: 24px; }
+
+    /* SECTIONS */
+    .doc-section { margin-bottom: clamp(36px,6vw,56px); }
+    .section-anchor { scroll-margin-top: 80px; }
+    .step-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
+      padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+    .step-num {
+      width: 38px; height: 38px; min-width: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      color: #040813; font-weight: 900; font-size: 17px; font-family: 'JetBrains Mono', monospace;
+    }
+    .step-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(18px,3vw,22px); font-weight: 800; color: #fff; }
+    .step-sub { color: var(--sub); font-size: 13px; margin-top: 2px; }
+
+    p { color: var(--sub); font-size: clamp(14px,2vw,15.5px); margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: #fff; }
+
+    /* CODE BLOCKS */
+    .code-block {
+      background: #050a18; border: 1px solid rgba(0,242,254,0.15);
+      border-radius: 10px; overflow: hidden; margin: 14px 0;
+    }
+    .code-block-header {
+      background: #08111f; padding: 8px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-block-lang { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+    .code-block-copy {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--cyan);
+      background: none; border: none; cursor: pointer; padding: 4px 8px;
+      border-radius: 4px; transition: background 0.2s; min-height: 28px;
+    }
+    .code-block-copy:hover { background: rgba(0,242,254,0.1); }
+    pre {
+      padding: 16px 18px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      font-family: 'JetBrains Mono', monospace; font-size: clamp(12px,1.6vw,13.5px);
+      color: #e2e8f0; line-height: 1.65; word-break: break-word; white-space: pre-wrap;
+    }
+    .hl-c { color: var(--cyan); }
+    .hl-g { color: var(--green); font-weight: 600; }
+    .hl-y { color: var(--amber); }
+    .hl-r { color: var(--red); }
+    .hl-m { color: #94a3b8; }
+
+    /* CALLOUTS */
+    .callout {
+      border-radius: 10px; padding: clamp(14px,2.5vw,18px);
+      margin: 14px 0; display: flex; gap: 12px; align-items: flex-start;
+    }
+    .callout.info { background: rgba(0,242,254,0.07); border: 1px solid rgba(0,242,254,0.2); }
+    .callout.success { background: rgba(0,230,118,0.07); border: 1px solid rgba(0,230,118,0.2); }
+    .callout.warning { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); }
+    .callout-icon { font-size: 16px; min-width: 22px; margin-top: 1px; font-family: monospace; font-weight: 700; }
+    .callout.info .callout-icon { color: var(--cyan); }
+    .callout.success .callout-icon { color: var(--green); }
+    .callout.warning .callout-icon { color: var(--amber); }
+    .callout-body { font-size: 14px; line-height: 1.6; color: var(--sub); }
+    .callout-body strong { color: #fff; }
+
+    /* STATUS TABLE */
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,260px),1fr)); gap: 12px; margin: 14px 0; }
+    .status-item {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .status-dot { width: 10px; height: 10px; min-width: 10px; border-radius: 50%; }
+    .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .status-dot.amber { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+    .status-dot.muted { background: #475569; }
+    .status-label { font-size: 13.5px; color: #fff; font-weight: 600; }
+    .status-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    /* FOOTER */
+    footer {
+      margin-top: auto; padding: clamp(20px,4vw,32px) 0;
+      border-top: 1px solid var(--border); text-align: center;
+    }
+    .footer-copy { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .footer-copy a { color: var(--sub); text-decoration: none; transition: color 0.2s; }
+    .footer-copy a:hover { color: #fff; }
+    .legal-notice {
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 14px 18px; margin-top: 14px; text-align: left;
+      font-size: 12px; color: var(--muted); line-height: 1.65;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap nav-inner">
+      <a href="/" class="logo-wrap">
+        <div class="logo-mark">B</div>
+        <div class="logo-text">BARTHOLOMEW</div>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/operations">Operations</a>
+        <a href="/simulator">Simulator</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/docs" class="active">Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="flex:1;">
+    <div class="wrap">
+
+      <!-- HERO -->
+      <div class="doc-hero">
+        <span class="eyebrow">Developer Documentation</span>
+        <h1>How to <span>Test Bartholomew</span></h1>
+        <p>A step-by-step guide for developers and teams who want to install, run, and test the autonomous CI failure auto-fix engine against a real GitHub repository.</p>
+        <div class="copyright-notice">
+          [C] Copyright 2026 Bartholomew Autonomous Systems / Bartholomew AI Contributors. All rights reserved.
+        </div>
+      </div>
+
+      <!-- TABLE OF CONTENTS -->
+      <div class="toc">
+        <h3>Quick Navigation</h3>
+        <ul>
+          <li><a href="#step1"><span class="toc-num">01</span>Install the CLI (30 seconds)</a></li>
+          <li><a href="#step2"><span class="toc-num">02</span>Run CLI Commands Locally</a></li>
+          <li><a href="#step3"><span class="toc-num">03</span>Try the Interactive Simulator</a></li>
+          <li><a href="#step4"><span class="toc-num">04</span>Connect a Real GitHub Repository</a></li>
+          <li><a href="#step5"><span class="toc-num">05</span>Trigger a Live Autonomous PR</a></li>
+          <li><a href="#status"><span class="toc-num">06</span>Current Feature Status</a></li>
+        </ul>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="doc-section section-anchor" id="step1">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Install the CLI</div>
+            <div class="step-sub">Takes about 30 seconds. Requires Python 3.9 or higher.</div>
+          </div>
+        </div>
+
+        <p>Install the Bartholomew evaluation and diagnostic CLI directly from PyPI:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>pip install bartholomew-eval</pre>
+        </div>
+
+        <p>Verify the install worked:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>python -m bartholomew_eval.cli --help</pre>
+        </div>
+
+        <div class="callout success">
+          <div class="callout-icon">[OK]</div>
+          <div class="callout-body">If you see the command list, you are ready to go. No API key required for the default heuristic engine.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="doc-section section-anchor" id="step2">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Run CLI Commands Locally</div>
+            <div class="step-sub">Five commands you can run immediately against any Python test file.</div>
+          </div>
+        </div>
+
+        <p><strong>Diagnose a failing test file:</strong> Point Bartholomew at any Python file with a known failure and it will identify the root cause and suggest a minimal fix.</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>python -m bartholomew_eval.cli diagnose ./path/to/test_file.py</pre>
+        </div>
+
+        <p><strong>Detect and quarantine a flaky test</strong> by running it multiple times and analyzing the variance:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-c"># Replace with your actual test function name</span>
+python -m bartholomew_eval.cli quarantine test_payment_webhook_timeout</pre>
+        </div>
+
+        <p><strong>Benchmark AI repair models</strong> side-by-side across real AST defect scenarios:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>python -m bartholomew_eval.cli eval-models</pre>
+        </div>
+
+        <p>You will see a ranked leaderboard comparing Gemini 2.0 Flash, Claude 3.7 Sonnet, GPT-4o, and DeepSeek R1 on pass rate, latency, and cost per fix.</p>
+
+        <div class="callout info">
+          <div class="callout-icon">[i]</div>
+          <div class="callout-body"><strong>BYOK:</strong> To use real AI inference instead of the built-in heuristic engine, set your API key in the <a href="/dashboard" style="color:var(--cyan);">Developer Console</a> or export it as an environment variable: <code style="color:var(--cyan); font-family:'JetBrains Mono', monospace; font-size:12px;">export GEMINI_API_KEY=AIzaSy...</code></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="doc-section section-anchor" id="step3">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Try the Interactive Simulator</div>
+            <div class="step-sub">No install required. Runs in any browser.</div>
+          </div>
+        </div>
+
+        <p>The Bartholomew Simulator lets you watch the full autonomous repair loop execute against three real production failure scenarios without connecting a GitHub repository:</p>
+
+        <ol style="color:var(--sub); font-size:14.5px; padding-left:20px; display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          <li>Go to <a href="/simulator" style="color:var(--cyan); text-decoration:none; font-weight:600;">bartholomew.info/simulator</a></li>
+          <li>Select a failure scenario (Python Asyncio, TypeScript Vitest, or Go Data Race)</li>
+          <li>Click <strong style="color:#fff;">Run Full Auto-Fix Cycle</strong></li>
+          <li>Watch the 5-stage repair loop execute step by step in the terminal</li>
+        </ol>
+
+        <p>The simulator faithfully demonstrates: <strong>Webhook Ingest &rarr; Isolated Reproduction &rarr; Minimal AST Patch &rarr; 100% Test Verification &rarr; Green PR Dispatch.</strong></p>
+
+        <a href="/simulator" style="display:inline-flex; align-items:center; min-height:44px; padding:11px 22px; background:linear-gradient(135deg,var(--cyan),var(--blue)); color:#040813; font-weight:700; font-size:14px; border-radius:9px; text-decoration:none; transition:all 0.2s; margin-top:4px;">Open the Simulator</a>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="doc-section section-anchor" id="step4">
+        <div class="step-header">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Connect a Real GitHub Repository</div>
+            <div class="step-sub">Add the Bartholomew webhook to your repo in under two minutes.</div>
+          </div>
+        </div>
+
+        <p>This connects your repository directly to the Bartholomew backend so it receives real CI failure events.</p>
+
+        <p><strong>Step A &mdash; Copy the Webhook URL:</strong></p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">Webhook Endpoint</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>https://acn-fastapi-backend-k72r.a.run.app/api/webhooks/github</pre>
+        </div>
+
+        <p><strong>Step B &mdash; Add it to your GitHub Repository:</strong></p>
+
+        <ol style="color:var(--sub); font-size:14.5px; padding-left:20px; display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+          <li>Go to your GitHub repository &rarr; <strong style="color:#fff;">Settings</strong> &rarr; <strong style="color:#fff;">Webhooks</strong></li>
+          <li>Click <strong style="color:#fff;">Add webhook</strong></li>
+          <li>Paste the Webhook URL above into the <strong style="color:#fff;">Payload URL</strong> field</li>
+          <li>Set Content type to <code style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:12px;">application/json</code></li>
+          <li>Under Events, choose <strong style="color:#fff;">Workflow runs</strong> (or "Send me everything")</li>
+          <li>Click <strong style="color:#fff;">Add webhook</strong></li>
+        </ol>
+
+        <div class="callout info">
+          <div class="callout-icon">[i]</div>
+          <div class="callout-body"><strong>No secrets required.</strong> The current webhook endpoint is open for testing. A signed secret token will be required for production team accounts.</div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="doc-section section-anchor" id="step5">
+        <div class="step-header">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Trigger a Live Autonomous Repair</div>
+            <div class="step-sub">Push a broken test and watch Bartholomew respond in real time.</div>
+          </div>
+        </div>
+
+        <p>Once your webhook is connected, introduce a known failure into your repository to trigger the full repair loop:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">python &mdash; Broken test to trigger repair (test_sample.py)</span>
+            <button class="code-block-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl-m"># Paste this into any test file in your repo</span>
+<span class="hl-m"># This simulates the exact asyncio failure Bartholomew knows how to repair</span>
+
+import asyncio
+
+<span class="hl-y">def</span> <span class="hl-c">test_async_broken</span>():
+    loop = asyncio.get_event_loop()  <span class="hl-m"># Deprecated in Python 3.10+</span>
+    result = loop.run_until_complete(some_async_task())
+    <span class="hl-y">assert</span> result == <span class="hl-g">True</span>
+
+<span class="hl-y">async def</span> <span class="hl-c">some_async_task</span>():
+    <span class="hl-y">return</span> <span class="hl-g">True</span></pre>
+        </div>
+
+        <p>Push to your main branch and let CI run. When it fails, Bartholomew will:</p>
+
+        <ol style="color:var(--sub); font-size:14.5px; padding-left:20px; display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          <li>Receive the GitHub <code style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:12px;">workflow_run</code> failure webhook</li>
+          <li>Clone the failing commit into an isolated sandbox</li>
+          <li>Synthesize a standalone reproduction proof</li>
+          <li>Apply the minimal AST patch (<code style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:12px;">asyncio.get_running_loop()</code>)</li>
+          <li>Verify 100% of tests pass locally</li>
+          <li>Open a Pull Request on your repository with the fix attached</li>
+        </ol>
+
+        <div class="callout warning">
+          <div class="callout-icon">[!]</div>
+          <div class="callout-body"><strong>GitHub App write permissions</strong> are required for Bartholomew to open Pull Requests on private repositories. This is the final integration step currently in development. Public repositories work today.</div>
+        </div>
+
+        <p>You can monitor all live repair activity in the <a href="/operations" style="color:var(--cyan); text-decoration:none; font-weight:600;">Operations Workspace</a>.</p>
+      </div>
+
+      <!-- FEATURE STATUS -->
+      <div class="doc-section section-anchor" id="status">
+        <div class="step-header">
+          <div class="step-num" style="background:linear-gradient(135deg,#475569,#64748b);">?</div>
+          <div>
+            <div class="step-title">Current Feature Status</div>
+            <div class="step-sub">What works today vs. what is coming next.</div>
+          </div>
+        </div>
+
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-dot green"></div>
+            <div><div class="status-label">CLI: diagnose, quarantine, eval-models</div><div class="status-meta">Fully working via PyPI</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot green"></div>
+            <div><div class="status-label">Interactive Browser Simulator</div><div class="status-meta">Live at /simulator</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot green"></div>
+            <div><div class="status-label">FastAPI Webhook Backend</div><div class="status-meta">Deployed on Cloud Run</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot green"></div>
+            <div><div class="status-label">AST Patch Synthesis Engine</div><div class="status-meta">Working locally</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot green"></div>
+            <div><div class="status-label">Chrome and Edge Side Panel</div><div class="status-meta">Working via unpacked extension</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot amber"></div>
+            <div><div class="status-label">GitHub App Installation Flow</div><div class="status-meta">In development &mdash; next sprint</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot amber"></div>
+            <div><div class="status-label">Automated PR Write Permissions</div><div class="status-meta">Requires GitHub App OAuth</div></div>
+          </div>
+          <div class="status-item">
+            <div class="status-dot muted"></div>
+            <div><div class="status-label">Stripe Subscription Billing</div><div class="status-meta">Planned for next release</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-copy">
+        <a href="/">bartholomew.info</a> &bull; <a href="/privacy.html">Privacy Policy</a> &bull; <a href="/dashboard">Developer Console</a>
+      </div>
+      <div class="legal-notice">
+        Copyright (c) 2026 Bartholomew Autonomous Systems. All rights reserved.<br>
+        Organization: Bartholomew AI Contributors. GitHub: github.com/ivegotahunnitonit/bartholomew<br><br>
+        This documentation, software architecture, and all associated technical specifications described herein are the exclusive intellectual property of Bartholomew Autonomous Systems and Bartholomew AI Contributors. Reproduction, redistribution, or derivative commercial use of this material without express written permission is strictly prohibited. Bartholomew, the Bartholomew B logo, and "Mechanical Verification Engine" are trademarks of Bartholomew Autonomous Systems.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

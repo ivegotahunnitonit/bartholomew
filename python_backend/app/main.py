@@ -30,21 +30,21 @@ if str(_backend_dir) not in sys.path:
 if str(_root_workspace) not in sys.path:
     sys.path.insert(0, str(_root_workspace))
 
-def _serve_dashboard_html(request=None):
-    """Serve main HTML landing page. Tries built React Vite dist first, then dev paths."""
-    import os
+def _serve_file_html(filename: str):
+    """Universal HTML server for static routes and dashboards."""
     candidates = [
-        _root_workspace / "web" / "dist" / "index.html",
-        Path.cwd() / "web" / "dist" / "index.html",
-        Path("/app/web/dist/index.html"),
-        Path("/app/index.html"),
-        Path(__file__).resolve().parent.parent / "index.html",
-        Path(os.environ.get("BARTHOLOMEW_INDEX", "")) if os.environ.get("BARTHOLOMEW_INDEX") else None,
-        _root_workspace / "index.html",
-        Path.cwd() / "index.html",
+        _root_workspace / "web" / "dist" / filename,
+        _root_workspace / filename,
+        Path.cwd() / "web" / "dist" / filename,
+        Path.cwd() / filename,
+        Path(f"/app/web/dist/{filename}"),
+        Path(f"/app/{filename}"),
+        Path(__file__).resolve().parent.parent / filename,
+        Path(__file__).resolve().parent.parent / "web" / "dist" / filename,
+        _root_workspace / "dashboard" / filename if filename.startswith("dashboard") else None,
     ]
     for p in candidates:
-        if p and p.exists():
+        if p and p.exists() and p.is_file():
             return HTMLResponse(
                 content=p.read_text(encoding="utf-8"),
                 headers={
@@ -54,8 +54,12 @@ def _serve_dashboard_html(request=None):
                     "X-Served-From": str(p),
                 }
             )
-    return HTMLResponse(content="<h1>Bartholomew — index.html not found</h1><pre>" +
-                        str([str(c) for c in candidates if c]) + "</pre>")
+    return HTMLResponse(content=f"<h1>Bartholomew — {filename} not found</h1>", status_code=404)
+
+
+def _serve_dashboard_html(request=None):
+    """Serve main HTML landing page."""
+    return _serve_file_html("index.html")
 
 
 try:
@@ -125,9 +129,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="ACN Telemetry & DePIN Engine",
+    title="Bartholomew Autonomous Systems API & Telemetry Engine",
     version="4.1.0",
-    description="Production-grade DePIN node orchestrator & LLM inference backend",
+    description="Production-grade AI Security, CI Auto-Fix & DePIN Engine",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
     lifespan=lifespan
 )
 
@@ -200,33 +206,41 @@ def health_check(request: Request):
 def get_index_page():
     return _serve_dashboard_html()
 
-@app.get("/orchestrator.html")
-def get_orchestrator_page():
-    orch_file = _root_workspace / "dashboard" / "orchestrator.html"
-    if orch_file.exists():
-        return HTMLResponse(content=orch_file.read_text(encoding="utf-8"))
-    return _serve_dashboard_html()
+@app.get("/dashboard", response_class=HTMLResponse)
+@app.get("/dashboard/", response_class=HTMLResponse)
+@app.get("/dashboard.html", response_class=HTMLResponse)
+def get_dashboard_page():
+    return _serve_file_html("dashboard.html")
 
-@app.get("/demystified.html", response_class=HTMLResponse)
-def get_demystified_page():
-    f = _root_workspace / "demystified.html"
-    if f.exists():
-        return HTMLResponse(content=f.read_text(encoding="utf-8"))
-    return _serve_dashboard_html()
+@app.get("/operations", response_class=HTMLResponse)
+@app.get("/operations/", response_class=HTMLResponse)
+@app.get("/operations.html", response_class=HTMLResponse)
+def get_operations_page():
+    return _serve_file_html("operations.html")
 
-@app.get("/plain_english.html", response_class=HTMLResponse)
-def get_plain_english_page():
-    f = _root_workspace / "plain_english.html"
-    if f.exists():
-        return HTMLResponse(content=f.read_text(encoding="utf-8"))
-    return _serve_dashboard_html()
+@app.get("/simulator", response_class=HTMLResponse)
+@app.get("/simulator/", response_class=HTMLResponse)
+@app.get("/simulator.html", response_class=HTMLResponse)
+def get_simulator_page():
+    return _serve_file_html("simulator.html")
 
+@app.get("/docs", response_class=HTMLResponse)
+@app.get("/docs/", response_class=HTMLResponse)
+@app.get("/docs.html", response_class=HTMLResponse)
+def get_docs_page():
+    return _serve_file_html("docs.html")
+
+@app.get("/privacy", response_class=HTMLResponse)
+@app.get("/privacy/", response_class=HTMLResponse)
+@app.get("/privacy.html", response_class=HTMLResponse)
+def get_privacy_page():
+    return _serve_file_html("privacy.html")
+
+@app.get("/pitch-deck", response_class=HTMLResponse)
+@app.get("/pitch-deck/", response_class=HTMLResponse)
 @app.get("/PITCH_DECK.html", response_class=HTMLResponse)
 def get_pitch_deck_page():
-    f = _root_workspace / "PITCH_DECK.html"
-    if f.exists():
-        return HTMLResponse(content=f.read_text(encoding="utf-8"))
-    return _serve_dashboard_html()
+    return _serve_file_html("PITCH_DECK.html")
 
 @app.get("/founder_avatar.jpg")
 def get_founder_avatar():

@@ -53,6 +53,13 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
+        },
+        {
+          "source": "/verify/**",
+          "run": {
+            "serviceId": "acn-fastapi-backend",
+            "region": "us-central1"
+          }
         }
       ],
       "headers": [

@@ -69,6 +69,35 @@ function OperationsView() {
   )
 }
 
+function DashboardView() {
+  return (
+    <div className="pt-24 pb-16 min-h-screen">
+      <CommandCenter />
+      <OperationsWorkspace />
+      <Simulator />
+    </div>
+  )
+}
+
+function SimulatorView() {
+  return (
+    <div className="pt-24 pb-16 min-h-screen">
+      <Simulator />
+      <CommandCenter />
+    </div>
+  )
+}
+
+function DocsView() {
+  return (
+    <div className="pt-24 pb-16 min-h-screen">
+      <SDK />
+      <LiveAPI />
+      <ExecutiveSummary />
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <Router>
@@ -79,6 +108,9 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomeView />} />
             <Route path="/operations" element={<OperationsView />} />
+            <Route path="/dashboard" element={<DashboardView />} />
+            <Route path="/simulator" element={<SimulatorView />} />
+            <Route path="/docs" element={<DocsView />} />
           </Routes>
         </main>
         <Footer />
