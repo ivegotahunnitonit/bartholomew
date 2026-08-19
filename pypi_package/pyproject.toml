@@ -10,7 +10,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.8"
 authors = [
-  { name = "Bartholomew AI Contributors", email = "contact@bartholomew.info" }
+  { name = "Bartholomew AI Contributors", email = "help@bartholomew.info" }
 ]
 keywords = ["ai-security", "llm-security", "owasp", "agent", "trajectory", "guard", "kill-switch", "soc2", "hipaa", "finra"]
 classifiers = [

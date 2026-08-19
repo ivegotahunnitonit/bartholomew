@@ -145,16 +145,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+_mounted_assets = False
 for _cand_assets in [
+    Path("/app/web/dist/assets"),
+    Path("/app/assets"),
+    _backend_dir / "web" / "dist" / "assets",
     _root_workspace / "web" / "dist" / "assets",
     Path.cwd() / "web" / "dist" / "assets",
-    Path("/app/web/dist/assets"),
-    _root_workspace / "assets",
     Path.cwd() / "assets",
+    Path(__file__).resolve().parent.parent / "web" / "dist" / "assets",
 ]:
-    if _cand_assets.exists():
+    if _cand_assets.exists() and _cand_assets.is_dir():
         app.mount("/assets", StaticFiles(directory=str(_cand_assets)), name="assets")
+        _mounted_assets = True
         break
+
+@app.get("/favicon.svg")
+def get_favicon_svg():
+    for cand in [
+        Path("/app/web/dist/favicon.svg"),
+        _backend_dir / "web" / "dist" / "favicon.svg",
+        _root_workspace / "web" / "dist" / "favicon.svg",
+        Path.cwd() / "web" / "dist" / "favicon.svg",
+        Path("/app/favicon.svg"),
+    ]:
+        if cand.exists():
+            return FileResponse(str(cand), media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="Favicon not found")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Models
