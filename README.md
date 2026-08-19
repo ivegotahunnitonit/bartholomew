@@ -9,19 +9,19 @@
 [![Website](https://img.shields.io/badge/Live_Site-www.bartholomew.info-00f2fe?style=for-the-badge&logo=google-chrome&logoColor=040813)](https://www.bartholomew.info)
 [![Dashboard](https://img.shields.io/badge/Command_Center-app.bartholomew.info-00e676?style=for-the-badge&logo=target&logoColor=040813)](https://app.bartholomew.info/dashboard)
 [![Docs](https://img.shields.io/badge/Documentation-docs.bartholomew.info-4facfe?style=for-the-badge&logo=readme&logoColor=040813)](https://docs.bartholomew.info/docs)
-[![License](https://img.shields.io/badge/License-Proprietary_Commercial-fbbf24?style=for-the-badge&logo=shield&logoColor=040813)](#-intellectual-property--commercial-protection-notice)
+[![License](https://img.shields.io/badge/License-Proprietary_Commercial-fbbf24?style=for-the-badge&logo=shield&logoColor=040813)](#intellectual-property--commercial-protection-notice)
 
 </div>
 
 ---
 
-## ⚡ **What is Bartholomew?**
+## **[SYSTEM_OVERVIEW] What is Bartholomew?**
 
 > **Bartholomew is an automated robotic mechanic for software teams.** When code breaks during CI/CD testing, Bartholomew instantly isolates the crash in a private sandbox, applies a 3-line surgical compiler AST fix, runs 100% of pre-flight test suites, and opens a verified green Pull Request before engineers even open Slack.
 
 ---
 
-## 🔒 **Intellectual Property & Commercial Protection Notice**
+## **[INTELLECTUAL_PROPERTY] Commercial Protection Notice**
 
 > **NOTICE OF PROPRIETARY OWNERSHIP & RESTRICTED COMMERCIAL USE:**
 > 
@@ -35,10 +35,10 @@ For commercial enterprise licensing, contact: **`help@bartholomew.info`**.
 
 ---
 
-## 🚀 **Empirical Benchmark Telemetry**
+## **[BENCHMARK_TELEMETRY] Empirical Validation**
 
 * **1,000,000 Deterministic Test Cycles:** Executed across 12 parallel CPU cores with **100.0000% reliability (0 failures, 0.00000%)**.
-* **1.14 &mu;s Go Trajectory Daemon:** 11.98 million operations/second inline security firewall.
+* **1.14 us Go Trajectory Daemon:** 11.98 million operations/second inline security firewall.
 * **28,880 Cryptographic Ops/Sec:** High-throughput RFC 8785 Ed25519 tamper-evident receipts.
 * **Compiler-Level AST Surgery:** Minimal 3-line patch delta leaving 100% of adjacent code untouched.
 * **100% Pre-Flight Test Guarantee:** Zero PRs shipped unless all repository tests pass green.
