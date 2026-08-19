@@ -114,27 +114,44 @@
     /* HERO */
     .hero {
       max-width: 1200px; margin: 0 auto;
-      padding: clamp(50px,9vw,90px) clamp(16px,4vw,28px) clamp(36px,6vw,60px);
+      padding: clamp(24px,3.5vw,42px) clamp(16px,4vw,28px) clamp(28px,4vw,48px);
       text-align: center; position: relative;
     }
+    .hero-grid-pattern {
+      position: absolute; inset: -40px -15vw 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, black 20%, transparent 80%);
+      pointer-events: none; z-index: 0;
+    }
     .hero-glow {
-      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 700px; max-width: 100%; height: 450px;
-      background: radial-gradient(ellipse, rgba(0,242,254,0.14) 0%, transparent 70%);
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      width: 700px; max-width: 100%; height: 420px;
+      background: radial-gradient(ellipse, rgba(0,242,254,0.15) 0%, transparent 70%);
       pointer-events: none; z-index: 0;
     }
     .hero > * { position: relative; z-index: 1; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px;
-      background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.3);
-      color: var(--cyan); font-size: 12px; font-weight: 700;
+      background: rgba(0,242,254,0.08); border: 1px solid rgba(0,242,254,0.28);
+      color: #e2e8f0; font-size: 12.5px; font-weight: 600;
       font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px;
+      letter-spacing: 0.2px; margin-bottom: 20px;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .hero-badge:hover {
+      background: rgba(0,242,254,0.16); border-color: var(--cyan);
+      box-shadow: 0 0 16px rgba(0,242,254,0.3); transform: translateY(-1px);
     }
     .badge-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 8px var(--green); animation: pulseDot 2s infinite;
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green); animation: pulseDot 2s infinite; flex-shrink: 0;
     }
+    .badge-arrow { color: var(--cyan); font-weight: 700; transition: transform 0.2s; }
+    .hero-badge:hover .badge-arrow { transform: translateX(3px); }
     @keyframes pulseDot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
 
     h1 {
@@ -395,8 +412,13 @@
 
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-grid-pattern"></div>
     <div class="hero-glow"></div>
-    <div class="hero-badge"><span class="badge-dot"></span>Autonomous CI Auto-Fix Engine</div>
+    <a href="/operations" class="hero-badge">
+      <span class="badge-dot"></span>
+      <span>v2.0 Released: Autonomous AST Repair Loop</span>
+      <span class="badge-arrow">&rarr;</span>
+    </a>
     <h1>Your CI build just failed.<br><span class="grad">Bartholomew already fixed it.</span></h1>
     <p class="hero-sub">The autonomous developer copilot that catches failing tests, synthesizes isolated reproduction proofs, applies surgical AST patches, and ships a verified green PR before your team even opens Slack.</p>
     <div class="hero-cta-group">
