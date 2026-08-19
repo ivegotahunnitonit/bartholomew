@@ -1,46 +1,24 @@
-# Business Source License 1.1 (BSL 1.1)
+# **Bartholomew Autonomous Systems Enterprise License**
+### **Proprietary Commercial Protective Agreement**
 
-**Software Name:** Bartholomew Enterprise AI Security Engine  
-**Licensor:** Bartholomew Security Firm  
-**Effective Date:** July 31, 2026  
-**Change Date:** July 31, 2030  
-**Change License:** Apache License, Version 2.0  
+**Copyright &copy; 2026 Bartholomew AI & Contributors. All Rights Reserved.**
 
 ---
 
-## 1. Grant of License
-
-Licensor hereby grants you a non-exclusive, royalty-free, worldwide license to use, copy, modify, and distribute the Licensed Work solely for **Non-Commercial, Educational, and Development Evaluation Purposes**.
-
----
-
-## 2. Permitted Commercial Use Limit
-
-You may use the Licensed Work for internal commercial evaluation, development testing, and non-production CI/CD execution. 
-
-Any **Production Deployment**, **Hosted Managed Service Offering**, or **Re-selling of the Licensed Work** by any commercial entity with more than $100,000 USD in annual revenue requires a **Formal Commercial Enterprise License Agreement** from Licensor.
+### **1. Proprietary Ownership & Intellectual Property**
+This software, source code, compiler AST delta algorithms, Go kernel trajectory daemons, RFC 8785 cryptographic attestation modules, and associated documentation (the "Software") are the exclusive intellectual property of **Bartholomew AI & Contributors**.
 
 ---
 
-## 3. Restrictions
-
-You may NOT:
-1. Host or offer the Licensed Work as a competing managed SaaS service.
-2. Remove or alter any copyright notices, SHA-256 attestation headers, or intellectual property attestation metadata.
-3. Sub-license or re-license the source code to third parties for commercial resale.
+### **2. Strict Prohibitions Against Duplication & Commercial Exploitation**
+* **Zero Commercial Resale / SaaS Hosting:** You may not sell, rent, lease, sub-license, host as a managed service (SaaS), or commercially exploit the Software, or any derivative work, without an express written Commercial License Agreement executed by Bartholomew AI.
+* **No AI Training or Distillation:** You may not use the Software, its source code, AST transformations, or verification benchmarks to train, fine-tune, distill, or evaluate competing artificial intelligence, code generation, or CI auto-repair models.
+* **No Unauthorized Cloning:** No entity or competitor may replicate, clone, or white-label the mechanical verification engine, trajectory intercept architecture, or cryptographic attestation protocol for commercial deployment.
 
 ---
 
-## 4. Change License
-
-On the **Change Date** specified above, this license shall automatically convert to the **Apache License, Version 2.0**, making the specified version open-source without commercial restriction.
-
----
-
-## Enterprise Licensing Inquiries
-
-To obtain a Commercial Enterprise License or Custom SLA Agreement, contact:
-
-- **Licensor:** Bartholomew Security Firm
-- **Repository:** https://github.com/ivegotahunnitonit/agentic-eval
-- **Inquiry Tiers:** Enterprise Retainer ($2,500/mo) | B2B Audit ($250/report)
+### **3. Commercial Licensing & Inquiries**
+For commercial production deployment, enterprise VPC hosting, and custom licensing agreements, contact:
+* **Support / Licensing:** [`help@bartholomew.info`](mailto:help@bartholomew.info)
+* **Routing:** `itsub@bartholomew.info`
+* **Official Website:** [https://www.bartholomew.info](https://www.bartholomew.info)

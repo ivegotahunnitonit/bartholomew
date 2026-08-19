@@ -1,21 +1,45 @@
-MIT License
+BARTHOLOMEW AUTONOMOUS SYSTEMS ENTERPRISE LICENSE & PROPRIETARY PROTECTIVE AGREEMENT
+======================================================================================
+Copyright (c) 2026 Bartholomew AI & Contributors. All Rights Reserved.
 
-Copyright (c) 2026 Bartholomew AI Contributors & Bartholomew AI Security Contributors
+1. PROPRIETARY GRANT & RESTRICTIONS:
+-----------------------------------
+This software, source code, compiler AST delta algorithms, Go kernel trajectory
+daemons, cryptographic attestation modules, and associated documentation (the "Software")
+are the exclusive intellectual property of Bartholomew AI & Contributors.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted to inspect, evaluate, and run the Software solely for
+non-commercial evaluation, security auditing, and academic research purposes, subject to
+the following strict prohibitions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. EXPLICIT COMMERCIAL & DUPLICATION PROHIBITIONS:
+-------------------------------------------------
+(a) ZERO COMMERCIAL RESALE / HOSTING: You may not sell, rent, lease, sub-license, host as
+    a managed service (SaaS), or commercially exploit the Software, or any derivative work,
+    without an express written Commercial License Agreement executed by Bartholomew AI.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+(b) NO AI TRAINING / DERIVATIVE EXTRACTION: You may not use the Software, its source code,
+    AST transformations, or verification benchmarks to train, fine-tune, distill, or
+    evaluate competing artificial intelligence, code generation, or CI auto-repair models.
+
+(c) NO UNAUTHORIZED CLONING: No entity or competitor may replicate, clone, or white-label
+    the mechanical verification engine, trajectory intercept architecture, or cryptographic
+    attestation protocol for commercial deployment.
+
+3. INTELLECTUAL PROPERTY & PATENTS:
+-----------------------------------
+All patents, patent applications, copyrights, trademarks, and trade secret rights
+pertaining to the AST surgical patch synthesis, RFC 8785 Ed25519 verifiable receipts,
+and sub-microsecond POSIX execution barriers remain the sole property of Bartholomew AI.
+
+4. COMMERCIAL LICENSING & INQUIRIES:
+------------------------------------
+For commercial production deployment, enterprise VPC hosting, and custom licensing agreements,
+contact: help@bartholomew.info (routed to itsub@bartholomew.info).
+
+5. DISCLAIMER OF WARRANTY:
+--------------------------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE.
