@@ -3,25 +3,25 @@
 <div align="center">
 
 ```text
-uunZYxjxxjy2wwxti(JJ(}u5jxjyyaaxo[uu[u   bartholomew@core-engine ----------------------------------------------------
-oeo5xyyyyyawZ7r=,___,^<?fj2aES2jZennen    OS: ....................................... Windows 11, Linux (Ubuntu/Debian)
-jjxjaaaayya(=_^;<+++<;=,,cewSS2j5ooZZo    Role: ................................. Lead Architect & Systems Engineer
-2ESwwSEyYy(,*L7{1[[1{7T?*^r2wEax5ZZYYY    Platform: ............................. Bartholomew Autonomous Systems
-wqPh96q2jYrrJ|CtZjxZlC(Jv/>nq2yxY5Yxjj    Kernel: ............................... Mechanical AST Verifier (BTP v0.1)
-k694V4hqE2ifF(C3ojy5ti()7tijq2ajxxyaaa    Latency: .............................. 1.14 µs (11.98M ops/sec Go Daemon)
-6hdpOO46qa55|?sz?(n(/zz/stetaSayya22E2    IDE: .................................. Antigravity IDE, VS Code, JetBrains
-694OGGp99fil(J7{3CZ}Ff(J7Fusow222ESSEE    
-h9VGbbOV4afoIo5xn12[{[enIIu|2E22SwwwSE    Languages.Core: ....................... Python 3.14, Go 1.23, Rust, C++
-hdVGUUGO44t}}Ie5})}(Lfe3Ff71w2a2wqqwE2    Languages.Systems: .................... AST Grammars, POSIX Kernel, Linux eBPF
-69VGUUGOVdd(s(F7TsvLzs)JJ/(q2aa2wkkwE2    Cryptography: ......................... RFC 8785 JCS, Ed25519, SHA-256
-k64ObbGpVdVa>c//L)F(szc*+>YqayaEwkqw2y    Cloud.Infra: .......................... Google Cloud Run, Firebase, Docker
-wkdpGGOppphZ(=<rTTvT?z<<^)flaEESwwwS2j    
-2SP4GG4qxtTrw/,;+*?zr<;=;oC^LF1Z2wqw2j    Focus.Engineering: .................... Deterministic CI/CD Auto-Remediation
-jy2yn{s!>;+!h4?,^^,,^=,+o6)^=,^+/){uZ5    Focus.Security: ....................... Zero-Trust Agent Trajectory Firewalls
-7L*<^^=<!!<=Y$GF!^<!;;)EO2c<<>;><>;>!*    Focus.Verification: ................... 100% Pre-Flight Test Suite Guarantees
-^=;<++<<<<<^uVwV9n**|yh2EZ<+!+<++!!+<<    
-<++++<<!<<<=7X%$%MdIhmXHAf;!+<++<+++++    - Contact ----------------------------------------------------------------
-<++++<<+++<>cXWBBWBHm@B@K)>!++++<+++<<     Email.Support: ..................................... help@bartholomew.info
+uuojEqqqwk6dbOSt|)LL)iuywqqPh9hwxnuu[u   bartholomew@core-engine ----------------------------------------------------
+xYxawP6666dp5s_       .<FE4dpOdqjZeZ5o    OS: ....................................... Windows 11, Linux (Ubuntu/Debian)
+kkqP9d96P6qz   -_^=^:.   'eUGGdqaxxjyj    Role: ................................. Lead Architect & Systems Engineer
+VObAKUpPSkz _<zFlYYt|z>,: `hbVhw2yaEww    Platform: ............................. Bartholomew Autonomous Systems
+AH%@M#XV6w--!zJ1EPkEn(/<+<`YA46qSEwkPP    Kernel: ............................... Mechanical AST Verifier (BTP v0.1)
+m%MBBB@HOG1nJcLJf5S[)*c;/Z}hKV9Pqq6999    Latency: .............................. 1.14 µs (11.98M ops/sec Go Daemon)
+&#WBBBB$mx[5*-==;ro/_!;'_(o?EbdhhdVpV4    IDE: .................................. Antigravity IDE, VS Code, JetBrains
+%@BBBBBMW3T[){}[Z}q3)lCiJvn>EGd4VObGpV    
+$MBBBBBBB%|nFeEq3(2I/tj[J}|sG4d4OUKbp4    Languages.Core: ....................... Python 3.14, Go 1.23, Rust, C++
+%MBBBBBBWBh/sL}3?,<^:z{T/?!kp994bKXUpd    Languages.Systems: .................... AST Grammars, POSIX Kernel, Linux eBPF
+H$WBBBBBW@Be ^=_,+s*,-.': oKhhhVUXKbVh    Cryptography: ......................... RFC 8785 JCS, Ed25519, SHA-256
+UHWBWWWWBBBU< `-^=c+'-`  =5PpddVbAAGdP    Cloud.Infra: .......................... Google Cloud Run, Firebase, Docker
+VU%BBBBB84}+2   -^+>:` ` IC_Fo2dAXAO9q    
+P9bHOafz,  `$S-         fHJ   .>L}Zw6k    Focus.Engineering: .................... Deterministic CI/CD Auto-Remediation
+|T/=      ` kB4r      ;jBO^ `      .=r    Focus.Security: ....................... Zero-Trust Agent Trajectory Firewalls
+      `   ` [$G&9C  +xXVVq                Focus.Verification: ................... 100% Pre-Flight Test Suite Guarantees
+            z#@BBBq)dBW#$I `              
+            '8BWWWB#MWWBB*                - Contact ----------------------------------------------------------------
+                                           Email.Support: ..................................... help@bartholomew.info
                                            Email.Inbound: .................................... itsub@bartholomew.info
                                            Platform.Live: ................................. https://www.bartholomew.info
                                            Dashboard.App: ................................. https://app.bartholomew.info

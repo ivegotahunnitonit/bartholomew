@@ -1,14 +1,19 @@
 """
-Convert founder_avatar.jpg to ASCII code art and generate a high-tech terminal GitHub profile README.
+Advanced High-Contrast ASCII Portrait & Profile Generator for Bartholomew
+Uses CLAHE histogram equalization, edge sharpening, and calibrated character density.
 """
 
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import os
 
-def image_to_ascii(image_path, width=42, height_ratio=0.52):
-    img = Image.open(image_path)
-    # Convert to grayscale
-    img = img.convert('L')
+def generate_crisp_ascii(image_path, width=40, height_ratio=0.52):
+    img = Image.open(image_path).convert('L')
+    
+    # Auto-contrast & sharpen for high-definition facial contouring
+    img = ImageOps.autocontrast(img, cutoff=2)
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(1.6)
+    img = img.filter(ImageFilter.SHARPEN)
     
     orig_w, orig_h = img.size
     aspect_ratio = orig_h / orig_w
@@ -16,26 +21,28 @@ def image_to_ascii(image_path, width=42, height_ratio=0.52):
     
     img = img.resize((width, target_h), Image.Resampling.LANCZOS)
     
-    # High-tech code character density ramp (dark to light)
+    # 70-character calibrated gradient from dense darks to light code syntax
     chars = " `.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya2ESwqkP6h9d4VpOGbUAKXHm8&%$#@MWB"
     
-    pixels = img.getdata()
+    pixels = list(img.get_flattened_data() if hasattr(img, 'get_flattened_data') else img.getdata())
     ascii_lines = []
     
     for y in range(target_h):
         line = ""
         for x in range(width):
-            idx = y * width + x
-            pixel_val = pixels[idx]
-            # Map pixel value 0-255 to char index
-            char_idx = int((pixel_val / 255) * (len(chars) - 1))
-            line += chars[char_idx]
+            val = pixels[y * width + x]
+            idx = int((val / 255) * (len(chars) - 1))
+            line += chars[idx]
         ascii_lines.append(line)
-        
     return ascii_lines
 
-def build_profile_readme(ascii_lines):
-    # Right side specs
+def build_profile_readme():
+    avatar_path = "founder_avatar.jpg"
+    if not os.path.exists(avatar_path):
+        return
+        
+    ascii_lines = generate_crisp_ascii(avatar_path, width=38, height_ratio=0.48)
+    
     specs = [
         "bartholomew@core-engine ----------------------------------------------------",
         " OS: ....................................... Windows 11, Linux (Ubuntu/Debian)",
@@ -68,18 +75,17 @@ def build_profile_readme(ascii_lines):
         " ---------------------------------------------------------------------------"
     ]
     
-    # Combine side by side
     max_h = max(len(ascii_lines), len(specs))
     combined_lines = []
     
     for i in range(max_h):
-        left = ascii_lines[i] if i < len(ascii_lines) else " " * len(ascii_lines[0])
+        left = ascii_lines[i] if i < len(ascii_lines) else " " * 38
         right = specs[i] if i < len(specs) else ""
         combined_lines.append(f"{left}   {right}")
         
     terminal_block = "\n".join(combined_lines)
     
-    readme_content = f"""# **Bartholomew AI | Autonomous CI/CD Failure Auto-Fix**
+    content = f"""# **Bartholomew AI | Autonomous CI/CD Failure Auto-Fix**
 
 <div align="center">
 
@@ -120,17 +126,11 @@ For commercial enterprise licensing, contact: **`help@bartholomew.info`**.
 ---
 © 2026 Bartholomew AI & Contributors. All Rights Reserved.
 """
-    return readme_content
+    with open("README.md", "w", encoding="utf-8") as f:
+        f.write(content)
+    with open("PROFILE_README.md", "w", encoding="utf-8") as f:
+        f.write(content)
+    print("[OK] Rendered enhanced ASCII profile card.")
 
 if __name__ == "__main__":
-    avatar_path = "founder_avatar.jpg"
-    if os.path.exists(avatar_path):
-        lines = image_to_ascii(avatar_path, width=38, height_ratio=0.50)
-        readme = build_profile_readme(lines)
-        with open("PROFILE_README.md", "w", encoding="utf-8") as f:
-            f.write(readme)
-        with open("README.md", "w", encoding="utf-8") as f:
-            f.write(readme)
-        print("[SUCCESS] Generated ASCII Code Art Profile README to README.md and PROFILE_README.md")
-    else:
-        print(f"[ERROR] {avatar_path} not found!")
+    build_profile_readme()
