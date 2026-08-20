@@ -1,0 +1,42 @@
+{
+  "report_id": "AUDIT-29DA6908C3D2CEC1",
+  "organization": "Fintech Global Enterprise",
+  "generated_at_unix": 1787204970.4365842,
+  "frameworks_covered": [
+    "SOC-2 Type II (CC6.1 Logical Access, CC6.6 Code Tampering, CC7.1 Change Management)",
+    "NIST AI Risk Management Framework (NIST AI RMF 1.0 - GOVERN 1.2, MAP 2.3, MEASURE 2.6)",
+    "ISO/IEC 42001 (Artificial Intelligence Management System - Control A.6.2 & A.8.4)",
+    "EU AI Act (Article 14 - Human Oversight & Deterministic Technical Verification)"
+  ],
+  "telemetry_summary": {
+    "total_autonomous_actions_monitored": 3,
+    "verified_safe_actions_authorized": 2,
+    "security_threats_blocked": 1,
+    "cryptographic_integrity_rate": "100.00%",
+    "zero_regression_sla_status": "COMPLIANT"
+  },
+  "evidence_ledger": [
+    {
+      "action_id": "ACT-001",
+      "agent": "Agent-A",
+      "action": "DEPLOY_PATCH",
+      "verdict": "ALLOW",
+      "latency_us": 129.5
+    },
+    {
+      "action_id": "ACT-002",
+      "agent": "Agent-B",
+      "action": "EXEC_SHELL",
+      "verdict": "DENY",
+      "reason": "Secret exfiltration attempt blocked",
+      "latency_us": 2.6
+    },
+    {
+      "action_id": "ACT-003",
+      "agent": "Agent-C",
+      "action": "DB_MIGRATION",
+      "verdict": "ALLOW",
+      "latency_us": 140.2
+    }
+  ]
+}
