@@ -35,7 +35,7 @@
       scroll-behavior: smooth;
     }
 
-    /* NAV */
+    /* NAV CSS */
     header {
       position: sticky; top: 0; z-index: 100;
       width: 100%;
@@ -106,7 +106,7 @@
       .hamburger { display: flex; }
     }
 
-    /* HERO */
+    /* HERO CSS */
     .hero {
       max-width: 1200px; margin: 0 auto;
       padding: clamp(50px,9vw,90px) clamp(16px,4vw,28px) clamp(36px,6vw,60px);
@@ -168,7 +168,7 @@
     }
     .btn-secondary:hover { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.2); }
 
-    /* TERMINAL HUD */
+    /* TERMINAL HUD CSS */
     .terminal-wrap {
       max-width: 820px; margin: clamp(32px,5vw,52px) auto 0;
       background: #060d1e;
@@ -617,7 +617,7 @@
   <script>
     function toggleMenu() {
       const m = document.getElementById('mobileMenu');
-      m.classList.toggle('open');
+      if (m) m.classList.toggle('open');
     }
     function closeMenu() {
       const m = document.getElementById('mobileMenu');
@@ -685,20 +685,30 @@
 
     function selectInvariant(idx, btn) {
       document.querySelectorAll('#invariantTabs .demo-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
       const inv = btpInvariants[idx];
-      document.getElementById('invBadge').innerText = `INVARIANT: ${inv.id}`;
-      document.getElementById('invTitle').innerText = inv.title;
-      document.getElementById('invDesc').innerText = inv.desc;
-      document.getElementById('invGauntlet').innerHTML = inv.gauntlet;
-      document.getElementById('invJsonCode').innerText = inv.json;
-      document.getElementById('invStatusTag').innerText = '100% OFFLINE VERIFIABLE';
-      document.getElementById('invStatusTag').style.color = 'var(--green)';
-      document.getElementById('invStatusTag').style.borderColor = 'rgba(0,230,118,0.3)';
+      const invBadge = document.getElementById('invBadge');
+      const invTitle = document.getElementById('invTitle');
+      const invDesc = document.getElementById('invDesc');
+      const invGauntlet = document.getElementById('invGauntlet');
+      const invJsonCode = document.getElementById('invJsonCode');
+      const invStatusTag = document.getElementById('invStatusTag');
+      
+      if (invBadge) invBadge.innerText = 'INVARIANT: ' + inv.id;
+      if (invTitle) invTitle.innerText = inv.title;
+      if (invDesc) invDesc.innerText = inv.desc;
+      if (invGauntlet) invGauntlet.innerHTML = inv.gauntlet;
+      if (invJsonCode) invJsonCode.innerText = inv.json;
+      if (invStatusTag) {
+        invStatusTag.innerText = '100% OFFLINE VERIFIABLE';
+        invStatusTag.style.color = 'var(--green)';
+        invStatusTag.style.borderColor = 'rgba(0,230,118,0.3)';
+      }
     }
 
     function simulateInvariantCheck() {
       const tag = document.getElementById('invStatusTag');
+      if (!tag) return;
       tag.innerText = 'VERIFYING ED25519 SIGNATURE...';
       tag.style.color = 'var(--cyan)';
       tag.style.borderColor = 'var(--cyan)';
@@ -709,9 +719,9 @@
       }, 350);
     }
 
-    // Initialize first invariant on load
     document.addEventListener('DOMContentLoaded', () => {
-      selectInvariant(0, document.querySelector('#invariantTabs .demo-btn'));
+      const firstBtn = document.querySelector('#invariantTabs .demo-btn');
+      selectInvariant(0, firstBtn);
     });
   </script>
 </body>
