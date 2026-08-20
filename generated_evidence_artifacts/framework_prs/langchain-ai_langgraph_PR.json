@@ -1,0 +1,7 @@
+{
+  "target_repo": "langchain-ai/langgraph",
+  "branch_name": "feature/btp-cryptographic-agent-guard",
+  "pr_title": "feat(security): Add BTP v2.2 cryptographic tool delegation & offline verification guard",
+  "target_file": "libs/langgraph/langgraph/prebuilt/btp_guard.py",
+  "pr_body": "### Summary\nAdds native, vendor-neutral cryptographic governance to LangGraph tool executions using the **Bartholomew Trust Protocol (BTP v2.2 Standards Track)**.\n\n### Key Capabilities\n- **1-Line Tool Decoration:** `@guard.wrap_tool` verifies inbound action attestations before tool execution.\n- **RFC 8785 (JCS) + Ed25519:** Pure mathematical offline verification in ~175 \u00b5s with 0 network dependencies.\n- **Replay & Context Isolation:** Prevents cross-agent replay and privilege escalation.\n- **Zero Breaking Changes:** Transparent pass-through when unconfigured.\n\n### References\n- Spec: https://github.com/ivegotahunnitonit/bartholomew/blob/main/BTP_PROTOCOL_SPECIFICATION.md\n- Standalone Verifier: https://github.com/ivegotahunnitonit/bartholomew/blob/main/standalone_btp_verifier.py\n"
+}

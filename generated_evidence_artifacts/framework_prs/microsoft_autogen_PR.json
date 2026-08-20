@@ -1,0 +1,7 @@
+{
+  "target_repo": "microsoft/autogen",
+  "branch_name": "feature/btp-message-interceptor",
+  "pr_title": "feat(security): Add BTP v2.2 cryptographic message interceptor & multi-authority trust store",
+  "target_file": "autogen/agentchat/middleware/btp_interceptor.py",
+  "pr_body": "### Summary\nIntegrates BTP v2.2 cryptographic message interception for AutoGen multi-agent conversations.\n\n### Key Capabilities\n- Validates cross-agent delegations against recipient's pinned `trusted_root_pubkeys`.\n- Drops or alerts on unattested high-privilege tool requests (`EXEC_COMMAND`, `SQL_EXEC`).\n- Sub-millisecond offline verification overhead.\n\n### References\n- Challenge & Invariants: https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md\n"
+}

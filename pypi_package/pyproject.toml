@@ -1,47 +1,29 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bartholomew-eval"
-version = "1.0.0"
-description = "Sub-millisecond AI agent trajectory security: 1-line @guard decorator for OWASP LLM kill-switches, secret redaction, and SHA-256 audit attestation."
-readme = "README.md"
-license = { text = "MIT" }
-requires-python = ">=3.8"
+name = "btp-guard"
+version = "2.2.0"
 authors = [
-  { name = "Bartholomew AI Contributors", email = "help@bartholomew.info" }
+  { name="Bartholomew Autonomous Systems", email="help@bartholomew.info" },
 ]
-keywords = ["ai-security", "llm-security", "owasp", "agent", "trajectory", "guard", "kill-switch", "soc2", "hipaa", "finra"]
+description = "BTP v2.2 Universal Cryptographic Trust Guard for Autonomous Agent Frameworks (LangGraph, AutoGen, CrewAI)"
+readme = "README.md"
+requires-python = ">=3.9"
 classifiers = [
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent",
-  "Topic :: Security",
-  "Topic :: Software Development :: Quality Assurance",
-  "Intended Audience :: Developers",
-  "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 dependencies = [
-  "requests>=2.28.0",
+    "cryptography>=41.0.0"
 ]
 
-[project.optional-dependencies]
-dev = ["pytest>=7.0", "build", "twine"]
-
 [project.urls]
-Homepage = "https://bartholomew.ai"
-Repository = "https://github.com/itsub-solomon/bartholomew-eval"
-Documentation = "https://bartholomew.ai/demystified.html"
-"Bug Tracker" = "https://github.com/itsub-solomon/bartholomew-eval/issues"
-
-[project.scripts]
-bartholomew = "bartholomew_eval.cli:main"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["bartholomew_eval*"]
-
-[tool.setuptools.package-data]
-bartholomew_eval = ["py.typed", "*.pyi"]
-
+"Homepage" = "https://www.bartholomew.info"
+"Specification" = "https://github.com/ivegotahunnitonit/bartholomew/blob/main/BTP_PROTOCOL_SPECIFICATION.md"
+"Challenge Package" = "https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md"
+"Bug Tracker" = "https://github.com/ivegotahunnitonit/bartholomew/issues"

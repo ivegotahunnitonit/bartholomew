@@ -1,0 +1,27 @@
+{
+  "name": "@btp/verifier",
+  "version": "2.2.0",
+  "description": "BTP v2.2 Zero-Dependency Offline Cryptographic Verifier for Autonomous Agent Architectures",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "btp",
+    "ai-agents",
+    "security",
+    "cryptography",
+    "ed25519",
+    "rfc8785",
+    "langgraph",
+    "autogen",
+    "crewai"
+  ],
+  "author": "Bartholomew Autonomous Systems <help@bartholomew.info>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew.git"
+  }
+}

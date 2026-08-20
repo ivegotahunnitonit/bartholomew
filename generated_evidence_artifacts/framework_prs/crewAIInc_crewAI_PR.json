@@ -1,0 +1,7 @@
+{
+  "target_repo": "crewAIInc/crewAI",
+  "branch_name": "feature/btp-task-guard",
+  "pr_title": "feat(security): Add BTP v2.2 pre-flight task attestation & capability containment",
+  "target_file": "crewai/security/btp_task_guard.py",
+  "pr_body": "### Summary\nEnables pre-flight BTP v2.2 attestation checks on CrewAI autonomous task execution.\n\n### Key Capabilities\n- Verifies task capability scopes (`FS_WRITE_RESTRICTED`, `NO_NET_EGRESS`) prior to worker dispatch.\n- Protects multi-agent pipelines from prompt injection and confused-deputy tool misuse.\n"
+}
