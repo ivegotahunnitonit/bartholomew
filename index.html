@@ -497,6 +497,49 @@
             <span class="code-add">+ asyncio.set_event_loop(loop)</span><br>
             <span class="code-add">+ return loop.run_until_complete(fetch())</span>
           </code>
+    <!-- INTERACTIVE BTP SECURITY INVARIANT EXPLORER -->
+    <div class="section-label" style="margin-top:50px;">Interactive Protocol Invariants</div>
+    <h2 class="section-title">BTP v2.2 Frozen Security Invariant Registry</h2>
+    <p class="section-sub">Select any invariant below to inspect the mathematical attestation structure, contextual bindings, and 100% offline verification behavior.</p>
+
+    <div class="demo-box" style="background:#070d1e; border:1px solid rgba(0,242,254,0.3); border-radius:18px; padding:clamp(20px,3vw,32px); box-shadow:0 0 40px rgba(0,242,254,0.08);">
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap:10px; margin-bottom:24px;" id="invariantTabs">
+        <button class="demo-btn active" style="justify-content:center;" onclick="selectInvariant(0, this)">BTP-SEC-001</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(1, this)">BTP-SEC-002</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(2, this)">BTP-SEC-003</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(3, this)">BTP-SEC-004</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(4, this)">BTP-SEC-005</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(5, this)">BTP-SEC-006</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(6, this)">BTP-SEC-007</button>
+        <button class="demo-btn" style="justify-content:center;" onclick="selectInvariant(7, this)">BTP-SEC-008</button>
+      </div>
+
+      <div id="invariantDetails" style="display:grid; grid-template-columns:1fr 1.2fr; gap:20px;">
+        <!-- Invariant Meta Card -->
+        <div style="background:#040813; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div id="invBadge" style="display:inline-block; font-size:11px; font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--cyan); background:rgba(0,242,254,0.1); padding:4px 10px; border-radius:6px; margin-bottom:12px; border:1px solid rgba(0,242,254,0.2);">INVARIANT: BTP-SEC-001</div>
+            <h4 id="invTitle" style="font-family:'Plus Jakarta Sans', sans-serif; font-size:18px; font-weight:800; color:#fff; margin-bottom:10px;">Payload Tamper-Resistance</h4>
+            <p id="invDesc" style="color:#94a3b8; font-size:13.5px; line-height:1.6; margin-bottom:16px;">A candidate payload cannot be altered by a single bit without invalidating the RFC 8785 SHA-256 hash and Ed25519 digital signature.</p>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1; background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); line-height:1.6;">
+              <div style="color:var(--cyan); font-weight:700; margin-bottom:4px;">VERIFICATION GAUNTLET:</div>
+              <div id="invGauntlet">&bull; RFC 8785 Canonical JCS Bytes<br>&bull; SHA-256 Digest Verification<br>&bull; FIPS 186-5 Ed25519 PureEdDSA</div>
+            </div>
+          </div>
+          <div style="margin-top:20px; display:flex; gap:10px;">
+            <button onclick="simulateInvariantCheck()" class="btn-primary" style="flex:1; justify-content:center; padding:10px 16px; font-size:13px; min-height:42px;">
+              <span>Simulate Cryptographic Gate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live JSON Wire Envelope -->
+        <div style="background:#020612; border:1px solid rgba(0,242,254,0.2); border-radius:12px; padding:18px; position:relative; overflow:hidden;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="font-family:'JetBrains Mono', monospace; font-size:11.5px; color:#64748b; font-weight:700;">SIGNED BTP v2.2 ATTESTATION ENVELOPE</span>
+            <span id="invStatusTag" style="font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:700; color:var(--green); background:rgba(0,230,118,0.1); padding:2px 8px; border-radius:4px; border:1px solid rgba(0,230,118,0.3);">100% OFFLINE VERIFIABLE</span>
+          </div>
+          <pre id="invJsonCode" style="font-family:'JetBrains Mono', monospace; font-size:11.5px; color:#94a3b8; line-height:1.55; overflow-x:auto; margin:0; white-space:pre;"></pre>
         </div>
       </div>
     </div>
@@ -629,46 +672,95 @@
     </div>
   </footer>
 
-  <script>
-    function toggleMenu() {
-      const m = document.getElementById('mobileMenu');
-      m.classList.toggle('open');
-    }
-    function closeMenu() {
-      const m = document.getElementById('mobileMenu');
-      if (m) m.classList.remove('open');
-    }
-
-    const demoCases = [
+    const btpInvariants = [
       {
-        bad: 'def start_worker():<br><span class="code-del">- loop = asyncio.get_event_loop()</span><br><span class="code-del">- return loop.run_until_complete(fetch())</span>',
-        good: 'def start_worker():<br><span class="code-add">+ loop = asyncio.new_event_loop()</span><br><span class="code-add">+ asyncio.set_event_loop(loop)</span><br><span class="code-add">+ return loop.run_until_complete(fetch())</span>'
+        id: 'BTP-SEC-001',
+        title: 'Payload Tamper-Resistance',
+        desc: 'A candidate payload cannot be altered by even a single bit without invalidating the RFC 8785 SHA-256 hash and Ed25519 digital signature.',
+        gauntlet: '&bull; RFC 8785 Canonical JCS Bytes<br>&bull; SHA-256 Digest Verification<br>&bull; FIPS 186-5 Ed25519 PureEdDSA',
+        json: '{\n  "attestation": {\n    "protocol_version": "BTP/2.2",\n    "authority": "Bartholomew-Trust-Engine-v2.2",\n    "authority_pubkey": "f041b2c3d4e5f60718293a4b5c6d7e8f...",\n    "nonce": "e0a1b2c3d4e5f60718293a4b5c6d7e8f",\n    "action_payload_hash": "b3c0ba74bbfd57c31f5e2f6f24787f14...",\n    "action_type": "DEPLOY_PATCH",\n    "verdict": "ALLOW"\n  },\n  "signature": "d38a719c8f2b1a0e6e7d8c9b0a1f2e3d4c5b6a7..."\n}'
       },
       {
-        bad: 'def parse_node(node):<br><span class="code-del">- if isinstance(node, ast.Str):</span><br><span class="code-del">-     return node.s</span>',
-        good: 'def parse_node(node):<br><span class="code-add">+ if isinstance(node, ast.Constant):</span><br><span class="code-add">+     return node.value</span>'
+        id: 'BTP-SEC-002',
+        title: 'Cross-Recipient Isolation',
+        desc: 'An attestation issued for target_recipient = B cannot authorize execution by recipient C (Context Mismatch protection).',
+        gauntlet: '&bull; Contextual Recipient Binding<br>&bull; Multi-Tenant Isolation<br>&bull; Explicit Wildcard Policy Rejection',
+        json: '{\n  "attestation": {\n    "protocol_version": "BTP/2.2",\n    "originating_agent": "Agent-LangGraph-01",\n    "target_recipient": "Agent-AutoGen-02",\n    "action_type": "DATABASE_MIGRATE",\n    "verdict": "ALLOW"\n  },\n  "signature": "81f2a3b4c5d6e7f8091a2b3c4d5e6f708192a3b..."\n}'
       },
       {
-        bad: 'def cleanup_socket(sock):<br><span class="code-del">- sock.close()</span>',
-        good: 'def cleanup_socket(sock):<br><span class="code-add">+ if sock and not sock._closed:</span><br><span class="code-add">+     sock.shutdown(socket.SHUT_RDWR)</span><br><span class="code-add">+     sock.close()</span>'
+        id: 'BTP-SEC-003',
+        title: 'Temporal Validity Enforcement',
+        desc: 'An attestation evaluated after its expiration timestamp (expires_at_unix) is rejected immediately with zero grace period.',
+        gauntlet: '&bull; Strict TTL Epoch Boundaries<br>&bull; Clock-Skew Pre-Issuance Guard (+60s)<br>&bull; Deterministic Rejection',
+        json: '{\n  "attestation": {\n    "protocol_version": "BTP/2.2",\n    "issued_at_unix": 1771500000.0,\n    "expires_at_unix": 1771500300.0,\n    "nonce": "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d",\n    "verdict": "ALLOW"\n  },\n  "signature": "4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3..."\n}'
+      },
+      {
+        id: 'BTP-SEC-004',
+        title: 'Configurable Multi-Authority Store',
+        desc: 'Attestations signed by keys outside the recipient\'s configured trusted_root_pubkeys are rejected as unauthorized forgeries.',
+        gauntlet: '&bull; Pinning Multi-Authority Trust Store<br>&bull; Independent Root Governance<br>&bull; Compromised Key CRL List',
+        json: '{\n  "trusted_root_pubkeys": [\n    "pubkey_enterprise_root_01...",\n    "pubkey_compliance_auditor_02..."\n  ],\n  "attestation": {\n    "authority_pubkey": "pubkey_enterprise_root_01...",\n    "verdict": "ALLOW"\n  }\n}'
+      },
+      {
+        id: 'BTP-SEC-005',
+        title: 'Capability Scope Containment',
+        desc: 'Attestations requesting capabilities exceeding the recipient\'s allowed policy are halted prior to process execution.',
+        gauntlet: '&bull; Explicit Capability Subset Assertion<br>&bull; Least-Privilege Enforcer<br>&bull; Denial on Overreach',
+        json: '{\n  "attestation": {\n    "capability_scope": [\n      "FS_WRITE_RESTRICTED",\n      "NO_NET_EGRESS",\n      "AST_MAX_DELTA_5"\n    ],\n    "verdict": "ALLOW"\n  }\n}'
+      },
+      {
+        id: 'BTP-SEC-006',
+        title: 'Semantic Policy Provenance',
+        desc: 'Attestations cryptographically bind the exact policy_id and policy_hash evaluated during the pre-flight sandbox run.',
+        gauntlet: '&bull; SHA-256 Policy Ruleset Hash<br>&bull; Policy Rollback Prevention<br>&bull; Zero Semantic Drift',
+        json: '{\n  "attestation": {\n    "policy_id": "urn:btp:policy:owasp-agentic-v2026.1",\n    "policy_hash": "630574a737d9634b9f4dbcfe365a0a4de19a...",\n    "verdict": "ALLOW"\n  }\n}'
+      },
+      {
+        id: 'BTP-SEC-007',
+        title: 'Nonce & Replay Immunity',
+        desc: 'Attestations bearing a previously processed nonce within the active TTL window are rejected as replay attacks.',
+        gauntlet: '&bull; 128-Bit CSPRNG Nonce Tracking<br>&bull; Distributed De-duplication<br>&bull; Zero Replay Window',
+        json: '{\n  "attestation": {\n    "nonce": "d8e8fca2dc6b4b9b9c9f0a1b2c3d4e5f",\n    "action_payload_hash": "2f91a0c7...",\n    "verdict": "ALLOW"\n  }\n}'
+      },
+      {
+        id: 'BTP-SEC-008',
+        title: 'Offline Zero-Network Verifiability',
+        desc: 'Conforming verifiers reach 100% deterministic authorization decisions in sub-milliseconds without calling any external server.',
+        gauntlet: '&bull; 100% Offline Pure Math (Ed25519)<br>&bull; Zero Network Roundtrip Delay<br>&bull; Zero Cloud SPoF',
+        json: '{\n  "verification_mode": "100% OFFLINE ZERO-NETWORK",\n  "runtime_dependencies": 0,\n  "median_latency_us": 175.5,\n  "result": "VERIFIED_VALID"\n}'
       }
     ];
 
-    function switchDemo(idx, btn) {
-      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+    function selectInvariant(idx, btn) {
+      document.querySelectorAll('#invariantTabs .demo-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const c = demoCases[idx];
-      document.getElementById('diffView').innerHTML = `
-        <div class="diff-card">
-          <div class="diff-card-head diff-bad">Failing CI Code (Broken Commit)</div>
-          <code>${c.bad}</code>
-        </div>
-        <div class="diff-card">
-          <div class="diff-card-head diff-good">Bartholomew Surgical AST Patch (Verified Green)</div>
-          <code>${c.good}</code>
-        </div>
-      `;
+      const inv = btpInvariants[idx];
+      document.getElementById('invBadge').innerText = `INVARIANT: ${inv.id}`;
+      document.getElementById('invTitle').innerText = inv.title;
+      document.getElementById('invDesc').innerText = inv.desc;
+      document.getElementById('invGauntlet').innerHTML = inv.gauntlet;
+      document.getElementById('invJsonCode').innerText = inv.json;
+      document.getElementById('invStatusTag').innerText = '100% OFFLINE VERIFIABLE';
+      document.getElementById('invStatusTag').style.color = 'var(--green)';
+      document.getElementById('invStatusTag').style.borderColor = 'rgba(0,230,118,0.3)';
     }
+
+    function simulateInvariantCheck() {
+      const tag = document.getElementById('invStatusTag');
+      tag.innerText = 'VERIFYING ED25519 SIGNATURE...';
+      tag.style.color = 'var(--cyan)';
+      tag.style.borderColor = 'var(--cyan)';
+      setTimeout(() => {
+        tag.innerText = 'EXIT CODE 0: VERIFIED VALID (175.5 µs)';
+        tag.style.color = 'var(--green)';
+        tag.style.borderColor = 'rgba(0,230,118,0.4)';
+      }, 350);
+    }
+
+    // Initialize first invariant on load
+    document.addEventListener('DOMContentLoaded', () => {
+      selectInvariant(0, document.querySelector('#invariantTabs .demo-btn'));
+    });
   </script>
 </body>
 </html>
