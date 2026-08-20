@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTP v2.2 Multi-Agent Trust Mesh Topology Visualizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111726;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #34d399;
+      --danger: #f43f5e;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow-x: hidden;
+    }
+    .header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+    }
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      height: calc(100vh - 81px);
+    }
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; height: auto; }
+    }
+    .canvas-container {
+      position: relative;
+      background: radial-gradient(circle at center, #111a2e 0%, #090d16 100%);
+      overflow: hidden;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls-sidebar {
+      background: var(--card-bg);
+      border-left: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .btn-action {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-blue {
+      background: var(--accent);
+      color: #040813;
+    }
+    .btn-blue:hover {
+      background: #7dd3fc;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    .btn-red {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .btn-red:hover {
+      background: rgba(244, 63, 94, 0.25);
+    }
+    .log-box {
+      background: #070a12;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #38bdf8;
+      height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .log-entry {
+      line-height: 1.4;
+    }
+    .log-success { color: var(--success); }
+    .log-danger { color: var(--danger); }
+    .stat-pill {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .stat-pill .val {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <span>Bartholomew Trust Protocol</span>
+      <span class="badge">BTP v2.2 Mesh Visualizer</span>
+    </div>
+    <div>
+      <a href="/" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; margin-right:16px;">Landing</a>
+      <a href="/verifier" style="color:var(--accent); text-decoration:none; font-size:0.9rem; font-weight:600;">In-Browser Verifier</a>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <div class="canvas-container">
+      <canvas id="meshCanvas"></canvas>
+    </div>
+
+    <div class="controls-sidebar">
+      <div class="sidebar-title">Agent Mesh Controls</div>
+
+      <button class="btn-action btn-blue" onclick="simulateDelegation()">
+        Trigger Verifiable Delegation
+      </button>
+
+      <button class="btn-action btn-red" onclick="simulateAdversarialAttack()">
+        Inject Adversarial Tampering
+      </button>
+
+      <div class="sidebar-title" style="margin-top:10px;">Live Mesh Telemetry</div>
+      <div>
+        <div class="stat-pill"><span>Active Authority:</span> <span class="val">BTP-Root-Authority</span></div>
+        <div class="stat-pill"><span>Algorithm:</span> <span class="val">FIPS 186-5 Ed25519</span></div>
+        <div class="stat-pill"><span>Canonicalization:</span> <span class="val">RFC 8785 (JCS)</span></div>
+        <div class="stat-pill"><span>Offline Verification:</span> <span class="val" style="color:var(--success)">175.5 &mu;s P50</span></div>
+      </div>
+
+      <div class="sidebar-title" style="margin-top:10px;">Cryptographic Event Log</div>
+      <div id="logBox" class="log-box">
+        <div class="log-entry log-success">[INIT] Multi-Agent Mesh Topology Ready.</div>
+        <div class="log-entry">[READY] 5 Sovereign Agent Nodes Linked.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('meshCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const nodes = [
+      { id: 'auth', name: 'BTP Authority', x: 0.5, y: 0.5, color: '#38bdf8', r: 36, pulse: 0, isRoot: true },
+      { id: 'langgraph', name: 'LangGraph Master', x: 0.25, y: 0.25, color: '#818cf8', r: 24, pulse: 0 },
+      { id: 'autogen', name: 'AutoGen Worker', x: 0.75, y: 0.25, color: '#c084fc', r: 24, pulse: 0 },
+      { id: 'crewai', name: 'CrewAI Task Node', x: 0.25, y: 0.75, color: '#34d399', r: 24, pulse: 0 },
+      { id: 'mcp', name: 'Anthropic MCP Tool', x: 0.75, y: 0.75, color: '#fb923c', r: 24, pulse: 0 }
+    ];
+
+    let packets = [];
+
+    function addLog(text, type = '') {
+      const box = document.getElementById('logBox');
+      const div = document.createElement('div');
+      div.className = 'log-entry ' + (type === 'success' ? 'log-success' : type === 'danger' ? 'log-danger' : '');
+      div.innerText = `[${new Date().toLocaleTimeString()}] ${text}`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function simulateDelegation() {
+      const fromNode = nodes[1]; // LangGraph
+      const authNode = nodes[0]; // Authority
+      const toNode = nodes[2];   // AutoGen
+
+      addLog(`Agent ${fromNode.name} -> Requesting BTP attestation...`);
+      
+      packets.push({
+        from: fromNode,
+        to: authNode,
+        progress: 0,
+        speed: 0.03,
+        color: '#38bdf8',
+        onComplete: () => {
+          addLog(`Authority pre-flight sandbox verified: 48/48 unit tests green.`, 'success');
+          addLog(`Issued RFC 8785 Ed25519 token -> Routing to ${toNode.name}`);
+          
+          packets.push({
+            from: authNode,
+            to: toNode,
+            progress: 0,
+            speed: 0.03,
+            color: '#34d399',
+            onComplete: () => {
+              addLog(`Recipient ${toNode.name} verified token offline in 175.5µs -> EXECUTION PERMITTED!`, 'success');
+              toNode.pulse = 1.0;
+            }
+          });
+        }
+      });
+    }
+
+    function simulateAdversarialAttack() {
+      const fromNode = nodes[3]; // CrewAI
+      const toNode = nodes[4];   // MCP Tool
+
+      addLog(`ADVERSARIAL ATTACK: Mutated payload injected into ${fromNode.name}...`, 'danger');
+
+      packets.push({
+        from: fromNode,
+        to: toNode,
+        progress: 0,
+        speed: 0.025,
+        color: '#f43f5e',
+        onComplete: () => {
+          addLog(`REJECTED by ${toNode.name}: PAYLOAD_TAMPERED (Hash mismatch). Execution halted!`, 'danger');
+          toNode.pulse = -1.0;
+        }
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Draw Links
+      nodes.forEach((n1, idx1) => {
+        nodes.forEach((n2, idx2) => {
+          if (idx1 < idx2 && (n1.isRoot || n2.isRoot)) {
+            ctx.beginPath();
+            ctx.moveTo(n1.x * width, n1.y * height);
+            ctx.lineTo(n2.x * width, n2.y * height);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+        });
+      });
+
+      // 2. Draw Packets
+      for (let i = packets.length - 1; i >= 0; i--) {
+        const p = packets[i];
+        p.progress += p.speed;
+        const x = (p.from.x + (p.to.x - p.from.x) * p.progress) * width;
+        const y = (p.from.y + (p.to.y - p.from.y) * p.progress) * height;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (p.progress >= 1) {
+          if (p.onComplete) p.onComplete();
+          packets.splice(i, 1);
+        }
+      }
+
+      // 3. Draw Nodes
+      nodes.forEach(n => {
+        const nx = n.x * width;
+        const ny = n.y * height;
+
+        if (n.pulse > 0) {
+          ctx.beginPath();
+          ctx.arc(nx, ny, n.r + (1.0 - n.pulse) * 25, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(52, 211, 153, ${n.pulse})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          n.pulse -= 0.02;
+        } else if (n.pulse < 0) {
+          ctx.beginPath();
+          ctx.arc(nx, ny, n.r + (1.0 - Math.abs(n.pulse)) * 25, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(244, 63, 94, ${Math.abs(n.pulse)})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          n.pulse += 0.02;
+        }
+
+        ctx.beginPath();
+        ctx.arc(nx, ny, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = n.color;
+        ctx.lineWidth = n.isRoot ? 4 : 2;
+        ctx.shadowColor = n.color;
+        ctx.shadowBlur = n.isRoot ? 15 : 6;
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '600 12px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.name, nx, ny + n.r + 18);
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
