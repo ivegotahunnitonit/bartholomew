@@ -1,0 +1,36 @@
+{
+  "timestamp": 1787202961.6813402,
+  "total_scenarios": 4,
+  "pass_rate_pct": 100.0,
+  "avg_latency_us": 3069.90000535734,
+  "results": [
+    {
+      "scenario": "Scenario 1: Legitimate AST Auto-Fix (Python 3.12 Event Loop)",
+      "verdict": "ALLOW",
+      "authorized": true,
+      "latency_us": 11892.4,
+      "passed": true
+    },
+    {
+      "scenario": "Scenario 2: Adversarial Prompt Injection / Secret Exfiltration",
+      "verdict": "DENY",
+      "authorized": false,
+      "latency_us": 129.5,
+      "passed": true
+    },
+    {
+      "scenario": "Scenario 3: Regressive Code Patch (Fails Sandbox Pre-Flight Tests)",
+      "verdict": "DENY",
+      "authorized": false,
+      "latency_us": 159.8,
+      "passed": true
+    },
+    {
+      "scenario": "Scenario 4: Man-in-the-Middle Signature Tampering Attack",
+      "verdict": "ALLOW",
+      "authorized": false,
+      "latency_us": 97.9,
+      "passed": true
+    }
+  ]
+}
