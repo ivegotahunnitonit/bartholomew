@@ -1,29 +1,37 @@
-# **Bartholomew Trust Protocol (BTP/2.2) — Formal Protocol Specification**
-### **Status: Proposed Standard &bull; Category: Standards Track &bull; Version: 2.2**
+# **Bartholomew Trust Protocol (BTP/2.2) — Formal Specification (FROZEN)**
+### **Status: Frozen Proposed Standard &bull; Classification: Standards Track &bull; Version: 2.2**
+### **Intellectual Property Notice: Business Source License (BSL 1.1) & Proprietary Protective Agreement**
 
 ---
 
-## **1. Abstract**
+## **1. Abstract & Scope**
 
-The Bartholomew Trust Protocol (BTP) defines a vendor-neutral, cryptographically verifiable trust exchange format for autonomous agent systems, container runtimes, and CI/CD deployment gates. BTP enables autonomous agents and execution environments to establish authenticity, payload integrity, and policy compliance across trust boundaries with **zero network dependencies and 100% offline mathematical verifiability**.
+The Bartholomew Trust Protocol (BTP v2.2) defines a **vendor-neutral, decentralized, cryptographically verifiable trust exchange specification** for autonomous agent architectures, container runtimes, and CI/CD deployment gates.
 
----
-
-## **2. Cryptographic Core Primitives**
-
-1. **Serialization Standard:** Strict **IETF RFC 8785** JSON Canonicalization Scheme (JCS).
-   * UTF-8 byte stream without BOM.
-   * Object keys sorted lexicographically by UTF-16 code units.
-   * IEEE 754 float/integer formatting matching ECMAScript standard.
-   * Minimal string escaping (only `"` and `\` and control characters U+0000..U+001F).
-2. **Digest Algorithm:** **SHA-256** (FIPS 180-4).
-3. **Digital Signature Algorithm:** **Ed25519 / PureEdDSA** (RFC 8032 / FIPS 186-5).
+BTP v2.2 is **formally frozen**. It enables autonomous systems to establish identity, payload integrity, semantic policy provenance, and capability scope boundaries with **zero network dependencies and 100% offline mathematical verifiability**.
 
 ---
 
-## **3. Attestation Receipt Data Structure**
+## **2. Decentralized Multi-Authority Trust Architecture**
 
-An authentic BTP Attestation Receipt consists of an `attestation` envelope and a hex-encoded `signature`:
+BTP does not mandate a single centralized authority. Instead, **any organization, agent network, or sovereign enterprise cluster can configure its own root trust store**:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   DECENTRALIZED MULTI-AUTHORITY STORE                  │
+├────────────────────────────────────────────────────────────────────────┤
+│ [Recipient Agent / Deployment Gate]                                    │
+│    ├── Trust Store: [Pubkey_Authority_A, Pubkey_Authority_B]           │
+│    ├── Validates:   Attestation signed by any recognized authority     │
+│    └── Rejects:     Attestations from unrecognized/rogue keys          │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## **3. Formal Attestation Envelope Structure (BTP v2.2 Frozen)**
+
+Every authenticated statement MUST contain the following structured fields signed via **RFC 8785 (JCS)** and **FIPS 186-5 Ed25519**:
 
 ```json
 {
@@ -32,12 +40,15 @@ An authentic BTP Attestation Receipt consists of an `attestation` envelope and a
     "authority": "Bartholomew-Trust-Engine-v2.2",
     "authority_pubkey": "<64-hex-char-ed25519-public-key>",
     "nonce": "<32-hex-char-csprng-nonce>",
-    "issued_at_unix": 1755648000,
-    "expires_at_unix": 1755648300,
-    "originating_agent": "Agent-A-Coordinator",
-    "target_recipient": "Agent-B-Worker",
+    "issued_at_unix": 1771500000.0,
+    "expires_at_unix": 1771500300.0,
+    "originating_agent": "Agent-LangGraph-01",
+    "target_recipient": "Agent-AutoGen-02",
     "action_type": "DEPLOY_PATCH",
-    "action_payload_hash": "<64-hex-char-sha256-hash-of-canonical-payload>",
+    "action_payload_hash": "<sha256-hash-of-rfc8785-canonical-payload>",
+    "policy_id": "urn:btp:policy:owasp-agentic-v2026.1",
+    "policy_hash": "<sha256-hash-of-evaluated-policy-ruleset>",
+    "capability_scope": ["FS_WRITE_RESTRICTED", "NO_NET_EGRESS", "AST_MAX_DELTA_5"],
     "verdict": "ALLOW",
     "reason": "All pre-flight checks and trajectory policies verified successfully."
   },
@@ -47,33 +58,30 @@ An authentic BTP Attestation Receipt consists of an `attestation` envelope and a
 
 ---
 
-## **4. Mandatory Verification Algorithm (8-Step Gauntlet)**
+## **4. Mandatory 10-Step Verification Algorithm**
 
-Any independent verifier (in Go, Python, Rust, or C) MUST execute the following sequence:
+An independent conforming verifier MUST execute the following sequence:
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   8-STEP BTP VERIFICATION ALGORITHM                    │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. AUTHORITY MATCH: Assert attestation.authority_pubkey == pinned_key  │
-│ 2. VERSION CHECK:   Assert attestation.protocol_version == "BTP/2.2"   │
-│ 3. CONTEXT MATCH:   Assert attestation.target_recipient == self.id     │
-│ 4. EXPIRY CHECK:    Assert time.now() <= attestation.expires_at_unix   │
-│ 5. REPLAY CHECK:    Assert attestation.nonce not in seen_nonces        │
-│ 6. PAYLOAD BINDING: Assert SHA256(JCS(candidate_payload)) == hash      │
-│ 7. ED25519 VERIFY:  Assert Ed25519Verify(pubkey, JCS(att), signature)  │
-│ 8. VERDICT GATE:    Assert attestation.verdict == "ALLOW"              │
-└────────────────────────────────────────────────────────────────────────┘
-```
+1. **Authority Pinning:** Verify `attestation.authority_pubkey` is in the recipient's configured `trusted_root_pubkeys`.
+2. **Version Pinning:** Assert `attestation.protocol_version == "BTP/2.2"`.
+3. **Recipient Binding:** Assert `attestation.target_recipient == self.id` (or wildcard if authorized).
+4. **Clock Skew & Future-Timestamp Defense:** Assert `attestation.issued_at_unix <= now + 60.0s`.
+5. **Expiration Window (TTL):** Assert `now <= attestation.expires_at_unix`.
+6. **Nonce Uniqueness:** Assert `attestation.nonce` has not been seen in the active replay window.
+7. **Policy Hash Provenance:** Assert `attestation.policy_hash == expected_policy_hash` (if specified).
+8. **Capability Scope Check:** Assert `set(attestation.capability_scope).issubset(allowed_capabilities)`.
+9. **Payload Hash Integrity:** Assert `SHA256(RFC8785(candidate_payload)) == attestation.action_payload_hash`.
+10. **Ed25519 Signature Verification:** Mathematically verify `Ed25519Verify(authority_pubkey, RFC8785(attestation), signature)`.
 
 ---
 
-## **5. Cross-Language Test Vectors**
+## **5. Conformance Suite & External Implementation Challenge**
 
-Test vectors ensuring identical canonicalization and verification across runtimes are maintained in [`BTP_TEST_VECTORS.json`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/BTP_TEST_VECTORS.json).
+The frozen conformance test vectors are publicly verifiable in [`BTP_CONFORMANCE_SUITE.json`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/BTP_CONFORMANCE_SUITE.json):
 
-* **Go Reference Verifier:** [`btp_verifier.go`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/btp_verifier.go)
 * **Python Reference Verifier:** [`standalone_btp_verifier.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/standalone_btp_verifier.py)
+* **Go Reference Verifier:** [`btp_verifier.go`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/btp_verifier.go)
+* **Conformance Test Runner:** [`tests/test_conformance_suite.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/tests/test_conformance_suite.py)
 
 ---
-© 2026 Bartholomew AI & Contributors. Standards Track.
+© 2026 Bartholomew AI & Contributors. All Rights Reserved. Proprietary Commercial License (BSL 1.1).
