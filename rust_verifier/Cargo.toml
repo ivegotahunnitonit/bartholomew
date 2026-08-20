@@ -1,0 +1,15 @@
+[package]
+name = "btp-verifier"
+version = "2.2.0"
+edition = "2021"
+authors = ["Bartholomew Autonomous Systems <help@bartholomew.info>"]
+description = "BTP v2.2 Pure Zero-Dependency Rust Reference Verifier for Autonomous Agent Attestations"
+license = "MIT"
+repository = "https://github.com/ivegotahunnitonit/bartholomew"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+ed25519-dalek = { version = "2.1", default-features = false }
+hex = "0.4"
