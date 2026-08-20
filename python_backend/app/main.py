@@ -247,6 +247,97 @@ def get_simulator_page():
 def get_docs_page():
     return _serve_file_html("docs.html")
 
+# ─────────────────────────────────────────────────────────────────────────────
+# BTP v2.2 Standards Track Machine Discovery & Evaluation RPC Routes
+# ─────────────────────────────────────────────────────────────────────────────
+try:
+    from src.trust_protocol import BartholomewTrustAuthority
+    from standalone_btp_verifier import independent_verify_btp_receipt
+    _btp_authority_instance = BartholomewTrustAuthority(ttl_seconds=300)
+except Exception as _btp_err:
+    print(f"[BTP Authority Init Warning]: {_btp_err}")
+    _btp_authority_instance = None
+
+class BTPEvaluateRequest(BaseModel):
+    agent_id: str
+    action_type: str
+    payload: Dict[str, Any]
+    target_recipient: Optional[str] = "Agent-Universal-Node"
+    capability_scope: Optional[List[str]] = None
+
+class BTPVerifyRequest(BaseModel):
+    receipt: Dict[str, Any]
+    candidate_payload: Dict[str, Any]
+    trusted_roots: Optional[List[str]] = None
+    expected_recipient: Optional[str] = None
+
+@app.get("/.well-known/btp-configuration.json")
+@app.get("/.well-known/btp.json")
+def get_btp_well_known():
+    """Machine-readable BTP v2.2 autonomous agent discovery profile."""
+    return {
+        "protocol_version": "BTP/2.2",
+        "status": "FROZEN_STANDARDS_TRACK",
+        "service_type": "AUTONOMOUS_TRUST_AUTHORITY",
+        "authority_identity": "Bartholomew-Trust-Engine-v2.2",
+        "authority_pubkey": _btp_authority_instance.public_key_hex if _btp_authority_instance else "",
+        "endpoints": {
+            "evaluation_rpc": "/v2.2/evaluate",
+            "trust_roots": "/v2.2/trust-roots",
+            "offline_verifier": "https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/standalone_btp_verifier.py"
+        },
+        "canonicalization_standard": "RFC_8785_JCS",
+        "signature_algorithm": "FIPS_186_5_ED25519",
+        "offline_verification_supported": True
+    }
+
+@app.get("/v2.2/trust-roots")
+@app.get("/api/v2.2/trust-roots")
+def get_btp_trust_roots():
+    """Returns active recognized root public keys."""
+    if not _btp_authority_instance:
+        raise HTTPException(status_code=500, detail="BTP Trust Engine uninitialized")
+    return {
+        "protocol_version": "BTP/2.2",
+        "authority_id": "Bartholomew-Trust-Engine-v2.2",
+        "active_roots": [_btp_authority_instance.public_key_hex],
+        "algorithm": "Ed25519"
+    }
+
+@app.post("/v2.2/evaluate")
+@app.post("/api/v2.2/evaluate")
+def evaluate_btp_action(req: BTPEvaluateRequest):
+    """
+    Evaluates an autonomous agent action trajectory and returns 
+    an RFC 8785 signed Ed25519 attestation receipt.
+    """
+    if not _btp_authority_instance:
+        raise HTTPException(status_code=500, detail="BTP Trust Engine uninitialized")
+    
+    receipt = _btp_authority_instance.evaluate_intent(
+        agent_id=req.agent_id,
+        action_type=req.action_type,
+        payload=req.payload,
+        target_recipient=req.target_recipient,
+        capability_scope=req.capability_scope
+    )
+    return receipt
+
+@app.post("/v2.2/verify")
+@app.post("/api/v2.2/verify")
+def verify_btp_action(req: BTPVerifyRequest):
+    """
+    Verifies an incoming BTP action receipt against candidate payload.
+    """
+    trusted = req.trusted_roots or ([_btp_authority_instance.public_key_hex] if _btp_authority_instance else [])
+    ok, msg = independent_verify_btp_receipt(
+        receipt_json_str=req.receipt,
+        candidate_payload=req.candidate_payload,
+        trusted_root_pubkeys=trusted,
+        expected_recipient_context=req.expected_recipient
+    )
+    return {"valid": ok, "message": msg}
+
 @app.get("/privacy", response_class=HTMLResponse)
 @app.get("/privacy/", response_class=HTMLResponse)
 @app.get("/privacy.html", response_class=HTMLResponse)
