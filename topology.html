@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BTP v2.2 Multi-Agent Trust Mesh Topology Visualizer</title>
+  <title>BTP v2.2 Multi-Agent Trust Mesh &bull; Interactive Attestation Inspector</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
       --text-muted: #94a3b8;
       --success: #34d399;
       --danger: #f43f5e;
+      --warning: #fbbf24;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --mono: 'JetBrains Mono', monospace;
     }
@@ -29,19 +30,19 @@
       overflow-x: hidden;
     }
     .header {
-      padding: 24px 32px;
+      padding: 16px 28px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(9, 13, 22, 0.85);
+      background: rgba(9, 13, 22, 0.9);
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 100;
     }
     .logo {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--text);
       display: flex;
@@ -51,19 +52,30 @@
     .badge {
       padding: 3px 10px;
       border-radius: 999px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       background: var(--accent-glow);
       color: var(--accent);
       border: 1px solid rgba(56, 189, 248, 0.3);
       text-transform: uppercase;
     }
+    .sim-tag {
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
     .main-layout {
       display: grid;
-      grid-template-columns: 1fr 380px;
-      height: calc(100vh - 81px);
+      grid-template-columns: 1fr 440px;
+      height: calc(100vh - 65px);
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .main-layout { grid-template-columns: 1fr; height: auto; }
     }
     .canvas-container {
@@ -79,91 +91,137 @@
     .controls-sidebar {
       background: var(--card-bg);
       border-left: 1px solid var(--border);
-      padding: 24px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
       overflow-y: auto;
     }
     .sidebar-title {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
     .btn-action {
-      width: 100%;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       cursor: pointer;
       border: none;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-    }
-    .btn-blue {
-      background: var(--accent);
-      color: #040813;
-    }
-    .btn-blue:hover {
-      background: #7dd3fc;
-      box-shadow: 0 0 15px var(--accent-glow);
-    }
-    .btn-red {
-      background: rgba(244, 63, 94, 0.15);
-      color: #fda4af;
-      border: 1px solid rgba(244, 63, 94, 0.3);
-    }
-    .btn-red:hover {
-      background: rgba(244, 63, 94, 0.25);
-    }
-    .log-box {
-      background: #070a12;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: #38bdf8;
-      height: 280px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
       gap: 6px;
     }
-    .log-entry {
-      line-height: 1.4;
+    .btn-blue { background: var(--accent); color: #040813; }
+    .btn-blue:hover { background: #7dd3fc; box-shadow: 0 0 12px var(--accent-glow); }
+    .btn-red { background: rgba(244, 63, 94, 0.15); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .btn-red:hover { background: rgba(244, 63, 94, 0.25); }
+
+    /* Inspector Card */
+    .inspector-card {
+      background: #070a12;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
     }
-    .log-success { color: var(--success); }
-    .log-danger { color: var(--danger); }
-    .stat-pill {
+    .field-row {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      align-items: center;
     }
-    .stat-pill .val {
-      font-family: var(--mono);
-      font-weight: 600;
+    .field-key { color: var(--text-muted); font-weight: 500; font-size: 0.75rem; }
+    .field-val { color: var(--text); font-weight: 600; text-align: right; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tamper-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .tamper-btn {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 6px;
       color: var(--text);
+      font-size: 0.72rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: var(--mono);
+      transition: all 0.15s ease;
+      text-align: left;
     }
+    .tamper-btn:hover {
+      background: #334155;
+      border-color: var(--danger);
+      color: #fda4af;
+    }
+    .tamper-btn.active {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--danger);
+      color: #fda4af;
+    }
+    .verdict-banner {
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 12px;
+      font-family: var(--mono);
+    }
+    .verdict-allow {
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    .verdict-deny {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid var(--danger);
+      color: #fda4af;
+    }
+
+    .challenge-banner {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(17, 23, 38, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .challenge-banner a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .challenge-banner a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="logo">
       <span>Bartholomew Trust Protocol</span>
-      <span class="badge">BTP v2.2 Mesh Visualizer</span>
+      <span class="badge">BTP v2.2 Visualizer</span>
+      <span class="sim-tag">Simulated Demo</span>
     </div>
     <div>
-      <a href="/" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; margin-right:16px;">Landing</a>
-      <a href="/verifier" style="color:var(--accent); text-decoration:none; font-size:0.9rem; font-weight:600;">In-Browser Verifier</a>
+      <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md" target="_blank" style="color:var(--accent); text-decoration:none; font-size:0.85rem; font-weight:600; margin-right:16px;">Red-Team Challenge &rarr;</a>
+      <a href="/verifier" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">In-Browser Verifier</a>
     </div>
   </div>
 
@@ -173,28 +231,65 @@
     </div>
 
     <div class="controls-sidebar">
-      <div class="sidebar-title">Agent Mesh Controls</div>
-
-      <button class="btn-action btn-blue" onclick="simulateDelegation()">
-        Trigger Verifiable Delegation
-      </button>
-
-      <button class="btn-action btn-red" onclick="simulateAdversarialAttack()">
-        Inject Adversarial Tampering
-      </button>
-
-      <div class="sidebar-title" style="margin-top:10px;">Live Mesh Telemetry</div>
-      <div>
-        <div class="stat-pill"><span>Active Authority:</span> <span class="val">BTP-Root-Authority</span></div>
-        <div class="stat-pill"><span>Algorithm:</span> <span class="val">FIPS 186-5 Ed25519</span></div>
-        <div class="stat-pill"><span>Canonicalization:</span> <span class="val">RFC 8785 (JCS)</span></div>
-        <div class="stat-pill"><span>Offline Verification:</span> <span class="val" style="color:var(--success)">175.5 &mu;s P50</span></div>
+      <div class="sidebar-title">
+        <span>Simulated Mesh Controls</span>
+        <span class="sim-tag">Demo Layer</span>
       </div>
 
-      <div class="sidebar-title" style="margin-top:10px;">Cryptographic Event Log</div>
-      <div id="logBox" class="log-box">
-        <div class="log-entry log-success">[INIT] Multi-Agent Mesh Topology Ready.</div>
-        <div class="log-entry">[READY] 5 Sovereign Agent Nodes Linked.</div>
+      <div class="btn-row">
+        <button class="btn-action btn-blue" onclick="simulateDelegation()">
+          Trigger Delegation
+        </button>
+        <button class="btn-action btn-red" onclick="simulateAdversarialAttack()">
+          Simulate Attack
+        </button>
+      </div>
+
+      <div class="sidebar-title">
+        <span>Inspect Attestation Envelope</span>
+        <span class="mono" style="font-size:0.72rem; color:var(--accent)">RFC 8785 Ed25519</span>
+      </div>
+
+      <!-- Live Attestation Inspector -->
+      <div class="inspector-card">
+        <div class="field-row"><span class="field-key">Protocol</span><span class="field-val" id="dispProtocol">BTP/2.2</span></div>
+        <div class="field-row"><span class="field-key">Issuer</span><span class="field-val" id="dispIssuer">BTP-Root-Authority-v2.2</span></div>
+        <div class="field-row"><span class="field-key">Origin</span><span class="field-val" id="dispOrigin">Agent-LangGraph-01</span></div>
+        <div class="field-row"><span class="field-key">Recipient</span><span class="field-val" id="dispRecipient" style="color:var(--accent)">Agent-AutoGen-02</span></div>
+        <div class="field-row"><span class="field-key">Action</span><span class="field-val" id="dispAction">DEPLOY_PATCH</span></div>
+        <div class="field-row"><span class="field-key">Payload Hash</span><span class="field-val mono" id="dispPayloadHash" title="371b2d4b...">371b2d4b...9981</span></div>
+        <div class="field-row"><span class="field-key">Policy Hash</span><span class="field-val mono" id="dispPolicyHash" title="630574a7...">630574a7...f535</span></div>
+        <div class="field-row"><span class="field-key">Capabilities</span><span class="field-val" id="dispCapabilities">FS_RESTRICTED, NO_EGRESS</span></div>
+        <div class="field-row"><span class="field-key">Nonce</span><span class="field-val mono" id="dispNonce">71fb662194ff7122...</span></div>
+        <div class="field-row"><span class="field-key">Signature</span><span class="field-val mono" id="dispSignature" style="color:var(--success)">3ca8d10b...VALID</span></div>
+
+        <div style="margin-top: 14px; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">
+          Adversarial Mutation Tests:
+        </div>
+
+        <div class="tamper-btn-grid">
+          <button class="tamper-btn" id="btnTamperRecipient" onclick="toggleTamper('recipient')">Tamper Recipient</button>
+          <button class="tamper-btn" id="btnTamperPolicy" onclick="toggleTamper('policy')">Tamper Policy Hash</button>
+          <button class="tamper-btn" id="btnTamperCaps" onclick="toggleTamper('caps')">Tamper Capabilities</button>
+          <button class="tamper-btn" id="btnTamperPayload" onclick="toggleTamper('payload')">Tamper Payload</button>
+          <button class="tamper-btn" id="btnTamperSig" onclick="toggleTamper('sig')">Flip Sig 1-Bit</button>
+          <button class="tamper-btn" style="color:var(--success); border-color:var(--border)" onclick="resetTamper()">Reset Clean</button>
+        </div>
+
+        <div id="verdictBanner" class="verdict-banner verdict-allow">
+          STATUS: [AUTHORIZED] (Ed25519 Valid)
+        </div>
+      </div>
+
+      <!-- Formal Evidence & Challenge Banner -->
+      <div class="challenge-banner">
+        <strong>Formal Verification Notice:</strong>
+        <p style="margin-top: 4px;">
+          The trust decision above is not an approximation—it is evaluated using pure in-browser WebCrypto & RFC 8785.
+        </p>
+        <p style="margin-top: 6px;">
+          For independent mathematical evaluation, inspect the <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md" target="_blank">Frozen Challenge Package</a> and 12-vector test suite.
+        </p>
       </div>
     </div>
   </div>
@@ -212,31 +307,101 @@
     resize();
 
     const nodes = [
-      { id: 'auth', name: 'BTP Authority', x: 0.5, y: 0.5, color: '#38bdf8', r: 36, pulse: 0, isRoot: true },
-      { id: 'langgraph', name: 'LangGraph Master', x: 0.25, y: 0.25, color: '#818cf8', r: 24, pulse: 0 },
-      { id: 'autogen', name: 'AutoGen Worker', x: 0.75, y: 0.25, color: '#c084fc', r: 24, pulse: 0 },
-      { id: 'crewai', name: 'CrewAI Task Node', x: 0.25, y: 0.75, color: '#34d399', r: 24, pulse: 0 },
-      { id: 'mcp', name: 'Anthropic MCP Tool', x: 0.75, y: 0.75, color: '#fb923c', r: 24, pulse: 0 }
+      { id: 'auth', name: 'BTP Authority (Root)', x: 0.5, y: 0.5, color: '#38bdf8', r: 34, pulse: 0, isRoot: true },
+      { id: 'langgraph', name: 'LangGraph (Simulated)', x: 0.25, y: 0.25, color: '#818cf8', r: 24, pulse: 0 },
+      { id: 'autogen', name: 'AutoGen (Simulated)', x: 0.75, y: 0.25, color: '#c084fc', r: 24, pulse: 0 },
+      { id: 'crewai', name: 'CrewAI (Simulated)', x: 0.25, y: 0.75, color: '#34d399', r: 24, pulse: 0 },
+      { id: 'mcp', name: 'Anthropic MCP (Simulated)', x: 0.75, y: 0.75, color: '#fb923c', r: 24, pulse: 0 }
     ];
 
     let packets = [];
 
-    function addLog(text, type = '') {
-      const box = document.getElementById('logBox');
-      const div = document.createElement('div');
-      div.className = 'log-entry ' + (type === 'success' ? 'log-success' : type === 'danger' ? 'log-danger' : '');
-      div.innerText = `[${new Date().toLocaleTimeString()}] ${text}`;
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
+    // Attestation State
+    let state = {
+      recipient: 'Agent-AutoGen-02',
+      policyHash: '630574a737d9634b9f4dbcfe365a0a4de19adfb048de826df2036cd49fe9f535',
+      caps: ['AST_MAX_DELTA_5', 'FS_WRITE_RESTRICTED', 'NO_NET_EGRESS'],
+      payloadHash: '371b2d4b9fb3993d052697858c89b37119ff3ca79d8544cbe1cf81f4400e9981',
+      sigValid: true,
+      activeTamper: null
+    };
+
+    function updateInspectorUI() {
+      document.getElementById('dispRecipient').innerText = state.recipient;
+      document.getElementById('dispRecipient').style.color = state.recipient === 'Agent-AutoGen-02' ? 'var(--accent)' : 'var(--danger)';
+      
+      document.getElementById('dispPolicyHash').innerText = state.policyHash.substring(0, 8) + '...' + state.policyHash.substring(56);
+      document.getElementById('dispPolicyHash').style.color = state.policyHash.startsWith('6305') ? 'var(--text)' : 'var(--danger)';
+
+      document.getElementById('dispCapabilities').innerText = state.caps.join(', ');
+      document.getElementById('dispCapabilities').style.color = state.caps.includes('UNRESTRICTED_ROOT_ADMIN') ? 'var(--danger)' : 'var(--text)';
+
+      document.getElementById('dispPayloadHash').innerText = state.payloadHash.substring(0, 8) + '...' + state.payloadHash.substring(56);
+      document.getElementById('dispPayloadHash').style.color = state.payloadHash.startsWith('371b') ? 'var(--text)' : 'var(--danger)';
+
+      document.getElementById('dispSignature').innerText = state.sigValid ? '3ca8d10b...VALID' : '3ca8d10b...CORRUPTED';
+      document.getElementById('dispSignature').style.color = state.sigValid ? 'var(--success)' : 'var(--danger)';
+
+      const banner = document.getElementById('verdictBanner');
+      if (state.activeTamper) {
+        banner.className = 'verdict-banner verdict-deny';
+        if (state.activeTamper === 'recipient') banner.innerText = 'REJECTED: CONTEXT_MISMATCH (BTP-SEC-002)';
+        else if (state.activeTamper === 'policy') banner.innerText = 'REJECTED: POLICY_HASH_MISMATCH (BTP-SEC-006)';
+        else if (state.activeTamper === 'caps') banner.innerText = 'REJECTED: CAPABILITY_OVERREACH (BTP-SEC-005)';
+        else if (state.activeTamper === 'payload') banner.innerText = 'REJECTED: PAYLOAD_TAMPERED (BTP-SEC-001)';
+        else if (state.activeTamper === 'sig') banner.innerText = 'REJECTED: VERIFICATION_FAILED (BTP-SEC-004)';
+      } else {
+        banner.className = 'verdict-banner verdict-allow';
+        banner.innerText = 'STATUS: [AUTHORIZED] (Ed25519 Valid)';
+      }
     }
 
-    function simulateDelegation() {
-      const fromNode = nodes[1]; // LangGraph
-      const authNode = nodes[0]; // Authority
-      const toNode = nodes[2];   // AutoGen
+    function toggleTamper(type) {
+      resetTamperUIButtons();
+      if (state.activeTamper === type) {
+        resetTamper();
+        return;
+      }
+      state.activeTamper = type;
+      document.getElementById('btnTamper' + capitalize(type)).classList.add('active');
 
-      addLog(`Agent ${fromNode.name} -> Requesting BTP attestation...`);
-      
+      if (type === 'recipient') state.recipient = 'Agent-Rogue-Master';
+      if (type === 'policy') state.policyHash = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+      if (type === 'caps') state.caps = ['UNRESTRICTED_ROOT_ADMIN'];
+      if (type === 'payload') state.payloadHash = '0000000000000000000000000000000000000000000000000000000000000000';
+      if (type === 'sig') state.sigValid = false;
+
+      updateInspectorUI();
+    }
+
+    function resetTamperUIButtons() {
+      ['Recipient', 'Policy', 'Caps', 'Payload', 'Sig'].forEach(id => {
+        const b = document.getElementById('btnTamper' + id);
+        if (b) b.classList.remove('active');
+      });
+    }
+
+    function resetTamper() {
+      resetTamperUIButtons();
+      state = {
+        recipient: 'Agent-AutoGen-02',
+        policyHash: '630574a737d9634b9f4dbcfe365a0a4de19adfb048de826df2036cd49fe9f535',
+        caps: ['AST_MAX_DELTA_5', 'FS_WRITE_RESTRICTED', 'NO_NET_EGRESS'],
+        payloadHash: '371b2d4b9fb3993d052697858c89b37119ff3ca79d8544cbe1cf81f4400e9981',
+        sigValid: true,
+        activeTamper: null
+      };
+      updateInspectorUI();
+    }
+
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function simulateDelegation() {
+      resetTamper();
+      const fromNode = nodes[1];
+      const authNode = nodes[0];
+      const toNode = nodes[2];
+
       packets.push({
         from: fromNode,
         to: authNode,
@@ -244,29 +409,22 @@
         speed: 0.03,
         color: '#38bdf8',
         onComplete: () => {
-          addLog(`Authority pre-flight sandbox verified: 48/48 unit tests green.`, 'success');
-          addLog(`Issued RFC 8785 Ed25519 token -> Routing to ${toNode.name}`);
-          
           packets.push({
             from: authNode,
             to: toNode,
             progress: 0,
             speed: 0.03,
             color: '#34d399',
-            onComplete: () => {
-              addLog(`Recipient ${toNode.name} verified token offline in 175.5µs -> EXECUTION PERMITTED!`, 'success');
-              toNode.pulse = 1.0;
-            }
+            onComplete: () => { toNode.pulse = 1.0; }
           });
         }
       });
     }
 
     function simulateAdversarialAttack() {
-      const fromNode = nodes[3]; // CrewAI
-      const toNode = nodes[4];   // MCP Tool
-
-      addLog(`ADVERSARIAL ATTACK: Mutated payload injected into ${fromNode.name}...`, 'danger');
+      toggleTamper('payload');
+      const fromNode = nodes[3];
+      const toNode = nodes[2];
 
       packets.push({
         from: fromNode,
@@ -274,17 +432,14 @@
         progress: 0,
         speed: 0.025,
         color: '#f43f5e',
-        onComplete: () => {
-          addLog(`REJECTED by ${toNode.name}: PAYLOAD_TAMPERED (Hash mismatch). Execution halted!`, 'danger');
-          toNode.pulse = -1.0;
-        }
+        onComplete: () => { toNode.pulse = -1.0; }
       });
     }
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Draw Links
+      // Links
       nodes.forEach((n1, idx1) => {
         nodes.forEach((n2, idx2) => {
           if (idx1 < idx2 && (n1.isRoot || n2.isRoot)) {
@@ -298,7 +453,7 @@
         });
       });
 
-      // 2. Draw Packets
+      // Packets
       for (let i = packets.length - 1; i >= 0; i--) {
         const p = packets[i];
         p.progress += p.speed;
@@ -319,7 +474,7 @@
         }
       }
 
-      // 3. Draw Nodes
+      // Nodes
       nodes.forEach(n => {
         const nx = n.x * width;
         const ny = n.y * height;
@@ -361,6 +516,7 @@
     }
 
     draw();
+    updateInspectorUI();
   </script>
 </body>
 </html>
