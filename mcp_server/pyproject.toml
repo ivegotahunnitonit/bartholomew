@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-server-bartholomew"
+version = "2.2.0"
+description = "Official Model Context Protocol (MCP) Security & Attestation Server for Claude Desktop and Cursor"
+readme = "README.md"
+authors = [{ name = "Bartholomew AI Contributors", email = "contact@bartholomew.info" }]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dependencies = [
+    "cryptography>=41.0.0"
+]
+keywords = ["mcp", "model-context-protocol", "anthropic", "claude", "cursor", "security", "ed25519", "btp"]
+
+[project.scripts]
+mcp-server-bartholomew = "mcp_server.server:main"

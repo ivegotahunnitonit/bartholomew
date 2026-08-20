@@ -1,0 +1,31 @@
+{
+  "name": "@bartholomew/mcp-server",
+  "version": "2.2.0",
+  "description": "Official Bartholomew BTP Model Context Protocol (MCP) Security Server for Claude Desktop, Cursor, and AI Agents",
+  "main": "server.js",
+  "bin": {
+    "bartholomew-mcp": "./bin/cli.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "anthropic",
+    "claude",
+    "cursor",
+    "security",
+    "zero-trust",
+    "ed25519",
+    "agentic-ai",
+    "btp"
+  ],
+  "author": "Bartholomew AI Contributors <contact@bartholomew.info>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ivegotahunnitonit/bartholomew/issues"
+  },
+  "homepage": "https://github.com/ivegotahunnitonit/bartholomew"
+}
