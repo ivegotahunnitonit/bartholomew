@@ -126,6 +126,8 @@ class CapabilityNegotiationRequest:
         context_conditions: Dict[str, Any],
         target_system: str,
         delegation_chain: Optional[DelegationChain] = None,
+        bonded_collateral_usd: float = 0.0,
+        challenger_address: Optional[str] = None,
     ) -> None:
         self.request_id = request_id
         self.nonce = nonce
@@ -136,6 +138,8 @@ class CapabilityNegotiationRequest:
         self.context_conditions = context_conditions  # e.g., {'region': 'CA', 'cost_limit': 100}
         self.target_system = target_system
         self.delegation_chain = delegation_chain
+        self.bonded_collateral_usd = bonded_collateral_usd
+        self.challenger_address = challenger_address
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -148,6 +152,8 @@ class CapabilityNegotiationRequest:
             "context_conditions": self.context_conditions,
             "target_system": self.target_system,
             "delegation_chain": self.delegation_chain.to_dict() if self.delegation_chain else None,
+            "bonded_collateral_usd": self.bonded_collateral_usd,
+            "challenger_address": self.challenger_address,
         }
 
 
@@ -296,6 +302,8 @@ class VendorNeutralProtocolGateway:
             "requested_capability": req.intent_requested_capability,
             "decision": decision,
             "delegation_chain_verified": req.delegation_chain is not None,
+            "bonded_collateral_usd": req.bonded_collateral_usd,
+            "challenger_address": req.challenger_address,
             "ed25519_proof": proof,
             "tampered": False
         }

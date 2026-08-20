@@ -40,9 +40,13 @@ from .epistemic_execution_engine import EpistemicExecutionEngine
 from .linux_adapter import LinuxExecutionAdapter, LinuxExecutionViolation
 from .linux_master import LinuxMasterEngine, LinuxSecurityViolation
 
+from .game_theoretic_engine import GameTheoreticStakeEngine, AgentToAgentGameSimulator
+
 __version__ = "9.1.0"
 __author__ = "Bartholomew AI Contributors"
 __all__ = [
+    "GameTheoreticStakeEngine",
+    "AgentToAgentGameSimulator",
     "LinuxExecutionAdapter",
     "LinuxExecutionViolation",
     "LinuxMasterEngine",
