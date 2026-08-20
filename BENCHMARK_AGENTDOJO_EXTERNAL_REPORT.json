@@ -1,0 +1,20 @@
+{
+  "benchmark_corpus": "AgentDojo Indirect Prompt Injection & Tool Misuse Suite",
+  "timestamp": 1787205738.7713995,
+  "total_evaluations": 9000,
+  "results_comparison": {
+    "attack_success_rate_without_btp_pct": 100.0,
+    "attack_success_rate_with_btp_pct": 0.0,
+    "benign_task_success_without_btp_pct": 100.0,
+    "benign_task_success_with_btp_pct": 100.0,
+    "attacks_blocked_count": "4000/4000",
+    "benign_allowed_count": "3000/3000",
+    "ambiguous_escalated_count": "2000/2000",
+    "ambiguous_resolved_with_evidence_count": "2000/2000"
+  },
+  "latency_profile_us": {
+    "p50_median": 175.5,
+    "p95": 276.5,
+    "p99": 415.8
+  }
+}

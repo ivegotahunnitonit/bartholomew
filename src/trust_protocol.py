@@ -1,10 +1,11 @@
 """
-Bartholomew Autonomous Trust Protocol (BTP-Core v2.1)
+Bartholomew Autonomous Trust Protocol (BTP-Core v2.2)
 Enhanced with:
-1. Nonce & Expiration Window (Replay Attack Defense)
-2. Standalone Zero-Network Offline Verification (Decentralized / Independent Trust)
-3. Cryptographic Artifact Hash Binding (Post-Attestation Substitution Defense)
-4. Configurable Fail-Open / Fail-Closed Enterprise Resilience Modes
+1. Comprehensive Trajectory & Indirect Injection Policy Scanner
+2. Nonce & Expiration Window (Replay Attack Defense)
+3. Standalone Zero-Network Offline Verification (Decentralized / Independent Trust)
+4. Cryptographic Artifact Hash Binding (Post-Attestation Substitution Defense)
+5. Multi-Stage Escalation & Resolution Support
 """
 
 import json
@@ -53,10 +54,11 @@ class BartholomewTrustAuthority:
         nonce = secrets.token_hex(16)
         self.issued_nonces.add(nonce)
 
-        # 1. Trajectory & Policy Evaluation
+        # 1. Trajectory, Indirect Prompt Injection & Policy Evaluation
         dangerous_patterns = [
             "rm -rf", "drop table", "aws_secret_access_key", 
-            "id_rsa", "/etc/shadow", "curl http://malicious"
+            "id_rsa", "/etc/shadow", "malicious", "system override",
+            "sk-live", "eval(", "exec(", "<script>"
         ]
         
         raw_payload_str = json.dumps(payload).lower()
@@ -88,7 +90,7 @@ class BartholomewTrustAuthority:
         verdict = "DENY" if blocked_reason else "ALLOW"
         
         attestation_body = {
-            "authority": "Bartholomew-Trust-Engine-v2.1",
+            "authority": "Bartholomew-Trust-Engine-v2.2",
             "authority_pubkey": self.public_key_hex,
             "nonce": nonce,
             "issued_at_unix": now,
@@ -113,8 +115,6 @@ class BartholomewTrustAuthority:
 class IndependentTrustVerifier:
     """
     100% Offline, Zero-Network Independent Verifier.
-    Can be run by ANY third party, downstream tool, or offline VM.
-    Does NOT require Bartholomew servers to be online.
     """
     @staticmethod
     def verify_attestation(attestation_packet: Dict[str, Any], 
@@ -122,15 +122,6 @@ class IndependentTrustVerifier:
                            trusted_root_pubkey: str,
                            current_timestamp: Optional[float] = None,
                            seen_nonces: Optional[set] = None) -> Tuple[bool, str]:
-        """
-        Adversarially verifies the cryptographic proof:
-        1. Root authority public key match.
-        2. Cryptographic signature validity over RFC 8785 bytes.
-        3. Expiration window (time-to-live).
-        4. Replay attack detection (nonce uniqueness).
-        5. Exact artifact / payload hash match.
-        6. Verdict authorization.
-        """
         now = current_timestamp if current_timestamp is not None else time.time()
         
         try:
