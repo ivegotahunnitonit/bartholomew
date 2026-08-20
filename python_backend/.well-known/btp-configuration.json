@@ -1,0 +1,24 @@
+{
+  "protocol_version": "BTP/2.2",
+  "status": "FROZEN_STANDARDS_TRACK",
+  "service_type": "AUTONOMOUS_TRUST_AUTHORITY",
+  "authority_identity": "Bartholomew-Trust-Engine-v2.2",
+  "endpoints": {
+    "evaluation_rpc": "https://api.bartholomew.info/v2.2/evaluate",
+    "public_keys": "https://api.bartholomew.info/v2.2/trust-roots",
+    "conformance_suite": "https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/BTP_CONFORMANCE_SUITE.json",
+    "challenge_package": "https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/CHALLENGE_PACKAGE.md"
+  },
+  "canonicalization_standard": "RFC_8785_JCS",
+  "signature_algorithm": "FIPS_186_5_ED25519",
+  "supported_frameworks": [
+    "LangChain",
+    "LangGraph",
+    "Microsoft_AutoGen",
+    "CrewAI",
+    "LlamaIndex",
+    "ModelContextProtocol_MCP"
+  ],
+  "default_ttl_seconds": 300,
+  "offline_verification_supported": true
+}

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bartholomew-eval",
-    version="7.0.0",
+    version="9.1.0",
     author="Bartholomew AI Contributors",
     author_email="help@bartholomew.info",
     description="Sub-millisecond OWASP LLM Top 10 Security Guard, Sovereign AES-256 Memory & Universal Swarm Federation Engine for AI Agents",

