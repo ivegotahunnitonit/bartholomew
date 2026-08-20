@@ -397,18 +397,22 @@
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="hero-badge"><span class="badge-dot"></span>Autonomous CI Auto-Fix Engine</div>
-    <h1>Your CI build just failed.<br><span class="grad">Bartholomew already fixed it.</span></h1>
-    <p class="hero-sub">The autonomous developer copilot that catches failing tests, synthesizes isolated reproduction proofs, applies surgical AST patches, and ships a verified green PR before your team even opens Slack.</p>
+    <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; background:rgba(0,242,254,0.08); border:1px solid rgba(0,242,254,0.25); border-radius:100px; font-size:12.5px; font-family:'JetBrains Mono', monospace; color:var(--cyan); margin-bottom:20px;">
+      <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green);"></span>
+      BTP v2.2 PROTOCOL FROZEN &bull; MULTI-AUTHORITY TRUST ENGINE ACTIVE
+    </div>
+    <h1>Autonomous Agent Trust & CI Auto-Fix<br><span class="grad">Deterministic Cryptographic Governance</span></h1>
+    <p class="hero-sub">The independent trust protocol and autonomous mechanic that evaluates agent trajectories, enforces RFC 8785 Ed25519 attestations, applies minimal AST compiler fixes, and ships verified green PRs with zero human bottleneck.</p>
     <div class="hero-cta-group">
-      <a href="/dashboard" class="btn-primary">
-        <span>Start Developer Trial</span>
+      <a href="/simulator" class="btn-primary">
+        <span>Try Interactive Trust Trial</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="/simulator" class="btn-secondary">
-        <span>Try Live Simulator</span>
+      <a href="/dashboard" class="btn-secondary">
+        <span>Command Center</span>
       </a>
-      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn-secondary">
-        <span>View on GitHub</span>
+      <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+        <span>Red-Team Challenge (BTP v2.2)</span>
       </a>
     </div>
 
@@ -416,17 +420,16 @@
     <div class="terminal-wrap">
       <div class="terminal-topbar">
         <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-filename">bartholomew_agent.py &mdash; autonomous repair loop active</span>
+        <span class="terminal-filename">btp_core.go &mdash; 100% offline independent verification active</span>
       </div>
       <div class="terminal-body">
-        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Ingested webhook: <span class="t-hl">fintech-corp/payments-core</span> (CI failure detected)</div>
-        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Spawning isolated AST diagnostic sandbox container...</div>
-        <div class="t-line"><span class="t-err">[ERROR]</span> RuntimeError: Event loop is closed at worker.py:64</div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Root cause: asyncio.get_event_loop() deprecated in Python 3.12+</div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Synthesizing minimal surgical AST patch... <span class="t-hl">3 lines modified</span></div>
-        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Running verification test suite: <span class="t-ok">48/48 passed (0.14s)</span></div>
-        <div class="t-line"><span class="t-cmd">[00:14:04]</span> Zero regressions verified. Attaching reproduction evidence...</div>
-        <div class="t-line"><span class="t-ok">[SUCCESS]</span> PR #170 opened &rarr; <span class="t-hl">fintech-corp/payments-core</span> (1.14s total)</div>
+        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Ingested Cross-Agent Intent: <span class="t-hl">Agent-LangGraph-01 &rarr; Agent-AutoGen-02</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Running RFC 8785 JCS Canonicalization &amp; Trajectory Policy Audit...</div>
+        <div class="t-line"><span class="t-cmd">[00:14:02]</span> Trajectory Policy: <span class="t-ok">PASSED (0 forbidden patterns, AST delta = 3 lines)</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Pre-Flight Sandbox Gate: <span class="t-ok">48/48 test assertions verified green (0.14s)</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:03]</span> Signed Attestation Envelope: <span class="t-hl">FIPS 186-5 Ed25519 (Nonce Bound)</span></div>
+        <div class="t-line"><span class="t-cmd">[00:14:04]</span> Recipient Offline Verification: <span class="t-ok">AUTHORIZED (0 cloud calls, 175.5 µs latency)</span></div>
+        <div class="t-line"><span class="t-ok">[SUCCESS]</span> BTP Attestation Receipt #BTP-SEC-001 verified &rarr; <span class="t-hl">Multi-Authority Clean-Room Parity</span></div>
       </div>
     </div>
   </section>
@@ -434,10 +437,10 @@
   <!-- STATS ROW -->
   <section>
     <div class="stats-row">
-      <div class="stat-card"><span class="stat-val">&lt; 2s</span><div class="stat-label">End-to-End Repair Latency</div></div>
-      <div class="stat-card"><span class="stat-val">100%</span><div class="stat-label">Deterministic Verification</div></div>
-      <div class="stat-card"><span class="stat-val">$0.00</span><div class="stat-label">Cloud Compute Overhead</div></div>
-      <div class="stat-card"><span class="stat-val">3 Lines</span><div class="stat-label">Average Patch Size (AST)</div></div>
+      <div class="stat-card"><span class="stat-val">100%</span><div class="stat-label">Offline Independent Verification</div></div>
+      <div class="stat-card"><span class="stat-val">175.5 &mu;s</span><div class="stat-label">Median Protocol Latency (P50)</div></div>
+      <div class="stat-card"><span class="stat-val">0.00%</span><div class="stat-label">False Positives / Escapes</div></div>
+      <div class="stat-card"><span class="stat-val">Go &bull; Python</span><div class="stat-label">Cross-Language Byte Parity</div></div>
     </div>
   </section>
 
