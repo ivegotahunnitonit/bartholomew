@@ -15,6 +15,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy bartholomew_eval package
 COPY bartholomew_eval/ ./bartholomew_eval/
 
+# Copy BTP protocol core & standalone verifier
+COPY src/ ./src/
+COPY standalone_btp_verifier.py ./standalone_btp_verifier.py
+COPY BTP_CONFORMANCE_SUITE.json ./BTP_CONFORMANCE_SUITE.json
+COPY .well-known/ ./.well-known/
+
 # Copy application source code
 COPY app/ ./app/
 

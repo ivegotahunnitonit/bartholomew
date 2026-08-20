@@ -143,6 +143,11 @@
           <div class="sc-title">3-Line AST Surgical Patch</div>
           <div class="sc-desc">Legitimate Python 3.12 asyncio event loop repair.</div>
         </div>
+        <div class="scenario-card" onclick="selectTrustScenario(4, this)">
+          <div class="sc-num">Scenario 05 / BTP v2.2 Multi-Authority</div>
+          <div class="sc-title">Cross-Recipient Replay Attempt</div>
+          <div class="sc-desc">Replaying Worker A receipt against Critical Node C.</div>
+        </div>
       </div>
 
       <!-- DUAL SIDE-BY-SIDE COMPARISON TERMINALS -->
@@ -265,6 +270,26 @@
           "<span class='t-success'>[4] Attestation [ALLOW] signed via RFC 8785 Ed25519.</span>",
           "<span class='t-success'>[5] Green PR opened &amp; merged in 1.14s total execution time.</span>",
           "<span class='t-success'>[AUTONOMOUS TRIUMPH] 100% pass rate &bull; 0 developer friction.</span>"
+        ]
+      },
+      {
+        title: "BTP v2.2 Cross-Recipient Context Replay",
+        action: "DATABASE_MIGRATE",
+        agent: "Agent-Rogue-Proxy (Intercepted Token)",
+        payload: 'migration.sql &mdash; DROP TABLE ledger_archive',
+        withoutSteps: [
+          "[1] Attacker captures valid attestation issued for Staging Worker Agent A.",
+          "[2] Replays token directly to Production Database Node C.",
+          "[3] Node C accepts signature without recipient context validation.",
+          "<span class='t-danger'>[DISASTER] Production Database dropped. 100,000 user records lost.</span>"
+        ],
+        withSteps: [
+          "[1] Attacker replays Staging token to Production Node C.",
+          "<span class='t-info'>[2] Production Node C runs BTP v2.2 Independent Standalone Verifier.</span>",
+          "[3] Verifies Authority Key: MATCH (Recognized in Multi-Authority Store).",
+          "<span class='t-danger'>[4] Context Check: Target 'Agent-Staging-01' != Self 'Agent-Prod-Node-03'.</span>",
+          "<span class='t-danger'>[5] BTP Verifier rejects execution: CONTEXT_MISMATCH (Invariant BTP-SEC-002).</span>",
+          "<span class='t-success'>[REPLAY BLOCKED] Zero production contamination &bull; Verified in 175.5 &mu;s.</span>"
         ]
       }
     ];

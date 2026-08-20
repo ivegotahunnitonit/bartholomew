@@ -1,68 +1,42 @@
 {
-  "protocol_version": "BTP v0.1",
-  "specification_reference": "BTP_SPECIFICATION.md",
-  "pinned_root_keys": {
-    "did:bth:org_a_root": "pubkey_org_a_ed25519_key_101",
-    "did:bth:org_b_root": "pubkey_org_b_ed25519_key_202"
-  },
-  "test_vectors": [
-    {
-      "vector_id": "VEC_001_VALID_EVIDENCE",
-      "description": "Standard valid evidence artifact generated for Org A agent targeting Org C resource",
-      "artifact": {
-        "artifact_id": "art_bth_test_vector_001",
-        "issued_at": "2026-08-12T12:00:00Z",
-        "expires_at": "2026-12-31T23:59:59Z",
-        "agent_did": "did:bth:org_a_agent_alpha",
-        "issuer_did": "did:bth:org_a_root",
-        "target_system": "Org_C_Resource_Server",
-        "requested_capability": "resource_c.access",
-        "decision": "ALLOW",
-        "delegation_chain_verified": true,
-        "ed25519_proof": "proof_ed25519_ef39c717d6c42776",
-        "tampered": false
-      },
-      "canonical_payload": "{\"agent_did\":\"did:bth:org_a_agent_alpha\",\"artifact_id\":\"art_bth_test_vector_001\",\"decision\":\"ALLOW\",\"issuer_did\":\"did:bth:org_a_root\",\"requested_capability\":\"resource_c.access\",\"target_system\":\"Org_C_Resource_Server\"}",
-      "expected_verification_result": true,
-      "expected_reason": "100% Independently Verified"
-    },
-    {
-      "vector_id": "VEC_002_TAMPERED_ONE_BYTE",
-      "description": "Evidence artifact where decision was tampered from DENY to ALLOW",
-      "artifact": {
-        "artifact_id": "art_bth_test_vector_002",
-        "issued_at": "2026-08-12T12:00:00Z",
-        "expires_at": "2026-12-31T23:59:59Z",
-        "agent_did": "did:bth:org_a_agent_alpha",
-        "issuer_did": "did:bth:org_a_root",
-        "target_system": "Org_C_Resource_Server",
-        "requested_capability": "resource_c.access",
-        "decision": "ALLOW",
-        "delegation_chain_verified": true,
-        "ed25519_proof": "proof_ed25519_INVALID_TAMPERED_PROOF",
-        "tampered": true
-      },
-      "expected_verification_result": false,
-      "expected_reason": "Proof mismatch"
-    },
-    {
-      "vector_id": "VEC_003_UNPINNED_ISSUER_ROOT",
-      "description": "Evidence artifact issued by an unpinned root DID",
-      "artifact": {
-        "artifact_id": "art_bth_test_vector_003",
-        "issued_at": "2026-08-12T12:00:00Z",
-        "expires_at": "2026-12-31T23:59:59Z",
-        "agent_did": "did:bth:untrusted_agent",
-        "issuer_did": "did:bth:untrusted_attacker_root",
-        "target_system": "Org_C_Resource_Server",
-        "requested_capability": "resource_c.access",
-        "decision": "ALLOW",
-        "delegation_chain_verified": false,
-        "ed25519_proof": "proof_ed25519_1122334455667788",
-        "tampered": false
-      },
-      "expected_verification_result": false,
-      "expected_reason": "Issuer DID not in pinned root trust store"
+  "test_vector_id": "BTP-TV-RFC8785-ED25519-001",
+  "description": "Deterministic Cross-Language RFC 8785 Canonicalization & Ed25519 Verification Vector",
+  "deterministic_seed_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+  "trusted_root_pubkey_hex": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+  "candidate_payload_raw": {
+    "zeta": 100,
+    "alpha": "Hello, 世界",
+    "beta": [
+      3.14,
+      -0.0,
+      true,
+      null,
+      "escaped: \" \\ \n \t"
+    ],
+    "nested": {
+      "z": 1,
+      "a": 2
     }
-  ]
+  },
+  "canonical_payload_utf8_hex": "7b22616c706861223a2248656c6c6f2c20e4b896e7958c222c2262657461223a5b332e31342c302c747275652c6e756c6c2c22657363617065643a205c22205c5c205c6e205c74225d2c226e6573746564223a7b2261223a322c227a223a317d2c227a657461223a3130307d",
+  "canonical_payload_sha256": "b3c0ba74bbfd57c31f5e2f6f24787f1450d3ff154421f65abe1ae23f2b6fb164",
+  "attestation_packet": {
+    "attestation": {
+      "protocol_version": "BTP/2.2",
+      "authority": "Bartholomew-Trust-Engine-v2.2",
+      "authority_pubkey": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+      "nonce": "d8e8fca2dc6b4b9b9c9f0a1b2c3d4e5f",
+      "issued_at_unix": 1755648000,
+      "expires_at_unix": 1755648300,
+      "originating_agent": "Agent-LangGraph-01",
+      "target_recipient": "Agent-AutoGen-02",
+      "action_type": "DEPLOY_PATCH",
+      "action_payload_hash": "b3c0ba74bbfd57c31f5e2f6f24787f1450d3ff154421f65abe1ae23f2b6fb164",
+      "verdict": "ALLOW",
+      "reason": "All pre-flight checks and trajectory policies verified successfully."
+    },
+    "signature": "86d1a2dc31cefb7600a33f0269a145c2dee9cdce01c4c08ef9fdeef9244ea22c116e08949dd41d3eb42834207f6952886e65d60d62abd3b31a63a389fa3daf0a"
+  },
+  "canonical_attestation_utf8_hex": "7b22616374696f6e5f7061796c6f61645f68617368223a2262336330626137346262666435376333316635653266366632343738376631343530643366663135343432316636356162653161653233663262366662313634222c22616374696f6e5f74797065223a224445504c4f595f5041544348222c22617574686f72697479223a2242617274686f6c6f6d65772d54727573742d456e67696e652d76322e32222c22617574686f726974795f7075626b6579223a2238613838653364643734303966313935666435326462326433636261356437326361363730396266316439343132316266333734383830316234306636663563222c22657870697265735f61745f756e6978223a313735353634383330302c226973737565645f61745f756e6978223a313735353634383030302c226e6f6e6365223a226438653866636132646336623462396239633966306131623263336434653566222c226f726967696e6174696e675f6167656e74223a224167656e742d4c616e6747726170682d3031222c2270726f746f636f6c5f76657273696f6e223a224254502f322e32222c22726561736f6e223a22416c6c207072652d666c6967687420636865636b7320616e64207472616a6563746f727920706f6c6963696573207665726966696564207375636365737366756c6c792e222c227461726765745f726563697069656e74223a224167656e742d4175746f47656e2d3032222c2276657264696374223a22414c4c4f57227d",
+  "expected_verification_result": true
 }
