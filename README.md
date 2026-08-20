@@ -1,22 +1,41 @@
-# **Bartholomew AI**
-### **Autonomous CI/CD Failure Auto-Fix & Mechanical Verification Engine**
+# **Bartholomew AI &bull; BTP v2.2 Standards Track**
+### **Cryptographic Trust Protocol &amp; Autonomous Pre-Flight Execution Gate for AI Agents**
 
 <div align="center">
 
-[![Live Web Platform](https://img.shields.io/badge/Production_Platform-www.bartholomew.info-00f2fe?style=for-the-badge&logo=google-chrome&logoColor=040813)](https://www.bartholomew.info)
-[![Command Center](https://img.shields.io/badge/Command_Center-app.bartholomew.info-00e676?style=for-the-badge&logo=target&logoColor=040813)](https://app.bartholomew.info/dashboard)
-[![Interactive Simulator](https://img.shields.io/badge/Live_Simulator-Try_AST_Auto--Fix-4facfe?style=for-the-badge&logo=terminal&logoColor=040813)](https://app.bartholomew.info/simulator)
-[![Investor Presentation](https://img.shields.io/badge/Investor_Deck-10--Slide_Overview-fbbf24?style=for-the-badge&logo=slides&logoColor=040813)](https://pitch.bartholomew.info/PITCH_DECK.html)
-[![License](https://img.shields.io/badge/License-Proprietary_Commercial-94a3b8?style=for-the-badge&logo=shield&logoColor=040813)](#intellectual-property--commercial-protection-notice)
+[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.2_FROZEN-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
+[![Conformance Suite](https://img.shields.io/badge/Conformance-12%2F12_Passed_(100%25)-00e676?style=for-the-badge&logo=checkmarx&logoColor=040813)](BTP_CONFORMANCE_SUITE.json)
+[![Challenge Package](https://img.shields.io/badge/Red--Team_Challenge-8_Formal_Invariants-fbbf24?style=for-the-badge&logo=target&logoColor=040813)](CHALLENGE_PACKAGE.md)
+[![MCP Server](https://img.shields.io/badge/Anthropic_MCP-Security_Server-a855f7?style=for-the-badge&logo=anthropic&logoColor=ffffff)](mcp_server/)
+[![Framework Adapters](https://img.shields.io/badge/Frameworks-LangGraph_%7C_AutoGen_%7C_CrewAI-38bdf8?style=for-the-badge&logo=python&logoColor=040813)](framework_adapters/)
 
 </div>
 
 ---
 
-### **[EXECUTIVE_SUMMARY] What is Bartholomew?**
+### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP?**
 
-> **Bartholomew is an autonomous robotic mechanic for software engineering teams.** 
-> When continuous integration (CI) tests fail, Bartholomew intercepts the failure, reproduces the crash in an isolated sandbox, calculates a minimal 3-line compiler Abstract Syntax Tree (AST) patch, executes 100% of pre-flight test suites, and opens a verified green Pull Request before developers even open Slack.
+> **Bartholomew is the open cryptographic trust and verification gateway for autonomous AI agents.**  
+> Built on the **Bartholomew Trust Protocol (BTP v2.2 Standards Track)**, it replaces probabilistic prompt filters with deterministic, hermetic pre-flight sandboxing and signed RFC 8785 Ed25519 attestations. Downstream execution environments (LangGraph, AutoGen, CrewAI, MCP, Kubernetes clusters) verify agent tool calls **100% offline in 175.5 microseconds** with zero cloud dependencies.
+
+---
+
+### **[FRAMEWORK_ADAPTERS] 1-Line Drop-in Middleware**
+
+| Framework | Integration File | 1-Line Guard | Description |
+| :--- | :--- | :--- | :--- |
+| **LangGraph / LangChain** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@guard.wrap_tool` | Protects database & tool calls with offline Ed25519 receipts |
+| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `guard.intercept_message()` | Blocks confused-deputy tool exploits in multi-agent chat |
+| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `guard.wrap_task()` | Enforces pre-flight capability containment (`NO_NET_EGRESS`) |
+| **Anthropic MCP** | [`mcp_server/`](mcp_server/) | `mcp-server-bartholomew` | Native Model Context Protocol security server for Claude Desktop |
+
+---
+
+### **[OFFLINE_VERIFIERS] Zero-Dependency Cross-Language Reference Verifiers**
+
+* **Python Reference Verifier (35 Lines):** [`standalone_btp_verifier.py`](standalone_btp_verifier.py)
+* **Go Reference Verifier (Microsecond Engine):** [`btp_verifier.go`](btp_verifier.go)
+* **Node.js / TypeScript Reference Verifier:** [`btp_verifier.js`](btp_verifier.js)
 
 ---
 
