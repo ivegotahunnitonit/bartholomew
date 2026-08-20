@@ -17,6 +17,9 @@ import sys
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives import serialization
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.rfc8785 import rfc8785_canonicalize
 from standalone_btp_verifier import independent_verify_btp_receipt

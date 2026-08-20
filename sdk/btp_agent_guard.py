@@ -10,7 +10,7 @@ Enables 1-line cryptographic trust validation for:
 import json
 import time
 import hashlib
-from typing import Dict, Any, List, Optional, Callable, Union, Set
+from typing import Dict, Any, List, Optional, Callable, Union, Set, Tuple
 from src.rfc8785 import rfc8785_canonicalize
 from standalone_btp_verifier import independent_verify_btp_receipt
 from src.trust_protocol import BartholomewTrustAuthority
