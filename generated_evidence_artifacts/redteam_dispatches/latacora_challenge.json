@@ -1,0 +1,11 @@
+{
+  "organization": "Latacora",
+  "team": "Infrastructure & Cryptography Practice",
+  "contact_channel": "security@latacora.com",
+  "target_invariants": [
+    "BTP-SEC-004 (Multi-Authority Pinning)",
+    "BTP-SEC-007 (Replay Immunity)"
+  ],
+  "subject": "BTP v2.2: Multi-authority trust store & replay defense challenge",
+  "spec_url": "https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md"
+}

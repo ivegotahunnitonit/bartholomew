@@ -1,0 +1,11 @@
+{
+  "organization": "Trail of Bits",
+  "team": "Applied Cryptography & AI Security",
+  "contact_channel": "research@trailofbits.com / DMs",
+  "target_invariants": [
+    "BTP-SEC-001 (Payload Tampering)",
+    "BTP-SEC-005 (Capability Containment)"
+  ],
+  "subject": "Adversarial Challenge: 35-line RFC 8785 Ed25519 verifier & 8 formal invariants for multi-agent delegation",
+  "spec_url": "https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md"
+}

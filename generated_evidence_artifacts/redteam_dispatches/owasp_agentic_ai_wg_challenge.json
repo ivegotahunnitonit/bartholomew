@@ -1,0 +1,10 @@
+{
+  "organization": "OWASP Agentic AI WG",
+  "team": "OWASP Top 10 for LLM & Agents Core Team",
+  "contact_channel": "owasp-ai@owasp.org / Discord",
+  "target_invariants": [
+    "BTP-SEC-005 (Privilege Escalation Defense)"
+  ],
+  "subject": "Proposal: BTP v2.2 as reference mitigation for OWASP Agentic AI confused-deputy attacks",
+  "spec_url": "https://github.com/ivegotahunnitonit/bartholomew/tree/main/framework_adapters"
+}

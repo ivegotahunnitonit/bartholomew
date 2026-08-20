@@ -1,0 +1,11 @@
+{
+  "organization": "Alignment Research Center (ARC)",
+  "team": "ARC Evals / Safety Alignment",
+  "contact_channel": "evals@alignment.org",
+  "target_invariants": [
+    "BTP-SEC-002 (Context Isolation)",
+    "BTP-SEC-006 (Policy Provenance)"
+  ],
+  "subject": "Formalizing cryptographic bounds for autonomous agent tool execution (BTP v2.2)",
+  "spec_url": "https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md"
+}
