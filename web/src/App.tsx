@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import ArchitecturalVerdict from './components/ArchitecturalVerdict'
 import CorePrimitives from './components/CorePrimitives'
 import ObjectiveEngineViewer from './components/ObjectiveEngineViewer'
 import VendorNeutralProtocolViewer from './components/VendorNeutralProtocolViewer'
@@ -42,6 +43,7 @@ function HomeView() {
   return (
     <>
       <Hero />
+      <ArchitecturalVerdict />
       <CorePrimitives />
       <ObjectiveEngineViewer />
       <VendorNeutralProtocolViewer />
