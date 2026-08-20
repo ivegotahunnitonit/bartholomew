@@ -19,8 +19,10 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.abspath("pypi_package"))
+sys.path.insert(0, os.path.abspath("python_backend"))
 
 from bartholomew_eval.github_app_server import BartholomewSaaSEngine
+from app.stripe_webhook_handler import handle_stripe_webhook, get_provisioned_customers
 
 
 STRIPE_PAYMENT_LINKS = {
@@ -56,21 +58,37 @@ class BartholomewSaaSHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         parsed = urlparse(self.path)
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
+        raw_body = self.rfile.read(content_length) if content_length > 0 else b"{}"
 
         try:
-            payload = json.loads(body) if body else {}
+            payload = json.loads(raw_body.decode("utf-8")) if raw_body else {}
         except Exception:
             payload = {}
 
         if parsed.path == "/api/github/webhook":
             res = GLOBAL_SAAS_ENGINE.handle_github_webhook(payload)
             self._serve_json(res)
+
+        elif parsed.path == "/api/stripe/webhook":
+            # Must pass raw bytes + Stripe-Signature header for HMAC verification
+            sig_header = self.headers.get("Stripe-Signature", "")
+            status_code, res = handle_stripe_webhook(raw_body, sig_header)
+            body_bytes = json.dumps(res).encode("utf-8")
+            self.send_response(status_code)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body_bytes)))
+            self.end_headers()
+            self.wfile.write(body_bytes)
+
         elif parsed.path == "/api/stripe/checkout":
             org = payload.get("org", "my-startup-repo")
             plan = payload.get("plan", "PRO_REPO_$49")
             session = GLOBAL_SAAS_ENGINE.create_checkout_session(org, plan)
             self._serve_json(session)
+
+        elif parsed.path == "/api/customers":
+            self._serve_json(get_provisioned_customers())
+
         else:
             self.send_response(404)
             self.end_headers()
