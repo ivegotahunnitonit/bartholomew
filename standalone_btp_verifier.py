@@ -45,7 +45,8 @@ def independent_verify_btp_receipt(receipt_json_str: str,
                                   candidate_payload: Dict[str, Any], 
                                   trusted_root_pubkey_hex: str,
                                   expected_recipient_context: Optional[str] = None,
-                                  seen_nonces: Optional[Set[str]] = None) -> Tuple[bool, str]:
+                                  seen_nonces: Optional[Set[str]] = None,
+                                  eval_timestamp: Optional[float] = None) -> Tuple[bool, str]:
     """
     Independently verifies a BTP trust receipt with ZERO network requests.
     Validates complete contextual binding:
@@ -78,7 +79,7 @@ def independent_verify_btp_receipt(receipt_json_str: str,
                 return False, f"CONTEXT_MISMATCH: Receipt intended for '{receipt_recipient}', not '{expected_recipient_context}'"
 
         # 4. Expiration Window Check (TTL)
-        now = time.time()
+        now = eval_timestamp if eval_timestamp is not None else time.time()
         expires_at = att.get("expires_at_unix", 0)
         if now > expires_at:
             return False, f"EXPIRED_RECEIPT: Attestation token expired {now - expires_at:.1f}s ago"
