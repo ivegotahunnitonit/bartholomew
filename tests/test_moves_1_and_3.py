@@ -1,5 +1,5 @@
 """
-Test Suite for Move 1 (Bonded Execution Warranty) and Move 3 (eBPF Kernel Interceptor)
+Test Suite for Bartholomew Enterprise Verification Commitment SLA & eBPF Kernel Interceptor
 """
 
 import sys
@@ -10,48 +10,49 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.bonded_warranty import BondedExecutionWarranty
+from src.verification_sla import VerificationCommitmentSLA
 from src.kernel_interceptor import KernelTrajectoryInterceptor
 
-def test_bonded_warranty():
+def test_verification_commitment_sla():
     print("=" * 80)
-    print("  TESTING MOVE 1: BONDED EXECUTION WARRANTY & FINANCIALIZED TRUST")
+    print("  TESTING ENTERPRISE VERIFICATION COMMITMENT & SLA ENGINE")
     print("=" * 80)
     
-    warranty_engine = BondedExecutionWarranty(reserve_pool_usd=100_000.0, max_bond_per_action_usd=10_000.0)
+    sla_engine = VerificationCommitmentSLA(monthly_service_fee_usd=499.0)
     
-    # 1. Issue Bond
-    bond = warranty_engine.issue_warranty_bond(
+    # 1. Issue Verification Receipt
+    receipt = sla_engine.issue_verification_receipt(
         attestation_hash="d1bb1ca624ce43a903484a877bf95819",
         agent_id="Agent-OpenAI-GPT4o",
         action_type="DEPLOY_PATCH",
-        bond_amount_usd=10_000.0
+        sandbox_tests_passed=48,
+        sandbox_tests_total=48
     )
-    print(f"[BOND ISSUED] ID: {bond['bond_id']} | Coverage: ${bond['bond_amount_usd']:,.2f}")
-    assert bond["status"] == "ACTIVE_BONDED"
+    print(f"[RECEIPT ISSUED] ID: {receipt['receipt_id']} | Status: {receipt['status']}")
+    print(f"  └─ Audit: {receipt['sandbox_audit']}")
+    assert receipt["status"] == "VERIFIED_ACTIVE"
     
-    # 2. Test Bogus Claim (No regression)
-    claimed, msg, _ = warranty_engine.claim_warranty_payout(
-        bond_id=bond["bond_id"],
-        regression_proof={"production_exit_code": 0}
+    # 2. Test Invalid Claim
+    claimed, msg, _ = sla_engine.evaluate_sla_claim(
+        receipt_id=receipt["receipt_id"],
+        incident_proof={"production_exit_code": 0}
     )
     print(f"[CLAIM 1: BOGUS] Result: {msg}")
     assert not claimed
     
-    # 3. Test Legitimate Incident Claim (Simulated regression proof)
-    claimed, msg, payout = warranty_engine.claim_warranty_payout(
-        bond_id=bond["bond_id"],
-        regression_proof={"production_exit_code": 1, "incident_trace_hash": "trace_err_500_auth_fail"}
+    # 3. Test Verified SLA Credit Claim
+    claimed, msg, credit = sla_engine.evaluate_sla_claim(
+        receipt_id=receipt["receipt_id"],
+        incident_proof={"production_exit_code": 1, "incident_trace_hash": "trace_err_500_auth_fail"}
     )
-    print(f"[CLAIM 2: VALID INCIDENT] Result: {msg} | Disbursed: ${payout:,.2f}")
+    print(f"[CLAIM 2: VALID INCIDENT] Result: {msg} | Credits: ${credit:,.2f}")
     assert claimed
-    assert payout == 10_000.0
-    assert warranty_engine.reserve_pool_usd == 90_000.0
-    print("[PASS] Move 1 Bonded Execution Warranty verified 100%!")
+    assert credit == 499.0
+    print("[PASS] Enterprise Verification Commitment SLA verified 100%!")
 
 def test_ebpf_kernel_interceptor():
     print("\n" + "=" * 80)
-    print("  TESTING MOVE 3: eBPF KERNEL TRAJECTORY INTERCEPTOR (RING-0 POSIX)")
+    print("  TESTING eBPF KERNEL TRAJECTORY INTERCEPTOR (RING-0 POSIX)")
     print("=" * 80)
     
     interceptor = KernelTrajectoryInterceptor()
@@ -76,9 +77,9 @@ def test_ebpf_kernel_interceptor():
     print(f"[BLOCKED SYSCALL] {msg}")
     assert not allowed
     assert interceptor.stats["blocked_threats"] == 1
-    print("[PASS] Move 3 eBPF Kernel Interceptor verified 100%!")
+    print("[PASS] eBPF Kernel Interceptor verified 100%!")
 
 if __name__ == "__main__":
-    test_bonded_warranty()
+    test_verification_commitment_sla()
     test_ebpf_kernel_interceptor()
-    print("\n[OK] All Move 1 & Move 3 verification tests passed successfully.")
+    print("\n[OK] All Verification Commitment & eBPF tests passed successfully.")
