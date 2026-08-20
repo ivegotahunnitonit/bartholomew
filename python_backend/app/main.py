@@ -1640,6 +1640,34 @@ def run_linux_script_audit(payload: Dict[str, Any] = Body(...)):
         return {"success": False, "error": str(e)}
 
 
+@app.post("/api/stripe/webhook")
+async def stripe_webhook_endpoint(request: Request):
+    """
+    Stripe Webhook Receiver: Handles checkout.session.completed and subscription lifecycle events.
+    Verifies HMAC-SHA256 Stripe-Signature and auto-provisions API keys.
+    """
+    raw_body = await request.body()
+    sig_header = request.headers.get("Stripe-Signature", "")
+    try:
+        from app.stripe_webhook_handler import handle_stripe_webhook
+    except ImportError:
+        from stripe_webhook_handler import handle_stripe_webhook
+
+    status_code, res = handle_stripe_webhook(raw_body, sig_header)
+    if status_code != 200:
+        raise HTTPException(status_code=status_code, detail=res)
+    return res
+
+
+@app.get("/api/stripe/status")
+def stripe_status():
+    return {
+        "status": "ONLINE",
+        "webhook_endpoint": "/api/stripe/webhook",
+        "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    }
+
+
 
 
 

@@ -21,6 +21,12 @@ import hashlib
 import secrets
 from typing import Dict, Any, Optional, Tuple
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # ─── Plan Tier Lookup by Amount ───────────────────────────────────────────────
 # Matches the 3 Stripe products: Developer ($0), Pro ($49), Team ($199)
 AMOUNT_TO_TIER: Dict[int, str] = {
@@ -35,8 +41,7 @@ TIER_AUDIT_QUOTAS: Dict[str, int] = {
     "TEAM_ORG_$199": 5_000_000,
 }
 
-WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
-LEDGER_FILE    = os.getenv("SAAS_LEDGER_FILE", "saas_production_ledger.jsonl")
+LEDGER_FILE = os.getenv("SAAS_LEDGER_FILE", "saas_production_ledger.jsonl")
 
 # In-memory provisioned customer store (survives process lifetime)
 _provisioned: Dict[str, Dict[str, Any]] = {}
@@ -142,13 +147,15 @@ def _cancel_subscription(customer_email: str, stripe_subscription_id: str) -> Di
 def handle_stripe_webhook(
     raw_body: bytes,
     sig_header: str,
+    secret: Optional[str] = None,
 ) -> Tuple[int, Dict[str, Any]]:
     """
     Main entry point called by the HTTP server.
     Returns (http_status_code, response_dict).
     """
+    effective_secret = secret or os.getenv("STRIPE_WEBHOOK_SECRET", "")
     # 1. Verify signature
-    sig_ok, sig_msg = _verify_stripe_signature(raw_body, sig_header, WEBHOOK_SECRET)
+    sig_ok, sig_msg = _verify_stripe_signature(raw_body, sig_header, effective_secret)
     if not sig_ok:
         print(f"[Webhook] REJECTED: {sig_msg}")
         return 400, {"error": sig_msg}
@@ -177,7 +184,7 @@ def handle_stripe_webhook(
         tier           = _resolve_tier(amount_cents)
         record         = _provision_api_key(customer_email, tier, session_id)
 
-        print(f"[Webhook] ✅ Provisioned {tier} key for {customer_email}: {record['api_key'][:20]}...")
+        print(f"[Webhook] [OK] Provisioned {tier} key for {customer_email}: {record['api_key'][:20]}...")
         return 200, {
             "received":   True,
             "event_type": event_type,
@@ -190,7 +197,7 @@ def handle_stripe_webhook(
         customer_email      = obj.get("metadata", {}).get("email", "unknown@customer.com")
         subscription_id     = obj.get("id", "")
         record              = _cancel_subscription(customer_email, subscription_id)
-        print(f"[Webhook] ⚠️  Subscription cancelled for {customer_email}")
+        print(f"[Webhook] [INFO] Subscription cancelled for {customer_email}")
         return 200, {"received": True, "event_type": event_type, "status": "CANCELLED"}
 
     else:
