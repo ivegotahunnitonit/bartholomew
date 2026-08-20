@@ -23,6 +23,12 @@ sys.path.insert(0, os.path.abspath("pypi_package"))
 from bartholomew_eval.github_app_server import BartholomewSaaSEngine
 
 
+STRIPE_PAYMENT_LINKS = {
+    "DEVELOPER_FREE":  "https://buy.stripe.com/8x2cN518VgyC86k0qY9R602",
+    "PRO_REPO_$49":    "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600",
+    "TEAM_ORG_$199":   "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601",
+}
+
 GLOBAL_SAAS_ENGINE = BartholomewSaaSEngine(ledger_file="saas_production_ledger.jsonl")
 
 # Seed initial verified subscriptions for demo & live tracking
