@@ -8,11 +8,28 @@
 
 This challenge package contains everything necessary for an independent cryptographer, security researcher, or multi-agent engineer to evaluate, implement, or attempt to break the **Bartholomew Trust Protocol (BTP v2.2)**.
 
-> **Objective:** Attempt to falsify the BTP v2.2 security invariants or demonstrate an uncontained exploit under the threat model.
+> **Objective:** Attempt to falsify any of the 8 formal security invariants listed in the Claim Registry below under the defined threat model.
 
 ---
 
-## **2. Included Specifications & Reference Artifacts**
+## **2. Formal Security Invariant & Claim Registry**
+
+Researchers may submit proof-of-concept exploits targeting any of the following pre-registered invariant claims:
+
+| Invariant ID | Claim Title | Formal Security Guarantee |
+| :--- | :--- | :--- |
+| **`BTP-SEC-001`** | **Payload Tamper-Resistance** | A candidate payload cannot be altered by even a single bit without invalidating the RFC 8785 SHA-256 hash and Ed25519 signature. |
+| **`BTP-SEC-002`** | **Cross-Recipient Isolation** | An attestation issued for `target_recipient = B` cannot authorize execution by recipient `C` (Context Mismatch). |
+| **`BTP-SEC-003`** | **Temporal Validity Enforcement** | An attestation evaluated at `timestamp > expires_at_unix` cannot be accepted (Strict TTL Expiry). |
+| **`BTP-SEC-004`** | **Authority Pinning & Origin Authenticity** | An attestation signed by any key outside the recipient's configured `trusted_root_pubkeys` store cannot authorize an action. |
+| **`BTP-SEC-005`** | **Capability Scope Containment** | Capability scope cannot be escalated beyond the recipient's allowed policy without invalidating the attestation. |
+| **`BTP-SEC-006`** | **Semantic Policy Provenance** | An attestation's `policy_id` or `policy_hash` cannot be substituted or rolled back without invalidating the envelope signature. |
+| **`BTP-SEC-007`** | **Nonce & Replay Immunity** | An attestation bearing a previously observed `nonce` within the active TTL window cannot be replayed. |
+| **`BTP-SEC-008`** | **Offline Zero-Network Verifiability** | A conforming verifier can reach 100% deterministic authorization decisions without issuing external network calls. |
+
+---
+
+## **3. Included Specifications & Reference Artifacts**
 
 | Component | File Link | Purpose |
 | :--- | :--- | :--- |
@@ -23,17 +40,6 @@ This challenge package contains everything necessary for an independent cryptogr
 | **Go Reference Verifier** | [`btp_verifier.go`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/btp_verifier.go) | Native Go 1.26 independent verifier |
 | **Red-Team Evaluation Guide** | [`EXTERNAL_SCRUTINY_AND_REDTEAM_GUIDE.md`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/EXTERNAL_SCRUTINY_AND_REDTEAM_GUIDE.md) | Prioritized adversarial attack surfaces |
 | **Reproducibility Kit** | [`REPRODUCIBILITY_KIT.md`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/REPRODUCIBILITY_KIT.md) | Denominator accounting & 1-command reproduction steps |
-
----
-
-## **3. Top Priority Attack Surfaces for Adversarial Review**
-
-1. **Confused Deputy:** Can Agent A obtain an authorization for one action and trick Agent B into applying it to a different resource?
-2. **Authority Compromise & Revocation:** Can a recipient safely revoke a compromised root key without breaking unrelated authorities?
-3. **Capability Substitution:** Can an attacker transform `FS_WRITE_RESTRICTED` into unrestricted filesystem access?
-4. **Policy Rollback:** Can an attestation referencing an older, weaker policy be replayed after a recipient moves to a newer policy?
-5. **Version Downgrade:** Can an attacker force the verifier into accepting legacy protocol formats?
-6. **Canonicalization Disagreement:** Can two independent implementations produce different interpretations of the same JSON while accepting the signature?
 
 ---
 
@@ -58,4 +64,4 @@ go run btp_verifier.go
 
 ## **5. Vulnerability Disclosure**
 
-Submit findings, proof-of-concept scripts, or protocol ambiguities to **`help@bartholomew.info`** *(routing to `itsub@bartholomew.info`)*.
+Submit findings, proof-of-concept scripts, or protocol ambiguities to **`help@bartholomew.info`** *(routing to `itsub@bartholomew.info`)*. Reference the specific Invariant ID (e.g. `BTP-SEC-005 Broken`) in your submission for rapid triage and attribution.
