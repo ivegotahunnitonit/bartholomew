@@ -1675,10 +1675,30 @@ def stripe_status():
 @app.get("/llms.txt", response_class=HTMLResponse)
 def get_llms_txt():
     """Standard llms.txt index for AI crawlers (OpenAI, Anthropic, Gemini, Perplexity)."""
-    p = _root_workspace / "llms.txt"
-    if p.exists():
-        return p.read_text(encoding="utf-8")
-    return "# Bartholomew BTP v2.2\nSub-millisecond cryptographic execution gate for AI agents."
+    candidates = [
+        _root_workspace / "llms.txt",
+        _backend_dir / "llms.txt",
+        Path.cwd() / "llms.txt",
+        Path("/app/llms.txt")
+    ]
+    for c in candidates:
+        if c.exists():
+            return c.read_text(encoding="utf-8")
+    return """# Bartholomew Autonomous Trust Protocol (BTP v2.2)
+> The sub-millisecond cryptographic safety & execution boundary for autonomous AI agents.
+
+## Machine Discovery Endpoints
+- **Agent Manifest**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/.well-known/ai-agent-manifest.json`
+- **BTP Configuration**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/.well-known/btp-configuration.json`
+- **Live Sidecar Gateway**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/sidecar/evaluate`
+
+## Tooling & SDKs
+- **Python**: pip install btp-guard
+- **TypeScript**: npm install @bartholomew/btp-guard
+- **Go**: go get github.com/ivegotahunnitonit/bartholomew/pkg/btp
+- **MCP Server**: python -m mcp_server.server
+- **Docker Sidecar**: docker run -p 8080:8080 bartholomew/sidecar
+"""
 
 
 @app.get("/.well-known/ai-agent-manifest.json")
