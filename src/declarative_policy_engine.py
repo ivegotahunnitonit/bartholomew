@@ -30,7 +30,6 @@ class DeclarativePolicyEngine:
         if filepath.endswith(".json"):
             data = json.loads(content)
         else:
-            # Try PyYAML if installed, otherwise basic YAML parser
             try:
                 import yaml
                 data = yaml.safe_load(content)
@@ -104,7 +103,21 @@ class DeclarativePolicyEngine:
                         latency_us = (time.perf_counter() - start_us) * 1_000_000
                         return (False, message, round(latency_us, 2))
 
-            # 2. Forbidden Substrings / Regex
+            # 2. Diminishing Marginal Utility (LDMU) Check
+            elif rule_type == "diminishing_marginal_utility":
+                agent_id = payload.get("agent_id", "default_agent")
+                action_type = payload.get("action_type", "EXEC_TOOL")
+                cost_usd = float(payload.get("amount_usd", payload.get("cost_usd", 0.0)))
+                decay_rate = float(rule.get("decay_rate", 0.35))
+                min_threshold = float(rule.get("min_utility_threshold", 0.15))
+
+                from src.marginal_utility_engine import evaluate_marginal_utility
+                v, mu, r, _ = evaluate_marginal_utility(agent_id, action_type, payload, cost_usd, decay_rate, min_threshold)
+                if v in ("CO_SIGN_REQUIRED", "DENY"):
+                    latency_us = (time.perf_counter() - start_us) * 1_000_000
+                    return (False, r, round(latency_us, 2))
+
+            # 3. Forbidden Substrings / Regex
             elif rule_type == "forbidden_substrings":
                 patterns = rule.get("patterns", [])
                 for pat in patterns:
@@ -112,7 +125,7 @@ class DeclarativePolicyEngine:
                         latency_us = (time.perf_counter() - start_us) * 1_000_000
                         return (False, f"{message} (Pattern: '{pat}')", round(latency_us, 2))
 
-            # 3. Disallowed Values
+            # 4. Disallowed Values
             elif rule_type == "disallowed_values":
                 field = rule.get("field")
                 disallowed = [str(d).lower() for d in rule.get("disallowed", [])]

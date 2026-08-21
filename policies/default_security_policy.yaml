@@ -11,6 +11,14 @@ rules:
     action: "DENY"
     message: "Requested amount exceeds maximum policy threshold of $500.00"
 
+  - id: "RULE_DIMINISHING_MARGINAL_UTILITY"
+    name: "Law of Diminishing Marginal Utility Action Fatigue Limiter"
+    type: "diminishing_marginal_utility"
+    decay_rate: 0.35
+    min_utility_threshold: 0.15
+    action: "DENY"
+    message: "Diminishing marginal utility threshold breached. Repeated low-entropy actions throttled."
+
   - id: "RULE_DESTRUCTIVE_PATTERNS"
     name: "Destructive Command Filter"
     type: "forbidden_substrings"

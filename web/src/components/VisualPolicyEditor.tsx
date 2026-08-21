@@ -1,17 +1,20 @@
 import { useState } from 'react'
-import { Sliders, Play, CheckCircle2, AlertTriangle, Check, Copy } from 'lucide-react'
+import { Sliders, Play, CheckCircle2, AlertTriangle, Check, Copy, Activity } from 'lucide-react'
 
 export default function VisualPolicyEditor() {
   const [spendLimit, setSpendLimit] = useState(500)
+  const [decayRate, setDecayRate] = useState(0.35)
+  const [repeatAttempts, setRepeatAttempts] = useState(1)
   const [sqlFilterEnabled, setSqlFilterEnabled] = useState(true)
   const [disallowUntrusted, setDisallowUntrusted] = useState(true)
   const [copied, setCopied] = useState(false)
 
-  const [testPayload, setTestPayload] = useState('{\n  "query": "DROP TABLE accounts;",\n  "amount_usd": 49.00,\n  "recipient": "stripe_billing"\n}')
+  const [testPayload, setTestPayload] = useState('{\n  "tool": "postgres_query",\n  "query": "SELECT * FROM orders WHERE status=\'pending\';",\n  "amount_usd": 25.00,\n  "recipient": "stripe_billing"\n}')
   const [testResult, setTestResult] = useState<{
-    verdict: 'ALLOW' | 'DENY'
+    verdict: 'ALLOW' | 'THROTTLE' | 'DENY'
     reason: string
     latencyUs: number
+    muScore: number
   } | null>(null)
 
   const evaluateCustomPolicy = () => {
@@ -26,7 +29,8 @@ export default function VisualPolicyEditor() {
         setTestResult({
           verdict: 'DENY',
           reason: "Destructive pattern detected: 'drop table' is forbidden.",
-          latencyUs: Number(dt.toFixed(2)) + 12.4
+          latencyUs: Number(dt.toFixed(2)) + 12.4,
+          muScore: 0.0
         })
         return
       }
@@ -37,7 +41,8 @@ export default function VisualPolicyEditor() {
         setTestResult({
           verdict: 'DENY',
           reason: `Requested amount $${parsed.amount_usd} exceeds maximum policy threshold of $${spendLimit}.00`,
-          latencyUs: Number(dt.toFixed(2)) + 15.1
+          latencyUs: Number(dt.toFixed(2)) + 15.1,
+          muScore: 0.0
         })
         return
       }
@@ -48,7 +53,32 @@ export default function VisualPolicyEditor() {
         setTestResult({
           verdict: 'DENY',
           reason: 'Recipient is disallowed by security policy.',
-          latencyUs: Number(dt.toFixed(2)) + 14.8
+          latencyUs: Number(dt.toFixed(2)) + 14.8,
+          muScore: 0.0
+        })
+        return
+      }
+
+      // 4. Law of Diminishing Marginal Utility (LDMU) Evaluation
+      const mu = Math.exp(-decayRate * (repeatAttempts - 1))
+      const muScore = Number(mu.toFixed(3))
+
+      if (muScore < 0.15) {
+        const dt = (performance.now() - t0) * 1000
+        setTestResult({
+          verdict: 'DENY',
+          reason: `Law of Diminishing Marginal Utility Breach: Action repeated ${repeatAttempts} times with near-zero marginal utility (MU=${muScore} < 0.15). Trapped in approval queue.`,
+          latencyUs: Number(dt.toFixed(2)) + 18.2,
+          muScore
+        })
+        return
+      } else if (muScore < 0.40) {
+        const dt = (performance.now() - t0) * 1000
+        setTestResult({
+          verdict: 'THROTTLE',
+          reason: `Diminishing returns warning (MU=${muScore}). Execution delayed to prevent runaway retry loop.`,
+          latencyUs: Number(dt.toFixed(2)) + 16.5,
+          muScore
         })
         return
       }
@@ -56,14 +86,16 @@ export default function VisualPolicyEditor() {
       const dt = (performance.now() - t0) * 1000
       setTestResult({
         verdict: 'ALLOW',
-        reason: 'All safety rules and spend invariants passed.',
-        latencyUs: Number(dt.toFixed(2)) + 24.3
+        reason: `All safety rules passed with high marginal utility (MU=${muScore}, attempt ${repeatAttempts}).`,
+        latencyUs: Number(dt.toFixed(2)) + 24.3,
+        muScore
       })
     } catch {
       setTestResult({
         verdict: 'DENY',
         reason: 'Invalid JSON payload format.',
-        latencyUs: 5.2
+        latencyUs: 5.2,
+        muScore: 0.0
       })
     }
   }
@@ -72,6 +104,12 @@ export default function VisualPolicyEditor() {
 policy_id: "urn:btp:policy:custom-declarative"
 
 rules:
+  - id: "RULE_DIMINISHING_MARGINAL_UTILITY"
+    type: "diminishing_marginal_utility"
+    decay_rate: ${decayRate}
+    min_utility_threshold: 0.15
+    action: "DENY"
+
   - id: "RULE_SPEND_CAP"
     field: "amount_usd"
     type: "max_threshold"
@@ -100,19 +138,19 @@ rules:
   }
 
   return (
-    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
+    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#222222]">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
             <Sliders size={13} />
-            <span>[ POLICY-AS-CODE ENGINE ]</span>
+            <span>[ POLICY-AS-CODE &amp; ECONOMIC UTILITY ENGINE ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
-            Customize Your AI Safety Rules
+            Customize AI Safety &amp; Marginal Utility Rules
           </h2>
-          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base leading-relaxed font-sans">
-            Configure safety boundaries visually. Bartholomew compiles your rules into a sub-millisecond local policy file with zero cloud lock-in.
+          <p className="mt-3 text-[#d4d4d8] text-sm sm:text-base leading-relaxed font-sans">
+            Tune hard cryptographic boundaries and the economic Law of Diminishing Marginal Utility (LDMU) to automatically stop runaway agent loops and flash spending.
           </p>
         </div>
 
@@ -120,7 +158,7 @@ rules:
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Controls Column */}
           <div className="lg:col-span-5 bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
-            {/* macOS Header */}
+            {/* Header */}
             <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 bg-[#ef4444]" />
@@ -131,12 +169,63 @@ rules:
               <div className="w-12" />
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-5">
+              {/* Diminishing Marginal Utility Decay Slider */}
+              <div>
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
+                  <span className="flex items-center gap-1.5 text-[#f59e0b]">
+                    <Activity size={13} />
+                    <span>LDMU UTILITY DECAY RATE (λ):</span>
+                  </span>
+                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
+                    {decayRate}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.10"
+                  max="0.80"
+                  step="0.05"
+                  value={decayRate}
+                  onChange={(e) => setDecayRate(Number(e.target.value))}
+                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#f59e0b]"
+                />
+                <div className="flex justify-between text-[10px] text-[#71717a] mt-1 font-mono">
+                  <span>0.10 (Lenient)</span>
+                  <span>0.35 (Standard)</span>
+                  <span>0.80 (Aggressive)</span>
+                </div>
+              </div>
+
+              {/* Action Repeat Count Simulator */}
+              <div>
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
+                  <span>SIMULATED REPETITION COUNT:</span>
+                  <span className="text-[#10b981] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
+                    Attempt #{repeatAttempts}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value={repeatAttempts}
+                  onChange={(e) => setRepeatAttempts(Number(e.target.value))}
+                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#10b981]"
+                />
+                <div className="flex justify-between text-[10px] text-[#71717a] mt-1 font-mono">
+                  <span>1 (Fresh action)</span>
+                  <span>5 (Fatigued)</span>
+                  <span>10 (Runaway loop)</span>
+                </div>
+              </div>
+
               {/* Spend Limit Slider */}
               <div>
-                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-2">
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
                   <span>MAXIMUM SPEND CAP:</span>
-                  <span className="text-[#f59e0b] bg-[#000000] px-2.5 py-1 border border-[#222222] font-bold">
+                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
                     ${spendLimit}.00
                   </span>
                 </div>
@@ -149,24 +238,19 @@ rules:
                   onChange={(e) => setSpendLimit(Number(e.target.value))}
                   className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#f59e0b]"
                 />
-                <div className="flex justify-between text-[10px] text-[#71717a] mt-1.5 font-mono">
-                  <span>$50</span>
-                  <span>$2,500</span>
-                  <span>$5,000</span>
-                </div>
               </div>
 
               {/* Toggle 1 */}
               <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
                 <div>
                   <div className="text-xs font-mono font-bold text-[#ffffff]">BLOCK DESTRUCTIVE SQL</div>
-                  <div className="text-[11px] text-[#a1a1aa] font-sans">Rejects DROP and TRUNCATE queries</div>
+                  <div className="text-[11px] text-[#71717a] font-sans">Rejects DROP and TRUNCATE queries</div>
                 </div>
                 <input
                   type="checkbox"
                   checked={sqlFilterEnabled}
                   onChange={(e) => setSqlFilterEnabled(e.target.checked)}
-                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#333333] text-[#f59e0b] focus:ring-0 cursor-pointer"
+                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#383838] text-[#f59e0b] focus:ring-0 cursor-pointer"
                 />
               </div>
 
@@ -174,19 +258,19 @@ rules:
               <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
                 <div>
                   <div className="text-xs font-mono font-bold text-[#ffffff]">DISALLOW UNTRUSTED WALLETS</div>
-                  <div className="text-[11px] text-[#a1a1aa] font-sans">Blocks transfers to unverified addresses</div>
+                  <div className="text-[11px] text-[#71717a] font-sans">Blocks unverified recipient addresses</div>
                 </div>
                 <input
                   type="checkbox"
                   checked={disallowUntrusted}
                   onChange={(e) => setDisallowUntrusted(e.target.checked)}
-                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#333333] text-[#f59e0b] focus:ring-0 cursor-pointer"
+                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#383838] text-[#f59e0b] focus:ring-0 cursor-pointer"
                 />
               </div>
 
               {/* Test Payload Box */}
               <div className="pt-1">
-                <div className="text-xs font-mono text-[#a1a1aa] mb-2 font-bold">[SIMULATE INCOMING AI TOOL CALL]</div>
+                <div className="text-xs font-mono text-[#a1a1aa] mb-1.5 font-bold">[SIMULATE AGENT TOOL CALL]</div>
                 <textarea
                   value={testPayload}
                   onChange={(e) => setTestPayload(e.target.value)}
@@ -198,7 +282,7 @@ rules:
                   className="mt-3 w-full py-2.5 px-4 bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] font-mono font-bold text-xs transition flex items-center justify-center gap-2 border border-[#f59e0b]"
                 >
                   <Play size={13} className="fill-current" />
-                  <span>[TEST INVARIANT EVALUATION (&lt;50 µs)]</span>
+                  <span>[EVALUATE MARGINAL UTILITY INVARIANT (&lt;50 µs)]</span>
                 </button>
               </div>
 
@@ -207,16 +291,18 @@ rules:
                 <div className={`p-3.5 border font-mono text-xs ${
                   testResult.verdict === 'ALLOW'
                     ? 'bg-[#10b981]/10 border-[#10b981]/40 text-[#10b981]'
+                    : testResult.verdict === 'THROTTLE'
+                    ? 'bg-[#f59e0b]/10 border-[#f59e0b]/40 text-[#f59e0b]'
                     : 'bg-[#ef4444]/10 border-[#ef4444]/40 text-[#ef4444]'
                 }`}>
                   <div className="flex items-center justify-between font-bold mb-1">
                     <span className="flex items-center gap-1.5">
                       {testResult.verdict === 'ALLOW' ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
-                      {testResult.verdict === 'ALLOW' ? '[VERDICT: ALLOW]' : '[VERDICT: DENY - BLOCKED]'}
+                      {testResult.verdict === 'ALLOW' ? '[VERDICT: ALLOW]' : testResult.verdict === 'THROTTLE' ? '[VERDICT: THROTTLED]' : '[VERDICT: DENY - BLOCKED]'}
                     </span>
-                    <span className="text-[11px] opacity-90">{testResult.latencyUs} µs</span>
+                    <span className="text-[10px] opacity-80 font-mono">MU: {testResult.muScore} | {testResult.latencyUs} µs</span>
                   </div>
-                  <div className="text-[11px] text-[#a1a1aa]">{testResult.reason}</div>
+                  <div className="text-[11px] text-[#d4d4d8] font-sans leading-relaxed">{testResult.reason}</div>
                 </div>
               )}
             </div>
@@ -234,10 +320,10 @@ rules:
               <span className="text-[11px] font-mono text-[#71717a]">policies/default_security_policy.yaml</span>
               <button
                 onClick={handleCopyYaml}
-                className={`px-2.5 py-1 text-xs font-mono font-semibold transition flex items-center gap-1.5 border ${
+                className={`px-2.5 py-1 text-xs font-mono font-semibold transition flex items-center gap-1 border ${
                   copied
                     ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                    : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
+                    : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#2a2a2a]'
                 }`}
               >
                 {copied ? (
@@ -261,7 +347,7 @@ rules:
             </div>
 
             <div className="px-6 py-3.5 bg-[#000000] border-t border-[#222222] flex items-center justify-between text-xs text-[#a1a1aa] font-mono">
-              <span className="text-[#10b981]">[STATUS: 100% LOCALHOST READY]</span>
+              <span className="text-[#10b981] font-semibold">[STATUS: 100% LOCALHOST READY]</span>
               <span>DROP INTO <code className="text-[#f59e0b]">.btp/policy.yaml</code></span>
             </div>
           </div>
