@@ -3,825 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew — Autonomous Circularity Network</title>
-  <meta name="description" content="Bartholomew ACN Node — manage circular economy listings, matches, wallet settlements, and cognitive agents.">
+  <title>Bartholomew Operator Portal — Local Daemon Controller</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-black: #000000;
+      --bg-card: #0a0a0a;
+      --border-subtle: #222222;
+      --border-hover: #383838;
+      --text-white: #ffffff;
+      --text-zinc: #d4d4d8;
+      --text-muted: #71717a;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-zinc);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Top Bar */
+    header {
+      background: #000000;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      color: var(--text-white);
+      font-size: 1rem;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Layout */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+      main { grid-template-columns: 8fr 4fr; }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .card-header {
+      background: #000000;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+    }
+    .card-body { padding: 1.25rem; }
+
+    /* Stats Grid */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 1rem 1.25rem;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--text-white); }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; }
+    th { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); }
+    td { padding: 0.75rem; border-bottom: 1px solid #141414; }
+    tr:hover { background: #000000; }
+
+    /* Box Badges */
+    .tag-allow { color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); padding: 0.15rem 0.4rem; font-weight: 700; }
+    .tag-deny { color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); padding: 0.15rem 0.4rem; font-weight: 700; }
+    .tag-pending { color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.1); padding: 0.15rem 0.4rem; font-weight: 700; }
+
+    /* Buttons */
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn-amber { background: var(--accent-amber); color: #000000; border-color: var(--accent-amber); }
+    .btn-amber:hover { background: #d97706; }
+    .btn-emerald { background: var(--accent-emerald); color: #000000; border-color: var(--accent-emerald); }
+    .btn-red { background: var(--accent-red); color: #ffffff; border-color: var(--accent-red); }
+    .btn-dark { background: #000000; color: var(--text-zinc); border-color: var(--border-subtle); }
+    .btn-dark:hover { border-color: #444444; color: #ffffff; }
+
+    /* Approval Card */
+    .approval-item {
+      background: #000000;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- LEFT SIDEBAR NAV                                               -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <!-- Bartholomew B monogram -->
-        <rect x="4" y="3" width="2" height="18" rx="1"/>
-        <path d="M6 3 h6 a4 4 0 0 1 0 8 H6"/>
-        <path d="M6 11 h7 a4 4 0 0 1 0 8 H6"/>
+  <!-- Top Bar -->
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+        <path d="M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z" fill="#f59e0b" />
+        <path d="M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z" fill="#000000" stroke="#222222" />
+        <path d="M13 10.5H18.8C20.8 10.5 22.3 11.6 22.3 13.2C22.3 14.4 21.4 15.3 20.1 15.7C21.7 16.1 22.8 17.2 22.8 18.9C22.8 20.8 21.1 22.2 18.8 22.2H13V10.5ZM16.2 12.6V15.1H18.4C19.3 15.1 20 14.5 20 13.8C20 13.1 19.3 12.6 18.4 12.6H16.2ZM16.2 17.2V20.1H18.6C19.7 20.1 20.5 19.4 20.5 18.6C20.5 17.8 19.7 17.2 18.6 17.2H16.2Z" fill="#ffffff" />
       </svg>
-      <div>
-        <div class="sidebar-logo-title">Bartholomew</div>
-        <div class="sidebar-logo-sub">ACN Node v1.0</div>
-      </div>
+      <span>Bartholomew Operator Portal</span>
     </div>
 
-    <div class="sidebar-status">
-      <span class="status-dot"></span>
-      <span class="sidebar-node-id" id="sidebar-node-id">CONNECTING...</span>
-    </div>
-
-    <ul class="sidebar-nav">
-      <li><a href="#dashboard"   class="nav-link active" data-page="dashboard"   id="nav-dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Circularity Command
-      </a></li>
-      <li><a href="#marketplace" class="nav-link" data-page="marketplace" id="nav-marketplace">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        Resource Marketplace
-      </a></li>
-      <li><a href="#matches"     class="nav-link" data-page="matches"     id="nav-matches">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Circular Matches
-        <span class="nav-badge d-none" id="nav-matches-badge">0</span>
-      </a></li>
-      <li><a href="#wallet"      class="nav-link" data-page="wallet"      id="nav-wallet">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
-        Bartholomew Treasury
-      </a></li>
-      <li><a href="#network"     class="nav-link" data-page="network"     id="nav-network">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="20" r="2"/></svg>
-        P2P Peering Hub
-      </a></li>
-    </ul>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-stat">
-        <span class="sf-label">Earnings</span>
-        <span class="sf-value" id="sf-earnings">$0.00</span>
+    <div style="display:flex; align-items:center; gap: 0.75rem;">
+      <div class="status-badge font-mono" id="conn-status">
+        <span class="pulse-dot" id="conn-dot"></span>
+        <span id="conn-text" style="color: var(--accent-emerald);">[DAEMON: CONNECTED]</span>
       </div>
-      <div class="sidebar-stat">
-        <span class="sf-label">Savings</span>
-        <span class="sf-value" id="sf-savings">$0.00</span>
+      <a href="https://bartholomew.info" target="_blank" class="btn btn-dark font-mono">[WEBSITE]</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div style="max-width: 1400px; margin: 1.5rem auto 0; padding: 0 1.5rem; width: 100%;">
+    <!-- Telemetry Metric Chips -->
+    <div class="stats-bar font-mono">
+      <div class="stat-box">
+        <div class="stat-label">[TOTAL EVALUATIONS]</div>
+        <div class="stat-val" id="stat-total">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">[ALLOWED]</div>
+        <div class="stat-val" style="color: var(--accent-emerald);" id="stat-allowed">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">[INTERCEPTED / BLOCKED]</div>
+        <div class="stat-val" style="color: var(--accent-red);" id="stat-blocked">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">[AVERAGE LATENCY]</div>
+        <div class="stat-val" style="color: var(--accent-amber);" id="stat-latency">&lt;40 µs</div>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- MAIN CONTENT AREA                                              -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <div class="main-content">
-
-    <!-- Top Bar -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <h2 class="page-title" id="page-title">Command Center</h2>
-        <span class="page-breadcrumb" id="page-breadcrumb">ACN / Dashboard</span>
-      </div>
-      <div class="topbar-right">
-        <div class="topbar-stat">
-          <span class="ts-label">Listings</span>
-          <span class="ts-val" id="stat-listings">0</span>
+  <main>
+    <!-- Left Column: Live Event Stream Table -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+      <div class="card">
+        <div class="card-header font-mono">
+          <span style="color: var(--text-white); font-weight:700;">[LIVE CRYPTOGRAPHIC INTERCEPTION STREAM]</span>
+          <span style="color: var(--text-muted);">RFC 8785 + Ed25519</span>
         </div>
-        <div class="topbar-stat">
-          <span class="ts-label">Pending</span>
-          <span class="ts-val" id="stat-pending-earnings">$0.00</span>
-        </div>
-        <div class="node-status-pill">
-          <span class="status-dot"></span>
-          <span id="header-node-id">CONNECTING...</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- ─────────────────────────────────── PAGE: COMMAND CENTER ─── -->
-    <section class="page active" id="page-dashboard">
-      <!-- Stats Row -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Total Earnings</span>
-            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <div class="stat-value" id="stat-earnings">$0.00</div>
-          <div class="stat-sub">Confirmed settlements</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Resource Savings</span>
-            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
-          <div class="stat-value" id="stat-savings">$0.00</div>
-          <div class="stat-sub">Circular economy value</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Active Matches</span>
-            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          </div>
-          <div class="stat-value" id="stat-matches">0</div>
-          <div class="stat-sub">Proposed &amp; awaiting settlement</div>
-        </div>
-      </div>
-
-      <!-- Quick-action row -->
-      <div class="quick-actions">
-        <button class="btn btn-secondary" onclick="navigateTo('wallet')">Open Ledger</button>
-      </div>
-
-      <!-- Node Configuration -->
-      <div class="panel mb-panel">
-        <div class="panel-header">
-          <h2>Node Operational Control</h2>
-          <span class="badge">Active</span>
-        </div>
-        <div class="panel-content panel-grid-2">
-          <div class="form-group form-group-compact">
-            <label for="intake-mode" class="lbl-compact">Marketplace Intake Mode</label>
-            <select id="intake-mode" onchange="saveIntakeMode()" class="w-full">
-              <option value="manual">Manual Approval (Strict)</option>
-              <option value="hybrid">Hybrid (Auto-Scout opportunities)</option>
-            </select>
-          </div>
-          <div class="form-group form-group-flex">
-            <div>
-              <label class="lbl-compact">Auto-Settle Matches</label>
-              <p class="txt-sub">Automatically execute payout settlement upon accepting matches.</p>
-            </div>
-            <label class="paypal-toggle">
-              <input type="checkbox" id="paypal-auto-settle" onchange="toggleAutoSettle()" aria-label="Auto-Settle on Match">
-              <span class="paypal-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- API Credentials & Billing Gating -->
-      <div class="panel mb-panel d-none">
-        <div class="panel-header">
-          <h2>Bartholomew API Access Gate</h2>
-          <span class="badge" id="api-keys-badge">0 Keys</span>
-        </div>
-        <div class="panel-content">
-          <p class="lbl-compact mb-sub">
-            Generate cryptographic API keys for external startups or client applications querying Bartholomew pricing trend intelligence.
-          </p>
-          <div class="flex-gap-1">
-            <input type="text" id="api-key-label" placeholder="Enter key description (e.g. Acme Corp)" class="input-clean">
-            <button class="btn btn-primary" onclick="generateApiKey()">Generate Key</button>
-          </div>
-          <table class="table-clean">
+        <div class="card-body" style="padding:0; overflow-x:auto;">
+          <table>
             <thead>
-              <tr>
-                <th class="th-clean">Label</th>
-                <th class="th-clean">API Key</th>
-                <th class="th-clean">Created</th>
-                <th class="th-clean">Queries</th>
-                <th class="th-clean-r">Actions</th>
+              <tr class="font-mono">
+                <th>TIME</th>
+                <th>AGENT ID</th>
+                <th>ACTION</th>
+                <th>VERDICT</th>
+                <th>LATENCY</th>
+                <th>DIGITAL SIGNATURE</th>
               </tr>
             </thead>
-            <tbody id="api-keys-table-body">
+            <tbody id="stream-table" class="font-mono">
               <tr>
-                <td colspan="5" class="td-empty">No active API credentials found.</td>
+                <td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                  Waiting for incoming AI tool calls on 127.0.0.1:8080...
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Network Traffic Monitor -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2>Network Health</h2>
-          <span class="badge">Live</span>
+      <!-- Quick Test Dispatcher -->
+      <div class="card">
+        <div class="card-header font-mono">
+          <span style="color: var(--accent-amber); font-weight:700;">[DISPATCH TEST AGENT INTENT TO LOCAL DAEMON]</span>
+          <button class="btn btn-amber" onclick="sendTestPayload()">[EXECUTE &lt;50 µs SCAN]</button>
         </div>
-        <div class="panel-content">
-          <div class="network-traffic-monitor">
-            <div><span class="traffic-light green"></span> gossip route alpha-beta: online</div>
-            <div><span class="traffic-light green"></span> gossip route alpha-gamma: online</div>
-            <div><span class="traffic-light green"></span> gossip route gamma-delta: online</div>
-            <!-- Solana RPC archived/disabled -->
-            <div><span class="traffic-light green"></span> blockchain rpc: Base L2 reachable</div>
-          </div>
+        <div class="card-body">
+          <textarea id="test-intent" class="font-mono" style="width:100%; height:90px; background:#000; border:1px solid var(--border-subtle); color:var(--accent-amber); padding:0.75rem; font-size:0.75rem; resize:none;">{
+  "agent_id": "desktop-claude-agent",
+  "action_type": "EXEC_COMMAND",
+  "payload": {
+    "command": "DROP TABLE transactions;"
+  }
+}</textarea>
         </div>
-      </div>
-    </section>
-
-
-
-    <!-- ─────────────────────────────────── PAGE: MARKETPLACE ─── -->
-    <section class="page" id="page-marketplace">
-      <div class="workspace-layout">
-        <!-- Listings Table -->
-        <div class="primary-column">
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Active Listings</h2>
-              <span class="badge" id="listings-badge">0</span>
-            </div>
-            <div class="panel-content">
-              <div class="listings-table-container">
-                <table class="data-table" id="listings-table">
-                  <thead>
-                    <tr>
-                      <th>Type</th>
-                      <th>Resource</th>
-                      <th>Qty</th>
-                      <th>Price/Unit</th>
-                      <th>Location</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="listings-tbody">
-                    <tr><td colspan="6" class="text-center"><div class="empty-state">No listings yet.</div></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Listing Form -->
-        <div class="sidebar-column">
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Post Listing</h2>
-            </div>
-            <div class="panel-content">
-              <form class="form-container" id="listing-form">
-                <div class="form-group">
-                  <label for="listing-type">Type</label>
-                  <select id="listing-type" name="type" required>
-                    <option value="waste">Waste (Have)</option>
-                    <option value="need">Need (Want)</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="listing-resource">Resource Name</label>
-                  <input type="text" id="listing-resource" name="resource" placeholder="e.g. Spent Brewer Grain" required>
-                </div>
-                <div class="form-group-row">
-                  <div class="form-group">
-                    <label for="listing-quantity">Quantity</label>
-                    <input type="number" id="listing-quantity" name="quantity" placeholder="500" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="listing-unit">Unit</label>
-                    <input type="text" id="listing-unit" name="unit" placeholder="kg" required>
-                  </div>
-                </div>
-                 <div class="form-group">
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-
-        <!-- Column 2: Withdrawal Actions & Sweeps -->
-        <div class="gap-1-5">
-          <div class="paypal-card paypal-card-withdraw m-0">
-            <div class="paypal-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-              Manual Withdrawal
-            </div>
-            <div class="paypal-form-group">
-              <label for="paypal-amount">Amount (USD)</label>
-              <div class="paypal-input-row">
-                <span class="paypal-currency-sign">$</span>
-                <input type="number" id="paypal-amount" placeholder="0.00" min="0.01" step="0.01">
-              </div>
-            </div>
-            <div class="paypal-form-group">
-              <label for="paypal-method">Withdrawal Method</label>
-              <select id="paypal-method">
-                <option value="paypal">PayPal</option>
-                <option value="electrum">Newton Wallet (Bitcoin)</option>
-              </select>
-            </div>
-            <button class="btn btn-paypal" id="btn-paypal-withdraw" onclick="handlePayPalWithdraw()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 21h2l1.5-7H15c3.5 0 5.5-2.5 6-5.5S19.5 3 16 3H9L7 21z"/></svg>
-              Withdraw Now
-            </button>
-            <div class="paypal-status" id="paypal-status"></div>
-          </div>
-
-          <!-- Auto-Withdraw Card -->
-          <div class="paypal-card paypal-card-auto m-0">
-            <div class="paypal-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-              Auto-Withdraw Settings
-            </div>
-            <p class="paypal-auto-desc">Automatically sweep confirmed balance to Newton BTC wallet when earnings exceed the threshold.</p>
-            
-            <div class="paypal-toggle-row">
-              <span>Enable Auto-Withdraw</span>
-              <label class="paypal-toggle">
-                <input type="checkbox" id="auto-withdraw-enabled" onchange="saveAutoWithdrawSettings()" aria-label="Enable Auto-Withdraw">
-                <span class="paypal-toggle-slider"></span>
-              </label>
-            </div>
-
-            <div class="paypal-form-group mt-1-l">
-              <label for="auto-withdraw-method" class="lbl-form">Withdrawal Destination</label>
-              <select id="auto-withdraw-method" onchange="saveAutoWithdrawSettings()" aria-label="Auto-Withdraw Method">
-                <option value="electrum">Newton BTC Wallet</option>
-                <option value="paypal">PayPal Payout</option>
-              </select>
-            </div>
-
-            <div class="paypal-form-group mt-0-75-l">
-              <label for="auto-withdraw-threshold" class="lbl-form">Threshold (USD)</label>
-              <div class="paypal-input-row">
-                <span class="paypal-currency-sign cur-sign">$</span>
-                <input type="number" id="auto-withdraw-threshold" value="10.00" min="0.10" step="0.50" onchange="saveAutoWithdrawSettings()" class="w-full">
-              </div>
-            </div>
-            <div class="paypal-status" id="auto-withdraw-status"></div>
-          </div>
-
-          <!-- PayPal API Credentials Card -->
-          <div class="paypal-card m-0">
-            <div class="paypal-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-              PayPal Payout Settings
-            </div>
-            <p class="paypal-auto-desc">Configure your PayPal API credentials to enable fiat withdrawals.</p>
-            
-            <div class="paypal-form-group mt-0-75-l">
-              <label for="paypal-me-link" class="lbl-form">PayPal.me Link (Optional)</label>
-              <input type="text" id="paypal-me-link" placeholder="paypal.me/yourname" class="input-form">
-            </div>
-
-            <div class="paypal-form-group mt-0-75-l">
-              <label for="paypal-client-id" class="lbl-form">Client ID</label>
-              <input type="password" id="paypal-client-id" placeholder="Enter PayPal Client ID" class="input-form">
-            </div>
-
-            <div class="paypal-form-group mt-0-75-l">
-              <label for="paypal-client-secret" class="lbl-form">Client Secret</label>
-              <input type="password" id="paypal-client-secret" placeholder="Enter PayPal Client Secret" class="input-form">
-            </div>
-
-            <button class="btn btn-primary w-full mt-1-l" onclick="savePayPalSettings()">Save Credentials</button>
-            <div class="paypal-status mt-sub-sm-2" id="paypal-settings-status"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Ledger & Withdrawal History -->
-      <div class="grid-2-1">
-        
-        <!-- Transaction Ledger -->
-        <div class="panel m-0">
-          <div class="panel-header">
-            <h2>Settlement Ledger</h2>
-            <div class="tab-bar">
-              <button class="tab-btn active" onclick="switchLedgerTab('all', this)">All</button>
-              <button class="tab-btn" onclick="switchLedgerTab('confirmed', this)">Confirmed</button>
-              <button class="tab-btn" onclick="switchLedgerTab('pending', this)">Pending</button>
-              <button class="tab-btn" onclick="switchLedgerTab('failed', this)">Failed</button>
-            </div>
-          </div>
-          <div class="panel-content scrollable scroll-panel" id="transactions-container">
-            <div class="empty-state">No transactions recorded yet.</div>
-          </div>
-        </div>
-
-        <!-- Withdrawal History Panel -->
-        <div class="panel m-0">
-          <div class="panel-header">
-            <h2>Withdrawals History</h2>
-            <span class="badge">Recent</span>
-          </div>
-          <div class="panel-content scrollable scroll-panel" id="paypal-history-container">
-            <div class="empty-state">No withdrawals recorded yet.</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ────────────────────────────── PAGE: ORCHESTRATOR & MINERS ─── -->
-    <section class="page" id="page-orchestrator">
-      
-      <!-- Combined Mining & Cluster Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Cluster Sub-Nodes</span>
-            <span class="badge badge-blue" id="orchestrator-active-count">0 Nodes</span>
-          </div>
-          <div class="stat-value" id="orchestrator-nodes-count">0</div>
-          <div class="stat-sub">Sprouted active peer processes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Avg Peer Connections</span>
-            <span class="badge badge-green" id="miner-proxy-status">Supernode</span>
-          </div>
-          <div class="stat-value" id="orchestrator-avg-peers">0</div>
-          <div class="stat-sub">Active connections across cluster</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Facilitated Matches</span>
-            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <div class="stat-value" id="orchestrator-total-matches">0</div>
-          <div class="stat-sub">Matches computed by cluster</div>
-        </div>
-      </div>
-
-      <div class="grid-2-1">
-        
-        <!-- Governing Body Controller -->
-        <div class="panel m-0">
-          <div class="panel-header">
-            <h2>Governing Cluster Controller</h2>
-            <div class="flex-gap-10">
-              <input type="number" id="spawn-port-input" placeholder="Port (e.g. 8081)" class="input-port" aria-label="Spawn Peer Node Port" />
-              <button class="btn btn-primary" onclick="handleSpawnSubNode()">+ Spawn Peer Node</button>
-            </div>
-          </div>
-          <div class="panel-content scrollable scroll-panel">
-            <table class="table table-clean">
-              <thead>
-                <tr class="th-header">
-                  <th class="td-cell">Node ID / PID</th>
-                  <th class="td-cell">Port</th>
-                  <th class="td-cell">Status</th>
-                  <th class="td-cell">Peers</th>
-                  <th class="td-cell">Listings</th>
-                  <th class="td-cell">Matches</th>
-                  <th class="td-cell">Uptime</th>
-                  <th class="td-cell th-header-r">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="cluster-nodes-tbody">
-                <tr>
-                  <td colspan="8" class="td-cell-empty">No sub-nodes spawned yet. Enter a port and click Spawn Peer Node!</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Hashing Proxy Outsourcing -->
-        <div class="gap-1-5">
-          <div class="paypal-card m-0">
-            <div class="paypal-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
-              Stratum Proxy Server
-            </div>
-            <p class="stratum-desc">
-              Node A runs an active Stratum Proxy on port <strong id="miner-proxy-address">7914</strong>. External mobile or IoT mining hardware can connect directly to pool hashing power.
-            </p>
-            <div class="stratum-box">
-              <strong>Host:</strong> <code id="mining-ip-display">localhost</code><br>
-              <strong>Port:</strong> <code id="mining-port-display">7914</code><br>
-              <strong>Worker:</strong> <code>sleepywoody</code>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ──────────────────────────────── PAGE: P2P NETWORK ─── -->
-    <section class="page" id="page-network">
-      <div class="workspace-layout">
-        <div class="primary-column">
-          <!-- Gossip Console -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>P2P Peering Hub</h2>
-              <span class="badge">Live Feed</span>
-            </div>
-            <div class="panel-content">
-              <div class="console-container" id="console-container">
-                <div class="console-line">
-                  <span class="console-timestamp">[--:--:--]</span>
-                  <span class="console-category system">SYSTEM</span>
-                  <span class="console-message">P2P console initializing...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sidebar-column">
-          <!-- Peer Connections -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Connected Peers</h2>
-              <span class="badge" id="peers-badge">0</span>
-            </div>
-            <div class="panel-content">
-              <form class="peer-connect-row" id="peer-connect-form">
-                <input type="text" id="peer-url" placeholder="http://peer-node:8080" />
-                <button type="submit" class="btn btn-secondary">Connect</button>
-              </form>
-              <div class="peers-list" id="peers-container">
-                <div class="empty-state">No peers connected.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ──────────────────────────────────── PAGE: SETTINGS ─── -->
-    <section class="page" id="page-settings">
-      <div class="workspace-layout">
-        <div class="primary-column">
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Node Configuration</h2>
-            </div>
-            <div class="panel-content">
-              <table class="explorer-details-table">
-                <tr><td>Node ID</td><td id="settings-node-id">-</td></tr>
-                <tr><td>Port</td><td id="settings-port">-</td></tr>
-                <tr><td>Latitude</td><td id="settings-lat">-</td></tr>
-                <tr><td>Longitude</td><td id="settings-lng">-</td></tr>
-                <tr><td>Max Radius</td><td id="settings-radius">-</td></tr>
-                <tr><td>Fee Rate</td><td id="settings-fee">-</td></tr>
-                <tr><td>Auto-Accept</td><td id="settings-autoaccept">-</td></tr>
-                <tr><td>Auto-Accept Threshold</td><td id="settings-threshold">-</td></tr>
-              </table>
-            </div>
-          </div>
-
-          <div class="panel mt-panel">
-            <div class="panel-header">
-              <h2>Opportunity Pipeline Config</h2>
-            </div>
-            <div class="panel-content">
-              <div class="form-group mb-form">
-                <label for="settings-intake-mode">Scout Intake Mode</label>
-                <select id="settings-intake-mode" class="form-select w-full select-dark">
-                  <option value="autonomous">Autonomous (Unlimited Intake)</option>
-                  <option value="balanced">Balanced (Basic Filtering + Pacing)</option>
-                  <option value="hybrid">Hybrid Priority (ROI + Circularity Logic)</option>
-                </select>
-                <p class="lbl-caps">
-                  Hybrid mode rejects low-ROI tasks and focuses compute power on sustainable, high-matching feedstocks.
-                </p>
-                <button class="btn btn-sm btn-primary mt-sub-sm-2" onclick="updateIntakeMode()">Apply Intake Settings</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel mt-panel">
-            <div class="panel-header">
-              <h2>Node Operating Mode</h2>
-            </div>
-            <div class="panel-content">
-              <div class="form-group mb-form">
-                <label for="settings-network-mode">Operating Network Mode</label>
-                <select id="settings-network-mode" class="form-select w-full select-dark">
-                  <option value="sandbox">Sandbox (Simulated Payouts)</option>
-                  <option value="mainnet" selected>Mainnet (Live On-Chain Mode)</option>
-                </select>
-                <p class="lbl-caps">
-                  Mainnet mode performs real-time queries for wallet balances and validates transactions using public RPC layers.
-                </p>
-                <button class="btn btn-sm btn-primary mt-sub-sm-2" onclick="updateNetworkMode()">Set Mode</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel mt-panel">
-            <div class="panel-header">
-              <h2>Pipeline Diagnostics</h2>
-              <span class="badge">Stats</span>
-            </div>
-            <div class="panel-content">
-              <table class="explorer-details-table">
-                <tr><td>Analyzed Opportunities</td><td id="diag-processed">0</td></tr>
-                <tr><td>Filtered (Rejected)</td><td id="diag-filtered" class="txt-red">0</td></tr>
-                <tr><td>Converted Listings</td><td id="diag-converted" class="txt-green">0</td></tr>
-                <tr><td>Conversion Rate</td><td id="diag-rate">0.0%</td></tr>
-              </table>
-              <h3 class="txt-sub-h3">Intake Breakdown</h3>
-              <table class="explorer-details-table">
-                <thead>
-                  <tr class="th-header"><th class="th-sub-pad">Stream</th><th class="th-sub-pad">Analyzed</th><th class="th-sub-pad">Filtered</th><th class="th-sub-pad">Converted</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Tasks</td><td id="diag-tasks-processed">0</td><td id="diag-tasks-filtered">0</td><td id="diag-tasks-converted">0</td></tr>
-                  <tr><td>Materials</td><td id="diag-materials-processed">0</td><td id="diag-materials-filtered">0</td><td id="diag-materials-converted">0</td></tr>
-                  <tr><td>Challenges</td><td id="diag-challenges-processed">0</td><td id="diag-challenges-filtered">0</td><td id="diag-challenges-converted">0</td></tr>
-                  <tr><td>Compute</td><td id="diag-compute-processed">0</td><td id="diag-compute-filtered">0</td><td id="diag-compute-converted">0</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="sidebar-column">
-          <div class="panel">
-            <div class="panel-header"><h2>Wallet Overrides</h2></div>
-            <div class="panel-content">
-              <p class="lbl-caps-sm">
-                To use real withdrawable addresses, add these to your <code>.env</code> file and restart the node:
-              </p>
-              <div class="form-group mb-sub d-none">
-                <label>SOLANA_WALLET_ADDRESS</label>
-                <input type="text" placeholder="Your real Solana address" id="settings-sol-override" readonly>
-              </div>
-              <div class="form-group">
-                <label>BASE_WALLET_ADDRESS</label>
-                <input type="text" placeholder="Your real Base L2 / ETH address" id="settings-base-override" readonly>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel mt-panel">
-            <div class="panel-header">
-              <h2>On-Chain Balances</h2>
-              <span class="badge badge-green" id="settings-network-badge">Mainnet</span>
-            </div>
-            <div class="panel-content">
-              <table class="explorer-details-table">
-                 <tr class="d-none"><td>Solana Wallet</td><td id="balance-real-sol" class="txt-green">0.0000 SOL</td></tr>
-                <tr><td>Base L2 Wallet</td><td id="balance-real-base" class="txt-green">0.0000 ETH</td></tr>
-                <tr><td>Bitcoin Wallet (Electrum)</td><td id="balance-real-btc" class="txt-green">0.0000 BTC</td></tr>
-              </table>
-              <p class="lbl-caps-sm mt-sub-sm-2">
-                * Live balances fetched from public mainnet RPC nodes and Blockstream API.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /main-content -->
-
-
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- MODALS                                                         -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-
-  <!-- MODAL: Payment Settlement -->
-  <div class="modal-overlay" id="payment-modal">
-    <div class="modal-content-panel modal-sm">
-      <div class="modal-title-bar">
-        <h3>Settle Match Contract</h3>
-        <button class="btn-close-modal" onclick="closeModal('payment-modal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Step tracker -->
-        <div class="payment-step-tracker">
-          <div class="payment-step active" id="step-node-1">
-            <div class="step-number">1</div><span>Select Network</span>
-          </div>
-          <div class="payment-step" id="step-node-2">
-            <div class="step-number">2</div><span>Broadcast</span>
-          </div>
-          <div class="payment-step" id="step-node-3">
-            <div class="step-number">3</div><span>Confirm</span>
-          </div>
-        </div>
-
-        <!-- Summary -->
-        <div class="payment-summary-block">
-          <div class="summary-row"><span>Net Savings:</span><strong id="modal-savings-usd">$0.00</strong></div>
-          <div class="summary-row total-fee"><span>Circularity Fee:</span><strong id="modal-fee-usd">$0.00</strong></div>
-          <div class="summary-row" id="modal-crypto-conv-row">
-            <span>Token Value:</span><strong id="modal-crypto-value">0.00</strong>
-          </div>
-        </div>
-
-        <!-- Network selector -->
-        <div id="network-selectors-container">
-          <div class="payment-network-selector">
-            <div class="network-select-btn active" id="net-btn-lightning" onclick="selectNetwork('lightning')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              Lightning
-            </div>
-            <div class="network-select-btn d-none" id="net-btn-solana" onclick="selectNetwork('solana')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-              Solana
-            </div>
-            <div class="network-select-btn" id="net-btn-base" onclick="selectNetwork('base')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4.5v9L12 20l-9-4.5v-9L12 2z"/></svg>
-              Base L2
-            </div>
-            <div class="network-select-btn" id="net-btn-bitcoin" onclick="selectNetwork('bitcoin')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2H7v7h2.5M7 9h3a2 2 0 0 1 0 4H7m0 0h3.5a2 2 0 0 1 0 4H7m0-4v4m0-11V2"/></svg>
-              Bitcoin
-            </div>
-            <div class="network-select-btn" id="net-btn-paypal" onclick="selectNetwork('paypal')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
-              PayPal
-            </div>
-          </div>
-        </div>
-
-        <!-- Invoice display -->
-        <div class="invoice-display-container d-none" id="invoice-display-block">
-          <div class="mock-qr-code">
-            <div class="mock-qr-canvas"></div>
-            <div class="mock-qr-logo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-            </div>
-          </div>
-          <textarea class="invoice-textarea" id="invoice-textarea" readonly placeholder="Invoice Details" title="Settlement Invoice Details" aria-label="Settlement Invoice Details"></textarea>
-        </div>
-
-        <!-- Real hash input -->
-        <div id="modal-real-tx-hash-container" class="mb-1 d-none">
-          <label class="lbl-caps-sec">
-            Paste Blockchain Tx Hash (Base):
-          </label>
-          <input type="text" id="modal-input-tx-hash" placeholder="e.g. 0x8a... (Base)">
-        </div>
-
-        <button class="btn btn-success w-full" id="btn-modal-action" onclick="simulatePaymentWorkflow()">Broadcast Payment Transaction</button>
       </div>
     </div>
-  </div>
 
-  <!-- MODAL: Blockchain Explorer -->
-  <div class="modal-overlay" id="explorer-modal">
-    <div class="modal-content-panel modal-lg">
-      <div class="modal-title-bar">
-        <h3>ACN Blockchain Settlement Explorer</h3>
-        <button class="btn-close-modal" onclick="closeModal('explorer-modal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <table class="explorer-details-table">
-          <tr><td>Transaction ID</td><td id="explorer-tx-id">-</td></tr>
-          <tr><td>Status</td><td id="explorer-status">-</td></tr>
-          <tr><td>Network</td><td id="explorer-network">-</td></tr>
-          <tr><td>Tx Signature Hash</td><td id="explorer-tx-hash" class="hash-link">-</td></tr>
-          <tr><td>Block Height</td><td id="explorer-block-height">-</td></tr>
-          <tr><td>Confirmations</td><td id="explorer-confirmations">-</td></tr>
-          <tr><td>Network Gas Fee</td><td id="explorer-gas-fee">-</td></tr>
-          <tr><td>Match ID Reference</td><td id="explorer-match-id">-</td></tr>
-          <tr><td>USD Value</td><td id="explorer-value">-</td></tr>
-          <tr><td>Finalized Time</td><td id="explorer-time">-</td></tr>
-        </table>
-        <button class="btn btn-secondary w-full mt-1" onclick="closeModal('explorer-modal')">Close Explorer</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Agent Detail & Delegation -->
-  <div class="modal-overlay" id="agent-detail-modal">
-    <div class="modal-content-panel modal-sm">
-      <div class="modal-title-bar">
-        <h3 id="modal-agent-name">Agent Overview</h3>
-        <button class="btn-close-modal" onclick="closeModal('agent-detail-modal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="payment-summary-block summary-left">
-          <div class="lbl-caps-muted">Purpose &amp; Capabilities</div>
-          <div id="modal-agent-purpose" class="txt-prewrap"></div>
+    <!-- Right Column: Human Co-Signing Queue & Process Info -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+      <!-- Co-Signing Queue Card -->
+      <div class="card">
+        <div class="card-header font-mono">
+          <span style="color: var(--accent-amber); font-weight:700;">[CO-SIGNING APPROVAL QUEUE]</span>
+          <span id="approval-count" class="tag-pending">0 PENDING</span>
         </div>
-
-        <!-- Jester special controls -->
-        <div id="modal-jester-controls" class="d-none">
-          <button class="btn btn-sm w-full btn-roast" onclick="roastNetwork()">🔥 Roast the Network</button>
-          <div id="jester-roast-output" class="box-roast"></div>
-        </div>
-
-        <!-- Zeta site map controls -->
-        <div id="modal-zeta-controls" class="d-none">
-          <div class="lbl-caps-muted-mb">Live Page Routes</div>
-          <div id="zeta-sitemap"></div>
-        </div>
-
-        <!-- Standard delegation controls -->
-        <div id="modal-agent-delegation-controls" class="summary-left">
-          <label class="lbl-bold-caps">
-            Delegate / Sprout Worker Node:
-          </label>
-          <div class="flex-gap-05">
-            <select id="modal-delegated-task-type" aria-label="Delegated Task Type">
-              <option value="route">Route Analysis</option>
-              <option value="audit">Price Audit</option>
-              <option value="gossip">Feed Sync</option>
-            </select>
-            <button class="btn btn-success" id="btn-modal-spawn" onclick="delegateAgentTask()">Sprout</button>
+        <div class="card-body" id="approvals-container">
+          <div style="font-size:0.75rem; color: var(--text-muted); font-family:'JetBrains Mono', monospace; text-align:center; padding: 1.5rem 0;">
+            No high-stakes actions pending confirmation.
           </div>
-          <span class="lbl-caps-muted-mt">
-            * Workers auto-terminate after completing their task.
-          </span>
         </div>
+      </div>
 
-        <button class="btn btn-secondary w-full mt-1" onclick="closeModal('agent-detail-modal')">Close</button>
+      <!-- Daemon Status & Root Key Card -->
+      <div class="card">
+        <div class="card-header font-mono">
+          <span style="color: var(--text-white); font-weight:700;">[DAEMON ENGINE METADATA]</span>
+        </div>
+        <div class="card-body font-mono" style="font-size:0.75rem; display:flex; flex-direction:column; gap:0.6rem;">
+          <div><span style="color:var(--text-muted);">HOST:</span> 127.0.0.1:8080</div>
+          <div><span style="color:var(--text-muted);">ENGINE:</span> BTP v2.2.0 Invariant Guard</div>
+          <div><span style="color:var(--text-muted);">POLICY:</span> policies/default_security_policy.yaml</div>
+          <div style="word-break:break-all;">
+            <span style="color:var(--text-muted);">SOVEREIGN PUBKEY:</span><br>
+            <span id="pubkey-text" style="color:var(--accent-emerald);">Loading...</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <script src="app.js?v=1.2"></script>
+  <script>
+    let ws;
+    const streamTable = document.getElementById('stream-table');
+    const approvalsContainer = document.getElementById('approvals-container');
+    const approvalCount = document.getElementById('approval-count');
+
+    function connectWebSocket() {
+      const wsUrl = `ws://127.0.0.1:8080/ws/stream`;
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        document.getElementById('conn-text').textContent = '[DAEMON: CONNECTED]';
+        document.getElementById('conn-text').style.color = 'var(--accent-emerald)';
+        document.getElementById('conn-dot').style.background = 'var(--accent-emerald)';
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          handleDaemonMessage(msg);
+        } catch (e) { console.error("WS Parse error", e); }
+      };
+
+      ws.onclose = () => {
+        document.getElementById('conn-text').textContent = '[DAEMON: DISCONNECTED]';
+        document.getElementById('conn-text').style.color = 'var(--accent-red)';
+        document.getElementById('conn-dot').style.background = 'var(--accent-red)';
+        setTimeout(connectWebSocket, 2000);
+      };
+    }
+
+    function handleDaemonMessage(msg) {
+      if (msg.type === 'INIT') {
+        document.getElementById('stat-total').textContent = msg.status.total_evaluations;
+        document.getElementById('stat-allowed').textContent = msg.status.total_allowed;
+        document.getElementById('stat-blocked').textContent = msg.status.total_blocked;
+        document.getElementById('pubkey-text').textContent = msg.status.public_key || '7e5bf4b7...';
+        renderApprovals(msg.pending_approvals || []);
+        if (msg.recent_events && msg.recent_events.length > 0) {
+          streamTable.innerHTML = '';
+          msg.recent_events.forEach(ev => appendStreamRow(ev));
+        }
+      } else if (msg.type === 'EVALUATION') {
+        appendStreamRow(msg);
+        updateCounters(msg.receipt.allowed);
+      } else if (msg.type === 'APPROVAL_REQUESTED') {
+        fetchApprovals();
+      } else if (msg.type === 'APPROVAL_DECIDED') {
+        fetchApprovals();
+        appendStreamRow({
+          receipt: msg.receipt,
+          latency_us: 15.2,
+          timestamp: new Date().toTimeString().slice(0, 8)
+        });
+      }
+    }
+
+    function appendStreamRow(ev) {
+      if (streamTable.querySelector('td[colspan]')) {
+        streamTable.innerHTML = '';
+      }
+      const r = ev.receipt;
+      const tr = document.createElement('tr');
+      const sig = r.signature || '';
+      tr.innerHTML = `
+        <td style="color:var(--text-muted);">${ev.timestamp || new Date().toTimeString().slice(0, 8)}</td>
+        <td style="color:#fff; font-weight:600;">${r.agent_id}</td>
+        <td style="color:var(--accent-amber);">${r.action_type}</td>
+        <td><span class="${r.allowed ? 'tag-allow' : 'tag-deny'}">[${r.allowed ? 'ALLOW' : 'DENY'}]</span></td>
+        <td style="color:var(--accent-emerald);">${ev.latency_us || 32.4} µs</td>
+        <td style="color:var(--text-muted);" title="${sig}">${sig.slice(0, 8)}...${sig.slice(-6)}</td>
+      `;
+      streamTable.prepend(tr);
+      if (streamTable.children.length > 30) streamTable.lastElementChild.remove();
+    }
+
+    function updateCounters(allowed) {
+      const tot = document.getElementById('stat-total');
+      tot.textContent = parseInt(tot.textContent || '0') + 1;
+      if (allowed) {
+        const al = document.getElementById('stat-allowed');
+        al.textContent = parseInt(al.textContent || '0') + 1;
+      } else {
+        const bl = document.getElementById('stat-blocked');
+        bl.textContent = parseInt(bl.textContent || '0') + 1;
+      }
+    }
+
+    async function fetchApprovals() {
+      try {
+        const res = await fetch('http://127.0.0.1:8080/v1/approvals');
+        const data = await res.json();
+        renderApprovals(data.approvals || []);
+      } catch (e) {}
+    }
+
+    function renderApprovals(list) {
+      approvalCount.textContent = `${list.length} PENDING`;
+      if (list.length === 0) {
+        approvalsContainer.innerHTML = `<div style="font-size:0.75rem; color: var(--text-muted); font-family:'JetBrains Mono', monospace; text-align:center; padding: 1.5rem 0;">No high-stakes actions pending confirmation.</div>`;
+        return;
+      }
+
+      approvalsContainer.innerHTML = list.map(item => `
+        <div class="approval-item font-mono">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
+            <span style="color:var(--accent-amber); font-weight:700;">[${item.request_id}]</span>
+            <span style="color:var(--text-muted); font-size:0.7rem;">${item.time_remaining_sec}s remaining</span>
+          </div>
+          <div style="font-size:0.75rem; color:#fff; margin-bottom:0.25rem;"><strong>Agent:</strong> ${item.agent_id} (${item.action_type})</div>
+          <div style="font-size:0.7rem; color:var(--text-zinc); margin-bottom:0.6rem;">${item.reason}</div>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-emerald" onclick="decideApproval('${item.request_id}', true)">[APPROVE]</button>
+            <button class="btn btn-red" onclick="decideApproval('${item.request_id}', false)">[REJECT]</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function decideApproval(id, approve) {
+      try {
+        await fetch(`http://127.0.0.1:8080/v1/approvals/${id}/decide`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ approve, operator: 'Local UI Operator' })
+        });
+      } catch (e) { alert("Error sending approval decision"); }
+    }
+
+    async function sendTestPayload() {
+      try {
+        const payload = JSON.parse(document.getElementById('test-intent').value);
+        await fetch('http://127.0.0.1:8080/v1/evaluate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) { alert("Invalid JSON payload"); }
+    }
+
+    connectWebSocket();
+  </script>
 </body>
 </html>
