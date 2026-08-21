@@ -17,7 +17,7 @@ from typing import Dict, Any
 sys.path.insert(0, os.path.abspath("."))
 from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.trust_protocol import BartholomewTrustAuthority
-from autonomous_assurance_scanner import AutonomousAssuranceEngine
+from src.ast_validator import ASTSecurityValidator
 
 def init_project(target_dir: str = ".") -> None:
     """Initializes a new project with BTP security configuration and keys."""
@@ -167,9 +167,23 @@ def main():
                 sys.exit(1)
 
     elif args.command == "audit":
-        engine = AutonomousAssuranceEngine()
-        res = engine.audit_environment(args.path)
-        print(f"Audit completed: {res['total_files_scanned']} files scanned. Status: {res['audit_status']}")
+        scanned = 0
+        violations = 0
+        for root, _, files in os.walk(args.path):
+            for f in files:
+                if f.endswith(".py"):
+                    scanned += 1
+                    try:
+                        with open(os.path.join(root, f), "r", encoding="utf-8") as fp:
+                            code = fp.read()
+                        safe, reason, _ = ASTSecurityValidator.validate_code_ast(code)
+                        if not safe:
+                            violations += 1
+                            print(f"[VIOLATION] {f}: {reason}")
+                    except Exception:
+                        pass
+        status = "PASSED" if violations == 0 else f"{violations} VIOLATIONS DETECTED"
+        print(f"AST Security Audit completed: {scanned} Python files scanned. Status: {status}")
 
     else:
         parser.print_help()

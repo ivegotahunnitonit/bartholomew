@@ -1,9 +1,0 @@
-{
-  "title": "Bartholomew Microsecond In-Memory Stream Scan Audit",
-  "timestamp": "2026-08-13T02:31:02.436440+00:00",
-  "scan_mode": "HIGH_FREQUENCY_MICROSECOND_MEMORY_STREAM",
-  "events_scanned_per_cycle": 1000,
-  "measured_scan_latency": "1.20 \u03bcs",
-  "latency_classification": "MICROSECOND_SUB_MILLISECOND_PERFORMANCE",
-  "target": "Zero-Latency Event Intercept"
-}
