@@ -63,28 +63,28 @@ export default function RuntimeThesisProof() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold uppercase tracking-wider mb-3 shadow-sm">
             <Layers size={13} />
-            How It Works
+            Deterministic Defense Model
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-sans">
             3 Simple Steps to Complete AI Safety
           </h2>
-          <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
             Instead of hoping an AI behaves, Bartholomew provides a mathematical three-stage defense that guarantees safety on every single tool call.
           </p>
         </div>
 
-        {/* 3 Step Cards in Layman Terms */}
+        {/* 3 Step Cards with Glassmorphism & Hover Transforms */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {/* Step 1 */}
-          <div className="p-6 rounded-2xl bg-slate-900/90 border border-cyan-500/30 relative overflow-hidden flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/10 backdrop-blur-xl shadow-xl hover:-translate-y-1 hover:border-cyan-500/40 hover:shadow-cyan-500/10 transition-all duration-200 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <span className="text-xs font-bold font-mono text-cyan-400 uppercase tracking-wider">Step 1</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">&lt;35 µs</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-400/30">&lt;35 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
                 <Search size={18} className="text-cyan-400" />
                 The Pre-Flight Scanner
               </h3>
@@ -92,19 +92,19 @@ export default function RuntimeThesisProof() {
                 Before any code runs, the scanner inspects the syntax tree. If the AI is trying to hide a destructive command, drop a database, or exceed spend caps, it is blocked immediately.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-cyan-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <div className="text-[11px] font-mono text-cyan-300 bg-slate-950 p-3 rounded-xl border border-white/5">
               Blocks: Dangerous code, SQL drops, budget breaches
             </div>
           </div>
 
           {/* Step 2 */}
-          <div className="p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/30 relative overflow-hidden flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/10 backdrop-blur-xl shadow-xl hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-emerald-500/10 transition-all duration-200 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <span className="text-xs font-bold font-mono text-emerald-400 uppercase tracking-wider">Step 2</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">&lt;150 µs</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-400/30">&lt;150 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
                 <Box size={18} className="text-emerald-400" />
                 The Locked Sandbox
               </h3>
@@ -112,19 +112,19 @@ export default function RuntimeThesisProof() {
                 The AI is confined inside a strict workspace boundary. It is physically impossible for the AI to touch system files, steal sensitive environment secrets, or run unauthorized shell scripts.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-emerald-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <div className="text-[11px] font-mono text-emerald-300 bg-slate-950 p-3 rounded-xl border border-white/5">
               Blocks: Directory escapes, credential leaks, OS damage
             </div>
           </div>
 
           {/* Step 3 */}
-          <div className="p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/30 relative overflow-hidden flex flex-col justify-between">
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/10 backdrop-blur-xl shadow-xl hover:-translate-y-1 hover:border-indigo-500/40 hover:shadow-indigo-500/10 transition-all duration-200 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <span className="text-xs font-bold font-mono text-indigo-400 uppercase tracking-wider">Step 3</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">&lt;40 µs</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-400/30">&lt;40 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
                 <Award size={18} className="text-indigo-400" />
                 The Digital Notary
               </h3>
@@ -132,79 +132,94 @@ export default function RuntimeThesisProof() {
                 Once safe, the action is stamped with a tamper-proof cryptographic signature. Enterprise auditors can verify the digital receipt offline in seconds without trusting third parties.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-indigo-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <div className="text-[11px] font-mono text-indigo-300 bg-slate-950 p-3 rounded-xl border border-white/5">
               Guarantees: 100% Non-repudiation &amp; compliance proof
             </div>
           </div>
         </div>
 
-        {/* Interactive Plain English Threat Simulator */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
-          <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-2 font-bold flex items-center gap-2">
-            <Cpu size={14} />
-            Interactive Safety Test
-          </div>
-          <div className="text-lg font-bold text-white mb-2">
-            See How Common AI Accidents Are Prevented in Real Time
-          </div>
-          <p className="text-xs text-slate-400 mb-6">
-            Click on any real-world scenario below to see how Bartholomew handles rogue AI behavior:
-          </p>
-
-          {/* Threat Selector Buttons */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
-            {THREAT_EXAMPLES.map(threat => (
-              <button
-                key={threat.id}
-                onClick={() => setSelectedThreat(threat)}
-                className={`p-3 rounded-xl text-left transition border ${
-                  selectedThreat.id === threat.id
-                    ? 'bg-slate-800 border-cyan-500/50 shadow-md'
-                    : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
-                }`}
-              >
-                <div className="text-[10px] font-mono text-slate-500 uppercase mb-1">{threat.id}</div>
-                <div className="text-xs font-bold text-slate-200">{threat.title}</div>
-              </button>
-            ))}
+        {/* Interactive Threat Simulator inside macOS Window Chrome */}
+        <div className="rounded-2xl bg-slate-900/90 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-200">
+          {/* macOS Titlebar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+            </div>
+            <span className="text-[11px] font-mono text-slate-400">threat-simulator.sh — interactive</span>
+            <div className="w-12" />
           </div>
 
-          {/* Active Threat Card */}
-          <div className="p-6 rounded-xl bg-slate-950 border border-slate-800 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-              <div>
-                <div className="text-xs font-semibold text-slate-300 mb-1">{selectedThreat.plainEnglishDescription}</div>
-                <div className="font-mono text-xs text-cyan-300">{selectedThreat.attemptedAction}</div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className={`text-xs font-bold font-mono px-3 py-1 rounded ${
-                  selectedThreat.verdict === 'BLOCKED'
-                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                    : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                }`}>
-                  {selectedThreat.verdict}
-                </span>
-                <span className="text-xs font-mono text-slate-400">
-                  {selectedThreat.latencyUs} µs
-                </span>
-              </div>
+          <div className="p-6 sm:p-8">
+            <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-2 font-bold flex items-center gap-2">
+              <Cpu size={14} />
+              Interactive Safety Test
+            </div>
+            <div className="text-lg font-bold text-white mb-2 font-sans">
+              See How Common AI Accidents Are Prevented in Real Time
+            </div>
+            <p className="text-xs text-slate-400 mb-6">
+              Click on any real-world scenario below to see how Bartholomew handles rogue AI behavior:
+            </p>
+
+            {/* Threat Selector Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+              {THREAT_EXAMPLES.map(threat => (
+                <button
+                  key={threat.id}
+                  onClick={() => setSelectedThreat(threat)}
+                  className={`p-3.5 rounded-xl text-left transition border ${
+                    selectedThreat.id === threat.id
+                      ? 'bg-slate-800/90 border-cyan-400/60 shadow-lg shadow-cyan-500/10'
+                      : 'bg-slate-950/70 border-white/5 hover:border-white/20 hover:bg-slate-800/40'
+                  }`}
+                >
+                  <div className="text-[10px] font-mono text-slate-500 uppercase mb-1">{threat.id}</div>
+                  <div className="text-xs font-bold text-slate-200">{threat.title}</div>
+                </button>
+              ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
-                <div className="font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
-                  <AlertTriangle size={13} className={selectedThreat.verdict === 'BLOCKED' ? 'text-rose-400' : 'text-emerald-400'} />
-                  Where It Was Caught
+            {/* Active Threat Card */}
+            <div className="p-6 rounded-xl bg-slate-950 border border-white/10 space-y-4 shadow-inner">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                <div>
+                  <div className="text-xs font-semibold text-slate-300 mb-1">{selectedThreat.plainEnglishDescription}</div>
+                  <div className="font-mono text-xs text-cyan-300 font-bold bg-slate-900 px-2.5 py-1 rounded border border-white/5 inline-block">
+                    {selectedThreat.attemptedAction}
+                  </div>
                 </div>
-                <div className="font-mono text-cyan-300 font-bold">{selectedThreat.interceptedBy}</div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className={`text-xs font-bold font-mono px-3 py-1 rounded-lg ${
+                    selectedThreat.verdict === 'BLOCKED'
+                      ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30 shadow-sm shadow-rose-500/20'
+                      : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/20'
+                  }`}>
+                    {selectedThreat.verdict}
+                  </span>
+                  <span className="text-xs font-mono text-cyan-300 bg-slate-900 px-2.5 py-1 rounded border border-white/5">
+                    {selectedThreat.latencyUs} µs
+                  </span>
+                </div>
               </div>
 
-              <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
-                <div className="font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-emerald-400" />
-                  Plain English Explanation
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-slate-900/90 border border-white/5">
+                  <div className="font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5 font-mono">
+                    <AlertTriangle size={13} className={selectedThreat.verdict === 'BLOCKED' ? 'text-rose-400' : 'text-emerald-400'} />
+                    Where It Was Caught
+                  </div>
+                  <div className="font-mono text-cyan-300 font-bold">{selectedThreat.interceptedBy}</div>
                 </div>
-                <p className="text-slate-300 leading-relaxed">{selectedThreat.laymanExplanation}</p>
+
+                <div className="p-4 rounded-xl bg-slate-900/90 border border-white/5">
+                  <div className="font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5 font-mono">
+                    <CheckCircle2 size={13} className="text-emerald-400" />
+                    Plain English Explanation
+                  </div>
+                  <p className="text-slate-300 leading-relaxed">{selectedThreat.laymanExplanation}</p>
+                </div>
               </div>
             </div>
           </div>
