@@ -98,17 +98,17 @@ export const LiveAttestationInspector: React.FC = () => {
   });
 
   return (
-    <div className="bg-[#0a0a0a] border border-[#222222] p-6 sm:p-8 text-white my-12 shadow-2xl">
+    <div className="bg-[#0a0a0a] border border-[#262626] p-6 sm:p-8 text-white my-12 shadow-2xl">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[#222222] gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[#262626] gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <Lock size={17} className="text-[#f59e0b]" />
-            <h2 className="text-xl font-bold tracking-tight text-white font-sans">
+            <Lock size={18} className="text-[#f59e0b]" />
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">
               Live Cryptographic Attestation Inspector
             </h2>
           </div>
-          <p className="text-xs text-[#a1a1aa] mt-1 font-sans">
+          <p className="text-sm text-[#d4d4d8] mt-1.5 font-sans">
             Real-time Ed25519 digital receipts generated for every agent decision
           </p>
         </div>
@@ -116,21 +116,21 @@ export const LiveAttestationInspector: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsSimulating(!isSimulating)}
-            className={`px-3 py-1.5 text-xs font-mono font-semibold border transition flex items-center gap-2 ${
+            className={`px-3.5 py-1.5 text-xs sm:text-sm font-mono font-semibold border transition flex items-center gap-2 ${
               isSimulating
                 ? 'bg-[#10b981]/15 border-[#10b981]/50 text-[#10b981]'
-                : 'bg-[#000000] border-[#222222] text-[#71717a]'
+                : 'bg-[#000000] border-[#262626] text-[#9ca3af]'
             }`}
           >
-            <Activity size={13} className={isSimulating ? 'animate-pulse text-[#10b981]' : ''} />
+            <Activity size={14} className={isSimulating ? 'animate-pulse text-[#10b981]' : ''} />
             <span>{isSimulating ? '[STREAMING LIVE RECEIPTS]' : '[STREAM PAUSED]'}</span>
           </button>
 
-          <div className="flex bg-[#000000] border border-[#222222] font-mono text-xs">
+          <div className="flex bg-[#000000] border border-[#262626] font-mono text-xs sm:text-sm">
             <button
               onClick={() => setActiveTab('all')}
               className={`px-3 py-1 transition font-bold ${
-                activeTab === 'all' ? 'bg-[#222222] text-white' : 'text-[#a1a1aa] hover:text-white'
+                activeTab === 'all' ? 'bg-[#2a2a2a] text-white' : 'text-[#c4c4cc] hover:text-white'
               }`}
             >
               ALL
@@ -138,7 +138,7 @@ export const LiveAttestationInspector: React.FC = () => {
             <button
               onClick={() => setActiveTab('allowed')}
               className={`px-3 py-1 transition font-bold ${
-                activeTab === 'allowed' ? 'bg-[#10b981] text-[#000000]' : 'text-[#a1a1aa] hover:text-white'
+                activeTab === 'allowed' ? 'bg-[#10b981] text-[#000000]' : 'text-[#c4c4cc] hover:text-white'
               }`}
             >
               [ALLOW]
@@ -146,7 +146,7 @@ export const LiveAttestationInspector: React.FC = () => {
             <button
               onClick={() => setActiveTab('denied')}
               className={`px-3 py-1 transition font-bold ${
-                activeTab === 'denied' ? 'bg-[#ef4444] text-[#ffffff]' : 'text-[#a1a1aa] hover:text-white'
+                activeTab === 'denied' ? 'bg-[#ef4444] text-[#ffffff]' : 'text-[#c4c4cc] hover:text-white'
               }`}
             >
               [DENY]
@@ -157,29 +157,29 @@ export const LiveAttestationInspector: React.FC = () => {
 
       {/* Auditor Fixed-Width Log Table */}
       <div className="mt-6 overflow-x-auto">
-        <table className="w-full text-left font-mono text-xs border-collapse">
+        <table className="w-full text-left font-mono text-xs sm:text-sm border-collapse">
           <thead>
-            <tr className="border-b border-[#222222] text-[#71717a] text-[11px] uppercase tracking-wider">
-              <th className="py-2.5 px-3">TIMESTAMP</th>
-              <th className="py-2.5 px-3">AGENT ID</th>
-              <th className="py-2.5 px-3">ACTION</th>
-              <th className="py-2.5 px-3">STATUS</th>
-              <th className="py-2.5 px-3">LATENCY</th>
-              <th className="py-2.5 px-3">DIGITAL SEAL (ED25519)</th>
+            <tr className="border-b border-[#262626] text-[#9ca3af] uppercase tracking-wider text-xs">
+              <th className="py-3 px-3">TIMESTAMP</th>
+              <th className="py-3 px-3">AGENT ID</th>
+              <th className="py-3 px-3">ACTION</th>
+              <th className="py-3 px-3">STATUS</th>
+              <th className="py-3 px-3">LATENCY</th>
+              <th className="py-3 px-3">DIGITAL SEAL (ED25519)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#1a1a1a]">
+          <tbody className="divide-y divide-[#1e1e1e]">
             {filteredLogs.map((log) => (
               <tr
                 key={log.id}
                 className="hover:bg-[#000000] transition-colors"
               >
-                <td className="py-3 px-3 text-[#71717a]">{log.timestamp}</td>
-                <td className="py-3 px-3 text-[#ffffff] font-semibold">{log.agentId}</td>
-                <td className="py-3 px-3 text-[#f59e0b]">{log.actionType}</td>
-                <td className="py-3 px-3">
+                <td className="py-3.5 px-3 text-[#9ca3af]">{log.timestamp}</td>
+                <td className="py-3.5 px-3 text-[#ffffff] font-semibold">{log.agentId}</td>
+                <td className="py-3.5 px-3 text-[#f59e0b] font-semibold">{log.actionType}</td>
+                <td className="py-3.5 px-3">
                   <span
-                    className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${
+                    className={`inline-block px-2.5 py-0.5 text-xs font-bold border ${
                       log.verdict === 'ALLOW'
                         ? 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/40'
                         : 'bg-[#ef4444]/15 text-[#ef4444] border-[#ef4444]/40'
@@ -188,11 +188,11 @@ export const LiveAttestationInspector: React.FC = () => {
                     [{log.verdict}]
                   </span>
                 </td>
-                <td className="py-3 px-3 text-[#10b981] font-semibold">{log.latencyUs} µs</td>
-                <td className="py-3 px-3">
+                <td className="py-3.5 px-3 text-[#10b981] font-semibold">{log.latencyUs} µs</td>
+                <td className="py-3.5 px-3">
                   <span
                     title={log.signature}
-                    className="cursor-pointer text-[#a1a1aa] hover:text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] inline-block text-[11px] transition"
+                    className="cursor-pointer text-[#d4d4d8] hover:text-[#f59e0b] bg-[#000000] px-2.5 py-1 border border-[#262626] inline-block text-xs transition font-semibold"
                   >
                     {log.signature.slice(0, 10)}...{log.signature.slice(-6)}
                   </span>
@@ -203,9 +203,9 @@ export const LiveAttestationInspector: React.FC = () => {
         </table>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between text-xs text-[#a1a1aa] font-mono gap-2">
-        <div className="flex items-center gap-2 text-[#10b981]">
-          <ShieldCheck size={14} />
+      <div className="mt-6 pt-4 border-t border-[#262626] flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-[#d4d4d8] font-mono gap-2">
+        <div className="flex items-center gap-2 text-[#10b981] font-semibold">
+          <ShieldCheck size={15} />
           <span>[RFC 8785 CANONICAL SERIALIZATION ACTIVE]</span>
         </div>
         <span>[FIPS 186-5 ED25519 ATTESTATION LOADED]</span>

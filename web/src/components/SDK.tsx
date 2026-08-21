@@ -85,13 +85,13 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className={`flex items-center gap-1.5 text-xs font-mono font-semibold px-2.5 py-1 transition border ${
+      className={`flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold px-3 py-1.5 transition border ${
         copied
           ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-          : 'bg-[#000000] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff] hover:border-[#444444]'
+          : 'bg-[#000000] text-[#d4d4d8] border-[#262626] hover:text-[#ffffff] hover:border-[#444444]'
       }`}
     >
-      {copied ? <Check size={11} /> : <Copy size={11} />}
+      {copied ? <Check size={12} /> : <Copy size={12} />}
       <span>{copied ? '[COPIED]' : '[COPY CODE]'}</span>
     </button>
   )
@@ -102,31 +102,31 @@ export default function SDK() {
   const current = TABS.find(t => t.id === activeTab) || TABS[0]
 
   return (
-    <section id="sdk" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
+    <section id="sdk" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#222222]">
       <div className="max-w-5xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
-            <Code2 size={13} />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0a0a0a] border border-[#2a2a2a] text-[#f59e0b] text-xs sm:text-sm font-mono font-bold uppercase tracking-wider mb-3">
+            <Code2 size={14} />
             <span>[ MULTI-LANGUAGE SDKS ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
             1-Line Integration Across All Runtimes
           </h2>
-          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base font-sans">
+          <p className="mt-3 text-[#d4d4d8] text-base font-sans">
             Drop BTP cryptographic guardrails directly into Python, TypeScript, or Go agents.
           </p>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex flex-wrap gap-2 mb-4 bg-[#0a0a0a] p-2 border border-[#222222]">
+        <div className="flex flex-wrap gap-2.5 mb-4 bg-[#0a0a0a] p-2.5 border border-[#262626]">
           {TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-2 text-xs font-mono font-bold transition border ${
+              className={`px-3.5 py-2.5 text-xs sm:text-sm font-mono font-bold transition border ${
                 activeTab === tab.id
                   ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
-                  : 'bg-[#000000] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
+                  : 'bg-[#000000] text-[#c4c4cc] border-[#262626] hover:text-[#ffffff]'
               }`}
             >
               {tab.label}
@@ -135,20 +135,20 @@ export default function SDK() {
         </div>
 
         {/* Code Viewer inside Cyber-Terminal Frame */}
-        <div className="bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
+        <div className="bg-[#0a0a0a] border border-[#262626] shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#000000] border-b border-[#262626]">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 bg-[#ef4444]" />
               <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
               <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
-            <span className="text-[11px] font-mono text-[#71717a]">{current.filename}</span>
+            <span className="text-xs sm:text-sm font-mono text-[#9ca3af] font-semibold">{current.filename}</span>
             <CopyButton text={current.code} />
           </div>
 
           <div className="p-6 sm:p-8">
-            <pre className="font-mono text-xs sm:text-sm text-[#d4d4d8] overflow-x-auto leading-relaxed bg-[#000000] p-5 border border-[#1a1a1a]">
+            <pre className="font-mono text-xs sm:text-sm text-[#e4e4e7] overflow-x-auto leading-relaxed bg-[#000000] p-5 border border-[#222222]">
               {current.code}
             </pre>
           </div>

@@ -103,11 +103,11 @@ const { allowed, reason, signature } = authority.evaluateIntent({
       <div className="max-w-5xl mx-auto w-full relative z-10">
         {/* Floating Status Pill Indicator */}
         <div className="flex items-center justify-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0a0a0a] border border-[#2a2a2a] text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-[#d4d4d8] shadow-sm">
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981]">[BTP v2.2 ACTIVE]</span>
-            <span className="text-[#555555]">|</span>
-            <span className="text-[#d4d4d8]">UNIVERSAL COMPATIBILITY · READY FOR ALL AI AGENTS &amp; FRAMEWORKS</span>
+            <span className="text-[#666666]">|</span>
+            <span>UNIVERSAL COMPATIBILITY · READY FOR ALL AI AGENTS &amp; FRAMEWORKS</span>
           </div>
         </div>
 
@@ -115,8 +115,8 @@ const { allowed, reason, signature } = authority.evaluateIntent({
         <h1
           className="text-center font-bold mb-5 font-sans hero-metallic-title"
           style={{
-            fontSize: 'clamp(2.1rem, 3.8vw, 3.25rem)',
-            lineHeight: 1.12,
+            fontSize: 'clamp(2.15rem, 4vw, 3.4rem)',
+            lineHeight: 1.14,
             letterSpacing: '-0.025em'
           }}
         >
@@ -124,41 +124,41 @@ const { allowed, reason, signature } = authority.evaluateIntent({
         </h1>
 
         {/* Action-Oriented Subtitle */}
-        <p className="text-center mx-auto mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
+        <p className="text-center mx-auto mb-10 text-[#e4e4e7] leading-relaxed max-w-2xl text-base font-sans">
           Download the sub-millisecond local engine or drop the SDK wrapper straight into your Python, Node, or Go projects. Wrap any AI agent, framework, or custom script in a single line of code with guaranteed cryptographic boundaries.
         </p>
 
         {/* Front-and-Center 1-Click Terminal Box */}
-        <div className="bg-[#0a0a0a] border border-[#222222] max-w-3xl mx-auto mb-12 shadow-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
+        <div className="bg-[#0a0a0a] border border-[#262626] max-w-3xl mx-auto mb-12 shadow-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#000000] border-b border-[#262626]">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 bg-[#ef4444]" />
               <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
               <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
-            <span className="text-[11px] font-mono text-[#71717a]">quick-install-terminal</span>
+            <span className="text-xs font-mono text-[#9ca3af]">quick-install-terminal</span>
             <div className="flex items-center gap-2">
               <a
                 href={activeInstallTab === 'windows' ? '/install.bat' : '/install.sh'}
                 download={activeInstallTab === 'windows' ? 'install.bat' : 'install.sh'}
-                className="text-[11px] font-mono text-[#f59e0b] hover:underline flex items-center gap-1 font-semibold"
+                className="text-xs font-mono text-[#f59e0b] hover:underline flex items-center gap-1 font-bold"
               >
-                <Download size={11} />
+                <Download size={12} />
                 <span>Direct File Download</span>
               </a>
             </div>
           </div>
 
           {/* Tab Selector */}
-          <div className="flex bg-[#000000] border-b border-[#222222] p-1.5 gap-1.5">
+          <div className="flex bg-[#000000] border-b border-[#262626] p-1.5 gap-1.5">
             {(['windows', 'mac', 'pip', 'npm'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveInstallTab(tab)}
-                className={`flex-1 py-1.5 px-2 text-xs font-mono font-bold transition border ${
+                className={`flex-1 py-2 px-2 text-xs sm:text-sm font-mono font-bold transition border ${
                   activeInstallTab === tab
                     ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
-                    : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
+                    : 'bg-[#0a0a0a] text-[#c4c4cc] border-[#262626] hover:text-[#ffffff]'
                 }`}
               >
                 {tab === 'windows' && '[WINDOWS]'}
@@ -170,73 +170,73 @@ const { allowed, reason, signature } = authority.evaluateIntent({
           </div>
 
           {/* Command Row */}
-          <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[#000000] font-mono text-xs sm:text-sm text-[#f59e0b]">
-            <span className="truncate">$ {installCommands[activeInstallTab]}</span>
+          <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[#000000] font-mono text-sm text-[#f59e0b]">
+            <span className="truncate font-semibold">$ {installCommands[activeInstallTab]}</span>
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleCopyCommand}
-                className={`px-3 py-1.5 text-xs font-mono font-bold transition flex items-center gap-1.5 border ${
+                className={`px-3.5 py-1.5 text-xs sm:text-sm font-mono font-bold transition flex items-center gap-1.5 border ${
                   copiedCommand
                     ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                    : 'bg-[#0a0a0a] text-[#ffffff] border-[#333333] hover:border-[#555555]'
+                    : 'bg-[#0a0a0a] text-[#ffffff] border-[#383838] hover:border-[#666666]'
                 }`}
               >
-                {copiedCommand ? <Check size={12} /> : <Copy size={12} />}
+                {copiedCommand ? <Check size={13} /> : <Copy size={13} />}
                 <span>{copiedCommand ? '[COPIED]' : '[COPY]'}</span>
               </button>
             </div>
           </div>
 
-          <div className="px-5 py-2.5 bg-[#0a0a0a] border-t border-[#1c1c1c] flex items-center justify-between text-xs font-mono text-[#a1a1aa]">
-            <span className="text-[#10b981] flex items-center gap-1.5">
-              <CheckCircle2 size={13} />
+          <div className="px-5 py-3 bg-[#0a0a0a] border-t border-[#202020] flex items-center justify-between text-xs sm:text-sm font-mono text-[#d4d4d8]">
+            <span className="text-[#10b981] flex items-center gap-1.5 font-semibold">
+              <CheckCircle2 size={14} />
               Guard Active: Localhost (In-Memory | &lt;50 µs)
             </span>
-            <span className="text-[#71717a]">Zero Cloud Telemetry</span>
+            <span className="text-[#9ca3af]">Zero Cloud Telemetry</span>
           </div>
         </div>
 
         {/* Interactive Compatibility Matrix */}
-        <div className="border border-[#222222] max-w-3xl mx-auto bg-[#0a0a0a] p-6 shadow-2xl">
-          <div className="text-xs font-mono text-[#f59e0b] uppercase tracking-wider font-bold mb-2 flex items-center gap-2">
-            <Cpu size={14} />
+        <div className="border border-[#262626] max-w-3xl mx-auto bg-[#0a0a0a] p-6 shadow-2xl">
+          <div className="text-xs sm:text-sm font-mono text-[#f59e0b] uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+            <Cpu size={15} />
             <span>[ SELECT YOUR FRAMEWORK OR RUNTIME TO PAIR ]</span>
           </div>
 
           {/* Compatibility Selector Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
             {(['claude', 'openai', 'langchain', 'custom'] as const).map((agent) => (
               <button
                 key={agent}
                 onClick={() => setSelectedAgent(agent)}
-                className={`p-3 text-left transition font-mono border ${
+                className={`p-3.5 text-left transition font-mono border ${
                   selectedAgent === agent
-                    ? 'bg-[#141414] border-[#f59e0b] text-white shadow-sm'
-                    : 'bg-[#000000] border-[#222222] text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#383838]'
+                    ? 'bg-[#161616] border-[#f59e0b] text-white shadow-md'
+                    : 'bg-[#000000] border-[#262626] text-[#c4c4cc] hover:text-[#ffffff] hover:border-[#444444]'
                 }`}
               >
-                <div className="text-[10px] text-[#f59e0b] uppercase mb-1 font-bold">[{agent.toUpperCase()}]</div>
-                <div className="text-xs font-semibold truncate">{agentPairingSnippets[agent].title.split(' ')[0]}</div>
+                <div className="text-xs text-[#f59e0b] uppercase mb-1 font-bold">[{agent.toUpperCase()}]</div>
+                <div className="text-xs sm:text-sm font-semibold truncate">{agentPairingSnippets[agent].title.split(' ')[0]}</div>
               </button>
             ))}
           </div>
 
           {/* Dynamic Pairing Code Preview */}
-          <div className="bg-[#000000] border border-[#222222] overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2 bg-[#0a0a0a] border-b border-[#222222] text-xs font-mono">
-              <span className="text-[#a1a1aa]">{currentSnippet.filename}</span>
+          <div className="bg-[#000000] border border-[#262626] overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-[#0a0a0a] border-b border-[#262626] text-xs sm:text-sm font-mono">
+              <span className="text-[#d4d4d8] font-semibold">{currentSnippet.filename}</span>
               <button
                 onClick={handleCopySnippet}
                 className="text-[#f59e0b] hover:text-white font-bold flex items-center gap-1"
               >
-                {copiedCode ? <Check size={11} /> : <Copy size={11} />}
+                {copiedCode ? <Check size={12} /> : <Copy size={12} />}
                 <span>{copiedCode ? '[COPIED]' : '[COPY SNIPPET]'}</span>
               </button>
             </div>
-            <pre className="p-4 font-mono text-xs text-[#d4d4d8] leading-relaxed overflow-x-auto">
+            <pre className="p-4 sm:p-5 font-mono text-xs sm:text-sm text-[#e4e4e7] leading-relaxed overflow-x-auto">
               {currentSnippet.code}
             </pre>
-            <div className="p-3 bg-[#0a0a0a] border-t border-[#222222] text-xs text-[#a1a1aa] font-sans">
+            <div className="p-3.5 bg-[#0a0a0a] border-t border-[#262626] text-xs sm:text-sm text-[#d4d4d8] font-sans">
               {currentSnippet.desc}
             </div>
           </div>

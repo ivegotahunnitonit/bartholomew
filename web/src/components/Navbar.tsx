@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 ${
-        scrolled ? 'bg-black/95 border-b border-[#1c1c1c] backdrop-blur-md shadow-2xl' : 'bg-black/40 backdrop-blur-sm'
+        scrolled ? 'bg-black/95 border-b border-[#222222] backdrop-blur-md shadow-2xl' : 'bg-black/50 backdrop-blur-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -25,16 +25,16 @@ export default function Navbar() {
           <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
             <Logo size={28} showText={true} />
           </Link>
-          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[11px] font-mono">
-            <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#2a2a2a] text-xs font-mono">
+            <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981] font-bold">[STATUS: ACTIVE]</span>
-            <span className="text-[#555555]">|</span>
-            <span className="text-[#a1a1aa]">BTP v2.2 ENGINE</span>
+            <span className="text-[#666666]">|</span>
+            <span className="text-[#d4d4d8]">BTP v2.2 ENGINE</span>
           </div>
         </div>
 
         {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-7 text-xs font-mono font-semibold text-[#a1a1aa]">
+        <nav className="hidden md:flex items-center gap-7 text-xs sm:text-sm font-mono font-semibold text-[#c4c4cc]">
           <a href="#how-it-works" className="hover:text-[#ffffff] transition">
             [HOW IT WORKS]
           </a>
@@ -55,85 +55,85 @@ export default function Navbar() {
             href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-1.5 text-xs font-mono font-semibold bg-[#0a0a0a] border border-[#222222] text-[#d4d4d8] hover:text-[#ffffff] hover:border-[#444444] transition flex items-center gap-1.5"
+            className="px-3.5 py-1.5 text-xs sm:text-sm font-mono font-semibold bg-[#0a0a0a] border border-[#2a2a2a] text-[#e4e4e7] hover:text-[#ffffff] hover:border-[#555555] transition flex items-center gap-1.5"
           >
-            <Code2 size={13} />
+            <Code2 size={14} />
             <span>GITHUB</span>
-            <ExternalLink size={11} className="text-[#71717a]" />
+            <ExternalLink size={12} className="text-[#9ca3af]" />
           </a>
           <a
             href="#download"
-            className="px-4 py-1.5 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-1.5 shadow-sm"
+            className="px-4 py-1.5 text-xs sm:text-sm font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-1.5 shadow-sm"
           >
-            <Download size={13} />
+            <Download size={14} />
             <span>GET STARTED (FREE)</span>
           </a>
         </div>
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden p-2 text-[#a1a1aa] hover:text-[#ffffff]"
+          className="md:hidden p-2 text-[#c4c4cc] hover:text-[#ffffff]"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#000000] border-b border-[#222222] px-5 py-5 space-y-4">
-          <div className="flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono mb-2">
-            <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
+        <div className="md:hidden bg-[#000000] border-b border-[#2a2a2a] px-5 py-5 space-y-4">
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#2a2a2a] text-xs font-mono mb-2">
+            <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981] font-bold">[STATUS: ACTIVE]</span>
-            <span className="text-[#a1a1aa]">BTP v2.2 ENGINE</span>
+            <span className="text-[#d4d4d8]">BTP v2.2 ENGINE</span>
           </div>
           <a
             href="#how-it-works"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-[#e4e4e7] hover:text-[#ffffff]"
           >
             [HOW IT WORKS]
           </a>
           <a
             href="#threat-simulator"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-[#e4e4e7] hover:text-[#ffffff]"
           >
             [THREAT DEMOS]
           </a>
           <a
             href="#policy-editor"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-[#e4e4e7] hover:text-[#ffffff]"
           >
             [RULE BUILDER]
           </a>
           <a
             href="#sdk"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-[#e4e4e7] hover:text-[#ffffff]"
           >
             [SDKS &amp; API]
           </a>
-          <div className="pt-3 border-t border-[#222222] flex flex-col gap-2.5">
+          <div className="pt-3 border-t border-[#2a2a2a] flex flex-col gap-2.5">
             <a
               href="#download"
               onClick={() => setMobileOpen(false)}
-              className="w-full py-2 text-xs font-mono font-bold bg-[#f59e0b] text-[#000000] text-center flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 text-xs sm:text-sm font-mono font-bold bg-[#f59e0b] text-[#000000] text-center flex items-center justify-center gap-1.5"
             >
-              <Download size={13} />
+              <Download size={14} />
               <span>GET STARTED (FREE)</span>
             </a>
             <a
               href="https://github.com/ivegotahunnitonit/bartholomew"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2 text-xs font-mono font-semibold bg-[#0a0a0a] border border-[#222222] text-[#d4d4d8] text-center flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 text-xs sm:text-sm font-mono font-semibold bg-[#0a0a0a] border border-[#2a2a2a] text-[#e4e4e7] text-center flex items-center justify-center gap-1.5"
             >
-              <Code2 size={13} />
+              <Code2 size={14} />
               <span>GITHUB</span>
-              <ExternalLink size={11} className="text-[#71717a]" />
+              <ExternalLink size={12} className="text-[#9ca3af]" />
             </a>
           </div>
         </div>
