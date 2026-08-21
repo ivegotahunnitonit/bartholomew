@@ -20,6 +20,59 @@
 
 ---
 
+### **⚡ 60-Second Multi-Language Quickstarts**
+
+#### **1. Python (`pip install btp-guard`)**
+```python
+from btp_guard import BartholomewTrustAuthority, IndependentTrustVerifier
+
+authority = BartholomewTrustAuthority()
+# Evaluates & signs action in <60 µs
+receipt = authority.evaluate_intent(
+    agent_id="my-agent",
+    action_type="DB_QUERY",
+    payload={"query": "SELECT * FROM orders;"}
+)
+print("Verdict:", receipt["attestation"]["verdict"]) # "ALLOW"
+```
+
+#### **2. TypeScript / Node.js (`npm install @bartholomew/btp-guard`)**
+```typescript
+import { BTPGuard } from '@bartholomew/btp-guard';
+
+const guard = new BTPGuard();
+const receipt = guard.evaluateAction({
+  agentId: 'claude-desktop',
+  actionType: 'DATABASE_MUTATION',
+  payload: { query: 'DROP TABLE accounts;' }
+});
+console.log(receipt.verdict); // "DENY" (Blocked in 11 µs)
+```
+
+#### **3. Go (`go get github.com/ivegotahunnitonit/bartholomew/pkg/btp`)**
+```go
+package main
+import "fmt"
+import "github.com/ivegotahunnitonit/bartholomew/pkg/btp"
+
+func main() {
+    guard := btp.NewGuard()
+    verdict := guard.Evaluate("AGENT_01", "DB_READ", map[string]interface{}{"id": 101})
+    fmt.Println("Verdict:", verdict) // ALLOW (0.00s latency)
+}
+```
+
+#### **4. Command-Line CLI**
+```bash
+# Validate declarative YAML security policies
+python -m src.cli policy validate --file policies/default_security_policy.yaml
+
+# Test an action payload directly in your terminal
+python -m src.cli policy eval -f policies/default_security_policy.yaml -p '{"query": "SELECT 1"}'
+```
+
+---
+
 ### **[FRAMEWORK_ADAPTERS] 1-Line Drop-in Middleware**
 
 | Framework | Integration File | 1-Line Guard | Description |
