@@ -23,6 +23,7 @@ from src.trust_protocol import BartholomewTrustAuthority
 from standalone_btp_verifier import independent_verify_btp_receipt
 from src.rfc8785 import rfc8785_canonicalize
 from src.ast_validator import ASTSecurityValidator
+from src.hermetic_sandbox import HermeticCommandSandbox
 from mcp_server.inline_tool_gate import MandatoryToolGate
 
 class BartholomewMCPServer:
@@ -44,12 +45,9 @@ class BartholomewMCPServer:
                 f.write(code)
             return f"File '{path}' written successfully ({len(code)} bytes)."
 
-        def _safe_run_command(command: str) -> str:
-            # Physical subprocess execution reachable ONLY when gate allows
-            import subprocess
-            res = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=10)
-            output = res.stdout if res.returncode == 0 else f"Command error ({res.returncode}): {res.stderr}"
-            return output.strip() or "[Command executed successfully with no output]"
+        def _safe_run_command(command: str) -> Dict[str, Any]:
+            # Real, bounded execution via HermeticCommandSandbox (Allowlist + Env Scrubbing)
+            return HermeticCommandSandbox.execute_bounded_command(command)
 
         self.gate.register_tool("write_file", _safe_write_file)
         self.gate.register_tool("run_command", _safe_run_command)
