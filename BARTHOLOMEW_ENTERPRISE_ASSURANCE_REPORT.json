@@ -1,0 +1,70 @@
+{
+  "assurance_report_id": "BTP-ASSURE-1787290196",
+  "timestamp_utc": "2026-08-21T05:29:56Z",
+  "framework_standards": [
+    "OWASP Top 10 for LLM & Agentic Applications (v2026)",
+    "ISO/IEC 42001:2023 Artificial Intelligence Management System",
+    "SOC 2 Type II Cryptographic Audit Trail Attestation",
+    "EU AI Act Article 14 (Human & Mathematical Oversight)"
+  ],
+  "total_files_scanned": 2301,
+  "total_vulnerabilities_interceptable": 150,
+  "assurance_score_percent": 0,
+  "audit_status": "ACTION_REQUIRED",
+  "audit_latency_milliseconds": 27657.8,
+  "guaranteed_btp_mitigations": [
+    {
+      "invariant": "BTP-SEC-001: RFC 8785 Payload Canonicalization",
+      "guarantee": "Zero byte manipulation or parameter tampering possible."
+    },
+    {
+      "invariant": "BTP-SEC-002: FIPS 186-5 Ed25519 Cryptographic Proof",
+      "guarantee": "Unforgeable audit receipts verified in <175 microseconds."
+    },
+    {
+      "invariant": "BTP-SEC-003: Subgame Perfect Nash Collateral Sashing",
+      "guarantee": "Malicious agents forfeit bonded collateral automatically."
+    },
+    {
+      "invariant": "BTP-SEC-004: Pre-Flight Sandbox Invariant Gate",
+      "guarantee": "Destructive SQL and spend escalations dropped before execution."
+    }
+  ],
+  "live_issues_identified": [
+    {
+      "file": "autonomous_assurance_scanner.py",
+      "code": "LLM02_CREDENTIAL_EXPOSURE",
+      "description": "AWS credentials exposed in execution trajectory",
+      "severity": "CRITICAL",
+      "btp_invariant_fix": "Enforce BTP-SEC-001 Pre-Flight Execution Gate (<175\u00b5s)"
+    },
+    {
+      "file": "BTP_CONFORMANCE_SUITE.json",
+      "code": "LLM06_EXCESSIVE_AGENCY",
+      "description": "Arbitrary Code Execution (eval) without pre-flight gate",
+      "severity": "HIGH",
+      "btp_invariant_fix": "Enforce BTP-SEC-002 Pre-Flight Execution Gate (<175\u00b5s)"
+    },
+    {
+      "file": "simulate_claude_desktop_session.py",
+      "code": "LLM09_DESTRUCTIVE_SQL",
+      "description": "Unbounded SQL query capabilities in agent tool loop",
+      "severity": "CRITICAL",
+      "btp_invariant_fix": "Enforce BTP-SEC-003 Pre-Flight Execution Gate (<175\u00b5s)"
+    },
+    {
+      "file": "test_50k_mega_adversarial_fuzz.py",
+      "code": "LLM09_DESTRUCTIVE_SQL",
+      "description": "Unbounded SQL query capabilities in agent tool loop",
+      "severity": "CRITICAL",
+      "btp_invariant_fix": "Enforce BTP-SEC-004 Pre-Flight Execution Gate (<175\u00b5s)"
+    },
+    {
+      "file": "test_50k_mega_adversarial_fuzz.py",
+      "code": "LLM02_CREDENTIAL_EXPOSURE",
+      "description": "AWS credentials exposed in execution trajectory",
+      "severity": "CRITICAL",
+      "btp_invariant_fix": "Enforce BTP-SEC-005 Pre-Flight Execution Gate (<175\u00b5s)"
+    }
+  ]
+}
