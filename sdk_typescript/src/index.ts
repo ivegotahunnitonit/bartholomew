@@ -19,11 +19,11 @@ export interface BtpEvaluationResult {
 }
 
 export class BartholomewGuard {
-  private gatewayUrl: string;
+  private gatewayUrl: string | null;
   private maxSpendUsd: number;
 
   constructor(options?: { gatewayUrl?: string; maxSpendUsd?: number }) {
-    this.gatewayUrl = options?.gatewayUrl || 'https://acn-fastapi-backend-322603900775.us-central1.run.app';
+    this.gatewayUrl = options?.gatewayUrl ?? null;
     this.maxSpendUsd = options?.maxSpendUsd ?? 500.0;
   }
 

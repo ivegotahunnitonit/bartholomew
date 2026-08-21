@@ -24,13 +24,13 @@ type Guard struct {
 	MaxSpendUSD float64
 }
 
-// NewGuard initializes a new Bartholomew Guard.
+// NewGuard initializes a new Bartholomew Guard (100% offline local evaluation by default).
 func NewGuard(maxSpendUSD float64) *Guard {
 	if maxSpendUSD <= 0 {
 		maxSpendUSD = 500.0
 	}
 	return &Guard{
-		GatewayURL:  "https://acn-fastapi-backend-322603900775.us-central1.run.app",
+		GatewayURL:  "",
 		MaxSpendUSD: maxSpendUSD,
 	}
 }
