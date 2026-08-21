@@ -8,11 +8,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-slate-900">
           {/* Brand Info */}
           <div className="md:col-span-6 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <Logo size={28} />
-              <span className="font-extrabold text-base tracking-tight text-white font-mono">
-                BARTHOLOMEW
-              </span>
+            <div className="flex items-center">
+              <Logo size={32} />
             </div>
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
               Sub-millisecond cryptographic safety infrastructure and deterministic guardrails for autonomous AI agents.
@@ -103,7 +100,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div>© 2026 Bartholomew Protocol · Open Source</div>
+          <div>© 2026 Open Source under MIT License</div>
           <div className="flex items-center gap-4">
             <a href="https://bartholomew.info" className="text-slate-400 hover:text-white transition">
               bartholomew.info
