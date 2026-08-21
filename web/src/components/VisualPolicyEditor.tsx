@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { ShieldCheck, Sliders, Play, CheckCircle2, AlertTriangle, FileCode } from 'lucide-react'
+import { Sliders, Play, CheckCircle2, AlertTriangle, FileCode, Check, Copy } from 'lucide-react'
 
 export default function VisualPolicyEditor() {
   const [spendLimit, setSpendLimit] = useState(500)
   const [sqlFilterEnabled, setSqlFilterEnabled] = useState(true)
   const [disallowUntrusted, setDisallowUntrusted] = useState(true)
+  const [copied, setCopied] = useState(false)
 
   const [testPayload, setTestPayload] = useState('{\n  "query": "DROP TABLE accounts;",\n  "amount_usd": 49.00,\n  "recipient": "stripe_billing"\n}')
   const [testResult, setTestResult] = useState<{
@@ -24,7 +25,7 @@ export default function VisualPolicyEditor() {
         const dt = (performance.now() - t0) * 1000
         setTestResult({
           verdict: 'DENY',
-          reason: "Destructive pattern detected in payload. (Pattern: 'drop table')",
+          reason: "Destructive pattern detected: 'drop table' is forbidden.",
           latencyUs: Number(dt.toFixed(2)) + 12.4
         })
         return
@@ -55,13 +56,13 @@ export default function VisualPolicyEditor() {
       const dt = (performance.now() - t0) * 1000
       setTestResult({
         verdict: 'ALLOW',
-        reason: 'All declarative policy rules passed.',
+        reason: 'All safety rules and spend invariants passed.',
         latencyUs: Number(dt.toFixed(2)) + 24.3
       })
     } catch {
       setTestResult({
         verdict: 'DENY',
-        reason: 'Invalid JSON payload structure.',
+        reason: 'Invalid JSON payload format.',
         latencyUs: 5.2
       })
     }
@@ -92,34 +93,45 @@ rules:
     disallowed:
       - "untrusted_wallet"`
 
-  return (
-    <section id="policy-editor" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      <div className="text-center mb-12">
-        <div className="text-xs font-mono font-bold tracking-widest text-cyan-400 uppercase mb-2">
-          POLICY-AS-CODE &amp; DECLARATIVE INVARIANTS
-        </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 font-sans">
-          Declarative Policy Manager
-        </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-base">
-          Configure, test, and evaluate custom agent safety boundaries in real time with sub-40 microsecond execution guarantees.
-        </p>
-      </div>
+  const handleCopyYaml = () => {
+    navigator.clipboard.writeText(generatedYaml)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column: Visual Controls & Generated YAML */}
-        <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
-            <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-              <Sliders className="w-5 h-5 text-cyan-400" />
-              <h3 className="font-semibold text-white text-sm">Policy Controls</h3>
+  return (
+    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+            <Sliders size={13} />
+            Interactive Rule Builder
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Customize Your AI Safety Rules
+          </h2>
+          <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+            Configure safety boundaries visually. Bartholomew compiles your rules into a sub-millisecond local policy file with zero cloud lock-in.
+          </p>
+        </div>
+
+        {/* 2-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Controls Column */}
+          <div className="lg:col-span-5 p-6 sm:p-7 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-sm space-y-6">
+            <div className="flex items-center gap-2 text-sm font-bold text-white border-b border-slate-800 pb-3">
+              <Sliders size={16} className="text-cyan-400" />
+              <span>Safety Rule Controls</span>
             </div>
 
             {/* Spend Limit Slider */}
             <div>
-              <div className="flex justify-between text-xs font-mono mb-2">
-                <span className="text-slate-400">Max Transaction Spend Threshold</span>
-                <span className="text-cyan-400 font-bold">${spendLimit}.00 USD</span>
+              <div className="flex justify-between items-center text-xs font-semibold text-slate-300 mb-2">
+                <span>Maximum Allowed Spend Cap:</span>
+                <span className="font-mono text-cyan-300 bg-slate-950 px-2.5 py-1 rounded border border-slate-800 font-bold">
+                  ${spendLimit}.00
+                </span>
               </div>
               <input
                 type="range"
@@ -130,100 +142,111 @@ rules:
                 onChange={(e) => setSpendLimit(Number(e.target.value))}
                 className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
               />
-            </div>
-
-            {/* Toggles */}
-            <div className="space-y-3 pt-2">
-              <label className="flex items-center justify-between p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 cursor-pointer">
-                <span className="text-xs font-medium text-slate-300">Destructive SQL &amp; Command Filter</span>
-                <input
-                  type="checkbox"
-                  checked={sqlFilterEnabled}
-                  onChange={(e) => setSqlFilterEnabled(e.target.checked)}
-                  className="w-4 h-4 rounded text-cyan-500 focus:ring-0 bg-slate-900 border-slate-700"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 cursor-pointer">
-                <span className="text-xs font-medium text-slate-300">Block Disallowed Wallets / Recipient Sinks</span>
-                <input
-                  type="checkbox"
-                  checked={disallowUntrusted}
-                  onChange={(e) => setDisallowUntrusted(e.target.checked)}
-                  className="w-4 h-4 rounded text-cyan-500 focus:ring-0 bg-slate-900 border-slate-700"
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* Generated YAML Box */}
-          <div className="p-5 rounded-2xl bg-slate-950/90 border border-slate-800/80">
-            <div className="flex items-center justify-between mb-3 text-xs font-mono text-slate-400">
-              <span className="flex items-center gap-2">
-                <FileCode className="w-4 h-4 text-cyan-400" />
-                policies/custom_security_policy.yaml
-              </span>
-              <span className="text-[11px] text-slate-500">Auto-Generated</span>
-            </div>
-            <pre className="p-4 rounded-xl bg-slate-900/60 text-cyan-300 text-xs font-mono overflow-x-auto leading-relaxed">
-              {generatedYaml}
-            </pre>
-          </div>
-        </div>
-
-        {/* Right Column: Live Policy Test Sandbox */}
-        <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-semibold text-white text-sm">Live Invariant Sandbox</h3>
+              <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                <span>$50</span>
+                <span>$2,500</span>
+                <span>$5,000</span>
               </div>
-              <span className="text-xs font-mono text-cyan-400">&lt; 40 µs Gateway</span>
             </div>
 
-            <label className="block text-xs font-mono text-slate-400 mb-2">
-              Candidate Agent Tool Payload (JSON)
-            </label>
-            <textarea
-              rows={8}
-              value={testPayload}
-              onChange={(e) => setTestPayload(e.target.value)}
-              className="w-full p-4 rounded-xl bg-slate-950/90 border border-slate-800 text-slate-200 font-mono text-xs focus:outline-none focus:border-cyan-500/50"
-            />
-          </div>
+            {/* Toggle 1 */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+              <div>
+                <div className="text-xs font-bold text-slate-200">Block Destructive SQL</div>
+                <div className="text-[11px] text-slate-400">Rejects DROP and TRUNCATE queries</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={sqlFilterEnabled}
+                onChange={(e) => setSqlFilterEnabled(e.target.checked)}
+                className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-cyan-500 focus:ring-0 cursor-pointer"
+              />
+            </div>
 
-          <div className="mt-6 space-y-4">
-            <button
-              onClick={evaluateCustomPolicy}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-bold text-xs transition shadow-lg shadow-cyan-500/10"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              EVALUATE DECLARATIVE INVARIANTS
-            </button>
+            {/* Toggle 2 */}
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+              <div>
+                <div className="text-xs font-bold text-slate-200">Disallow Untrusted Wallets</div>
+                <div className="text-[11px] text-slate-400">Blocks transfers to unverified addresses</div>
+              </div>
+              <input
+                type="checkbox"
+                checked={disallowUntrusted}
+                onChange={(e) => setDisallowUntrusted(e.target.checked)}
+                className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-cyan-500 focus:ring-0 cursor-pointer"
+              />
+            </div>
 
-            {testResult && (
-              <div
-                className={`p-4 rounded-xl border font-mono text-xs flex items-start gap-3 ${
-                  testResult.verdict === 'ALLOW'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                    : 'bg-red-500/10 border-red-500/30 text-red-300'
-                }`}
+            {/* Test Payload Box */}
+            <div className="pt-2">
+              <div className="text-xs font-bold text-slate-300 mb-2">Simulate Incoming AI Tool Call:</div>
+              <textarea
+                value={testPayload}
+                onChange={(e) => setTestPayload(e.target.value)}
+                rows={4}
+                className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-cyan-300 focus:outline-none focus:border-cyan-500/60 leading-relaxed resize-none"
+              />
+              <button
+                onClick={evaluateCustomPolicy}
+                className="mt-3 w-full py-2.5 px-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/10"
               >
-                {testResult.verdict === 'ALLOW' ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                )}
-                <div>
-                  <div className="font-bold flex items-center gap-2">
-                    <span>{testResult.verdict}</span>
-                    <span className="text-slate-400 font-normal">({testResult.latencyUs} µs decision latency)</span>
-                  </div>
-                  <div className="text-[11px] mt-1 text-slate-300">{testResult.reason}</div>
+                <Play size={14} className="fill-current" />
+                Test Invariant Evaluation (&lt;50 µs)
+              </button>
+            </div>
+
+            {/* Verdict Box */}
+            {testResult && (
+              <div className={`p-4 rounded-xl border text-xs ${
+                testResult.verdict === 'ALLOW'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              }`}>
+                <div className="flex items-center justify-between font-bold mb-1">
+                  <span className="flex items-center gap-1.5 font-mono">
+                    {testResult.verdict === 'ALLOW' ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
+                    {testResult.verdict === 'ALLOW' ? 'VERDICT: ALLOW' : 'VERDICT: DENY (BLOCKED)'}
+                  </span>
+                  <span className="font-mono text-[11px] opacity-80">{testResult.latencyUs} µs</span>
                 </div>
+                <div className="text-[11px] opacity-90">{testResult.reason}</div>
               </div>
             )}
+          </div>
+
+          {/* Generated YAML Code Column */}
+          <div className="lg:col-span-7 p-6 sm:p-7 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <div className="flex items-center gap-2 text-sm font-bold text-white">
+                  <FileCode size={16} className="text-cyan-400" />
+                  <span>Compiled Policy File (YAML)</span>
+                </div>
+                <button
+                  onClick={handleCopyYaml}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700"
+                >
+                  {copied ? (
+                    <>
+                      <Check size={12} className="text-emerald-400" />
+                      <span className="text-emerald-400">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} />
+                      <span>Copy YAML</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 overflow-x-auto leading-relaxed">
+                {generatedYaml}
+              </pre>
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+              <span className="text-emerald-400 font-mono">● 100% Localhost Ready</span>
+              <span>Drop into <code className="text-cyan-300">.btp/policy.yaml</code></span>
+            </div>
           </div>
         </div>
       </div>
