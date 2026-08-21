@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-6 space-y-3">
             <div className="flex items-center">
-              <Logo size={30} />
+              <Logo size={28} showText={true} />
             </div>
             <p className="text-xs text-[#a1a1aa] max-w-sm leading-relaxed font-sans">
               Sub-millisecond cryptographic safety infrastructure and deterministic guardrails for autonomous AI agents.

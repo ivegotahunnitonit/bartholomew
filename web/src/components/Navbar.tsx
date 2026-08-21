@@ -23,7 +23,7 @@ export default function Navbar() {
         {/* Brand Logo & Box Status Tag */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
-            <Logo size={28} />
+            <Logo size={28} showText={true} />
           </Link>
           <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[11px] font-mono">
             <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
