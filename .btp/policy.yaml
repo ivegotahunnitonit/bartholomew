@@ -1,0 +1,15 @@
+version: "2.2.0"
+policy_id: "urn:btp:policy:default"
+rules:
+  - id: "RULE_SPEND_CAP"
+    field: "amount_usd"
+    type: "max_threshold"
+    value: 500.00
+    action: "DENY"
+
+  - id: "RULE_FORBIDDEN_COMMANDS"
+    type: "forbidden_substrings"
+    patterns:
+      - "rm -rf"
+      - "DROP TABLE"
+      - "DROP SCHEMA"

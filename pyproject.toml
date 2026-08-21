@@ -1,40 +1,50 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
 version = "2.2.0"
-authors = [
-    { name = "Bartholomew Protocol Team", email = "security@bartholomew.dev" }
-]
-description = "Sub-millisecond cryptographic invariant and safety guardrail engine for autonomous AI agents."
+description = "Bartholomew Autonomous Trust Protocol (BTP) — Sub-millisecond deterministic guardrails, AST compiler gating, and RFC 8785 Ed25519 attestations for AI agents."
 readme = "README.md"
+authors = [
+    { name = "Bartholomew Team", email = "security@bartholomew.info" }
+]
+license = { text = "MIT" }
+keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "ed25519", "rfc8785", "mcp", "claude-desktop", "cursor"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
 requires-python = ">=3.10"
 dependencies = [
-    "cryptography>=41.0.0",
-    "pyyaml>=6.0",
-    "fastapi>=0.100.0",
-    "uvicorn>=0.22.0",
-    "pydantic>=2.0.0",
-    "requests>=2.28.0"
+    "cryptography>=42.0.0",
+    "pyyaml>=6.0"
 ]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Topic :: Security :: Cryptography"
-]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.100.0", "uvicorn>=0.22.0"]
+test = ["pytest>=7.0.0"]
 
 [project.urls]
-"Homepage" = "https://github.com/ivegotahunnitonit/bartholomew"
-"Bug Tracker" = "https://github.com/ivegotahunnitonit/bartholomew/issues"
+Homepage = "https://bartholomew.info"
+Documentation = "https://bartholomew.info#sdk"
+Repository = "https://github.com/ivegotahunnitonit/bartholomew"
+Tracker = "https://github.com/ivegotahunnitonit/bartholomew/issues"
 
 [project.scripts]
-bartholomew = "src.cli:main"
-btp = "src.cli:main"
+bartholomew = "cli:main"
+btp-guard = "cli:main"
 
-[tool.pyright]
-pythonVersion = "3.10"
-include = ["."]
-extraPaths = ["."]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "btp_guard*", "daemon*"]

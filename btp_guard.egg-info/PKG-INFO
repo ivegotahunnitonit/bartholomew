@@ -1,26 +1,38 @@
 Metadata-Version: 2.4
 Name: btp-guard
 Version: 2.2.0
-Summary: Sub-millisecond cryptographic invariant and safety guardrail engine for autonomous AI agents.
+Summary: Bartholomew Autonomous Trust Protocol (BTP) — Sub-millisecond deterministic guardrails, AST compiler gating, and RFC 8785 Ed25519 attestations for AI agents.
 Author: Bartholomew Protocol Team
-Author-email: Bartholomew Protocol Team <security@bartholomew.dev>
-Project-URL: Homepage, https://github.com/ivegotahunnitonit/bartholomew
-Project-URL: Bug Tracker, https://github.com/ivegotahunnitonit/bartholomew/issues
-Classifier: Programming Language :: Python :: 3
+Author-email: Bartholomew Team <security@bartholomew.info>
+License: MIT
+Project-URL: Homepage, https://bartholomew.info
+Project-URL: Documentation, https://bartholomew.info#sdk
+Project-URL: Repository, https://github.com/ivegotahunnitonit/bartholomew
+Project-URL: Tracker, https://github.com/ivegotahunnitonit/bartholomew/issues
+Keywords: ai-safety,agent-guardrails,security,ast-analysis,ed25519,rfc8785,mcp,claude-desktop,cursor
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
-Classifier: Topic :: Security :: Cryptography
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Topic :: Security
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: LICENSE-ENTERPRISE.md
 License-File: LICENSE.md
-Requires-Dist: cryptography>=41.0.0
+Requires-Dist: cryptography>=42.0.0
 Requires-Dist: pyyaml>=6.0
-Requires-Dist: fastapi>=0.100.0
-Requires-Dist: uvicorn>=0.22.0
-Requires-Dist: pydantic>=2.0.0
-Requires-Dist: requests>=2.28.0
+Provides-Extra: fastapi
+Requires-Dist: fastapi>=0.100.0; extra == "fastapi"
+Requires-Dist: uvicorn>=0.22.0; extra == "fastapi"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0.0; extra == "test"
 Dynamic: author
 Dynamic: license-file
 Dynamic: requires-python
