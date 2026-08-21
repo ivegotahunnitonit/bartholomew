@@ -45,7 +45,11 @@ class BartholomewMCPServer:
             return f"File '{path}' written successfully ({len(code)} bytes)."
 
         def _safe_run_command(command: str) -> str:
-            return f"Command '{command}' authorized and queued."
+            # Physical subprocess execution reachable ONLY when gate allows
+            import subprocess
+            res = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=10)
+            output = res.stdout if res.returncode == 0 else f"Command error ({res.returncode}): {res.stderr}"
+            return output.strip() or "[Command executed successfully with no output]"
 
         self.gate.register_tool("write_file", _safe_write_file)
         self.gate.register_tool("run_command", _safe_run_command)

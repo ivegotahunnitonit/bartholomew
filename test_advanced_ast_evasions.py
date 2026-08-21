@@ -2,13 +2,14 @@
 Advanced AST Evasion & Exploit Test Suite
 =========================================
 Tests compiler-grade defenses against:
-  1. Variable assignment alias (s = os; s.system(...)).
-  2. Chained import aliases (from os import system as s).
-  3. String concatenation getattr (getattr(os, 'sys' + 'tem')).
-  4. Dunder attribute access (().__class__.__subclasses__()).
-  5. Arbitrary file write to system path (open('/etc/shadow', 'w')).
-  6. Socket exfiltration import (import socket).
-  7. Legitimate code execution.
+  1. Tuple unpacking assignment alias (a, s = 1, os; s.system(...)).
+  2. Single variable assignment alias (s = os; s.system(...)).
+  3. Chained import aliases (from os import system as s).
+  4. Constant-folded getattr (getattr(os, 'sys' + 'tem')).
+  5. Dunder attribute access (().__class__.__subclasses__()).
+  6. Arbitrary file write to system path (open('/etc/shadow', 'w')).
+  7. Socket exfiltration import (import socket).
+  8. Legitimate code execution.
 """
 
 import sys
@@ -23,6 +24,12 @@ def run_evasion_tests():
     print("=" * 80 + "\n")
 
     test_cases = [
+        {
+            "name": "Tuple Unpacking Assignment (a, s = 1, os; s.system(...))",
+            "code": "import os\na, s = 1, os\ns.system('rm -rf /')",
+            "expect_safe": False,
+            "expected_violation": "os.system"
+        },
         {
             "name": "Variable Assignment Alias (s = os; s.system(...))",
             "code": "import os\ns = os\ns.system('rm -rf /')",

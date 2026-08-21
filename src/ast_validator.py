@@ -4,7 +4,7 @@ Bartholomew Compiler-Grade AST Security & Invariant Engine
 Deep structural Python Abstract Syntax Tree (AST) static analysis.
 Handles:
   1. Direct, aliased, and imported execution calls (eval, exec, os.system, subprocess).
-  2. Variable assignment alias propagation (s = os; s.system(...)).
+  2. Single & tuple assignment alias propagation (s = os; a, s = 1, os; s.system(...)).
   3. Dunder and reflection attacks (__builtins__, __subclasses__, __import__, globals()).
   4. Dynamic getattr with constant-folded string concatenation.
   5. Destructive filesystem operations (open(..., 'w'), shutil.rmtree).
@@ -45,12 +45,12 @@ class ASTSecurityValidator:
 
         total_nodes = 0
         violations: List[str] = []
-        aliases: Dict[str, str] = {} # Symbol table: local var -> canonical module/func
+        aliases: Dict[str, str] = {}
 
         for node in ast.walk(tree):
             total_nodes += 1
 
-            # 1. Track Imports & Import-Aliases
+            # 1. Track Imports & Import-Aliases (import os as o, from os import system as s)
             if isinstance(node, ast.Import):
                 for alias in node.names:
                     original = alias.name
@@ -68,13 +68,9 @@ class ASTSecurityValidator:
                     asname = alias.asname or alias.name
                     aliases[asname] = canonical
 
-            # 2. Track Variable Assignment Aliases (s = os, p = os.system)
+            # 2. Track Single & Tuple Unpacking Assignments (s = os; a, s = 1, os)
             elif isinstance(node, ast.Assign):
-                rhs_resolved = cls._resolve_call_name(node.value, aliases)
-                if rhs_resolved:
-                    for target in node.targets:
-                        if isinstance(target, ast.Name):
-                            aliases[target.id] = rhs_resolved
+                cls._extract_assignment_aliases(node, aliases)
 
             # 3. Inspect Dunder / Reflection Attributes (__builtins__, __subclasses__)
             elif isinstance(node, ast.Attribute):
@@ -123,6 +119,27 @@ class ASTSecurityValidator:
         }
 
         return is_safe, reason, metadata
+
+    @classmethod
+    def _extract_assignment_aliases(cls, node: ast.Assign, aliases: Dict[str, str]) -> None:
+        """Extracts aliases from simple assignments (s = os) and tuple unpacking (a, s = 1, os)."""
+        # Case A: Simple single assignment (s = os)
+        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            target_name = node.targets[0].id
+            rhs_resolved = cls._resolve_call_name(node.value, aliases)
+            if rhs_resolved:
+                aliases[target_name] = rhs_resolved
+
+        # Case B: Tuple unpacking (a, s = 1, os)
+        elif len(node.targets) == 1 and isinstance(node.targets[0], ast.Tuple) and isinstance(node.value, ast.Tuple):
+            target_elts = node.targets[0].elts
+            value_elts = node.value.elts
+            if len(target_elts) == len(value_elts):
+                for t_elt, v_elt in zip(target_elts, value_elts):
+                    if isinstance(t_elt, ast.Name):
+                        rhs_res = cls._resolve_call_name(v_elt, aliases)
+                        if rhs_res:
+                            aliases[t_elt.id] = rhs_res
 
     @classmethod
     def _resolve_call_name(cls, func_node: ast.AST, aliases: Dict[str, str]) -> str:
