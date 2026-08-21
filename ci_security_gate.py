@@ -23,9 +23,11 @@ def run_gate():
         ("1. Validate Declarative Policies", ["python", "-m", "src.cli", "policy", "validate", "--file", "policies/default_security_policy.yaml"]),
         ("2. Test Declarative Policy Engine", ["python", "test_declarative_policy_engine.py"]),
         ("3. Test Sidecar Runtime E2E", ["python", "sidecar/test_sidecar_e2e.py"]),
-        ("4. Test TypeScript SDK", ["node", "test_ts_sdk.js"], "sdk_typescript"),
-        ("5. Test Go Microsecond Engine", ["go", "test", "-v", "./..."], "sdk_go"),
-        ("6. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"])
+        ("4. Test Hermetic Command & File Sandbox", ["python", "test_hermetic_command_sandbox.py"]),
+        ("5. Test Docker / Hermetic Execution Runner", ["python", "test_docker_runner.py"]),
+        ("6. Test TypeScript SDK", ["node", "test_ts_sdk.js"], "sdk_typescript"),
+        ("7. Test Go Microsecond Engine", ["go", "test", "-v", "./..."], "sdk_go"),
+        ("8. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"])
     ]
 
     all_passed = True
