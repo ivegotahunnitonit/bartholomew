@@ -107,7 +107,7 @@ const { allowed, reason, signature } = authority.evaluateIntent({
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981]">[BTP v2.2 ACTIVE]</span>
             <span className="text-[#555555]">|</span>
-            <span className="text-[#d4d4d8]">READY FOR CLAUDE, OPENAI &amp; CURSOR AGENTS</span>
+            <span className="text-[#d4d4d8]">UNIVERSAL COMPATIBILITY · READY FOR ALL AI AGENTS &amp; FRAMEWORKS</span>
           </div>
         </div>
 
@@ -125,7 +125,7 @@ const { allowed, reason, signature } = authority.evaluateIntent({
 
         {/* Action-Oriented Subtitle */}
         <p className="text-center mx-auto mb-8 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          Download the sub-millisecond local engine or drop the SDK wrapper straight into your Python, Node, or Go projects. Wrap your Claude, OpenAI, or LangChain agents in a single line of code with guaranteed cryptographic boundaries.
+          Download the sub-millisecond local engine or drop the SDK wrapper straight into your Python, Node, or Go projects. Wrap any AI agent, framework, or custom script in a single line of code with guaranteed cryptographic boundaries.
         </p>
 
         {/* Primary CTA Buttons */}
