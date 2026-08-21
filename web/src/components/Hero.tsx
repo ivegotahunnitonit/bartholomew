@@ -56,11 +56,11 @@ response = client.chat.completions.create(
 
         {/* Metallic Dimensional Hero Title */}
         <h1
-          className="text-center font-bold mb-6 font-sans hero-metallic-title"
+          className="text-center font-bold mb-5 font-sans hero-metallic-title"
           style={{
-            fontSize: 'clamp(2.75rem, 5vw, 4.5rem)',
-            lineHeight: 1.05,
-            letterSpacing: '-0.03em'
+            fontSize: 'clamp(2.1rem, 3.8vw, 3.25rem)',
+            lineHeight: 1.12,
+            letterSpacing: '-0.025em'
           }}
         >
           The Seatbelt and Black Box <br className="hidden sm:block" />
@@ -68,7 +68,7 @@ response = client.chat.completions.create(
         </h1>
 
         {/* High-Contrast Zinc Subtitle */}
-        <p className="text-center mx-auto mb-9 text-[#d4d4d8] leading-relaxed max-w-3xl text-base sm:text-lg font-sans">
+        <p className="text-center mx-auto mb-8 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
           Empower AI agents with execution access without the risk. Bartholomew intercepts destructive code, unauthorized database drops, and API overspending in <strong className="text-[#ffffff]">under 50 microseconds</strong>—using deterministic AST scanning and cryptographic audit trails.
         </p>
 
