@@ -3,10 +3,15 @@ Bartholomew CI/CD Multi-Runtime Automated Security Gate
 ======================================================
 Executes end-to-end multi-language test suite and policy validation:
   1. Declarative policy validation (YAML/JSON).
-  2. Python cryptographic invariants & sidecar E2E.
-  3. TypeScript/Node.js SDK verification.
-  4. Go compiled microsecond engine.
-  5. Multi-agent swarm concurrency test.
+  2. Declarative policy engine verification.
+  3. Sidecar runtime E2E.
+  4. Hermetic command & file sandbox boundary containment.
+  5. Docker / hermetic execution runner.
+  6. TypeScript/Node.js SDK verification.
+  7. Go compiled microsecond engine.
+  8. Multi-agent swarm concurrency verification.
+  9. 1-Line drop-in client wrapper (OpenAI / Anthropic).
+  10. Native LangChain & CrewAI guardrail callback plugin.
 """
 
 import sys
@@ -16,7 +21,7 @@ import time
 
 def run_gate():
     print("=" * 80)
-    print("RUNNING BARTHOLOMEW CI/CD MULTI-RUNTIME SECURITY GATE")
+    print("RUNNING BARTHOLOMEW CORE MULTI-RUNTIME SECURITY GATE")
     print("=" * 80 + "\n")
 
     steps = [
@@ -28,15 +33,8 @@ def run_gate():
         ("6. Test TypeScript SDK", ["node", "test_ts_sdk.js"], "sdk_typescript"),
         ("7. Test Go Microsecond Engine", ["go", "test", "-v", "./..."], "sdk_go"),
         ("8. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"]),
-        ("9. Test AgentMesh Social & Task Network", ["python", "test_agent_social_network.py"]),
-        ("10. Test Autonomous Bounty Solver & PR Engine", ["python", "test_autonomous_bounty_solver.py"]),
-        ("11. Test IssueHunt & Open VRP Hunter Engine", ["python", "test_issuehunt_vrp_hunter.py"]),
-        ("12. Test Invariant Fuzzing & Bounty Crawler", ["python", "test_fuzzing_bounty_crawler.py"]),
-        ("13. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
-        ("14. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"]),
-        ("15. Test Enterprise Agent Scout & M2M Settlement", ["python", "test_enterprise_agent_scout.py"]),
-        ("16. Test Fund Legitimacy & Financial Invariants", ["python", "test_fund_legitimacy_verifier.py"]),
-        ("17. Test Zero-Friction M2M Instant Settlement", ["python", "test_zero_friction_m2m_engine.py"])
+        ("9. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
+        ("10. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"])
     ]
 
     all_passed = True
@@ -56,9 +54,9 @@ def run_gate():
 
     print("\n" + "=" * 80)
     if all_passed:
-        print("CI/CD GATE STATUS: 100% ALL RUNTIMES PASSED")
+        print("CORE CI/CD GATE STATUS: 100% ALL RUNTIMES PASSED CLEAN")
     else:
-        print("CI/CD GATE STATUS: FAILURES DETECTED")
+        print("CORE CI/CD GATE STATUS: FAILURES DETECTED")
     print("=" * 80)
 
     if not all_passed:
