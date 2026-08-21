@@ -1672,6 +1672,15 @@ def stripe_status():
 # Autonomous Agent-to-Agent (A2A) Machine Discovery & Runtime Sidecar Gateway
 # ─────────────────────────────────────────────────────────────────────────────
 
+@app.get("/llms.txt", response_class=HTMLResponse)
+def get_llms_txt():
+    """Standard llms.txt index for AI crawlers (OpenAI, Anthropic, Gemini, Perplexity)."""
+    p = _root_workspace / "llms.txt"
+    if p.exists():
+        return p.read_text(encoding="utf-8")
+    return "# Bartholomew BTP v2.2\nSub-millisecond cryptographic execution gate for AI agents."
+
+
 @app.get("/.well-known/ai-agent-manifest.json")
 def ai_agent_manifest():
     """RFC Machine-to-Machine Autonomous Agent Interconnect Manifest."""
