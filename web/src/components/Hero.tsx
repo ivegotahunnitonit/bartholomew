@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Download, Check, Copy, Cpu, CheckCircle2, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
+import { Download, Check, Copy, Cpu, CheckCircle2 } from 'lucide-react'
 
 type AgentTarget = 'claude' | 'openai' | 'langchain' | 'custom'
 type InstallTarget = 'windows' | 'mac' | 'pip' | 'npm'
@@ -9,22 +9,6 @@ export default function Hero() {
   const [activeInstallTab, setActiveInstallTab] = useState<InstallTarget>('windows')
   const [copiedCode, setCopiedCode] = useState(false)
   const [copiedCommand, setCopiedCommand] = useState(false)
-  const [showDownloadMenu, setShowDownloadMenu] = useState(false)
-  const [osName, setOsName] = useState<'windows' | 'mac' | 'linux'>('windows')
-
-  useEffect(() => {
-    const userAgent = window.navigator.userAgent.toLowerCase()
-    if (userAgent.includes('mac')) {
-      setOsName('mac')
-      setActiveInstallTab('mac')
-    } else if (userAgent.includes('linux')) {
-      setOsName('linux')
-      setActiveInstallTab('mac')
-    } else {
-      setOsName('windows')
-      setActiveInstallTab('windows')
-    }
-  }, [])
 
   const installCommands = {
     windows: 'irm https://bartholomew.info/install.ps1 | iex',
@@ -114,14 +98,6 @@ const { allowed, reason, signature } = authority.evaluateIntent({
     setTimeout(() => setCopiedCommand(false), 2000)
   }
 
-  const handleDirectDownload = () => {
-    if (osName === 'windows') {
-      window.location.href = '/install.bat'
-    } else {
-      window.location.href = '/install.sh'
-    }
-  }
-
   return (
     <section className="relative min-h-[96vh] flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-black text-white overflow-hidden">
       <div className="max-w-5xl mx-auto w-full relative z-10">
@@ -148,76 +124,13 @@ const { allowed, reason, signature } = authority.evaluateIntent({
         </h1>
 
         {/* Action-Oriented Subtitle */}
-        <p className="text-center mx-auto mb-8 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
+        <p className="text-center mx-auto mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
           Download the sub-millisecond local engine or drop the SDK wrapper straight into your Python, Node, or Go projects. Wrap any AI agent, framework, or custom script in a single line of code with guaranteed cryptographic boundaries.
         </p>
 
-        {/* 1-Click Direct Download & Copy CTA Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-10 relative">
-          <div className="relative">
-            <div className="inline-flex rounded-none shadow-lg">
-              <button
-                onClick={handleDirectDownload}
-                className="px-6 py-3 text-sm font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-2"
-              >
-                <Download size={15} />
-                <span>[ 1-CLICK DOWNLOAD ({osName === 'windows' ? 'WINDOWS .BAT' : 'MACOS/LINUX .SH'}) ]</span>
-              </button>
-              <button
-                onClick={() => setShowDownloadMenu(!showDownloadMenu)}
-                className="px-3 py-3 bg-[#d97706] hover:bg-[#b45309] text-[#000000] border-t border-b border-r border-[#f59e0b] transition flex items-center justify-center"
-                aria-label="More download options"
-              >
-                <ChevronDown size={15} />
-              </button>
-            </div>
-
-            {/* Dropdown Options */}
-            {showDownloadMenu && (
-              <div className="absolute left-0 mt-1 w-64 bg-[#0a0a0a] border border-[#222222] shadow-2xl z-50 font-mono text-xs">
-                <a
-                  href="/install.bat"
-                  download="install.bat"
-                  onClick={() => setShowDownloadMenu(false)}
-                  className="p-3 block hover:bg-[#141414] text-[#d4d4d8] hover:text-[#ffffff] border-b border-[#1a1a1a]"
-                >
-                  <div className="font-bold text-[#f59e0b]">[DOWNLOAD FOR WINDOWS]</div>
-                  <div className="text-[10px] text-[#71717a]">install.bat (Direct 1-Click)</div>
-                </a>
-                <a
-                  href="/install.ps1"
-                  download="install.ps1"
-                  onClick={() => setShowDownloadMenu(false)}
-                  className="p-3 block hover:bg-[#141414] text-[#d4d4d8] hover:text-[#ffffff] border-b border-[#1a1a1a]"
-                >
-                  <div className="font-bold text-[#10b981]">[POWERSHELL SCRIPT]</div>
-                  <div className="text-[10px] text-[#71717a]">install.ps1</div>
-                </a>
-                <a
-                  href="/install.sh"
-                  download="install.sh"
-                  onClick={() => setShowDownloadMenu(false)}
-                  className="p-3 block hover:bg-[#141414] text-[#d4d4d8] hover:text-[#ffffff]"
-                >
-                  <div className="font-bold text-[#ffffff]">[MACOS / LINUX BASH]</div>
-                  <div className="text-[10px] text-[#71717a]">install.sh (Direct 1-Click)</div>
-                </a>
-              </div>
-            )}
-          </div>
-
-          <button
-            onClick={handleCopySnippet}
-            className="px-6 py-3 text-sm font-mono font-semibold bg-[#0a0a0a] hover:bg-[#141414] border border-[#222222] hover:border-[#444444] text-[#ffffff] transition flex items-center gap-2"
-          >
-            <Copy size={15} className="text-[#10b981]" />
-            <span>{copiedCode ? '[ COPIED WRAPPER ]' : '[ COPY SDK WRAPPER ]'}</span>
-          </button>
-        </div>
-
         {/* Front-and-Center 1-Click Terminal Box */}
         <div className="bg-[#0a0a0a] border border-[#222222] max-w-3xl mx-auto mb-12 shadow-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2 bg-[#000000] border-b border-[#222222]">
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 bg-[#ef4444]" />
               <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
@@ -228,10 +141,10 @@ const { allowed, reason, signature } = authority.evaluateIntent({
               <a
                 href={activeInstallTab === 'windows' ? '/install.bat' : '/install.sh'}
                 download={activeInstallTab === 'windows' ? 'install.bat' : 'install.sh'}
-                className="text-[10px] font-mono text-[#f59e0b] hover:underline flex items-center gap-1"
+                className="text-[11px] font-mono text-[#f59e0b] hover:underline flex items-center gap-1 font-semibold"
               >
-                <Download size={10} />
-                <span>Direct File</span>
+                <Download size={11} />
+                <span>Direct File Download</span>
               </a>
             </div>
           </div>
