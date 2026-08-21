@@ -2,12 +2,13 @@
 Bartholomew Compiler-Grade AST Security & Invariant Engine
 =========================================================
 Deep structural Python Abstract Syntax Tree (AST) static analysis.
-Defends against:
-  1. Direct, aliased, and imported execution calls (eval, exec, compile, os.system, subprocess).
-  2. Dunder and reflection attacks (__builtins__, __subclasses__, __import__, globals()).
-  3. Dynamic getattr with constant-folded string concatenation (getattr(os, 'sys' + 'tem')).
-  4. Destructive filesystem operations (open(..., 'w'), shutil.rmtree, pathlib.Path.unlink).
-  5. Unauthorized network exfiltration (socket, urllib.request, requests, httpx).
+Handles:
+  1. Direct, aliased, and imported execution calls (eval, exec, os.system, subprocess).
+  2. Variable assignment alias propagation (s = os; s.system(...)).
+  3. Dunder and reflection attacks (__builtins__, __subclasses__, __import__, globals()).
+  4. Dynamic getattr with constant-folded string concatenation.
+  5. Destructive filesystem operations (open(..., 'w'), shutil.rmtree).
+  6. Network socket & exfiltration module containment.
 """
 
 import ast
@@ -44,7 +45,7 @@ class ASTSecurityValidator:
 
         total_nodes = 0
         violations: List[str] = []
-        aliases: Dict[str, str] = {} # Symbol table: maps local variable name -> canonical target
+        aliases: Dict[str, str] = {} # Symbol table: local var -> canonical module/func
 
         for node in ast.walk(tree):
             total_nodes += 1
@@ -67,12 +68,20 @@ class ASTSecurityValidator:
                     asname = alias.asname or alias.name
                     aliases[asname] = canonical
 
-            # 2. Inspect Dunder / Reflection Attributes (__builtins__, __subclasses__)
+            # 2. Track Variable Assignment Aliases (s = os, p = os.system)
+            elif isinstance(node, ast.Assign):
+                rhs_resolved = cls._resolve_call_name(node.value, aliases)
+                if rhs_resolved:
+                    for target in node.targets:
+                        if isinstance(target, ast.Name):
+                            aliases[target.id] = rhs_resolved
+
+            # 3. Inspect Dunder / Reflection Attributes (__builtins__, __subclasses__)
             elif isinstance(node, ast.Attribute):
                 if node.attr in cls.DANGEROUS_ATTRIBUTES:
                     violations.append(f"Forbidden Dunder Attribute Access: '{node.attr}'")
 
-            # 3. Inspect Function & Method Calls (ast.Call)
+            # 4. Inspect Function & Method Calls (ast.Call)
             elif isinstance(node, ast.Call):
                 call_name = cls._resolve_call_name(node.func, aliases)
                 
@@ -94,7 +103,6 @@ class ASTSecurityValidator:
                     if len(node.args) >= 2:
                         mode_val = cls._evaluate_string_expr(node.args[1])
                         if mode_val and any(m in mode_val for m in ["w", "a", "x", "+"]):
-                            # Inspect file path if constant
                             if isinstance(node.args[0], ast.Constant):
                                 path_str = str(node.args[0].value)
                                 if path_str.startswith("/") or ".." in path_str or "etc" in path_str:
