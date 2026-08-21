@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ArchitecturalVerdict from './components/ArchitecturalVerdict'
+import RuntimeThesisProof from './components/RuntimeThesisProof'
 import CorePrimitives from './components/CorePrimitives'
 import ObjectiveEngineViewer from './components/ObjectiveEngineViewer'
 import VendorNeutralProtocolViewer from './components/VendorNeutralProtocolViewer'
@@ -44,6 +45,7 @@ function HomeView() {
     <>
       <Hero />
       <ArchitecturalVerdict />
+      <RuntimeThesisProof />
       <CorePrimitives />
       <ObjectiveEngineViewer />
       <VendorNeutralProtocolViewer />
