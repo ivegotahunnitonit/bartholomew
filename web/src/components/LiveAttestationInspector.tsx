@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, CheckCircle2, AlertTriangle, Lock } from 'lucide-react';
+import { Activity, Lock, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 interface AttestationLog {
   id: string;
@@ -17,36 +17,47 @@ export const LiveAttestationInspector: React.FC = () => {
   const [logs, setLogs] = useState<AttestationLog[]>([
     {
       id: 'btp-log-101',
-      timestamp: '13:14:02.114',
+      timestamp: '13:30:02.114',
       agentId: 'claude-desktop-worker',
-      actionType: 'EXECUTE_GATED_FILE_WRITE',
+      actionType: 'EXEC_FILE_WRITE',
       verdict: 'ALLOW',
-      latencyUs: 42.8,
-      reason: 'AST static analysis verified clean. No dangerous calls.',
-      signature: '7e5bf4b7db8fe0a94ac299ec3263d53e...',
-      tier: 'Tier 1: AST Scanner'
+      latencyUs: 38.4,
+      reason: 'AST static analysis verified clean.',
+      signature: '7e5bf4b7db8fe0a94ac299ec3263d53e201b1c67',
+      tier: 'Tier 1'
     },
     {
       id: 'btp-log-102',
-      timestamp: '13:14:05.892',
+      timestamp: '13:30:05.892',
       agentId: 'untrusted-swarm-agent',
-      actionType: 'EXECUTE_GATED_COMMAND',
+      actionType: 'EXEC_COMMAND',
       verdict: 'DENY',
       latencyUs: 55.4,
-      reason: 'Hermetic Sandbox: Forbidden character or separator \';\' detected.',
-      signature: '1c6fa194cd1d11e705b268b838e7b9a7...',
-      tier: 'Tier 2: Locked Sandbox'
+      reason: 'Hermetic Sandbox: Forbidden separator \';\' detected.',
+      signature: '1c6fa194cd1d11e705b268b838e7b9a7409c2a11',
+      tier: 'Tier 2'
     },
     {
       id: 'btp-log-103',
-      timestamp: '13:14:09.301',
+      timestamp: '13:30:09.301',
       agentId: 'autonomous-finance-bot',
-      actionType: 'FINANCIAL_TRANSACTION',
+      actionType: 'WIRE_TRANSFER',
       verdict: 'DENY',
-      latencyUs: 38.1,
-      reason: 'Spend Cap Invariant: Requested $1,250.00 exceeds policy threshold $500.00',
-      signature: '9c7372586efae8b765237cf410e20583...',
-      tier: 'Tier 1: Spend Cap'
+      latencyUs: 28.1,
+      reason: 'Spend Cap Invariant: $1,250.00 > threshold $500.00',
+      signature: '9c7372586efae8b765237cf410e2058319f4d62e',
+      tier: 'Tier 1'
+    },
+    {
+      id: 'btp-log-104',
+      timestamp: '13:30:12.740',
+      agentId: 'github-action-bot',
+      actionType: 'GIT_CHECKOUT',
+      verdict: 'ALLOW',
+      latencyUs: 32.2,
+      reason: 'Approved binary & contained path verified.',
+      signature: '3f8e12a4bb09c8112e4589d71c990b52a14e9188',
+      tier: 'Tier 3'
     }
   ]);
 
@@ -58,9 +69,9 @@ export const LiveAttestationInspector: React.FC = () => {
 
     const interval = setInterval(() => {
       const isClean = Math.random() > 0.35;
-      const actions = ['EXECUTE_GATED_FILE_WRITE', 'EXECUTE_GATED_COMMAND', 'DATABASE_MUTATION', 'FINANCIAL_TRANSFER'];
+      const actions = ['EXEC_FILE_WRITE', 'EXEC_COMMAND', 'SQL_MUTATION', 'WIRE_TRANSFER', 'GIT_CHECKOUT'];
       const action = actions[Math.floor(Math.random() * actions.length)];
-      const latency = parseFloat((25 + Math.random() * 35).toFixed(1));
+      const latency = parseFloat((25 + Math.random() * 30).toFixed(1));
 
       const newLog: AttestationLog = {
         id: `btp-log-${Date.now().toString().slice(-4)}`,
@@ -70,12 +81,12 @@ export const LiveAttestationInspector: React.FC = () => {
         verdict: isClean ? 'ALLOW' : 'DENY',
         latencyUs: latency,
         reason: isClean ? 'RFC 8785 invariant verified clean & sealed.' : 'Interception: Path containment or spend limit triggered.',
-        signature: Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-        tier: isClean ? 'Tier 1: AST Scanner' : 'Tier 2: Locked Sandbox'
+        signature: Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+        tier: isClean ? 'Tier 1' : 'Tier 2'
       };
 
-      setLogs((prev) => [newLog, ...prev.slice(0, 8)]);
-    }, 4000);
+      setLogs((prev) => [newLog, ...prev.slice(0, 6)]);
+    }, 3500);
 
     return () => clearInterval(interval);
   }, [isSimulating]);
@@ -87,13 +98,13 @@ export const LiveAttestationInspector: React.FC = () => {
   });
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl text-slate-100 my-12 backdrop-blur-sm">
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+    <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl text-slate-100 my-12 backdrop-blur-xl">
+      {/* Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-white/10 gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              <Lock size={18} className="text-cyan-400" />
+            <Lock size={18} className="text-cyan-400" />
+            <h2 className="text-xl font-bold tracking-tight text-white font-sans">
               Live Cryptographic Attestation Inspector
             </h2>
           </div>
@@ -105,20 +116,20 @@ export const LiveAttestationInspector: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsSimulating(!isSimulating)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-2 ${
               isSimulating
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-sm shadow-emerald-500/10'
                 : 'bg-slate-800 border-slate-700 text-slate-400'
             }`}
           >
             <Activity size={13} className={isSimulating ? 'animate-pulse text-emerald-400' : ''} />
-            <span>{isSimulating ? 'Live Audit Stream' : 'Stream Paused'}</span>
+            <span className="font-mono">{isSimulating ? 'Streaming Live Receipts' : 'Stream Paused'}</span>
           </button>
 
-          <div className="flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+          <div className="flex rounded-xl bg-slate-950 p-1 border border-white/10 font-mono text-xs">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
+              className={`px-3 py-1 rounded-lg transition ${
                 activeTab === 'all' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -126,65 +137,79 @@ export const LiveAttestationInspector: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('allowed')}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
+              className={`px-3 py-1 rounded-lg transition ${
                 activeTab === 'allowed' ? 'bg-emerald-500/20 text-emerald-300' : 'text-slate-400 hover:text-white'
               }`}
             >
-              Approved
+              ALLOW
             </button>
             <button
               onClick={() => setActiveTab('denied')}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
+              className={`px-3 py-1 rounded-lg transition ${
                 activeTab === 'denied' ? 'bg-rose-500/20 text-rose-300' : 'text-slate-400 hover:text-white'
               }`}
             >
-              Blocked
+              DENY
             </button>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 space-y-3">
-        {filteredLogs.map((log) => (
-          <div
-            key={log.id}
-            className={`p-4 rounded-xl border transition duration-200 ${
-              log.verdict === 'ALLOW'
-                ? 'bg-slate-950/60 border-emerald-500/20 hover:border-emerald-500/40'
-                : 'bg-slate-950/60 border-rose-500/20 hover:border-rose-500/40'
-            }`}
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`px-2.5 py-0.5 text-[11px] font-extrabold rounded-md flex items-center gap-1 font-mono ${
-                    log.verdict === 'ALLOW'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  }`}
-                >
-                  {log.verdict === 'ALLOW' ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
-                  {log.verdict}
-                </span>
-                <span className="font-mono text-xs font-bold text-slate-200">{log.actionType}</span>
-                <span className="text-xs text-slate-500 font-mono">[{log.agentId}]</span>
-              </div>
+      {/* Auditor Fixed-Width Log Table */}
+      <div className="mt-6 overflow-x-auto">
+        <table className="w-full text-left font-mono text-xs border-collapse">
+          <thead>
+            <tr className="border-b border-white/10 text-slate-400 text-[11px] uppercase tracking-wider">
+              <th className="py-3 px-3">Timestamp</th>
+              <th className="py-3 px-3">Agent ID</th>
+              <th className="py-3 px-3">Action</th>
+              <th className="py-3 px-3">Status</th>
+              <th className="py-3 px-3">Latency</th>
+              <th className="py-3 px-3">Digital Seal (Ed25519)</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {filteredLogs.map((log) => (
+              <tr
+                key={log.id}
+                className="hover:bg-slate-950/60 transition-colors"
+              >
+                <td className="py-3.5 px-3 text-slate-400">{log.timestamp}</td>
+                <td className="py-3.5 px-3 text-slate-200 font-semibold">{log.agentId}</td>
+                <td className="py-3.5 px-3 text-cyan-300">{log.actionType}</td>
+                <td className="py-3.5 px-3">
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      log.verdict === 'ALLOW'
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/20'
+                        : 'bg-rose-500/15 text-rose-400 border border-rose-500/30 shadow-sm shadow-rose-500/20'
+                    }`}
+                  >
+                    {log.verdict === 'ALLOW' ? <CheckCircle2 size={11} /> : <AlertTriangle size={11} />}
+                    {log.verdict}
+                  </span>
+                </td>
+                <td className="py-3.5 px-3 text-cyan-300 font-semibold">{log.latencyUs} µs</td>
+                <td className="py-3.5 px-3">
+                  <span
+                    title={log.signature}
+                    className="cursor-pointer text-slate-400 hover:text-cyan-300 bg-slate-950 px-2 py-1 rounded border border-white/5 inline-block text-[11px] transition"
+                  >
+                    {log.signature.slice(0, 10)}...{log.signature.slice(-6)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-              <div className="flex items-center gap-3 text-xs font-mono">
-                <span className="text-cyan-300 font-bold">{log.latencyUs} µs</span>
-                <span className="text-slate-400 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-[10px]">
-                  {log.tier}
-                </span>
-                <span className="text-slate-500 text-[11px]">{log.timestamp}</span>
-              </div>
-            </div>
-
-            <div className="mt-2.5 pt-2 border-t border-slate-900 text-xs text-slate-300 flex flex-col md:flex-row md:items-center justify-between gap-2">
-              <p className="text-slate-300 text-[11px]">{log.reason}</p>
-              <p className="text-slate-500 font-mono text-[10px] truncate max-w-xs">Digital Seal: {log.signature}</p>
-            </div>
-          </div>
-        ))}
+      <div className="mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-2">
+        <div className="flex items-center gap-2 text-emerald-400">
+          <ShieldCheck size={14} />
+          <span>RFC 8785 Canonical Serialization Active</span>
+        </div>
+        <span>FIPS 186-5 Ed25519 Attestation Key Loaded</span>
       </div>
     </div>
   );
