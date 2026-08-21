@@ -1,49 +1,51 @@
-name: 'BTP v2.2 Agent Action Guard'
-description: 'Zero-network cryptographic attestation verification for AI-generated code and tool executions (Bartholomew Trust Protocol).'
-author: 'Bartholomew Autonomous Systems'
+name: "Bartholomew Autonomous AI Security Gate"
+description: "Sub-millisecond cryptographic attestation, declarative YAML policy validation, and AST invariant auditing for AI agent workflows."
+author: "Bartholomew AI Contributors"
+
 branding:
-  icon: 'shield'
-  color: 'blue'
+  icon: "shield"
+  color: "blue"
 
 inputs:
-  trusted_root_pubkey:
-    description: 'Hex-encoded Ed25519 public key of the recognized root authority'
-    required: true
-  receipt_path:
-    description: 'Filepath to the JSON BTP attestation receipt'
+  policy-file:
+    description: "Path to declarative YAML/JSON security policy file"
     required: false
-    default: 'btp_receipt.json'
-  candidate_payload_path:
-    description: 'Filepath to the candidate payload or diff being evaluated'
+    default: "policies/default_security_policy.yaml"
+  audit-path:
+    description: "Target directory path to inspect"
     required: false
-    default: 'payload.json'
-  expected_recipient:
-    description: 'Expected recipient execution context identifier'
+    default: "."
+  fail-on-violation:
+    description: "Whether to fail the CI build if policy violations or unsafe AST patterns are found"
     required: false
-    default: ''
-  enforce_strict:
-    description: 'Fail the build if receipt is missing or invalid'
-    required: false
-    default: 'true'
+    default: "true"
+
+outputs:
+  audit-status:
+    description: "Status of the security audit (PASSED or VIOLATIONS_DETECTED)"
+  total-files-scanned:
+    description: "Total files inspected during audit"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: Setup Python
+    - name: "Set up Python Environment"
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: "3.11"
 
-    - name: Install Cryptography
-      shell: bash
-      run: pip install --no-cache-dir cryptography>=41.0.0
-
-    - name: Execute BTP v2.2 Offline Verification
+    - name: "Install Bartholomew Security Dependencies"
       shell: bash
       run: |
-        python ${{ github.action_path }}/scripts/run_github_action.py \
-          --trusted-root "${{ inputs.trusted_root_pubkey }}" \
-          --receipt "${{ inputs.receipt_path }}" \
-          --payload "${{ inputs.candidate_payload_path }}" \
-          --recipient "${{ inputs.expected_recipient }}" \
-          --strict "${{ inputs.enforce_strict }}"
+        python -m pip install --upgrade pip
+        pip install cryptography pyyaml
+
+    - name: "Validate Declarative Security Policy"
+      shell: bash
+      run: |
+        python -m src.cli policy validate --file "${{ inputs.policy-file }}"
+
+    - name: "Run Multi-Runtime Invariant Gate"
+      shell: bash
+      run: |
+        python ci_security_gate.py
