@@ -34,7 +34,9 @@ def run_gate():
         ("7. Test Go Microsecond Engine", ["go", "test", "-v", "./..."], "sdk_go"),
         ("8. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"]),
         ("9. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
-        ("10. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"])
+        ("10. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"]),
+        ("11. Test Live Public Agent Gateway Server", ["python", "test_gateway_server.py"]),
+        ("12. Test Sovereign Agent Worker Tools", ["python", "test_sovereign_agent_worker.py"])
     ]
 
     all_passed = True
