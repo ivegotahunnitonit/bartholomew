@@ -38,7 +38,7 @@ def test_sidecar():
     print("    Blocked Reason :", res.json().get("reason"))
     print("    Decision Time  :", res.json().get("latency_us"), "µs")
     assert res.status_code == 403
-    assert "Destructive payload pattern detected" in res.json().get("reason")
+    assert "Destructive pattern" in res.json().get("reason")
     assert "cryptographic_receipt" in res.json()
 
     # 3. Intercept Spend Limit Escalation ($15k > $500)
@@ -48,7 +48,7 @@ def test_sidecar():
     print("    Blocked Reason :", res.json().get("reason"))
     print("    Decision Time  :", res.json().get("latency_us"), "µs")
     assert res.status_code == 403
-    assert "Spend limit escalation" in res.json().get("reason")
+    assert "exceeds maximum policy threshold" in res.json().get("reason")
 
     print("\n" + "=" * 80)
     print("ALL SIDECAR PROXY RUNTIME INVARIANT TESTS PASSED 100% CLEAN!")

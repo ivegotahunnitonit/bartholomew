@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ArchitecturalVerdict from './components/ArchitecturalVerdict'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
+import VisualPolicyEditor from './components/VisualPolicyEditor'
 import CorePrimitives from './components/CorePrimitives'
 import ObjectiveEngineViewer from './components/ObjectiveEngineViewer'
 import VendorNeutralProtocolViewer from './components/VendorNeutralProtocolViewer'
@@ -46,6 +47,7 @@ function HomeView() {
       <Hero />
       <ArchitecturalVerdict />
       <RuntimeThesisProof />
+      <VisualPolicyEditor />
       <CorePrimitives />
       <ObjectiveEngineViewer />
       <VendorNeutralProtocolViewer />

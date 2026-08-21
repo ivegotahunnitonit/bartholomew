@@ -25,8 +25,10 @@ sys.path.insert(0, os.path.abspath(".."))
 
 try:
     from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+    from src.declarative_policy_engine import DeclarativePolicyEngine
 except ImportError:
     from python_backend.src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+    from python_backend.src.declarative_policy_engine import DeclarativePolicyEngine
 
 app = FastAPI(
     title="Bartholomew Runtime Execution Sidecar",
@@ -35,32 +37,16 @@ app = FastAPI(
 )
 
 UPSTREAM_TARGET = os.getenv("UPSTREAM_TARGET", "http://localhost:8000")
-SIDECAR_POLICY_ID = os.getenv("SIDECAR_POLICY_ID", "urn:btp:policy:sidecar-zero-trust-v2")
-MAX_SPEND_THRESHOLD_USD = float(os.getenv("MAX_SPEND_THRESHOLD_USD", "500.0"))
+POLICY_FILE = os.getenv("POLICY_FILE", "policies/default_security_policy.yaml")
 
 AUTHORITY = BartholomewTrustAuthority(ttl_seconds=300)
+POLICY_ENGINE = DeclarativePolicyEngine(POLICY_FILE if os.path.exists(POLICY_FILE) else None)
 SEEN_NONCES = set()
 
 def evaluate_runtime_payload(payload: dict) -> tuple:
-    """Evaluates payload against deterministic security invariants."""
-    raw_str = json.dumps(payload).lower()
-    
-    # 1. SQL Injection / Destructive Patterns
-    destructive_patterns = ["drop table", "drop database", "truncate table", "/etc/shadow", "rm -rf"]
-    for p in destructive_patterns:
-        if p in raw_str:
-            return False, f"BTP-SEC-001: Destructive payload pattern detected: '{p}'"
-            
-    # 2. Spend Limit Governance
-    amount = payload.get("amount_usd", 0.0) or payload.get("spend_usd", 0.0)
-    if amount > MAX_SPEND_THRESHOLD_USD:
-        return False, f"BTP-SEC-005: Spend limit escalation. Requested ${amount} exceeds policy cap ${MAX_SPEND_THRESHOLD_USD}"
-
-    # 3. Disallowed Recipient
-    if payload.get("recipient") == "untrusted_wallet":
-        return False, "BTP-SEC-002: Recipient not in verified corporate allowlist"
-
-    return True, "ALL_INVARIANTS_SATISFIED"
+    """Evaluates payload against declarative security policy invariants in <50 µs."""
+    allowed, reason, latency_us = POLICY_ENGINE.evaluate_payload(payload)
+    return allowed, reason
 
 @app.get("/healthz")
 async def healthz():
