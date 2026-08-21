@@ -31,7 +31,9 @@ def run_gate():
         ("9. Test AgentMesh Social & Task Network", ["python", "test_agent_social_network.py"]),
         ("10. Test Autonomous Bounty Solver & PR Engine", ["python", "test_autonomous_bounty_solver.py"]),
         ("11. Test IssueHunt & Open VRP Hunter Engine", ["python", "test_issuehunt_vrp_hunter.py"]),
-        ("12. Test Invariant Fuzzing & Bounty Crawler", ["python", "test_fuzzing_bounty_crawler.py"])
+        ("12. Test Invariant Fuzzing & Bounty Crawler", ["python", "test_fuzzing_bounty_crawler.py"]),
+        ("13. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
+        ("14. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"])
     ]
 
     all_passed = True
