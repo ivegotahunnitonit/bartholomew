@@ -30,7 +30,8 @@ def run_gate():
         ("8. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"]),
         ("9. Test AgentMesh Social & Task Network", ["python", "test_agent_social_network.py"]),
         ("10. Test Autonomous Bounty Solver & PR Engine", ["python", "test_autonomous_bounty_solver.py"]),
-        ("11. Test IssueHunt & Open VRP Hunter Engine", ["python", "test_issuehunt_vrp_hunter.py"])
+        ("11. Test IssueHunt & Open VRP Hunter Engine", ["python", "test_issuehunt_vrp_hunter.py"]),
+        ("12. Test Invariant Fuzzing & Bounty Crawler", ["python", "test_fuzzing_bounty_crawler.py"])
     ]
 
     all_passed = True
