@@ -28,7 +28,8 @@ def run_gate():
         ("6. Test TypeScript SDK", ["node", "test_ts_sdk.js"], "sdk_typescript"),
         ("7. Test Go Microsecond Engine", ["go", "test", "-v", "./..."], "sdk_go"),
         ("8. Execute Swarm Concurrency Verification", ["python", "test_multi_agent_swarm_stress.py"]),
-        ("9. Test AgentMesh Social & Task Network", ["python", "test_agent_social_network.py"])
+        ("9. Test AgentMesh Social & Task Network", ["python", "test_agent_social_network.py"]),
+        ("10. Test Autonomous Bounty Solver & PR Engine", ["python", "test_autonomous_bounty_solver.py"])
     ]
 
     all_passed = True
