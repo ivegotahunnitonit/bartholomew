@@ -1,15 +1,22 @@
 import { useState } from 'react'
-import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, ArrowRight } from 'lucide-react'
+import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, ArrowRight, Download } from 'lucide-react'
 
 export default function DesktopInstallerSection() {
   const [activeTab, setActiveTab] = useState<'windows' | 'mac' | 'linux' | 'pip'>('windows')
   const [copied, setCopied] = useState<string | null>(null)
 
   const commands = {
-    windows: 'irm https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/install.ps1 | iex',
-    mac: 'curl -fsSL https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/install.sh | bash',
-    linux: 'curl -fsSL https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/install.sh | bash',
+    windows: 'irm https://bartholomew.info/install.ps1 | iex',
+    mac: 'curl -fsSL https://bartholomew.info/install.sh | bash',
+    linux: 'curl -fsSL https://bartholomew.info/install.sh | bash',
     pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git'
+  }
+
+  const directDownloadFiles = {
+    windows: { filename: 'install.bat', href: '/install.bat', label: 'DOWNLOAD INSTALL.BAT' },
+    mac: { filename: 'install.sh', href: '/install.sh', label: 'DOWNLOAD INSTALL.SH' },
+    linux: { filename: 'install.sh', href: '/install.sh', label: 'DOWNLOAD INSTALL.SH' },
+    pip: { filename: 'install.ps1', href: '/install.ps1', label: 'DOWNLOAD SCRIPT' }
   }
 
   const handleCopy = (tab: keyof typeof commands) => {
@@ -30,7 +37,7 @@ export default function DesktopInstallerSection() {
             Install Bartholomew on Your Desktop
           </h2>
           <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            One command to install the sub-millisecond BTP cryptographic guardrail engine directly onto your terminal.
+            One click to download the direct installer, or one command to run the sub-millisecond BTP cryptographic guardrail engine directly in your terminal.
           </p>
         </div>
 
@@ -59,38 +66,48 @@ export default function DesktopInstallerSection() {
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                {tab === 'windows' && <span>[WINDOWS POWERSHELL]</span>}
-                {tab === 'mac' && <span>[MACOS TERMINAL]</span>}
-                {tab === 'linux' && <span>[LINUX BASH]</span>}
+                {tab === 'windows' && <span>[WINDOWS]</span>}
+                {tab === 'mac' && <span>[MACOS]</span>}
+                {tab === 'linux' && <span>[LINUX]</span>}
                 {tab === 'pip' && <span>[PYTHON PIP]</span>}
               </button>
             ))}
           </div>
 
-          {/* Terminal Command Display */}
+          {/* Terminal Command Display & 1-Click Direct Download Action */}
           <div className="p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-4 bg-[#000000] border border-[#222222] p-4 font-mono text-xs sm:text-sm text-[#f59e0b]">
-              <span className="truncate">{commands[activeTab]}</span>
-              <button
-                onClick={() => handleCopy(activeTab)}
-                className={`shrink-0 px-4 py-2 text-xs font-mono font-bold transition flex items-center gap-1.5 border ${
-                  copied === activeTab
-                    ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                    : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
-                }`}
-              >
-                {copied === activeTab ? (
-                  <>
-                    <Check size={12} />
-                    <span>[COPIED]</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy size={12} />
-                    <span>[COPY COMMAND]</span>
-                  </>
-                )}
-              </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#000000] border border-[#222222] p-4 font-mono text-xs sm:text-sm text-[#f59e0b]">
+              <span className="truncate flex-1">$ {commands[activeTab]}</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={directDownloadFiles[activeTab].href}
+                  download={directDownloadFiles[activeTab].filename}
+                  className="px-3.5 py-2 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center gap-1.5"
+                >
+                  <Download size={12} />
+                  <span>[DOWNLOAD FILE]</span>
+                </a>
+                <button
+                  onClick={() => handleCopy(activeTab)}
+                  className={`px-3.5 py-2 text-xs font-mono font-bold transition flex items-center gap-1.5 border ${
+                    copied === activeTab
+                      ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
+                      : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
+                  }`}
+                >
+                  {copied === activeTab ? (
+                    <>
+                      <Check size={12} />
+                      <span>[COPIED]</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} />
+                      <span>[COPY]</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Quickstart Command Cheatsheet with Square Cards */}
@@ -123,9 +140,9 @@ export default function DesktopInstallerSection() {
                   <span>[STEP 3]</span>
                 </div>
                 <div className="font-mono text-xs text-[#ffffff] bg-[#0a0a0a] px-2.5 py-1.5 border border-[#1a1a1a]">
-                  bartholomew audit .
+                  bartholomew daemon start
                 </div>
-                <p className="text-xs text-[#a1a1aa] mt-2 font-sans">Performs compiler-grade AST security scan with zero cloud overhead.</p>
+                <p className="text-xs text-[#a1a1aa] mt-2 font-sans">Starts background guard daemon on localhost with desktop alerts.</p>
               </div>
             </div>
 
