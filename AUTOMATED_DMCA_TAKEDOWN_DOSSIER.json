@@ -1,0 +1,18 @@
+{
+  "notice_type": "DMCA_COPYRIGHT_INFRINGEMENT_NOTICE",
+  "timestamp_utc": "2026-08-21T05:34:24Z",
+  "copyright_owner": "Bartholomew Autonomous Trust Network",
+  "original_work_url": "https://github.com/ivegotahunnitonit/bartholomew",
+  "infringing_party": "https://github.com/copycat-dev/fake-guard",
+  "infringing_materials": [
+    "guard.py",
+    "engine.py"
+  ],
+  "cryptographic_proof_of_original_authorship": {
+    "prior_art_commit_hash": "89312db",
+    "canary_fingerprint": "urn:btp:canary:f4e82b7ca912df0823c145341fea9651",
+    "watermark_hash": "9298f42309125782173cf7d1d83d7b014ec32b58a85ed83b221a50f2bbf32b28",
+    "proof_dossier_url": "https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/CRYPTOGRAPHIC_PROOF_OF_UNBREAKABILITY.json"
+  },
+  "declaration": "I have a good faith belief that use of the copyrighted materials described above is not authorized by the copyright owner, its agent, or the law."
+}

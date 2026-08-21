@@ -52,8 +52,17 @@
 
 ---
 
+### Pillar 5: Autonomous Anti-Theft, Canary Watermarking & Clone Detection
+* **Mathematical Canary Tokens**: We embed invisible cryptographic constants and proprietary AST signatures (`BTP_CANARY_FINGERPRINT = "urn:btp:canary:f4e82b7c..."`) directly inside our protocol parsers and verifiers.
+* **Autonomous Plagiarism Sentinel (`anti_theft_canary_sentinel.py`)**: An automated continuous scanner that monitors GitHub, PyPI, npm, and HuggingFace for unauthorized forks, re-brandings, or leaked AST patterns.
+* **Instant DMCA Evidence Generator**: The moment a clone or unauthorized branch-off is detected, our system automatically compiles an immutable, timestamped DMCA Takedown Dossier (`AUTOMATED_DMCA_TAKEDOWN_DOSSIER.json`) backed by our prior art commit hashes.
+
+---
+
 ## 2. Immediate Action Steps
 
 1. **Keep the Core Mesh & Enterprise Analytics Proprietary**: The public sees the SDK and protocol verifier; our advanced enterprise threat models and Cloud Run telemetry remain protected on our secure infrastructure.
 2. **Include Copyright & Proprietary Notices**: Every source file includes our explicit copyright header and licensing terms.
-3. **File Provisional Patent Specification**: Submit our formal architectural claims to the US Patent and Trademark Office.
+3. **Continuous Canary Scanning**: Run `anti_theft_canary_sentinel.py` to actively catch copycats and unauthorized forks across the web.
+4. **File Provisional Patent Specification**: Submit our formal architectural claims to the US Patent and Trademark Office.
+
