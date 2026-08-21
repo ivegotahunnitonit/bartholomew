@@ -44,11 +44,10 @@ class BartholomewTrustAuthority:
         nonce = secrets.token_hex(16)
         self.issued_nonces.add(nonce)
 
-        # 1. Trajectory, Indirect Prompt Injection & Policy Evaluation
         dangerous_patterns = [
-            "rm -rf", "drop table", "aws_secret_access_key", 
-            "id_rsa", "/etc/shadow", "malicious", "system override",
-            "sk-live", "eval(", "exec(", "<script>"
+            "rm -rf", "drop table", "drop schema", "drop database", "truncate table",
+            "aws_secret_access_key", "id_rsa", "/etc/shadow", "malicious", "system override",
+            "sk-live", "eval(", "exec(", "<script>", "import os"
         ]
         
         raw_payload_str = json.dumps(payload).lower()
