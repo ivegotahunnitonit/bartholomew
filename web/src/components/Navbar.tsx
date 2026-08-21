@@ -21,46 +21,33 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 no-underline">
-          <Logo />
+        <Link to="/" className="flex items-center gap-2.5 no-underline">
+          <Logo size={28} />
           <div className="flex flex-col">
             <span className="font-extrabold text-sm sm:text-base tracking-tight text-white font-mono">
               BARTHOLOMEW
             </span>
             <span className="text-[10px] text-cyan-400 font-mono tracking-wider -mt-1 font-semibold">
-              AI SAFETY INFRASTRUCTURE
+              AI SAFETY PROTOCOL
             </span>
           </div>
         </Link>
 
-        {/* Desktop Nav Links in Layman Terms */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
+        {/* Streamlined Desktop Nav Links (Zero Redundancy) */}
+        <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-slate-300">
           <a href="#how-it-works" className="hover:text-cyan-400 transition">
             How It Works
           </a>
-          <a href="#download" className="hover:text-cyan-400 transition">
-            Install CLI
-          </a>
           <a href="#policy-editor" className="hover:text-cyan-400 transition">
-            Rule Editor
+            Rule Builder
           </a>
           <a href="#sdk" className="hover:text-cyan-400 transition">
-            1-Line SDKs
-          </a>
-          <a href="#live-api" className="hover:text-cyan-400 transition">
-            API Specs
+            SDKs &amp; API
           </a>
         </nav>
 
         {/* Action Buttons */}
         <div className="hidden sm:flex items-center gap-3">
-          <a
-            href="#download"
-            className="px-3.5 py-2 rounded-xl text-xs font-bold bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/60 transition flex items-center gap-1.5"
-          >
-            <Download size={13} />
-            Install CLI
-          </a>
           <a
             href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
@@ -68,14 +55,21 @@ export default function Navbar() {
             className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-slate-500 transition flex items-center gap-1.5"
           >
             <Code2 size={13} />
-            GitHub
+            <span>GitHub</span>
             <ExternalLink size={11} className="text-slate-400" />
+          </a>
+          <a
+            href="#download"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 shadow-md shadow-cyan-500/10 transition flex items-center gap-1.5"
+          >
+            <Download size={13} />
+            <span>Download CLI</span>
           </a>
         </div>
 
         {/* Mobile Hamburger */}
         <button
-          className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-white"
+          className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -83,9 +77,9 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Clean Mobile Dropdown */}
       {mobileOpen && (
-        <div className="lg:hidden bg-slate-950 border-b border-slate-800 px-4 py-4 space-y-3">
+        <div className="md:hidden bg-slate-950/95 backdrop-blur-md border-b border-slate-800 px-5 py-5 space-y-4">
           <a
             href="#how-it-works"
             onClick={() => setMobileOpen(false)}
@@ -94,33 +88,39 @@ export default function Navbar() {
             How It Works
           </a>
           <a
-            href="#download"
-            onClick={() => setMobileOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
-          >
-            Install CLI
-          </a>
-          <a
             href="#policy-editor"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            Rule Editor
+            Rule Builder
           </a>
           <a
             href="#sdk"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            1-Line SDKs
+            SDKs &amp; API
           </a>
-          <a
-            href="#live-api"
-            onClick={() => setMobileOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
-          >
-            API Specs
-          </a>
+          <div className="pt-3 border-t border-slate-800 flex flex-col gap-2.5">
+            <a
+              href="#download"
+              onClick={() => setMobileOpen(false)}
+              className="w-full py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-950 text-center flex items-center justify-center gap-1.5"
+            >
+              <Download size={13} />
+              <span>Download CLI</span>
+            </a>
+            <a
+              href="https://github.com/ivegotahunnitonit/bartholomew"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2.5 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-700 text-slate-200 text-center flex items-center justify-center gap-1.5"
+            >
+              <Code2 size={13} />
+              <span>GitHub</span>
+              <ExternalLink size={11} className="text-slate-400" />
+            </a>
+          </div>
         </div>
       )}
     </header>
