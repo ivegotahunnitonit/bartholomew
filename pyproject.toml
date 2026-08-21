@@ -3,39 +3,38 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "agentic-eval"
-version = "2.5.0"
+name = "btp-guard"
+version = "2.2.0"
 authors = [
-    { name = "Bartholomew Security Firm", email = "security@agentic-eval.com" }
+    { name = "Bartholomew Protocol Team", email = "security@bartholomew.dev" }
 ]
-description = "Enterprise OWASP LLM Top 10 AI Agent Security & Trajectory Audit Engine"
+description = "Sub-millisecond cryptographic invariant and safety guardrail engine for autonomous AI agents."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-    "requests>=2.25.0",
-    "pydantic>=1.8.0",
-    "cryptography>=3.0",
+    "cryptography>=41.0.0",
+    "pyyaml>=6.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.22.0",
+    "pydantic>=2.0.0",
+    "requests>=2.28.0"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography"
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ivegotahunnitonit/agentic-eval"
-"Bug Tracker" = "https://github.com/ivegotahunnitonit/agentic-eval/issues"
+"Homepage" = "https://github.com/ivegotahunnitonit/bartholomew"
+"Bug Tracker" = "https://github.com/ivegotahunnitonit/bartholomew/issues"
 
 [project.scripts]
-agent-qa-guard = "agent_qa_guard:main"
+bartholomew = "src.cli:main"
+btp = "src.cli:main"
 
 [tool.pyright]
 pythonVersion = "3.10"
 include = ["."]
-extraPaths = [
-    ".",
-    "pypi_package",
-    "python_backend",
-    "python_backend/app"
-]
-venvPath = "."
-
+extraPaths = ["."]
