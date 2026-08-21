@@ -2,68 +2,107 @@
 Bartholomew Hermetic OS Sandbox & Command Allowlist Engine
 =========================================================
 Implements real OS-level containment and strict allowlist gating:
-  1. Strict Command Allowlist (only pre-approved CLI binaries allowed).
-  2. Isolated Subprocess Environment (scrubs PATH, env secrets, disables root/admin).
-  3. Ephemeral Working Directory Isolation.
-  4. Strict Execution Timeouts & Resource Boundaries.
+  1. Strict Command Allowlist using shlex.split tokenization.
+  2. Blocks all shell operators, subshells, and newline separators (\n, \r).
+  3. Isolated Subprocess Environment (scrubs PATH, env secrets, disables root/admin).
+  4. Path containment sandbox for file writes (prevents path traversal / system file overwrites).
 """
 
 import sys
 import os
+import shlex
 import subprocess
-import tempfile
 import time
 from typing import Dict, Any, Tuple, List, Set, Optional
 
 class HermeticCommandSandbox:
     """
     Executes commands within a restricted OS subprocess boundary.
-    Replaces unbounded shell execution with strict allowlists.
+    Uses shlex tokenization and exact binary/subcommand allowlists.
     """
-    PERMITTED_COMMAND_PREFIXES: Set[str] = {
-        "git status", "git diff", "git log", "git branch",
-        "python -m pytest", "pytest", "python -m unittest",
-        "npm test", "npm run build", "go test", "cargo test",
-        "echo", "ls", "dir"
+    # Strict (binary, subcommand) tuple allowlist
+    PERMITTED_COMMAND_SIGNATURES: Set[Tuple[str, ...]] = {
+        ("git", "status"),
+        ("git", "diff"),
+        ("git", "log"),
+        ("git", "branch"),
+        ("pytest",),
+        ("python", "-m", "pytest"),
+        ("python", "-m", "unittest"),
+        ("npm", "test"),
+        ("npm", "run", "build"),
+        ("go", "test"),
+        ("cargo", "test"),
+        ("echo",),
+        ("dir",),
+        ("ls",)
     }
 
-    FORBIDDEN_SHELL_OPERATORS: Set[str] = {
-        ";", "&&", "||", "|", "`", "$(", ">", ">>", "<"
+    FORBIDDEN_CHARS: Set[str] = {
+        ";", "&", "|", "`", "$", ">", "<", "\n", "\r", "\\", "{"
     }
 
     @classmethod
     def execute_bounded_command(cls, command_str: str, timeout_seconds: int = 5) -> Dict[str, Any]:
         """
-        Validates command against the strict allowlist and executes in an isolated environment.
+        Tokenizes command using shlex, validates against allowlist, and executes in isolated subprocess.
         """
         start_us = time.perf_counter()
         cmd_clean = command_str.strip()
 
-        # 1. Reject shell chaining operators to prevent subshell breakouts
-        for op in cls.FORBIDDEN_SHELL_OPERATORS:
-            if op in cmd_clean:
+        # 1. Reject any shell chaining character or newline before tokenization
+        for ch in cls.FORBIDDEN_CHARS:
+            if ch in cmd_clean:
                 dt_us = (time.perf_counter() - start_us) * 1_000_000
                 return {
                     "status": "BLOCKED",
                     "verdict": "DENY",
-                    "reason": f"Hermetic Gate: Forbidden shell chaining operator '{op}' detected.",
+                    "reason": f"Hermetic Gate: Forbidden character or separator '{repr(ch)}' detected.",
                     "command_executed": False,
                     "latency_us": round(dt_us, 2)
                 }
 
-        # 2. Match against Permitted Command Allowlist
-        is_allowed = any(cmd_clean.startswith(prefix) for prefix in cls.PERMITTED_COMMAND_PREFIXES)
-        if not is_allowed:
+        # 2. Tokenize into argv list using shlex
+        try:
+            argv = shlex.split(cmd_clean, posix=(os.name != "nt"))
+        except Exception as e:
             dt_us = (time.perf_counter() - start_us) * 1_000_000
             return {
                 "status": "BLOCKED",
                 "verdict": "DENY",
-                "reason": f"Hermetic Gate: Command '{cmd_clean}' is not in the permitted allowlist.",
+                "reason": f"Hermetic Gate: Command tokenization error ({str(e)})",
                 "command_executed": False,
                 "latency_us": round(dt_us, 2)
             }
 
-        # 3. Scrub environment variables (remove Stripe/AWS/GitHub secrets from subprocess)
+        if not argv:
+            dt_us = (time.perf_counter() - start_us) * 1_000_000
+            return {
+                "status": "BLOCKED",
+                "verdict": "DENY",
+                "reason": "Hermetic Gate: Empty command.",
+                "command_executed": False,
+                "latency_us": round(dt_us, 2)
+            }
+
+        # 3. Match against Permitted Command Signatures
+        matched_allowlist = False
+        for sig in cls.PERMITTED_COMMAND_SIGNATURES:
+            if tuple(argv[:len(sig)]) == sig:
+                matched_allowlist = True
+                break
+
+        if not matched_allowlist:
+            dt_us = (time.perf_counter() - start_us) * 1_000_000
+            return {
+                "status": "BLOCKED",
+                "verdict": "DENY",
+                "reason": f"Hermetic Gate: Command binary/subcommand '{argv[0]}' is not in the permitted allowlist.",
+                "command_executed": False,
+                "latency_us": round(dt_us, 2)
+            }
+
+        # 4. Scrub environment variables (strip Stripe/AWS/GitHub tokens)
         scrubbed_env = {
             "PATH": os.environ.get("PATH", ""),
             "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),
@@ -72,11 +111,11 @@ class HermeticCommandSandbox:
             "PYTHONPATH": os.path.abspath(".")
         }
 
-        # 4. Execute in isolated subprocess with timeout boundary
+        # 5. Execute WITHOUT shell=True (direct binary invocation with argv)
         try:
             res = subprocess.run(
-                cmd_clean,
-                shell=True,
+                argv,
+                shell=False,
                 capture_output=True,
                 text=True,
                 timeout=timeout_seconds,
@@ -92,12 +131,39 @@ class HermeticCommandSandbox:
                 "stderr": res.stderr.strip(),
                 "latency_us": round(dt_us, 2)
             }
-        except subprocess.TimeoutExpired:
+        except Exception as e:
             dt_us = (time.perf_counter() - start_us) * 1_000_000
             return {
-                "status": "TIMEOUT",
+                "status": "EXECUTION_ERROR",
                 "verdict": "DENY",
-                "reason": f"Execution exceeded {timeout_seconds}s timeout boundary.",
+                "reason": f"Subprocess execution error: {str(e)}",
                 "command_executed": False,
                 "latency_us": round(dt_us, 2)
             }
+
+class HermeticFileSandbox:
+    """
+    Guarantees file operations are strictly confined within the workspace root.
+    Prevents path traversal, absolute path breakout, and system file overwrites.
+    """
+    @classmethod
+    def is_safe_write_path(cls, candidate_path: str, workspace_root: Optional[str] = None) -> Tuple[bool, str]:
+        root = os.path.abspath(workspace_root or ".")
+        try:
+            target_abs = os.path.abspath(os.path.join(root, candidate_path))
+        except Exception as e:
+            return False, f"Invalid path syntax: {str(e)}"
+
+        # 1. Reject if target escapes workspace root
+        if not target_abs.startswith(root):
+            return False, f"Path Traversal Blocked: Target '{candidate_path}' escapes workspace boundary."
+
+        # 2. Reject attempts to overwrite protected system / config files
+        protected_basenames = {
+            ".env", "id_rsa", "id_ed25519", "authorized_keys",
+            "claude_desktop_config.json"
+        }
+        if os.path.basename(target_abs).lower() in protected_basenames:
+            return False, f"Protected File Blocked: Overwriting '{os.path.basename(target_abs)}' is forbidden."
+
+        return True, "Path verified within workspace boundary."

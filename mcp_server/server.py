@@ -23,7 +23,7 @@ from src.trust_protocol import BartholomewTrustAuthority
 from standalone_btp_verifier import independent_verify_btp_receipt
 from src.rfc8785 import rfc8785_canonicalize
 from src.ast_validator import ASTSecurityValidator
-from src.hermetic_sandbox import HermeticCommandSandbox
+from src.hermetic_sandbox import HermeticCommandSandbox, HermeticFileSandbox
 from mcp_server.inline_tool_gate import MandatoryToolGate
 
 class BartholomewMCPServer:
@@ -40,7 +40,11 @@ class BartholomewMCPServer:
     def _register_default_underlying_tools(self):
         """Registers actual system actions behind the mandatory gate."""
         def _safe_write_file(path: str, code: str) -> str:
-            # Physical disk write only reachable when gate allows
+            # Enforce path containment boundary
+            is_safe, msg = HermeticFileSandbox.is_safe_write_path(path)
+            if not is_safe:
+                raise PermissionError(msg)
+
             with open(path, "w", encoding="utf-8") as f:
                 f.write(code)
             return f"File '{path}' written successfully ({len(code)} bytes)."
