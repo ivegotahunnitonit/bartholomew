@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bartholomew CLI — Sub-Millisecond AI Agent Guardrail & Daemon Controller
+Bartholomew CLI — Sub-Millisecond AI Agent Guardrail, Daemon & MCP Controller
 """
 
 import sys
@@ -105,6 +105,18 @@ def cmd_daemon_status(args):
         print("    Run 'python cli.py daemon start' to launch.")
 
 
+def cmd_mcp_start(args):
+    from mcp_server import BartholomewMCPServer
+    server = BartholomewMCPServer(workspace_root=args.workspace)
+    server.run_stdio()
+
+
+def cmd_mcp_install(args):
+    from mcp_installer import install_mcp_config
+    target = getattr(args, "target", "claude")
+    install_mcp_config(target=target)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bartholomew AI Agent Guardrail CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -128,6 +140,16 @@ def main():
     status_p = daemon_sub.add_parser("status", help="Query local daemon heartbeat & telemetry")
     status_p.add_argument("--port", type=int, default=8080, help="Daemon port")
 
+    # mcp
+    mcp_parser = subparsers.add_parser("mcp", help="Manage Model Context Protocol (MCP) server for Claude Desktop / Cursor")
+    mcp_sub = mcp_parser.add_subparsers(dest="mcp_cmd")
+
+    mcp_start_p = mcp_sub.add_parser("start", help="Start MCP stdio JSON-RPC server")
+    mcp_start_p.add_argument("--workspace", type=str, default=None, help="Custom sandbox workspace root directory")
+
+    mcp_inst_p = mcp_sub.add_parser("install", help="1-Click auto-install into Claude Desktop / Cursor config")
+    mcp_inst_p.add_argument("--target", type=str, default="claude", choices=["claude", "cursor"], help="Target IDE")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -141,6 +163,13 @@ def main():
             cmd_daemon_status(args)
         else:
             daemon_parser.print_help()
+    elif args.command == "mcp":
+        if args.mcp_cmd == "start":
+            cmd_mcp_start(args)
+        elif args.mcp_cmd == "install":
+            cmd_mcp_install(args)
+        else:
+            mcp_parser.print_help()
     else:
         parser.print_help()
 

@@ -19,21 +19,19 @@ export default function Hero() {
 
   const agentPairingSnippets: Record<AgentTarget, { title: string; filename: string; code: string; desc: string }> = {
     claude: {
-      title: 'Claude Desktop / Anthropic',
-      filename: 'claude_agent_guard.py',
-      desc: 'Intercepts tool execution calls from Claude Desktop before any OS subprocess or file mutation executes.',
-      code: `from btp_guard import wrap_client
-import anthropic
-
-# 1-Line Bartholomew Drop-In Guard
-client = wrap_client(anthropic.Anthropic())
-
-# Destructive tool calls (rm -rf, DROP TABLE) are blocked in <50 µs
-response = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
-    max_tokens=1024,
-    messages=[{"role": "user", "content": "Analyze project codebase"}]
-)`
+      title: 'Claude Desktop / MCP Server',
+      filename: 'claude_desktop_config.json',
+      desc: '1-Click MCP Guard for Claude Desktop. Automatically intercepts tool calls, file edits, and bash commands before OS execution.',
+      code: `// Run: python cli.py mcp install
+// Injected into %APPDATA%/Claude/claude_desktop_config.json:
+{
+  "mcpServers": {
+    "bartholomew-guard": {
+      "command": "python",
+      "args": ["-m", "mcp_server"]
+    }
+  }
+}`
     },
     openai: {
       title: 'OpenAI Assistants & Cursor',
@@ -111,7 +109,7 @@ const { allowed, reason, signature } = authority.evaluateIntent({
           </div>
         </div>
 
-        {/* Action-Oriented Hero Headline with generous line-height and bounding box to prevent any cropping */}
+        {/* Action-Oriented Hero Headline */}
         <div className="text-center max-w-4xl mx-auto mb-4 px-2">
           <h1
             className="font-bold font-sans hero-metallic-title text-center inline-block"
@@ -128,7 +126,7 @@ const { allowed, reason, signature } = authority.evaluateIntent({
 
         {/* Action-Oriented Subtitle */}
         <p className="text-center mx-auto mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          Download the sub-millisecond local engine or drop the SDK wrapper straight into your Python, Node, or Go projects. Wrap any AI agent, framework, or custom script in a single line of code with guaranteed cryptographic boundaries.
+          Download the sub-millisecond local engine, connect Claude Desktop via MCP in 1 click, or drop the SDK wrapper straight into your projects with guaranteed cryptographic boundaries.
         </p>
 
         {/* Front-and-Center 1-Click Terminal Box */}
