@@ -2,10 +2,11 @@
 Bartholomew Hermetic OS Sandbox & Command Allowlist Engine
 =========================================================
 Implements real OS-level containment and strict allowlist gating:
-  1. Strict Command Allowlist using shlex.split tokenization.
-  2. Blocks all shell operators, subshells, and newline separators (\n, \r).
-  3. Isolated Subprocess Environment (scrubs PATH, env secrets, disables root/admin).
-  4. Path containment sandbox for file writes (prevents path traversal / system file overwrites).
+  1. Strict Command Allowlist using shlex.split tokenization with flag sanitization.
+  2. Blocks shell injection, newline separators, and flag escapes (e.g., -exec, -c, --import).
+  3. Environment scrubbing (PATH, secrets, tokens).
+  4. Robust path containment using os.path.commonpath.
+  5. Composition defense: Protects execution-triggering configs (package.json, conftest.py, build.rs, etc.).
 """
 
 import sys
@@ -18,9 +19,8 @@ from typing import Dict, Any, Tuple, List, Set, Optional
 class HermeticCommandSandbox:
     """
     Executes commands within a restricted OS subprocess boundary.
-    Uses shlex tokenization and exact binary/subcommand allowlists.
+    Enforces exact binary/subcommand allowlists and rejects execution hijacking flags.
     """
-    # Strict (binary, subcommand) tuple allowlist
     PERMITTED_COMMAND_SIGNATURES: Set[Tuple[str, ...]] = {
         ("git", "status"),
         ("git", "diff"),
@@ -42,15 +42,17 @@ class HermeticCommandSandbox:
         ";", "&", "|", "`", "$", ">", "<", "\n", "\r", "\\", "{"
     }
 
+    # Flags that allow arbitrary code/binary execution from subcommands
+    FORBIDDEN_EXEC_FLAGS: Set[str] = {
+        "-exec", "--exec", "-c", "-e", "--eval", "--import", "-o", "--output"
+    }
+
     @classmethod
     def execute_bounded_command(cls, command_str: str, timeout_seconds: int = 5) -> Dict[str, Any]:
-        """
-        Tokenizes command using shlex, validates against allowlist, and executes in isolated subprocess.
-        """
         start_us = time.perf_counter()
         cmd_clean = command_str.strip()
 
-        # 1. Reject any shell chaining character or newline before tokenization
+        # 1. Reject shell chaining characters or newlines
         for ch in cls.FORBIDDEN_CHARS:
             if ch in cmd_clean:
                 dt_us = (time.perf_counter() - start_us) * 1_000_000
@@ -85,7 +87,20 @@ class HermeticCommandSandbox:
                 "latency_us": round(dt_us, 2)
             }
 
-        # 3. Match against Permitted Command Signatures
+        # 3. Reject execution-hijacking flags in trailing arguments
+        for arg in argv:
+            for flag in cls.FORBIDDEN_EXEC_FLAGS:
+                if arg == flag or arg.startswith(f"{flag}="):
+                    dt_us = (time.perf_counter() - start_us) * 1_000_000
+                    return {
+                        "status": "BLOCKED",
+                        "verdict": "DENY",
+                        "reason": f"Hermetic Gate: Forbidden execution flag '{arg}' detected.",
+                        "command_executed": False,
+                        "latency_us": round(dt_us, 2)
+                    }
+
+        # 4. Match against Permitted Command Signatures
         matched_allowlist = False
         for sig in cls.PERMITTED_COMMAND_SIGNATURES:
             if tuple(argv[:len(sig)]) == sig:
@@ -102,7 +117,7 @@ class HermeticCommandSandbox:
                 "latency_us": round(dt_us, 2)
             }
 
-        # 4. Scrub environment variables (strip Stripe/AWS/GitHub tokens)
+        # 5. Scrub environment variables (strip Stripe/AWS/GitHub tokens)
         scrubbed_env = {
             "PATH": os.environ.get("PATH", ""),
             "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),
@@ -111,7 +126,7 @@ class HermeticCommandSandbox:
             "PYTHONPATH": os.path.abspath(".")
         }
 
-        # 5. Execute WITHOUT shell=True (direct binary invocation with argv)
+        # 6. Execute WITHOUT shell=True (direct binary invocation)
         try:
             res = subprocess.run(
                 argv,
@@ -144,8 +159,19 @@ class HermeticCommandSandbox:
 class HermeticFileSandbox:
     """
     Guarantees file operations are strictly confined within the workspace root.
-    Prevents path traversal, absolute path breakout, and system file overwrites.
+    Defends against path traversal, sibling directory collision, and composition attacks
+    targeting build/test execution configs (package.json, conftest.py, build.rs, etc.).
     """
+    # Files that can trigger code execution when build/test tools are invoked
+    PROTECTED_EXECUTION_CONFIGS: Set[str] = {
+        "package.json", "package-lock.json",
+        "conftest.py", "pytest.ini", "setup.py", "setup.cfg", "pyproject.toml",
+        "build.rs", "cargo.toml", "cargo.lock",
+        "makefile", "dockerfile", "docker-compose.yml",
+        ".env", "id_rsa", "id_ed25519", "authorized_keys",
+        "claude_desktop_config.json"
+    }
+
     @classmethod
     def is_safe_write_path(cls, candidate_path: str, workspace_root: Optional[str] = None) -> Tuple[bool, str]:
         root = os.path.abspath(workspace_root or ".")
@@ -154,16 +180,18 @@ class HermeticFileSandbox:
         except Exception as e:
             return False, f"Invalid path syntax: {str(e)}"
 
-        # 1. Reject if target escapes workspace root
-        if not target_abs.startswith(root):
-            return False, f"Path Traversal Blocked: Target '{candidate_path}' escapes workspace boundary."
+        # 1. Robust path comparison using commonpath (prevents /project_evil sibling directory breakout)
+        try:
+            common = os.path.commonpath([root, target_abs])
+            if common != root or target_abs == root:
+                return False, f"Path Traversal Blocked: Target '{candidate_path}' escapes workspace boundary."
+        except ValueError:
+            # Different drives on Windows (e.g. C: vs D:)
+            return False, f"Path Traversal Blocked: Target '{candidate_path}' is on a different volume."
 
-        # 2. Reject attempts to overwrite protected system / config files
-        protected_basenames = {
-            ".env", "id_rsa", "id_ed25519", "authorized_keys",
-            "claude_desktop_config.json"
-        }
-        if os.path.basename(target_abs).lower() in protected_basenames:
-            return False, f"Protected File Blocked: Overwriting '{os.path.basename(target_abs)}' is forbidden."
+        # 2. Composition Defense: Reject modifications to execution-triggering configs
+        basename = os.path.basename(target_abs).lower()
+        if basename in cls.PROTECTED_EXECUTION_CONFIGS:
+            return False, f"Composition Security Gate: Overwriting execution config '{basename}' is forbidden."
 
         return True, "Path verified within workspace boundary."
