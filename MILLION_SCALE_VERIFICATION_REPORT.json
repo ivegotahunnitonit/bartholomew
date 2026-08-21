@@ -1,0 +1,11 @@
+{
+  "benchmark_id": "BTP_1M_MILLION_SCALE_STRESS",
+  "total_operations": 1000000,
+  "total_time_seconds": 18.917,
+  "sustained_throughput_ops_sec": 52863.7,
+  "average_latency_microseconds": 18.917,
+  "clean_payloads_verified": 500000,
+  "attacks_intercepted": 500000,
+  "mathematical_drift": 0.0,
+  "extrapolated_billion_run_time_minutes": 315.28
+}
