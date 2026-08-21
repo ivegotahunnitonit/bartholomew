@@ -1,83 +1,73 @@
 import { useState } from 'react'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, Code2 } from 'lucide-react'
 
 const TABS = [
   {
-    id: 'pip',
-    label: 'pip install',
-    code: `pip install bartholomew-eval
+    id: 'wrapper',
+    label: '1-Line Client Wrapper (Python)',
+    code: `from btp_guard import wrap_client
+import openai
 
-# Verify installation
-python -c "import bartholomew_eval; print(bartholomew_eval.__version__)"
-# → 0.4.2`,
-    lang: 'bash',
-  },
-  {
-    id: 'decorator',
-    label: '@guard decorator',
-    code: `from bartholomew_eval import guard
+# Drop-in 1-line wrapper around OpenAI or Anthropic
+client = wrap_client(openai.OpenAI())
 
-@guard(policy="strict", env="production")
-async def agent_step(trajectory: dict) -> dict:
-    # Bartholomew intercepts before this runs
-    return await your_llm_call(trajectory)
-
-# Violations raise BartholomewSecurityError
-# with full attestation hash in the exception`,
+# Any destructive SQL or filesystem breakout is intercepted in <50 µs
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Query inventory table"}]
+)`,
     lang: 'python',
   },
   {
-    id: 'middleware',
-    label: 'FastAPI middleware',
-    code: `from fastapi import FastAPI
-from bartholomew_eval.middleware import BartholomewMiddleware
+    id: 'langchain',
+    label: 'LangChain & CrewAI Plugin',
+    code: `from btp_guard import BTPCallbackHandler
+from langchain.agents import initialize_agent
 
-app = FastAPI()
-app.add_middleware(
-    BartholomewMiddleware,
-    policy="warn",        # observe | warn | strict | sovereign
-    env="staging",
-    siem_endpoint=None,   # optional: Splunk / Datadog HEC
-    attestation=True,     # SHA-256 chain to Firestore
+# Attach BTP sub-millisecond callback handler
+handler = BTPCallbackHandler(policy_file="policies/default_security_policy.yaml")
+
+agent = initialize_agent(
+    tools=tools,
+    llm=llm,
+    callbacks=[handler]
+)`,
+    lang: 'python',
+  },
+  {
+    id: 'typescript',
+    label: 'TypeScript / Node.js SDK',
+    code: `import { BartholomewTrustAuthority, DeclarativePolicyEngine } from '@bartholomew/btp-guard';
+
+const authority = new BartholomewTrustAuthority();
+const policy = new DeclarativePolicyEngine('policies/default_security_policy.yaml');
+
+// Evaluate agent tool call in <50 microseconds
+const { allowed, reason, signature } = authority.evaluateIntent({
+  agentId: 'worker-01',
+  actionType: 'EXECUTE_TOOL',
+  payload: { command: 'git status' }
+});`,
+    lang: 'typescript',
+  },
+  {
+    id: 'go',
+    label: 'Go Microsecond Engine',
+    code: `package main
+
+import (
+    "fmt"
+    "github.com/ivegotahunnitonit/bartholomew/sdk_go/btp"
 )
 
-@app.post("/agent/run")
-async def run_agent(trajectory: dict):
-    # Middleware handles scanning automatically
-    return await process(trajectory)`,
-    lang: 'python',
-  },
-  {
-    id: 'docker',
-    label: 'Docker / Air-gap',
-    code: `# Pull the Go daemon binary
-curl -LO https://bartholomew.info/releases/bartholomew_daemon_linux
-
-# Run (no internet required)
-PORT=8443 ./bartholomew_daemon_linux
-
-# Scan via local REST API
-curl -s -X POST http://localhost:8443/api/v1/go/scan-trajectory \\
-  -H "Content-Type: application/json" \\
-  -d @trajectory.json | jq .compliance_status
-# → "SOC2_PASSED"`,
-    lang: 'bash',
-  },
-  {
-    id: 'curl',
-    label: 'cURL / REST',
-    code: `# Cloud Run managed API
-curl -s -X POST \\
-  https://acn-fastapi-backend-322603900775.us-central1.run.app/api/v1/scan-trajectory \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "agent_name": "MyBot",
-    "steps": [
-      {"step_index": 1, "type": "thought", "content": "Fetch user data"},
-      {"step_index": 2, "type": "tool_call", "tool_name": "db_query", "content": "SELECT *"}
-    ]
-  }' | jq .`,
-    lang: 'bash',
+func main() {
+    authority := btp.NewBartholomewTrustAuthority(300)
+    receipt, err := authority.EvaluateIntent("agent_go", "EXEC_TOOL", map[string]any{"cmd": "ls"})
+    if err == nil {
+        fmt.Printf("BTP Ed25519 Signature: %s\\n", receipt.Signature)
+    }
+}`,
+    lang: 'go',
   },
 ]
 
@@ -91,99 +81,60 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg transition-all duration-150"
-      style={{
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.09)',
-        color: copied ? '#34d399' : '#94a3b8',
-        cursor: 'pointer',
-      }}
+      className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition border border-slate-700"
     >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+      <span>{copied ? 'Copied' : 'Copy'}</span>
     </button>
   )
 }
 
 export default function SDK() {
-  const [activeTab, setActiveTab] = useState('pip')
-  const tab = TABS.find(t => t.id === activeTab)!
+  const [activeTab, setActiveTab] = useState(TABS[0].id)
+  const current = TABS.find(t => t.id === activeTab) || TABS[0]
 
   return (
-    <section id="sdk" className="py-24 px-5 sm:px-8">
-      <div className="section-divider mb-24" />
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="section-label">SDK & Quickstart</div>
-          <h2 className="section-title mb-4">Integrate in under 5 minutes</h2>
-          <p className="section-subtitle mx-auto text-center">
-            pip install, one decorator, or drop the Go binary. Works with OpenAI, Anthropic, Gemini, Mistral, Llama — any agent that produces trajectories.
+    <section id="sdk" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+            <Code2 size={13} />
+            Multi-Language SDKs
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            1-Line Integration Across All Runtimes
+          </h2>
+          <p className="mt-3 text-slate-400 text-sm sm:text-base">
+            Drop BTP cryptographic guardrails directly into Python, TypeScript, or Go agents.
           </p>
         </div>
 
-        <div className="card overflow-hidden">
-          {/* Tab bar */}
-          <div
-            className="flex gap-0 overflow-x-auto"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.3)' }}
-          >
-            {TABS.map(t => (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id)}
-                className="px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-150"
-                style={{
-                  background: activeTab === t.id ? 'rgba(56,189,248,0.08)' : 'transparent',
-                  color: activeTab === t.id ? '#38bdf8' : '#94a3b8',
-                  borderBottom: activeTab === t.id ? '2px solid #38bdf8' : '2px solid transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  marginBottom: '-1px',
-                }}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Code block */}
-          <div className="relative p-5">
-            <div className="absolute top-5 right-5">
-              <CopyButton text={tab.code} />
-            </div>
-            <pre
-              style={{
-                background: '#020810',
-                border: '1px solid rgba(255,255,255,0.06)',
-                borderRadius: '10px',
-                padding: '1.25rem',
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '0.8rem',
-                lineHeight: 1.7,
-                color: '#94a3b8',
-                overflowX: 'auto',
-                margin: 0,
-              }}
+        {/* Tab Buttons */}
+        <div className="flex flex-wrap gap-2 mb-4 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800">
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition ${
+                activeTab === tab.id
+                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+              }`}
             >
-              <code>{tab.code}</code>
-            </pre>
-          </div>
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Footer links */}
-          <div
-            className="flex flex-wrap gap-4 px-5 py-3 text-xs"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.07)', color: '#475569' }}
-          >
-            <a href="https://pypi.org/project/bartholomew-eval/" target="_blank" rel="noopener noreferrer" className="no-underline hover:text-cyan-lt" style={{ color: '#475569', transition: 'color 0.15s' }}>
-              PyPI package ↗
-            </a>
-            <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" className="no-underline" style={{ color: '#475569' }}>
-              GitHub repo ↗
-            </a>
-            <a href="/dashboard/admin.html" className="no-underline" style={{ color: '#475569' }}>
-              Command Center ↗
-            </a>
+        {/* Code Viewer */}
+        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl relative">
+          <div className="flex items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-800/80">
+            <span className="text-xs font-mono text-cyan-400">{current.label}</span>
+            <CopyButton text={current.code} />
           </div>
+          <pre className="font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed">
+            {current.code}
+          </pre>
         </div>
       </div>
     </section>
