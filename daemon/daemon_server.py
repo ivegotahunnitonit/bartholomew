@@ -21,6 +21,7 @@ if parent_dir not in sys.path:
 from src.trust_protocol import BartholomewTrustAuthority
 from daemon.approval_queue import ApprovalQueue
 from daemon.notifications import send_desktop_notification
+from src.fleet_telemetry import FLEET_AGGREGATOR
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -68,65 +69,82 @@ class BartholomewDaemon:
     def evaluate_payload(self, agent_id: str, action_type: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         t0 = time.perf_counter()
 
-        # Check high-stakes co-signing gate before execution
-        amount_usd = payload.get("amount_usd", 0)
-        if isinstance(amount_usd, (int, float)) and amount_usd > 500:
-            approval = self.approval_queue.submit_for_approval(
+        # 1. High-Value Action Interception (Co-Signing Threshold)
+        amount = float(payload.get("amount_usd", payload.get("amount", 0.0)))
+        if amount > 500.0:
+            # Enqueue for human approval
+            req = self.approval_queue.enqueue(
                 agent_id=agent_id,
                 action_type=action_type,
                 payload=payload,
-                reason=f"Spend amount ${amount_usd:.2f} exceeds $500 threshold and requires human co-signing."
+                risk_level="HIGH",
+                reason=f"Transaction amount ${amount:.2f} exceeds automatic policy threshold ($500.00)"
             )
-            t_eval = (time.perf_counter() - t0) * 1_000_000
+            total_latency_us = round((time.perf_counter() - t0) * 1_000_000, 2)
+            self.total_evaluations += 1
+            self.total_blocked += 1
+            self.latencies_us.append(total_latency_us)
+
+            event = {
+                "timestamp": time.time(),
+                "agent_id": agent_id,
+                "action_type": action_type,
+                "verdict": "CO_SIGN_REQUIRED",
+                "request_id": req.request_id,
+                "latency_us": total_latency_us
+            }
+            self.broadcast_event(event)
+
             return {
-                "verdict": "PENDING_APPROVAL",
-                "request_id": approval.request_id,
-                "reason": approval.reason,
-                "latency_us": round(t_eval, 2),
-                "expires_at": approval.expires_at
+                "verdict": "CO_SIGN_REQUIRED",
+                "status": "QUEUED_FOR_HUMAN_APPROVAL",
+                "request_id": req.request_id,
+                "reason": req.reason,
+                "latency_us": total_latency_us
             }
 
-        # Evaluate intent using BTP Core cryptographic authority
+        # 2. Real-Time Invariant Evaluation
         receipt = self.authority.evaluate_intent(
             agent_id=agent_id,
             action_type=action_type,
             payload=payload
         )
+        total_latency_us = round((time.perf_counter() - t0) * 1_000_000, 2)
 
-        attestation = receipt.get("attestation", {})
-        verdict = attestation.get("verdict", "DENY")
-        is_allowed = (verdict == "ALLOW")
-        reason = attestation.get("reason", "Evaluated by policy invariants")
-        total_latency_us = round(attestation.get("evaluation_latency_us", (time.perf_counter() - t0) * 1_000_000), 2)
-
+        verdict = receipt["attestation"]["verdict"]
         self.total_evaluations += 1
-        if is_allowed:
+        if verdict == "ALLOW":
             self.total_allowed += 1
         else:
             self.total_blocked += 1
             send_desktop_notification(
-                title="[Bartholomew Threat Intercepted]",
-                message=f"Agent '{agent_id}' was BLOCKED: {reason}",
+                title="[Bartholomew Threat Blocked]",
+                message=f"Blocked {action_type} from {agent_id}: {receipt['attestation'].get('reason', 'Policy violation')}",
                 is_threat=True
             )
 
         self.latencies_us.append(total_latency_us)
-        if len(self.latencies_us) > 1000:
+        if len(self.latencies_us) > 500:
             self.latencies_us.pop(0)
 
-        # Record event
-        event_dict = {
-            "type": "EVALUATION",
-            "receipt": receipt,
+        event = {
+            "timestamp": time.time(),
+            "agent_id": agent_id,
+            "action_type": action_type,
+            "verdict": verdict,
+            "signature": receipt.get("signature")[:16] + "...",
             "latency_us": total_latency_us,
-            "timestamp": time.strftime("%H:%M:%S")
+            "reason": receipt["attestation"].get("reason")
         }
-        self.broadcast_event(event_dict)
+        self.broadcast_event(event)
+
+        # Ingest to Fleet Aggregator
+        FLEET_AGGREGATOR.ingest_receipt(receipt, node_id="local-daemon")
 
         return {
-            "allowed": is_allowed,
             "verdict": verdict,
-            "reason": reason,
+            "allowed": (verdict == "ALLOW"),
+            "reason": receipt["attestation"].get("reason", "Invariant evaluation complete"),
             "latency_us": total_latency_us,
             "signature": receipt.get("signature"),
             "public_key": self.authority.public_key_hex,
@@ -188,6 +206,22 @@ class BartholomewDaemon:
                     self._send_cors()
                     self.end_headers()
                     self.wfile.write(body)
+                elif self.path.startswith("/v1/fleet/export/otlp"):
+                    otlp_data = FLEET_AGGREGATOR.export_otlp_json(limit=100)
+                    body = json.dumps(otlp_data).encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors()
+                    self.end_headers()
+                    self.wfile.write(body)
+                elif self.path.startswith("/v1/fleet/health"):
+                    health = FLEET_AGGREGATOR.get_fleet_health_summary()
+                    body = json.dumps(health).encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors()
+                    self.end_headers()
+                    self.wfile.write(body)
                 elif self.path.startswith("/v1/events"):
                     events = daemon_instance.recent_events[:20]
                     body = json.dumps({"events": events}).encode("utf-8")
@@ -217,6 +251,16 @@ class BartholomewDaemon:
                     result = daemon_instance.evaluate_payload(agent_id, action_type, payload)
                     body = json.dumps(result).encode("utf-8")
                     self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors()
+                    self.end_headers()
+                    self.wfile.write(body)
+                elif self.path.startswith("/v1/fleet/ingest"):
+                    receipt = payload_json.get("receipt", payload_json)
+                    node_id = payload_json.get("node_id", "remote-node")
+                    success = FLEET_AGGREGATOR.ingest_receipt(receipt, node_id=node_id)
+                    body = json.dumps({"ingested": success}).encode("utf-8")
+                    self.send_response(200 if success else 400)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors()
                     self.end_headers()

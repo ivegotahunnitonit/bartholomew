@@ -91,7 +91,7 @@ def test_daemon_evaluate_endpoints():
         with urllib.request.urlopen(req) as resp:
             assert resp.status == 200
             res_high = json.loads(resp.read().decode())
-            assert res_high["verdict"] == "PENDING_APPROVAL"
+            assert res_high["verdict"] in ("PENDING_APPROVAL", "CO_SIGN_REQUIRED")
             req_id = res_high["request_id"]
 
         # 5. List approvals
