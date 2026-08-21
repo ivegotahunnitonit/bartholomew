@@ -35,7 +35,8 @@ def run_gate():
         ("13. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
         ("14. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"]),
         ("15. Test Enterprise Agent Scout & M2M Settlement", ["python", "test_enterprise_agent_scout.py"]),
-        ("16. Test Fund Legitimacy & Financial Invariants", ["python", "test_fund_legitimacy_verifier.py"])
+        ("16. Test Fund Legitimacy & Financial Invariants", ["python", "test_fund_legitimacy_verifier.py"]),
+        ("17. Test Zero-Friction M2M Instant Settlement", ["python", "test_zero_friction_m2m_engine.py"])
     ]
 
     all_passed = True
