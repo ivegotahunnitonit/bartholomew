@@ -1,0 +1,3 @@
+[console_scripts]
+bartholomew = src.cli:main
+btp = src.cli:main

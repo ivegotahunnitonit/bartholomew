@@ -3,25 +3,11 @@ import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
-import ArchitecturalVerdict from './components/ArchitecturalVerdict'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
-import { AgentSocialNetwork } from './components/AgentSocialNetwork'
-import CorePrimitives from './components/CorePrimitives'
-import ObjectiveEngineViewer from './components/ObjectiveEngineViewer'
-import VendorNeutralProtocolViewer from './components/VendorNeutralProtocolViewer'
-import Applications from './components/Applications'
-import ResourceGraphViewer from './components/ResourceGraphViewer'
-import AsynchronousReasoning from './components/AsynchronousReasoning'
-import OperationsWorkspace from './components/OperationsWorkspace'
-import CommandCenter from './components/CommandCenter'
-import Simulator from './components/Simulator'
-import EpistemicEngines from './components/EpistemicEngines'
-import Governance from './components/Governance'
 import SDK from './components/SDK'
 import LiveAPI from './components/LiveAPI'
-import ExecutiveSummary from './components/ExecutiveSummary'
 import Footer from './components/Footer'
 
 function ScrollToHash() {
@@ -31,7 +17,6 @@ function ScrollToHash() {
     if (location.hash) {
       const element = document.getElementById(location.hash.substring(1))
       if (element) {
-        // Wait a small tick to ensure render is complete
         setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth' })
         }, 100)
@@ -49,66 +34,16 @@ function HomeView() {
     <>
       <Hero />
       <DesktopInstallerSection />
-      <ArchitecturalVerdict />
       <RuntimeThesisProof />
-      <VisualPolicyEditor />
+      <div id="policy-editor">
+        <VisualPolicyEditor />
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <LiveAttestationInspector />
       </div>
-      <AgentSocialNetwork />
-      <CorePrimitives />
-      <ObjectiveEngineViewer />
-      <VendorNeutralProtocolViewer />
-      <Applications />
-      <Simulator />
-      <CommandCenter />
-      <ResourceGraphViewer />
-      <AsynchronousReasoning />
-      <EpistemicEngines />
-      <Governance />
       <SDK />
       <LiveAPI />
-      <ExecutiveSummary />
     </>
-  )
-}
-
-function OperationsView() {
-  return (
-    <div className="pt-24 pb-16 min-h-screen">
-      <OperationsWorkspace />
-      <CommandCenter />
-      <Simulator />
-    </div>
-  )
-}
-
-function DashboardView() {
-  return (
-    <div className="pt-24 pb-16 min-h-screen">
-      <CommandCenter />
-      <OperationsWorkspace />
-      <Simulator />
-    </div>
-  )
-}
-
-function SimulatorView() {
-  return (
-    <div className="pt-24 pb-16 min-h-screen">
-      <Simulator />
-      <CommandCenter />
-    </div>
-  )
-}
-
-function DocsView() {
-  return (
-    <div className="pt-24 pb-16 min-h-screen">
-      <SDK />
-      <LiveAPI />
-      <ExecutiveSummary />
-    </div>
   )
 }
 
@@ -116,15 +51,12 @@ export default function App() {
   return (
     <Router>
       <ScrollToHash />
-      <div className="min-h-screen bg-bg text-slate-100 font-sans antialiased selection:bg-cyan-500/20 selection:text-cyan-300 flex flex-col">
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
         <Navbar />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomeView />} />
-            <Route path="/operations" element={<OperationsView />} />
-            <Route path="/dashboard" element={<DashboardView />} />
-            <Route path="/simulator" element={<SimulatorView />} />
-            <Route path="/docs" element={<DocsView />} />
+            <Route path="*" element={<HomeView />} />
           </Routes>
         </main>
         <Footer />

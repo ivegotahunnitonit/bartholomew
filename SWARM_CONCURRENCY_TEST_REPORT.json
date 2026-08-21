@@ -1,14 +1,14 @@
 {
   "test_name": "Multi-Agent Swarm Concurrency Stress Test",
-  "timestamp_utc": "2026-08-21T17:32:05Z",
+  "timestamp_utc": "2026-08-21T18:33:39Z",
   "concurrent_agents": 50,
   "total_actions_evaluated": 5000,
   "clean_actions_authorized": 2500,
   "attacks_contained": 2500,
   "exploit_leakage_rate": "0.0000%",
   "thread_safety_nonce_collisions": 0,
-  "wall_clock_duration_seconds": 1.507,
-  "concurrent_throughput_ops_sec": 3317.0,
-  "average_swarm_latency_microseconds": 1085.44,
+  "wall_clock_duration_seconds": 1.562,
+  "concurrent_throughput_ops_sec": 3201.0,
+  "average_swarm_latency_microseconds": 1213.21,
   "verdict": "SWARM_CONCURRENCY_TEST_PASSED_100%"
 }

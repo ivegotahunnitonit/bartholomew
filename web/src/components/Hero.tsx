@@ -1,115 +1,106 @@
-import { ArrowRight, Terminal, Shield, Cpu, Activity } from 'lucide-react'
-
-const PILLARS = [
-  { label: 'Security', desc: 'OWASP LLM Intercept & Secret Masking' },
-  { label: 'Research', desc: 'Hypothesis Verification & Evidence' },
-  { label: 'Automation', desc: 'Constraint Enforcement & Control' },
-  { label: 'Economic Intelligence', desc: 'Opportunity Discovery & Resource Allocation' },
-]
+import { ArrowRight, Terminal, Shield, Cpu, Activity, Download, Lock } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-bg overflow-hidden">
-      {/* Background radial ambient light */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-violet-500/10 rounded-full blur-[140px] pointer-events-none" />
+    <section className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-slate-950 overflow-hidden text-white">
+      {/* Ambient background light */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-cyan-500/10 via-emerald-500/10 to-indigo-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto w-full relative z-10">
-        {/* Badge */}
+        {/* Top Badge */}
         <div className="flex items-center justify-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-            <Cpu size={14} className="animate-pulse" />
-            Autonomous Decision-Control Protocol
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            <Cpu size={14} className="text-cyan-400" />
+            Bartholomew Trust Protocol (BTP/2.2)
           </div>
         </div>
 
         {/* Primary Headline */}
         <h1
-          className="text-center font-extrabold leading-tight mb-6 tracking-tight text-white font-heading"
-          style={{ fontSize: 'clamp(2.4rem, 6vw, 4.2rem)', letterSpacing: '-0.03em' }}
+          className="text-center font-extrabold leading-tight mb-6 tracking-tight text-white"
+          style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', letterSpacing: '-0.03em' }}
         >
-          An Autonomous Decision-Control &amp;{' '}
-          <span className="gradient-text">Verification Layer</span>
-          <br className="hidden sm:block" />
-          {' '}for AI Agents.
+          Sub-Millisecond Cryptographic <br className="hidden sm:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-indigo-400">
+            Safety Guardrails
+          </span>{' '}
+          for Autonomous Agents.
         </h1>
 
         {/* Subtitle */}
-        <p
-          className="text-center mx-auto mb-10 text-slate-300 leading-relaxed max-w-2xl text-base sm:text-lg"
-        >
-          Bartholomew evaluates state, evidence, constraints, and outcomes in real time. Natively proficient as a <strong>Master of Linux</strong> environments, it enables autonomous agents to operate safely and effectively against reality rather than endlessly generating unverified responses.
+        <p className="text-center mx-auto mb-10 text-slate-300 leading-relaxed max-w-2xl text-base sm:text-lg">
+          Deterministic 3-Tier invariant defense for AI tool execution. Eliminates Rice’s theorem bypasses using compiler AST constant-folding, hermetic sandboxing, and &lt;50 µs Ed25519 cryptographic attestations.
         </p>
 
-        {/* Central Architecture Flow Visual */}
-        <div className="glass-card p-6 sm:p-8 rounded-2xl border border-white/10 max-w-3xl mx-auto mb-12 relative overflow-hidden bg-slate-950/80">
+        {/* Architecture Flow Card */}
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-800 max-w-3xl mx-auto mb-12 relative overflow-hidden bg-slate-900/90 shadow-2xl backdrop-blur-sm">
           <div className="flex flex-col items-center space-y-4 font-mono text-xs">
-            {/* Top Node */}
-            <div className="px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold tracking-wider uppercase">
-              AI AGENT INTENT &amp; DECISION
+            {/* Input Node */}
+            <div className="px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-bold tracking-wider uppercase flex items-center gap-2">
+              <Terminal size={14} />
+              AI AGENT INTENT &amp; TOOL CALL
             </div>
 
-            <div className="w-px h-6 bg-gradient-to-b from-cyan-500/50 to-emerald-500/50" />
+            <div className="w-px h-5 bg-gradient-to-b from-cyan-500/50 to-emerald-500/50" />
 
-            {/* Bartholomew Core Box */}
-            <div className="w-full p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-3">
-              <div className="text-center text-emerald-400 font-extrabold tracking-widest text-sm uppercase">
-                BARTHOLOMEW VERIFICATION ENGINE
+            {/* Core Verification Box */}
+            <div className="w-full p-4 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-3">
+              <div className="text-center text-emerald-400 font-extrabold tracking-widest text-xs sm:text-sm uppercase flex items-center justify-center gap-2">
+                <Shield size={16} />
+                BARTHOLOMEW 3-TIER INVARIANT ENGINE (&lt;50 µs)
               </div>
               <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
-                <div className="p-2 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                  <span className="font-bold block">REASON</span>
-                  <span className="text-[10px] text-slate-400">Entropy &amp; Logic</span>
+                <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200">
+                  <span className="font-bold text-cyan-400 block mb-0.5">TIER 1: AST</span>
+                  <span className="text-[10px] text-slate-400">Static AST Analysis</span>
                 </div>
-                <div className="p-2 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
-                  <span className="font-bold block">VERIFY</span>
-                  <span className="text-[10px] text-slate-400">Ed25519 Evidence</span>
+                <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200">
+                  <span className="font-bold text-emerald-400 block mb-0.5">TIER 2: SANDBOX</span>
+                  <span className="text-[10px] text-slate-400">Hermetic Isolation</span>
                 </div>
-                <div className="p-2 rounded bg-violet-500/10 border border-violet-500/20 text-violet-300">
-                  <span className="font-bold block">MEMORY</span>
-                  <span className="text-[10px] text-slate-400">Sovereign State</span>
+                <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200">
+                  <span className="font-bold text-indigo-400 block mb-0.5">TIER 3: PROOF</span>
+                  <span className="text-[10px] text-slate-400">Ed25519 Attestation</span>
                 </div>
               </div>
             </div>
 
-            <div className="w-px h-6 bg-gradient-to-b from-emerald-500/50 to-violet-500/50" />
+            <div className="w-px h-5 bg-gradient-to-b from-emerald-500/50 to-indigo-500/50" />
 
-            {/* Outcome Node */}
-            <div className="px-4 py-2 rounded-lg bg-violet-500/10 border border-violet-500/30 text-violet-300 font-bold tracking-wider uppercase">
-              REAL-WORLD ACTION &amp; VERIFIED OUTCOME
+            {/* Output Node */}
+            <div className="px-4 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-bold tracking-wider uppercase flex items-center gap-2">
+              <Lock size={14} />
+              CRYPTOGRAPHIC ATTESTATION &amp; ZERO-RISK EXECUTION
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-          <a href="#primitives" className="btn-action text-sm font-bold py-3 px-7 flex items-center gap-2">
-            <Activity size={16} />
-            Explore Core Primitives
-          </a>
-          <a href="#applications" className="btn-secondary text-sm font-medium py-3 px-6 flex items-center gap-2">
-            <Shield size={16} className="text-cyan-400" />
-            View Applications
-            <ArrowRight size={16} />
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="#download"
+            className="px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/20 transition flex items-center gap-2"
+          >
+            <Download size={16} />
+            Download Desktop CLI
           </a>
           <a
-            href="https://pypi.org/project/bartholomew-eval/"
+            href="#policy-editor"
+            className="px-6 py-3 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white transition flex items-center gap-2"
+          >
+            <Activity size={16} className="text-cyan-400" />
+            Interactive Policy Editor
+          </a>
+          <a
+            href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors"
+            className="px-6 py-3 rounded-xl text-sm font-semibold bg-slate-900/60 hover:bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition flex items-center gap-2"
           >
-            <Terminal size={14} />
-            pip install bartholomew-eval
+            <Terminal size={16} />
+            GitHub Repository
+            <ArrowRight size={14} />
           </a>
-        </div>
-
-        {/* 4 Pillars Underneath */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-          {PILLARS.map((p) => (
-            <div key={p.label} className="glass-card p-4 rounded-xl border border-white/10 text-center space-y-1">
-              <span className="text-sm font-bold text-white font-heading block">{p.label}</span>
-              <span className="text-[11px] text-slate-400 block">{p.desc}</span>
-            </div>
-          ))}
         </div>
       </div>
     </section>
