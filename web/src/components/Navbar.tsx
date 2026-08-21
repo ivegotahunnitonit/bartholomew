@@ -21,16 +21,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 no-underline">
-          <Logo size={28} />
-          <div className="flex flex-col">
-            <span className="font-extrabold text-sm sm:text-base tracking-tight text-white font-mono">
-              BARTHOLOMEW
-            </span>
-            <span className="text-[10px] text-cyan-400 font-mono tracking-wider -mt-1 font-semibold">
-              AI SAFETY PROTOCOL
-            </span>
-          </div>
+        <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
+          <Logo size={32} />
         </Link>
 
         {/* Streamlined Desktop Nav Links (Zero Redundancy) */}
