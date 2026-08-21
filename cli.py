@@ -53,10 +53,10 @@ rules:
             f.write(sample_policy)
         print(f"[+] Created default policy: {policy_path}")
 
-    print(f"[✓] Sovereign Public Key (Ed25519): {authority.public_key_hex}")
+    print(f"[OK] Sovereign Public Key (Ed25519): {authority.public_key_hex}")
     if getattr(args, "pair", None):
-        print(f"[✓] Paired with framework target: {args.pair}")
-    print("[✓] Bartholomew local workspace initialized successfully.")
+        print(f"[OK] Paired with framework target: {args.pair}")
+    print("[OK] Bartholomew local workspace initialized successfully.")
 
 
 def cmd_daemon_start(args):
@@ -73,7 +73,7 @@ def cmd_daemon_start(args):
             )
         else:
             proc = subprocess.Popen([sys.executable, daemon_script], start_new_session=True)
-        print(f"[✓] Daemon launched in background (PID: {proc.pid}).")
+        print(f"[OK] Daemon launched in background (PID: {proc.pid}).")
     else:
         from daemon.daemon_server import BartholomewDaemon
         daemon = BartholomewDaemon(host=host, port=port)
