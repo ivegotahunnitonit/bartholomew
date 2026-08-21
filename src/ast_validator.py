@@ -2,10 +2,11 @@
 Bartholomew AST Security & Invariant Validator
 =============================================
 Performs deep Abstract Syntax Tree (AST) static analysis on Python code payloads.
-Replaces naive substring filtering with structural AST node inspection:
-  - Detects dynamic execution calls (eval, exec, __import__, compile).
-  - Detects destructive OS/process invocations (os.system, subprocess, shutil.rmtree).
-  - Calculates AST node mutation deltas (AST_MAX_DELTA governance).
+Handles:
+  1. Direct & composite calls (eval, exec, os.system, subprocess.run).
+  2. Aliased module calls (import os as o; o.system(...)).
+  3. Dynamic attribute access (getattr(os, "system")(...)).
+  4. AST node complexity limits (AST_MAX_DELTA governance).
 """
 
 import ast
@@ -26,10 +27,6 @@ class ASTSecurityValidator:
 
     @classmethod
     def validate_code_ast(cls, code_str: str, max_ast_nodes: int = 500) -> Tuple[bool, str, Dict[str, Any]]:
-        """
-        Parses Python code into an AST and inspects all nodes structurally.
-        Returns: (is_safe, reason, metadata)
-        """
         start_us = time.perf_counter()
 
         try:
@@ -40,29 +37,46 @@ class ASTSecurityValidator:
 
         total_nodes = 0
         violations = []
+        aliases: Dict[str, str] = {} # Maps alias name -> original module name (e.g. 'o' -> 'os')
 
         for node in ast.walk(tree):
             total_nodes += 1
 
-            # 1. Inspect Function & Method Calls (ast.Call)
-            if isinstance(node, ast.Call):
-                call_name = cls._get_call_name(node.func)
+            # Track import aliases (e.g., import os as o, from subprocess import Popen as P)
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    original = alias.name
+                    asname = alias.asname or alias.name
+                    aliases[asname] = original
+                    if original in cls.FORBIDDEN_MODULES:
+                        violations.append(f"Forbidden Module Import: '{original}'")
+
+            elif isinstance(node, ast.ImportFrom):
+                mod = node.module or ""
+                if mod in cls.FORBIDDEN_MODULES:
+                    violations.append(f"Forbidden Module Import: '{mod}'")
+                for alias in node.names:
+                    original_func = f"{mod}.{alias.name}" if mod else alias.name
+                    asname = alias.asname or alias.name
+                    aliases[asname] = original_func
+
+            # Inspect Function & Method Calls (ast.Call)
+            elif isinstance(node, ast.Call):
+                call_name = cls._resolve_call_name(node.func, aliases)
                 if call_name in cls.FORBIDDEN_CALLS:
                     violations.append(f"Forbidden AST Call: '{call_name}'")
 
-            # 2. Inspect Direct Imports (ast.Import / ast.ImportFrom)
-            elif isinstance(node, ast.Import):
-                for alias in node.names:
-                    if alias.name in cls.FORBIDDEN_MODULES:
-                        violations.append(f"Forbidden Module Import: '{alias.name}'")
-
-            elif isinstance(node, ast.ImportFrom):
-                if node.module in cls.FORBIDDEN_MODULES:
-                    violations.append(f"Forbidden Module Import: '{node.module}'")
+                # Detect dynamic getattr evasion: getattr(os, "system")(...)
+                if isinstance(node.func, ast.Name) and node.func.id == "getattr":
+                    if len(node.args) >= 2 and isinstance(node.args[1], ast.Constant):
+                        attr_val = str(node.args[1].value)
+                        target_obj = cls._resolve_call_name(node.args[0], aliases)
+                        resolved_getattr = f"{target_obj}.{attr_val}"
+                        if resolved_getattr in cls.FORBIDDEN_CALLS or attr_val in {"system", "popen", "rmtree"}:
+                            violations.append(f"Forbidden Dynamic Call via getattr: '{resolved_getattr}'")
 
         dt_us = (time.perf_counter() - start_us) * 1_000_000
 
-        # 3. Check AST Complexity / Node Limit
         if total_nodes > max_ast_nodes:
             violations.append(f"AST Delta Limit Exceeded: {total_nodes} nodes > cap {max_ast_nodes}")
 
@@ -77,14 +91,14 @@ class ASTSecurityValidator:
 
         return is_safe, reason, metadata
 
-    @staticmethod
-    def _get_call_name(func_node: ast.AST) -> str:
-        """Resolves composite function call names like 'os.system' or 'subprocess.run'."""
+    @classmethod
+    def _resolve_call_name(cls, func_node: ast.AST, aliases: Dict[str, str]) -> str:
+        """Resolves function names through import alias mappings."""
         if isinstance(func_node, ast.Name):
-            return func_node.id
+            return aliases.get(func_node.id, func_node.id)
         elif isinstance(func_node, ast.Attribute):
-            value_name = ASTSecurityValidator._get_call_name(func_node.value)
-            if value_name:
-                return f"{value_name}.{func_node.attr}"
+            val_name = cls._resolve_call_name(func_node.value, aliases)
+            if val_name:
+                return f"{val_name}.{func_node.attr}"
             return func_node.attr
         return ""
