@@ -1,0 +1,39 @@
+{
+  "pipeline_name": "Real Autonomous Agent Security & Remediation Pipeline",
+  "timestamp_utc": "2026-08-21T05:45:15Z",
+  "agent_under_test": "real-codex-copilot-01",
+  "violations_caught": [],
+  "secrets_scrubbed": 2,
+  "sanitized_payload": "export [REDACTED_TRANSFORMER_SALIENCY_SECRET] && git push origin main",
+  "total_pipeline_latency_ms": 1.184,
+  "ed25519_receipt": {
+    "attestation": {
+      "protocol_version": "BTP/2.2",
+      "authority": "Bartholomew-Trust-Engine-v2.2",
+      "authority_pubkey": "540fb70dc5d81539febd0fa7e46eb65cb1784259874c6621553a971a1a9b2277",
+      "nonce": "da620844203486c8f4b69144120864c5",
+      "issued_at_unix": 1787291115.0556178,
+      "expires_at_unix": 1787291415.0556178,
+      "originating_agent": "real-codex-copilot-01",
+      "target_recipient": "github-ci-enclave",
+      "action_type": "CODE_REMEDIATION_ATTESTATION",
+      "action_payload_hash": "feb4ca208cb6f74fef0d5623a49b7cb6ea1bd8594ed999cc63f974ce37965e50",
+      "policy_id": "urn:btp:policy:owasp-agentic-v2026.1",
+      "policy_hash": "efdf8419a32fcf53e0f12d8603f1ce2bc1b3de576961e72c12b84f1beae3b4c6",
+      "capability_scope": [
+        "FS_WRITE_RESTRICTED",
+        "NO_NET_EGRESS",
+        "AST_MAX_DELTA_5"
+      ],
+      "verdict": "ALLOW",
+      "reason": "All pre-flight checks and trajectory policies verified successfully.",
+      "sandbox_receipt": {
+        "status": "SKIPPED",
+        "tests_passed": 0,
+        "tests_total": 0
+      },
+      "evaluation_latency_us": 27.8
+    },
+    "signature": "d870c816883329e856e51f9d19a26fffbe66823a1ecd33bdf1a01c67f3377fd7f1d191a682bf7237f2e9367d61b057fd0335315d38baba7f5633e2e49f1f3501"
+  }
+}
