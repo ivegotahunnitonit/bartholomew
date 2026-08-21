@@ -6,6 +6,7 @@ import ArchitecturalVerdict from './components/ArchitecturalVerdict'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
+import { AgentSocialNetwork } from './components/AgentSocialNetwork'
 import CorePrimitives from './components/CorePrimitives'
 import ObjectiveEngineViewer from './components/ObjectiveEngineViewer'
 import VendorNeutralProtocolViewer from './components/VendorNeutralProtocolViewer'
@@ -52,6 +53,7 @@ function HomeView() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <LiveAttestationInspector />
       </div>
+      <AgentSocialNetwork />
       <CorePrimitives />
       <ObjectiveEngineViewer />
       <VendorNeutralProtocolViewer />
