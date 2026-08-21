@@ -1,24 +1,111 @@
 """
-Bartholomew CLI Tool
-====================
-Command-line interface for policy validation, payload evaluation, and security auditing.
+Bartholomew CLI Tool (v2.2.0)
+=============================
+Command-line interface for:
+  1. Quickstart initialization (`bartholomew init`).
+  2. Ed25519 keypair generation (`bartholomew keygen`).
+  3. Declarative policy validation & testing (`bartholomew policy validate/eval`).
+  4. Codebase security auditing (`bartholomew audit`).
 """
 
 import sys
 import os
 import json
 import argparse
+from typing import Dict, Any
 
 sys.path.insert(0, os.path.abspath("."))
 from src.declarative_policy_engine import DeclarativePolicyEngine
+from src.trust_protocol import BartholomewTrustAuthority
 from autonomous_assurance_scanner import AutonomousAssuranceEngine
+
+def init_project(target_dir: str = ".") -> None:
+    """Initializes a new project with BTP security configuration and keys."""
+    btp_dir = os.path.join(target_dir, ".btp")
+    os.makedirs(btp_dir, exist_ok=True)
+
+    # 1. Generate project policy file
+    policy_path = os.path.join(btp_dir, "policy.yaml")
+    if not os.path.exists(policy_path):
+        default_policy = """# Bartholomew Trust Protocol - Project Security Policy
+version: "2.2"
+policy_id: "project_default_security_policy"
+description: "Zero-cloud sub-millisecond invariant policy for local agent workflows"
+
+rules:
+  - id: "INVARIANT_SPEND_CAP"
+    description: "Blocks autonomous single transactions exceeding $500"
+    field: "amount_usd"
+    operator: "<="
+    value: 500.0
+
+  - id: "INVARIANT_DESTRUCTIVE_SQL"
+    description: "Prohibits DROP and TRUNCATE SQL queries"
+    field: "query"
+    operator: "not_contains"
+    values: ["drop table", "drop schema", "truncate table", "drop database"]
+
+  - id: "INVARIANT_RESTRICTED_FILES"
+    description: "Blocks modifying protected system and environment configs"
+    field: "path"
+    operator: "not_contains"
+    values: [".env", "id_rsa", "package.json", "conftest.py"]
+"""
+        with open(policy_path, "w", encoding="utf-8") as f:
+            f.write(default_policy)
+
+    # 2. Initialize local Trust Authority keypair
+    auth = BartholomewTrustAuthority()
+    key_info_path = os.path.join(btp_dir, "trust_root.json")
+    with open(key_info_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "public_key_hex": auth.public_key_hex,
+            "protocol_version": "BTP/2.2",
+            "ttl_seconds": auth.ttl_seconds
+        }, f, indent=2)
+
+    print("=" * 70)
+    print("SUCCESS: Bartholomew BTP Initialized in current workspace!")
+    print("=" * 70)
+    print(f"[*] Configuration : {policy_path}")
+    print(f"[*] Trust Root    : {key_info_path}")
+    print(f"[*] Public Key    : {auth.public_key_hex}")
+    print("\n[+] To attach to Claude Desktop, add this to your claude_desktop_config.json:")
+    print(json.dumps({
+        "mcpServers": {
+            "bartholomew-guard": {
+                "command": "python",
+                "args": ["-m", "mcp_server.server"],
+                "cwd": os.path.abspath(target_dir)
+            }
+        }
+    }, indent=2))
+    print("=" * 70)
+
+def generate_key() -> None:
+    """Generates and prints a fresh Ed25519 keypair."""
+    auth = BartholomewTrustAuthority()
+    print("=" * 70)
+    print("BARTHOLOMEW ED25519 KEYPAIR GENERATION")
+    print("=" * 70)
+    print(f"[*] Public Key (Hex) : {auth.public_key_hex}")
+    print(f"[*] TTL Policy Bound : {auth.ttl_seconds} seconds")
+    print(f"[*] Algorithm        : Pure Ed25519 (RFC 8032 / FIPS 186-5)")
+    print("=" * 70)
 
 def main():
     parser = argparse.ArgumentParser(
         prog="bartholomew",
-        description="Bartholomew Sub-Millisecond Autonomous Security CLI"
+        description="Bartholomew Sub-Millisecond Autonomous Security CLI (v2.2.0)"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
+    # init Subcommand
+    init_parser = subparsers.add_parser("init", help="Initialize BTP security policy and MCP setup in current project")
+    init_parser.add_argument("--dir", default=".", help="Target project directory")
+
+    # keygen Subcommand
+    subparsers.add_parser("keygen", help="Generate a new Ed25519 sovereign keypair")
 
     # Policy Subcommand
     policy_parser = subparsers.add_parser("policy", help="Manage and test declarative policies")
@@ -45,8 +132,14 @@ def main():
     if args.command == "version":
         print("Bartholomew Autonomous Trust Protocol (BTP) CLI v2.2.0")
         print("Protocol: BTP/2.2 (RFC 8785 + FIPS 186-5 Ed25519)")
-        print("Target Latency: <175 µs")
+        print("Target Latency: <55 µs")
         return
+
+    elif args.command == "init":
+        init_project(args.dir)
+
+    elif args.command == "keygen":
+        generate_key()
 
     elif args.command == "policy":
         if args.policy_action == "validate":
