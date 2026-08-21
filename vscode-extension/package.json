@@ -1,0 +1,50 @@
+{
+  "name": "bartholomew-guard-vscode",
+  "displayName": "Bartholomew Autonomous AI Guard",
+  "description": "Sub-millisecond cryptographic attestation and invariant guard for Cursor and VS Code agent sessions.",
+  "version": "2.2.0",
+  "publisher": "Bartholomew",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Security",
+    "Machine Learning",
+    "Programming Languages"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bartholomew.viewStatus",
+        "title": "Bartholomew: View Security Status & Trust Roots",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "bartholomew.openDashboard",
+        "title": "Bartholomew: Open Visual Policy Editor"
+      },
+      {
+        "command": "bartholomew.validatePolicy",
+        "title": "Bartholomew: Validate Workspace Security Policy"
+      }
+    ],
+    "menus": {
+      "statusBar": [
+        {
+          "command": "bartholomew.viewStatus"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.3.0"
+  }
+}
