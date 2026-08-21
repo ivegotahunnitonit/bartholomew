@@ -33,7 +33,8 @@ def run_gate():
         ("11. Test IssueHunt & Open VRP Hunter Engine", ["python", "test_issuehunt_vrp_hunter.py"]),
         ("12. Test Invariant Fuzzing & Bounty Crawler", ["python", "test_fuzzing_bounty_crawler.py"]),
         ("13. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
-        ("14. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"])
+        ("14. Test Native LangChain & CrewAI Guard", ["python", "test_langchain_guard.py"]),
+        ("15. Test Enterprise Agent Scout & M2M Settlement", ["python", "test_enterprise_agent_scout.py"])
     ]
 
     all_passed = True
