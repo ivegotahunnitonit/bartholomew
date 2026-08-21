@@ -16,8 +16,8 @@ import os
 sys.path.insert(0, os.path.abspath("python_backend"))
 from app.stripe_webhook_handler import handle_stripe_webhook, get_provisioned_customers
 
-WEBHOOK_SECRET = "whsec_03vd3ONlnRjJK8u0HqB7H5DQS5IhpcdR"
-LIVE_ENDPOINT = "https://acn-fastapi-backend-322603900775.us-central1.run.app/api/stripe/webhook"
+WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "whsec_test_placeholder_secret_for_local_testing")
+LIVE_ENDPOINT = os.getenv("STRIPE_WEBHOOK_URL", "https://acn-fastapi-backend-322603900775.us-central1.run.app/api/stripe/webhook")
 
 def generate_signed_payload(secret: str, customer_email: str, amount_cents: int):
     timestamp = int(time.time())
