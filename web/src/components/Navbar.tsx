@@ -28,27 +28,27 @@ export default function Navbar() {
               BARTHOLOMEW
             </span>
             <span className="text-[10px] text-cyan-400 font-mono tracking-wider -mt-1 font-semibold">
-              BTP/2.2 INVARIANT ENGINE
+              AI SAFETY INFRASTRUCTURE
             </span>
           </div>
         </Link>
 
-        {/* Desktop Nav Links */}
+        {/* Desktop Nav Links in Layman Terms */}
         <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
-          <a href="#download" className="hover:text-cyan-400 transition">
-            Download CLI
+          <a href="#how-it-works" className="hover:text-cyan-400 transition">
+            How It Works
           </a>
-          <a href="#runtime-proof" className="hover:text-cyan-400 transition">
-            3-Tier Invariant Defense
+          <a href="#download" className="hover:text-cyan-400 transition">
+            Install CLI
           </a>
           <a href="#policy-editor" className="hover:text-cyan-400 transition">
-            Policy Editor
+            Rule Editor
           </a>
           <a href="#sdk" className="hover:text-cyan-400 transition">
-            SDKs &amp; Wrappers
+            1-Line SDKs
           </a>
           <a href="#live-api" className="hover:text-cyan-400 transition">
-            Gateway API
+            API Specs
           </a>
         </nav>
 
@@ -87,39 +87,39 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="lg:hidden bg-slate-950 border-b border-slate-800 px-4 py-4 space-y-3">
           <a
+            href="#how-it-works"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
+          >
+            How It Works
+          </a>
+          <a
             href="#download"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            Download CLI
-          </a>
-          <a
-            href="#runtime-proof"
-            onClick={() => setMobileOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
-          >
-            3-Tier Invariant Defense
+            Install CLI
           </a>
           <a
             href="#policy-editor"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            Policy Editor
+            Rule Editor
           </a>
           <a
             href="#sdk"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            SDKs &amp; Wrappers
+            1-Line SDKs
           </a>
           <a
             href="#live-api"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-semibold text-slate-200 hover:text-cyan-400"
           >
-            Gateway API
+            API Specs
           </a>
         </div>
       )}

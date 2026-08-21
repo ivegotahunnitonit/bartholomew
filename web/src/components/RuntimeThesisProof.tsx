@@ -1,188 +1,191 @@
 import { useState } from 'react'
-import { Shield, Cpu, Lock, CheckCircle2, AlertTriangle, Layers, FileCode } from 'lucide-react'
+import { Cpu, CheckCircle2, AlertTriangle, Layers, Search, Box, Award } from 'lucide-react'
 
-interface AttackScenario {
+interface ThreatExample {
   id: string
   title: string
-  payload: string
-  interceptedTier: 'TIER 1 (AST)' | 'TIER 2 (SANDBOX)' | 'PASSED (TIER 3 SEALED)'
+  plainEnglishDescription: string
+  attemptedAction: string
+  interceptedBy: 'STEP 1: THE SCANNER' | 'STEP 2: THE SANDBOX' | 'APPROVED & NOTARIZED'
   latencyUs: number
-  verdict: 'DENY' | 'ALLOW'
-  reason: string
-  mechanism: string
+  verdict: 'BLOCKED' | 'APPROVED'
+  laymanExplanation: string
 }
 
-const SCENARIOS: AttackScenario[] = [
+const THREAT_EXAMPLES: ThreatExample[] = [
   {
-    id: 'SCN-1',
-    title: 'Obfuscated OS System Call',
-    payload: "getattr(__import__('o' + 's'), 'sys' + 'tem')('rm -rf /')",
-    interceptedTier: 'TIER 1 (AST)',
+    id: 'THREAT-1',
+    title: 'Disguised Delete Command',
+    plainEnglishDescription: 'An AI tries to delete system files using obfuscated code to sneak past simple filters.',
+    attemptedAction: "getattr(__import__('os'), 'system')('rm -rf /')",
+    interceptedBy: 'STEP 1: THE SCANNER',
     latencyUs: 32.4,
-    verdict: 'DENY',
-    reason: 'Dynamic getattr import or dangerous built-in invocation detected',
-    mechanism: 'Compiler-Grade AST Static Analysis constant-folds strings and resolves dynamic aliases before execution.'
+    verdict: 'BLOCKED',
+    laymanExplanation: 'The Scanner reads through the disguises in the code, recognizes the hidden delete command, and stops it before a single line executes.'
   },
   {
-    id: 'SCN-2',
-    title: 'Directory Traversal OS Breakout',
-    payload: 'cat ../../Windows/System32/config/SAM',
-    interceptedTier: 'TIER 2 (SANDBOX)',
+    id: 'THREAT-2',
+    title: 'Operating System Folder Escape',
+    plainEnglishDescription: 'An AI tries to break out of the project folder and read sensitive Windows or Linux system files.',
+    attemptedAction: 'cat ../../Windows/System32/config/SAM',
+    interceptedBy: 'STEP 2: THE SANDBOX',
     latencyUs: 88.6,
-    verdict: 'DENY',
-    reason: "Path Traversal Blocked: Target escapes workspace boundary",
-    mechanism: 'Hermetic Sandbox compares paths via os.path.commonpath and traps execution within project root.'
+    verdict: 'BLOCKED',
+    laymanExplanation: 'The Sandbox physically restricts the AI to its own assigned workspace. Any attempt to reach into outside operating system folders is trapped and blocked.'
   },
   {
-    id: 'SCN-3',
-    title: 'Declarative Spend Cap Breach',
-    payload: '{"action": "WIRE_TRANSFER", "amount_usd": 15000.00}',
-    interceptedTier: 'TIER 1 (AST)',
+    id: 'THREAT-3',
+    title: 'Unauthorized $15,000 Spend',
+    plainEnglishDescription: 'An AI goes rogue or hallucinates and tries to trigger an unauthorized $15,000 bank or API transfer.',
+    attemptedAction: '{"action": "TRANSFER", "amount_usd": 15000.00}',
+    interceptedBy: 'STEP 1: THE SCANNER',
     latencyUs: 28.1,
-    verdict: 'DENY',
-    reason: 'Invariant Violation: SPEND_CAP_EXCEEDED (Max authorized: $500.00)',
-    mechanism: 'Declarative YAML Policy Engine intercepts spend limit invariant in memory before network call.'
+    verdict: 'BLOCKED',
+    laymanExplanation: 'The policy rule specifies a $500 maximum spend limit. The $15,000 transfer is rejected immediately before it can hit the financial network.'
   },
   {
-    id: 'SCN-4',
-    title: 'Allowlisted CLI Tool Execution',
-    payload: 'git status',
-    interceptedTier: 'PASSED (TIER 3 SEALED)',
+    id: 'THREAT-4',
+    title: 'Safe Code Inspection Task',
+    plainEnglishDescription: 'An AI runs a safe status check on the local project directory.',
+    attemptedAction: 'git status',
+    interceptedBy: 'APPROVED & NOTARIZED',
     latencyUs: 42.5,
-    verdict: 'ALLOW',
-    reason: 'Safe allowlisted tool execution cryptographically attested with Ed25519',
-    mechanism: 'Passed Tier 1 & Tier 2. Tier 3 generated deterministic RFC 8785 Ed25519 cryptographic receipt.'
+    verdict: 'APPROVED',
+    laymanExplanation: 'The action is confirmed safe, executed, and stamped with a digital cryptographic seal for enterprise audit records.'
   }
 ]
 
 export default function RuntimeThesisProof() {
-  const [selectedScenario, setSelectedScenario] = useState<AttackScenario>(SCENARIOS[0])
+  const [selectedThreat, setSelectedThreat] = useState<ThreatExample>(THREAT_EXAMPLES[0])
 
   return (
-    <section id="runtime-proof" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
+    <section id="how-it-works" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
             <Layers size={13} />
-            Deterministic Security Model
+            How It Works
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            The 3-Tier Invariant Defense Architecture
+            3 Simple Steps to Complete AI Safety
           </h2>
-          <p className="mt-3 text-slate-400 text-sm sm:text-base">
-            Eliminates Rice’s Theorem bypasses by combining compiler AST analysis, hermetic OS sandboxing, and sub-50 µs Ed25519 cryptographic attestations.
+          <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+            Instead of hoping an AI behaves, Bartholomew provides a mathematical three-stage defense that guarantees safety on every single tool call.
           </p>
         </div>
 
-        {/* 3 Tier Architecture Flow Cards */}
+        {/* 3 Step Cards in Layman Terms */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {/* Tier 1 */}
+          {/* Step 1 */}
           <div className="p-6 rounded-2xl bg-slate-900/90 border border-cyan-500/30 relative overflow-hidden flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-xs font-bold font-mono text-cyan-400 uppercase tracking-wider">Tier 1</span>
+                <span className="text-xs font-bold font-mono text-cyan-400 uppercase tracking-wider">Step 1</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">&lt;35 µs</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                <FileCode size={18} className="text-cyan-400" />
-                AST Static Analysis
+                <Search size={18} className="text-cyan-400" />
+                The Pre-Flight Scanner
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                Compiles source code into an Abstract Syntax Tree. Tracks variable aliases, constant-folds concatenations, and intercepts obfuscated system calls.
+                Before any code runs, the scanner inspects the syntax tree. If the AI is trying to hide a destructive command, drop a database, or exceed spend caps, it is blocked immediately.
               </p>
             </div>
             <div className="text-[11px] font-mono text-cyan-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-              Blocks: eval, exec, __import__, getattr
+              Blocks: Dangerous code, SQL drops, budget breaches
             </div>
           </div>
 
-          {/* Tier 2 */}
+          {/* Step 2 */}
           <div className="p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/30 relative overflow-hidden flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-xs font-bold font-mono text-emerald-400 uppercase tracking-wider">Tier 2</span>
+                <span className="text-xs font-bold font-mono text-emerald-400 uppercase tracking-wider">Step 2</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">&lt;150 µs</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                <Shield size={18} className="text-emerald-400" />
-                Hermetic OS Sandbox
+                <Box size={18} className="text-emerald-400" />
+                The Locked Sandbox
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                Direct binary invocation with <code className="text-emerald-300">shell=False</code>. Enforces strict <code className="text-emerald-300">commonpath</code> directory containment and scrubs environment secrets.
+                The AI is confined inside a strict workspace boundary. It is physically impossible for the AI to touch system files, steal sensitive environment secrets, or run unauthorized shell scripts.
               </p>
             </div>
             <div className="text-[11px] font-mono text-emerald-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-              Blocks: Path traversal, shell injection, token leaks
+              Blocks: Directory escapes, credential leaks, OS damage
             </div>
           </div>
 
-          {/* Tier 3 */}
+          {/* Step 3 */}
           <div className="p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/30 relative overflow-hidden flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-xs font-bold font-mono text-indigo-400 uppercase tracking-wider">Tier 3</span>
+                <span className="text-xs font-bold font-mono text-indigo-400 uppercase tracking-wider">Step 3</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">&lt;40 µs</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                <Lock size={18} className="text-indigo-400" />
-                Ed25519 Attestation
+                <Award size={18} className="text-indigo-400" />
+                The Digital Notary
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                Deterministic RFC 8785 Canonical JSON serialization signed with FIPS 186-5 Ed25519 asymmetric keys for tamper-proof audit trails.
+                Once safe, the action is stamped with a tamper-proof cryptographic signature. Enterprise auditors can verify the digital receipt offline in seconds without trusting third parties.
               </p>
             </div>
             <div className="text-[11px] font-mono text-indigo-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-              Guarantees: 100% Offline verification &amp; non-repudiation
+              Guarantees: 100% Non-repudiation &amp; compliance proof
             </div>
           </div>
         </div>
 
-        {/* Interactive Scenario Verifier */}
+        {/* Interactive Plain English Threat Simulator */}
         <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
           <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-2 font-bold flex items-center gap-2">
             <Cpu size={14} />
-            Live Scenario Evaluation
+            Interactive Safety Test
           </div>
-          <div className="text-lg font-bold text-white mb-6">
-            Test Attack Invariants Against the 3-Tier Boundary
+          <div className="text-lg font-bold text-white mb-2">
+            See How Common AI Accidents Are Prevented in Real Time
           </div>
+          <p className="text-xs text-slate-400 mb-6">
+            Click on any real-world scenario below to see how Bartholomew handles rogue AI behavior:
+          </p>
 
-          {/* Scenario Selector Tabs */}
+          {/* Threat Selector Buttons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
-            {SCENARIOS.map(scn => (
+            {THREAT_EXAMPLES.map(threat => (
               <button
-                key={scn.id}
-                onClick={() => setSelectedScenario(scn)}
+                key={threat.id}
+                onClick={() => setSelectedThreat(threat)}
                 className={`p-3 rounded-xl text-left transition border ${
-                  selectedScenario.id === scn.id
+                  selectedThreat.id === threat.id
                     ? 'bg-slate-800 border-cyan-500/50 shadow-md'
                     : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
                 }`}
               >
-                <div className="text-[10px] font-mono text-slate-500 uppercase mb-1">{scn.id}</div>
-                <div className="text-xs font-bold text-slate-200">{scn.title}</div>
+                <div className="text-[10px] font-mono text-slate-500 uppercase mb-1">{threat.id}</div>
+                <div className="text-xs font-bold text-slate-200">{threat.title}</div>
               </button>
             ))}
           </div>
 
-          {/* Active Scenario Inspector Card */}
+          {/* Active Threat Card */}
           <div className="p-6 rounded-xl bg-slate-950 border border-slate-800 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-slate-400">Payload:</span>
-                <span className="font-mono text-xs text-cyan-300 font-bold">{selectedScenario.payload}</span>
+              <div>
+                <div className="text-xs font-semibold text-slate-300 mb-1">{selectedThreat.plainEnglishDescription}</div>
+                <div className="font-mono text-xs text-cyan-300">{selectedThreat.attemptedAction}</div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold font-mono px-2.5 py-0.5 rounded ${
-                  selectedScenario.verdict === 'DENY'
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`text-xs font-bold font-mono px-3 py-1 rounded ${
+                  selectedThreat.verdict === 'BLOCKED'
                     ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                     : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                 }`}>
-                  {selectedScenario.verdict}
+                  {selectedThreat.verdict}
                 </span>
                 <span className="text-xs font-mono text-slate-400">
-                  {selectedScenario.latencyUs} µs
+                  {selectedThreat.latencyUs} µs
                 </span>
               </div>
             </div>
@@ -190,19 +193,18 @@ export default function RuntimeThesisProof() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
                 <div className="font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
-                  <AlertTriangle size={13} className={selectedScenario.verdict === 'DENY' ? 'text-rose-400' : 'text-emerald-400'} />
-                  Interception Layer
+                  <AlertTriangle size={13} className={selectedThreat.verdict === 'BLOCKED' ? 'text-rose-400' : 'text-emerald-400'} />
+                  Where It Was Caught
                 </div>
-                <div className="font-mono text-cyan-300">{selectedScenario.interceptedTier}</div>
-                <p className="text-slate-400 mt-1">{selectedScenario.reason}</p>
+                <div className="font-mono text-cyan-300 font-bold">{selectedThreat.interceptedBy}</div>
               </div>
 
               <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
                 <div className="font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
                   <CheckCircle2 size={13} className="text-emerald-400" />
-                  Defense Mechanism
+                  Plain English Explanation
                 </div>
-                <p className="text-slate-300">{selectedScenario.mechanism}</p>
+                <p className="text-slate-300 leading-relaxed">{selectedThreat.laymanExplanation}</p>
               </div>
             </div>
           </div>
