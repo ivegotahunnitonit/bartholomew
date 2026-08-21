@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import DesktopInstallerSection from './components/DesktopInstallerSection'
 import ArchitecturalVerdict from './components/ArchitecturalVerdict'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
@@ -47,6 +48,7 @@ function HomeView() {
   return (
     <>
       <Hero />
+      <DesktopInstallerSection />
       <ArchitecturalVerdict />
       <RuntimeThesisProof />
       <VisualPolicyEditor />

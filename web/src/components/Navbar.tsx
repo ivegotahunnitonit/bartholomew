@@ -157,11 +157,18 @@ export default function Navbar() {
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
           <Link
+            to="/#download"
+            className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-400/60 transition-all flex items-center gap-1.5"
+          >
+            <Terminal size={13} />
+            Download CLI
+          </Link>
+          <Link
             to="/operations"
             className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 border border-cyan-500/30 text-cyan-300 hover:border-cyan-400/60 transition-all flex items-center gap-1.5"
           >
             <Lock size={13} />
-            Operations Workspace
+            Operations
           </Link>
           <Link
             to="/#protocol"
