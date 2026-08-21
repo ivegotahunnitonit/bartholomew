@@ -18,7 +18,7 @@ export default function Hero() {
 client = openai.OpenAI()
 
 # DANGEROUS: AI hallucinates and executes destructive SQL
-# Database wiped, credentials exposed, zero interception.
+# Result: Database wiped, credentials exposed, zero runtime interception.
 response = client.chat.completions.create(
     model="gpt-4o",
     messages=[{"role": "user", "content": "Clean up records: DROP TABLE users;"}]
@@ -31,7 +31,7 @@ import openai
 client = wrap_client(openai.OpenAI())
 
 # PROTECTED: Intercepted in <50 µs via AST static invariant
-# Raises BartholomewSecurityError before network call.
+# Raises BartholomewSecurityError before network call executes.
 response = client.chat.completions.create(
     model="gpt-4o",
     messages=[{"role": "user", "content": "Clean up records: DROP TABLE users;"}]
@@ -44,169 +44,158 @@ response = client.chat.completions.create(
   }
 
   return (
-    <section className="relative min-h-[96vh] flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-slate-950 overflow-hidden text-white">
-      {/* Background ambient light */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[650px] bg-gradient-to-r from-cyan-500/15 via-emerald-500/10 to-indigo-500/15 rounded-full blur-[170px] pointer-events-none" />
-
+    <section className="relative min-h-[96vh] flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-black text-white overflow-hidden">
       <div className="max-w-5xl mx-auto w-full relative z-10">
-        {/* Top Developer Badge */}
+        {/* Top Monospace Badge Box */}
         <div className="flex items-center justify-center mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wide uppercase bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 shadow-lg shadow-cyan-500/10 backdrop-blur-md">
-            <Sparkles size={13} className="text-cyan-400 animate-pulse" />
-            <span>AI SAFETY INFRASTRUCTURE · BTP/2.2</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-semibold uppercase tracking-wider text-[#a1a1aa]">
+            <Sparkles size={13} className="text-[#f59e0b]" />
+            <span>[ PROTOCOL: BTP/2.2 · CRYPTOGRAPHIC AGENT GUARD ]</span>
           </div>
         </div>
 
-        {/* Dynamic Editorial Headline with Tight Line Height & Electric Gradient */}
+        {/* Metallic Dimensional Hero Title */}
         <h1
-          className="text-center font-extrabold mb-6 text-white font-sans"
+          className="text-center font-bold mb-6 font-sans hero-metallic-title"
           style={{
-            fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
+            fontSize: 'clamp(2.75rem, 5vw, 4.5rem)',
             lineHeight: 1.05,
-            letterSpacing: '-0.04em'
+            letterSpacing: '-0.03em'
           }}
         >
           The Seatbelt and Black Box <br className="hidden sm:block" />
-          for{' '}
-          <span
-            className="text-transparent bg-clip-text"
-            style={{
-              backgroundImage: 'linear-gradient(90deg, #00f2fe, #4facfe)'
-            }}
-          >
-            Autonomous AI Agents.
-          </span>
+          for Autonomous AI Agents.
         </h1>
 
-        {/* Upgraded Hero Copy */}
-        <p className="text-center mx-auto mb-9 text-slate-300 leading-relaxed max-w-3xl text-base sm:text-lg">
-          Empower AI agents with execution access without the risk. Bartholomew intercepts destructive code, unauthorized database drops, and API overspending in <strong>under 50 microseconds</strong>—using deterministic AST scanning and cryptographic audit trails.
+        {/* High-Contrast Zinc Subtitle */}
+        <p className="text-center mx-auto mb-9 text-[#d4d4d8] leading-relaxed max-w-3xl text-base sm:text-lg font-sans">
+          Empower AI agents with execution access without the risk. Bartholomew intercepts destructive code, unauthorized database drops, and API overspending in <strong className="text-[#ffffff]">under 50 microseconds</strong>—using deterministic AST scanning and cryptographic audit trails.
         </p>
 
-        {/* High-Visibility CTA Buttons */}
+        {/* High-Contrast CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
           <a
             href="#download"
-            className="px-7 py-3.5 rounded-xl text-sm font-extrabold bg-gradient-to-r from-cyan-400 via-emerald-400 to-emerald-500 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
+            className="px-7 py-3 text-sm font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-2 shadow-lg"
           >
-            <Download size={16} />
-            Install on Desktop (1 Command)
+            <Download size={15} />
+            <span>[ INSTALL DESKTOP CLI ]</span>
           </a>
           <a
             href="#threat-simulator"
-            className="px-6 py-3.5 rounded-xl text-sm font-semibold bg-slate-900/90 hover:bg-slate-800 border border-white/10 hover:border-cyan-400/40 text-white shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 backdrop-blur-md"
+            className="px-6 py-3 text-sm font-mono font-semibold bg-[#0a0a0a] hover:bg-[#141414] border border-[#222222] hover:border-[#444444] text-[#ffffff] transition flex items-center gap-2"
           >
-            <Shield size={16} className="text-cyan-400" />
-            Live Threat Simulator
+            <Shield size={15} className="text-[#10b981]" />
+            <span>[ THREAT SIMULATOR ]</span>
           </a>
           <a
             href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3.5 rounded-xl text-sm font-semibold bg-slate-900/60 hover:bg-slate-900 border border-white/10 hover:border-slate-600 text-slate-300 hover:text-white hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 backdrop-blur-md"
+            className="px-6 py-3 text-sm font-mono font-semibold bg-[#0a0a0a] hover:bg-[#141414] border border-[#222222] hover:border-[#444444] text-[#a1a1aa] hover:text-[#ffffff] transition flex items-center gap-2"
           >
-            <Terminal size={16} />
-            GitHub
-            <ArrowRight size={14} />
+            <Terminal size={15} />
+            <span>GITHUB</span>
+            <ArrowRight size={13} />
           </a>
         </div>
 
-        {/* Floating Metric Badges directly under main CTA */}
+        {/* Floating Monospace Stat Box Chips */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-cyan-300 shadow-md backdrop-blur-md">
-            <Zap size={13} className="text-cyan-400" />
-            <span>&lt;50 µs Execution</span>
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono text-[#f59e0b]">
+            <Zap size={13} />
+            <span>[ LATENCY: &lt;50 µs ]</span>
           </div>
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-emerald-300 shadow-md backdrop-blur-md">
-            <Lock size={13} className="text-emerald-400" />
-            <span>100% Localhost / In-Memory</span>
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono text-[#10b981]">
+            <Lock size={13} />
+            <span>[ IN-MEMORY / ZERO CLOUD CALLS ]</span>
           </div>
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-indigo-300 shadow-md backdrop-blur-md">
-            <Shield size={13} className="text-indigo-400" />
-            <span>Ed25519 Signed Proofs</span>
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono text-[#ffffff]">
+            <Shield size={13} className="text-[#10b981]" />
+            <span>[ PROOF: ED25519 SIGNED ]</span>
           </div>
         </div>
 
-        {/* Side-by-Side 1-Line Drop-In Code Comparison Preview inside macOS Window */}
-        <div className="rounded-2xl border border-white/10 max-w-3xl mx-auto mb-14 bg-slate-900/90 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-cyan-500/30 transition-all">
+        {/* Side-by-Side 1-Line Drop-In Code Comparison in Cyber-Terminal macOS Frame */}
+        <div className="border border-[#222222] max-w-3xl mx-auto mb-14 bg-[#0a0a0a] shadow-2xl overflow-hidden">
           {/* macOS Titlebar with Mode Switcher */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-white/10">
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              <div className="w-2.5 h-2.5 bg-[#ef4444]" />
+              <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
+              <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
 
             {/* Switcher Tabs */}
-            <div className="flex rounded-lg bg-slate-900 p-1 border border-white/10 text-xs font-mono">
+            <div className="flex bg-[#0a0a0a] border border-[#222222] text-xs font-mono">
               <button
                 onClick={() => setCodeMode('wrapped')}
-                className={`px-3 py-1 rounded-md transition font-semibold ${
-                  codeMode === 'wrapped' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shadow-sm' : 'text-slate-400 hover:text-white'
+                className={`px-3 py-1 transition font-bold ${
+                  codeMode === 'wrapped' ? 'bg-[#10b981] text-[#000000]' : 'text-[#a1a1aa] hover:text-[#ffffff]'
                 }`}
               >
-                + Bartholomew Guarded (1-Line)
+                [+ BARTHOLOMEW GUARDED]
               </button>
               <button
                 onClick={() => setCodeMode('standard')}
-                className={`px-3 py-1 rounded-md transition font-semibold ${
-                  codeMode === 'standard' ? 'bg-rose-500/20 text-rose-300 border border-rose-400/30 shadow-sm' : 'text-slate-400 hover:text-white'
+                className={`px-3 py-1 transition font-bold ${
+                  codeMode === 'standard' ? 'bg-[#ef4444] text-[#ffffff]' : 'text-[#a1a1aa] hover:text-[#ffffff]'
                 }`}
               >
-                Standard Raw Client (Unprotected)
+                [RAW UNPROTECTED]
               </button>
             </div>
 
             <button
               onClick={handleCopyCode}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1 border ${
-                copied ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50' : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'
+              className={`px-2.5 py-1 text-xs font-mono font-semibold transition flex items-center gap-1 border ${
+                copied ? 'bg-[#10b981]/20 text-[#10b981] border-[#10b981]/50' : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
               }`}
             >
-              {copied ? <Check size={12} /> : <Copy size={12} />}
-              <span>{copied ? 'Copied!' : 'Copy'}</span>
+              {copied ? <Check size={11} /> : <Copy size={11} />}
+              <span>{copied ? '[COPIED]' : '[COPY]'}</span>
             </button>
           </div>
 
-          <div className="p-5 sm:p-6">
-            <pre className="font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed bg-slate-950 p-4 rounded-xl border border-white/5 shadow-inner">
+          <div className="p-5">
+            <pre className="font-mono text-xs sm:text-sm text-[#d4d4d8] overflow-x-auto leading-relaxed bg-[#000000] p-4 border border-[#1a1a1a]">
               {codeMode === 'wrapped' ? wrappedCode : standardCode}
             </pre>
           </div>
         </div>
 
-        {/* Live Animated Pipeline Diagram with Microsecond Latency Clock */}
-        <div className="p-6 sm:p-7 rounded-2xl border border-white/10 max-w-3xl mx-auto bg-slate-900/90 shadow-2xl backdrop-blur-xl">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-            <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-              <Zap size={14} className="animate-pulse" />
-              <span>Live Invariant Execution Pipeline</span>
+        {/* Live Cyber Pipeline Flow Diagram with Real-Time Latency Clock */}
+        <div className="p-6 border border-[#222222] max-w-3xl mx-auto bg-[#0a0a0a]">
+          <div className="flex items-center justify-between border-b border-[#222222] pb-3 mb-4 font-mono text-xs">
+            <div className="text-[#f59e0b] font-bold uppercase tracking-wider flex items-center gap-2">
+              <Zap size={14} className="text-[#f59e0b]" />
+              <span>[LIVE INVARIANT PIPELINE]</span>
             </div>
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-950 border border-white/10 font-mono text-xs text-cyan-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-              <span>Latency: {clockUs} µs</span>
+            <div className="flex items-center gap-2 px-2.5 py-1 bg-[#000000] border border-[#222222] text-[#10b981] font-bold">
+              <span className="w-1.5 h-1.5 bg-[#10b981] animate-ping" />
+              <span>LATENCY: {clockUs} µs</span>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-center">
-            <div className="p-3 rounded-xl bg-slate-950 border border-white/10 text-cyan-300 w-full sm:w-auto flex-1">
-              [Agent Proposal]
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono text-center">
+            <div className="p-2.5 bg-[#000000] border border-[#222222] text-[#a1a1aa] flex-1 w-full sm:w-auto">
+              [AGENT PROPOSAL]
             </div>
-            <span className="text-cyan-400 font-bold hidden sm:inline">➔</span>
-            <div className="p-3 rounded-xl bg-slate-950 border border-cyan-500/40 text-cyan-300 w-full sm:w-auto flex-1 shadow-sm shadow-cyan-500/10">
-              [AST Scanner]
+            <span className="text-[#f59e0b] font-bold hidden sm:inline">&gt;</span>
+            <div className="p-2.5 bg-[#000000] border border-[#f59e0b]/50 text-[#f59e0b] flex-1 w-full sm:w-auto">
+              [AST SCANNER]
             </div>
-            <span className="text-emerald-400 font-bold hidden sm:inline">➔</span>
-            <div className="p-3 rounded-xl bg-slate-950 border border-emerald-500/40 text-emerald-300 w-full sm:w-auto flex-1 shadow-sm shadow-emerald-500/10">
-              [Locked Sandbox]
+            <span className="text-[#10b981] font-bold hidden sm:inline">&gt;</span>
+            <div className="p-2.5 bg-[#000000] border border-[#10b981]/50 text-[#10b981] flex-1 w-full sm:w-auto">
+              [SANDBOX CAGE]
             </div>
-            <span className="text-indigo-400 font-bold hidden sm:inline">➔</span>
-            <div className="p-3 rounded-xl bg-slate-950 border border-indigo-500/40 text-indigo-300 w-full sm:w-auto flex-1 shadow-sm shadow-indigo-500/10">
-              [Ed25519 Seal]
+            <span className="text-[#10b981] font-bold hidden sm:inline">&gt;</span>
+            <div className="p-2.5 bg-[#000000] border border-[#10b981]/50 text-[#ffffff] flex-1 w-full sm:w-auto">
+              [ED25519 SEAL]
             </div>
-            <span className="text-emerald-400 font-bold hidden sm:inline">➔</span>
-            <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/60 text-emerald-300 w-full sm:w-auto flex-1 font-bold">
-              [Safe Execution]
+            <span className="text-[#10b981] font-bold hidden sm:inline">&gt;</span>
+            <div className="p-2.5 bg-[#10b981] text-[#000000] font-bold flex-1 w-full sm:w-auto">
+              [SAFE EXECUTION]
             </div>
           </div>
         </div>

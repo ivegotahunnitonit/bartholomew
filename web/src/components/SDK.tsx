@@ -4,7 +4,7 @@ import { Copy, Check, Code2 } from 'lucide-react'
 const TABS = [
   {
     id: 'wrapper',
-    label: '1-Line Client Wrapper (Python)',
+    label: '[1-LINE CLIENT WRAPPER (PYTHON)]',
     filename: 'agent_safe_client.py',
     code: `from btp_guard import wrap_client
 import openai
@@ -21,7 +21,7 @@ response = client.chat.completions.create(
   },
   {
     id: 'langchain',
-    label: 'LangChain & CrewAI Plugin',
+    label: '[LANGCHAIN & CREWAI PLUGIN]',
     filename: 'langchain_guard_handler.py',
     code: `from btp_guard import BTPCallbackHandler
 from langchain.agents import initialize_agent
@@ -38,7 +38,7 @@ agent = initialize_agent(
   },
   {
     id: 'typescript',
-    label: 'TypeScript / Node.js SDK',
+    label: '[TYPESCRIPT / NODE.JS SDK]',
     filename: 'agent_evaluator.ts',
     code: `import { BartholomewTrustAuthority, DeclarativePolicyEngine } from '@bartholomew/btp-guard';
 
@@ -55,7 +55,7 @@ const { allowed, reason, signature } = authority.evaluateIntent({
   },
   {
     id: 'go',
-    label: 'Go Microsecond Engine',
+    label: '[GO MICROSECOND ENGINE]',
     filename: 'main.go',
     code: `package main
 
@@ -85,14 +85,14 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className={`flex items-center gap-1.5 text-xs px-3 py-1 rounded-lg transition border shadow-sm ${
+      className={`flex items-center gap-1.5 text-xs font-mono font-semibold px-2.5 py-1 transition border ${
         copied
-          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
-          : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 hover:border-cyan-400/50'
+          ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
+          : 'bg-[#000000] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff] hover:border-[#444444]'
       }`}
     >
-      {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-      <span>{copied ? 'Copied!' : 'Copy Code'}</span>
+      {copied ? <Check size={11} /> : <Copy size={11} />}
+      <span>{copied ? '[COPIED]' : '[COPY CODE]'}</span>
     </button>
   )
 }
@@ -102,31 +102,31 @@ export default function SDK() {
   const current = TABS.find(t => t.id === activeTab) || TABS[0]
 
   return (
-    <section id="sdk" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
+    <section id="sdk" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
       <div className="max-w-5xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold uppercase tracking-wider mb-3 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
             <Code2 size={13} />
-            Multi-Language SDKs
+            <span>[ MULTI-LANGUAGE SDKS ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
             1-Line Integration Across All Runtimes
           </h2>
-          <p className="mt-3 text-slate-300 text-sm sm:text-base">
+          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base font-sans">
             Drop BTP cryptographic guardrails directly into Python, TypeScript, or Go agents.
           </p>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex flex-wrap gap-2 mb-4 bg-slate-900/60 p-2 rounded-2xl border border-white/10 backdrop-blur-md">
+        <div className="flex flex-wrap gap-2 mb-4 bg-[#0a0a0a] p-2 border border-[#222222]">
           {TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+              className={`px-3 py-2 text-xs font-mono font-bold transition border ${
                 activeTab === tab.id
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-md shadow-cyan-500/10'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
+                  : 'bg-[#000000] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
               }`}
             >
               {tab.label}
@@ -134,21 +134,21 @@ export default function SDK() {
           ))}
         </div>
 
-        {/* Code Viewer inside macOS Window Chrome */}
-        <div className="rounded-2xl bg-slate-900/90 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-200">
-          {/* macOS Titlebar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-white/10">
+        {/* Code Viewer inside Cyber-Terminal Frame */}
+        <div className="bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              <div className="w-2.5 h-2.5 bg-[#ef4444]" />
+              <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
+              <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
-            <span className="text-[11px] font-mono text-slate-400">{current.filename}</span>
+            <span className="text-[11px] font-mono text-[#71717a]">{current.filename}</span>
             <CopyButton text={current.code} />
           </div>
 
           <div className="p-6 sm:p-8">
-            <pre className="font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed bg-slate-950 p-5 rounded-xl border border-white/5 shadow-inner">
+            <pre className="font-mono text-xs sm:text-sm text-[#d4d4d8] overflow-x-auto leading-relaxed bg-[#000000] p-5 border border-[#1a1a1a]">
               {current.code}
             </pre>
           </div>

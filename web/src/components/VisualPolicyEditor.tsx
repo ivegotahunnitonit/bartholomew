@@ -100,43 +100,43 @@ rules:
   }
 
   return (
-    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-slate-950 text-white border-t border-slate-900">
+    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold uppercase tracking-wider mb-3 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
             <Sliders size={13} />
-            Interactive Rule Builder
+            <span>[ POLICY-AS-CODE ENGINE ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
             Customize Your AI Safety Rules
           </h2>
-          <p className="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base leading-relaxed font-sans">
             Configure safety boundaries visually. Bartholomew compiles your rules into a sub-millisecond local policy file with zero cloud lock-in.
           </p>
         </div>
 
         {/* 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Controls Column inside macOS Window Frame */}
-          <div className="lg:col-span-5 rounded-2xl bg-slate-900/90 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-200">
+          {/* Controls Column */}
+          <div className="lg:col-span-5 bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
             {/* macOS Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-white/10">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <div className="w-2.5 h-2.5 bg-[#ef4444]" />
+                <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
+                <div className="w-2.5 h-2.5 bg-[#10b981]" />
               </div>
-              <span className="text-[11px] font-mono text-slate-400">rules-controller.yaml</span>
+              <span className="text-[11px] font-mono text-[#71717a]">rules-controller.yaml</span>
               <div className="w-12" />
             </div>
 
-            <div className="p-6 sm:p-7 space-y-6">
+            <div className="p-6 space-y-6">
               {/* Spend Limit Slider */}
               <div>
-                <div className="flex justify-between items-center text-xs font-semibold text-slate-300 mb-2">
-                  <span>Maximum Spend Threshold:</span>
-                  <span className="font-mono text-cyan-300 bg-slate-950 px-2.5 py-1 rounded-lg border border-white/10 font-bold shadow-inner">
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-2">
+                  <span>MAXIMUM SPEND CAP:</span>
+                  <span className="text-[#f59e0b] bg-[#000000] px-2.5 py-1 border border-[#222222] font-bold">
                     ${spendLimit}.00
                   </span>
                 </div>
@@ -147,9 +147,9 @@ rules:
                   step="50"
                   value={spendLimit}
                   onChange={(e) => setSpendLimit(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#f59e0b]"
                 />
-                <div className="flex justify-between text-[10px] text-slate-500 mt-1.5 font-mono">
+                <div className="flex justify-between text-[10px] text-[#71717a] mt-1.5 font-mono">
                   <span>$50</span>
                   <span>$2,500</span>
                   <span>$5,000</span>
@@ -157,112 +157,112 @@ rules:
               </div>
 
               {/* Toggle 1 */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-white/5 hover:border-white/10 transition">
+              <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
                 <div>
-                  <div className="text-xs font-bold text-slate-200">Block Destructive SQL</div>
-                  <div className="text-[11px] text-slate-400">Rejects DROP and TRUNCATE queries</div>
+                  <div className="text-xs font-mono font-bold text-[#ffffff]">BLOCK DESTRUCTIVE SQL</div>
+                  <div className="text-[11px] text-[#a1a1aa] font-sans">Rejects DROP and TRUNCATE queries</div>
                 </div>
                 <input
                   type="checkbox"
                   checked={sqlFilterEnabled}
                   onChange={(e) => setSqlFilterEnabled(e.target.checked)}
-                  className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-cyan-400 focus:ring-0 cursor-pointer"
+                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#333333] text-[#f59e0b] focus:ring-0 cursor-pointer"
                 />
               </div>
 
               {/* Toggle 2 */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/70 border border-white/5 hover:border-white/10 transition">
+              <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
                 <div>
-                  <div className="text-xs font-bold text-slate-200">Disallow Untrusted Wallets</div>
-                  <div className="text-[11px] text-slate-400">Blocks transfers to unverified addresses</div>
+                  <div className="text-xs font-mono font-bold text-[#ffffff]">DISALLOW UNTRUSTED WALLETS</div>
+                  <div className="text-[11px] text-[#a1a1aa] font-sans">Blocks transfers to unverified addresses</div>
                 </div>
                 <input
                   type="checkbox"
                   checked={disallowUntrusted}
                   onChange={(e) => setDisallowUntrusted(e.target.checked)}
-                  className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-cyan-400 focus:ring-0 cursor-pointer"
+                  className="w-4 h-4 rounded bg-[#0a0a0a] border-[#333333] text-[#f59e0b] focus:ring-0 cursor-pointer"
                 />
               </div>
 
               {/* Test Payload Box */}
               <div className="pt-1">
-                <div className="text-xs font-bold text-slate-300 mb-2">Simulate Incoming AI Tool Call:</div>
+                <div className="text-xs font-mono text-[#a1a1aa] mb-2 font-bold">[SIMULATE INCOMING AI TOOL CALL]</div>
                 <textarea
                   value={testPayload}
                   onChange={(e) => setTestPayload(e.target.value)}
                   rows={4}
-                  className="w-full p-3 rounded-xl bg-slate-950 border border-white/10 font-mono text-xs text-cyan-300 focus:outline-none focus:border-cyan-400/60 leading-relaxed resize-none shadow-inner"
+                  className="w-full p-3 bg-[#000000] border border-[#222222] font-mono text-xs text-[#f59e0b] focus:outline-none focus:border-[#f59e0b] leading-relaxed resize-none"
                 />
                 <button
                   onClick={evaluateCustomPolicy}
-                  className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-cyan-400 via-emerald-400 to-emerald-500 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30"
+                  className="mt-3 w-full py-2.5 px-4 bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] font-mono font-bold text-xs transition flex items-center justify-center gap-2 border border-[#f59e0b]"
                 >
-                  <Play size={14} className="fill-current" />
-                  Test Invariant Evaluation (&lt;50 µs)
+                  <Play size={13} className="fill-current" />
+                  <span>[TEST INVARIANT EVALUATION (&lt;50 µs)]</span>
                 </button>
               </div>
 
               {/* Verdict Box */}
               {testResult && (
-                <div className={`p-4 rounded-xl border text-xs shadow-sm ${
+                <div className={`p-3.5 border font-mono text-xs ${
                   testResult.verdict === 'ALLOW'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                    : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                    ? 'bg-[#10b981]/10 border-[#10b981]/40 text-[#10b981]'
+                    : 'bg-[#ef4444]/10 border-[#ef4444]/40 text-[#ef4444]'
                 }`}>
                   <div className="flex items-center justify-between font-bold mb-1">
-                    <span className="flex items-center gap-1.5 font-mono">
+                    <span className="flex items-center gap-1.5">
                       {testResult.verdict === 'ALLOW' ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
-                      {testResult.verdict === 'ALLOW' ? 'VERDICT: ALLOW' : 'VERDICT: DENY (BLOCKED)'}
+                      {testResult.verdict === 'ALLOW' ? '[VERDICT: ALLOW]' : '[VERDICT: DENY - BLOCKED]'}
                     </span>
-                    <span className="font-mono text-[11px] opacity-80">{testResult.latencyUs} µs</span>
+                    <span className="text-[11px] opacity-90">{testResult.latencyUs} µs</span>
                   </div>
-                  <div className="text-[11px] opacity-90">{testResult.reason}</div>
+                  <div className="text-[11px] text-[#a1a1aa]">{testResult.reason}</div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Generated YAML Code Column inside macOS Window Chrome */}
-          <div className="lg:col-span-7 rounded-2xl bg-slate-900/90 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-200 flex flex-col justify-between">
-            {/* macOS Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-950/80 border-b border-white/10">
+          {/* Generated YAML Code Column */}
+          <div className="lg:col-span-7 bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden flex flex-col justify-between">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <div className="w-2.5 h-2.5 bg-[#ef4444]" />
+                <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
+                <div className="w-2.5 h-2.5 bg-[#10b981]" />
               </div>
-              <span className="text-[11px] font-mono text-slate-400">policies/default_security_policy.yaml</span>
+              <span className="text-[11px] font-mono text-[#71717a]">policies/default_security_policy.yaml</span>
               <button
                 onClick={handleCopyYaml}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 border shadow-sm ${
+                className={`px-2.5 py-1 text-xs font-mono font-semibold transition flex items-center gap-1.5 border ${
                   copied
-                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
-                    : 'bg-slate-800 hover:bg-slate-700 text-white border-slate-700 hover:border-cyan-400/50'
+                    ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
+                    : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
                 }`}
               >
                 {copied ? (
                   <>
-                    <Check size={12} className="text-emerald-400" />
-                    <span>Copied!</span>
+                    <Check size={11} />
+                    <span>[COPIED]</span>
                   </>
                 ) : (
                   <>
-                    <Copy size={12} />
-                    <span>Copy YAML</span>
+                    <Copy size={11} />
+                    <span>[COPY YAML]</span>
                   </>
                 )}
               </button>
             </div>
 
-            <div className="p-6 sm:p-7 flex-grow">
-              <pre className="p-4 rounded-xl bg-slate-950 border border-white/10 font-mono text-xs text-slate-200 overflow-x-auto leading-relaxed shadow-inner">
+            <div className="p-6 flex-grow">
+              <pre className="p-4 bg-[#000000] border border-[#1a1a1a] font-mono text-xs text-[#d4d4d8] overflow-x-auto leading-relaxed">
                 {generatedYaml}
               </pre>
             </div>
 
-            <div className="px-6 py-4 bg-slate-950/80 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span className="text-emerald-400">● 100% Localhost Ready</span>
-              <span>Drop into <code className="text-cyan-300">.btp/policy.yaml</code></span>
+            <div className="px-6 py-3.5 bg-[#000000] border-t border-[#222222] flex items-center justify-between text-xs text-[#a1a1aa] font-mono">
+              <span className="text-[#10b981]">[STATUS: 100% LOCALHOST READY]</span>
+              <span>DROP INTO <code className="text-[#f59e0b]">.btp/policy.yaml</code></span>
             </div>
           </div>
         </div>

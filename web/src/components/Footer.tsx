@@ -3,52 +3,52 @@ import Logo from './Logo'
 
 export default function Footer() {
   return (
-    <footer className="py-14 px-5 sm:px-8 bg-slate-950 text-slate-400 border-t border-slate-900">
+    <footer className="py-14 px-5 sm:px-8 bg-black text-[#a1a1aa] border-t border-[#1c1c1c]">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-slate-900">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-[#222222]">
           {/* Brand Info */}
           <div className="md:col-span-6 space-y-3">
             <div className="flex items-center">
-              <Logo size={32} />
+              <Logo size={30} />
             </div>
-            <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+            <p className="text-xs text-[#a1a1aa] max-w-sm leading-relaxed font-sans">
               Sub-millisecond cryptographic safety infrastructure and deterministic guardrails for autonomous AI agents.
             </p>
-            <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono pt-1">
+            <div className="flex items-center gap-2 text-xs text-[#10b981] font-mono pt-1">
               <CheckCircle2 size={13} />
-              <span>Protocol Active: BTP v2.2.0 (MIT Licensed)</span>
+              <span>[PROTOCOL ACTIVE: BTP v2.2.0 · MIT LICENSED]</span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <div className="md:col-span-3 space-y-3">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">
-              Navigation
+            <div className="text-xs font-bold uppercase tracking-wider text-white font-mono">
+              [NAVIGATION]
             </div>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs font-mono">
               <li>
-                <a href="#how-it-works" className="hover:text-cyan-400 transition">
-                  How It Works
+                <a href="#how-it-works" className="hover:text-white transition">
+                  [HOW IT WORKS]
                 </a>
               </li>
               <li>
-                <a href="#download" className="hover:text-cyan-400 transition">
-                  Install Desktop CLI
+                <a href="#download" className="hover:text-white transition">
+                  [INSTALL CLI]
                 </a>
               </li>
               <li>
-                <a href="#policy-editor" className="hover:text-cyan-400 transition">
-                  Rule Builder
+                <a href="#policy-editor" className="hover:text-white transition">
+                  [RULE BUILDER]
                 </a>
               </li>
               <li>
-                <a href="#sdk" className="hover:text-cyan-400 transition">
-                  1-Line SDKs
+                <a href="#sdk" className="hover:text-white transition">
+                  [1-LINE SDKS]
                 </a>
               </li>
               <li>
-                <a href="#live-api" className="hover:text-cyan-400 transition">
-                  Gateway API
+                <a href="#live-api" className="hover:text-white transition">
+                  [GATEWAY API]
                 </a>
               </li>
             </ul>
@@ -56,20 +56,20 @@ export default function Footer() {
 
           {/* Standards & Open Source */}
           <div className="md:col-span-3 space-y-3">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">
-              Open Standards
+            <div className="text-xs font-bold uppercase tracking-wider text-white font-mono">
+              [OPEN STANDARDS]
             </div>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs font-mono">
               <li>
                 <a
                   href="https://github.com/ivegotahunnitonit/bartholomew"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-cyan-400 transition inline-flex items-center gap-1"
+                  className="hover:text-white transition inline-flex items-center gap-1"
                 >
                   <Code2 size={12} />
-                  <span>GitHub Repository</span>
-                  <ExternalLink size={10} className="text-slate-500" />
+                  <span>GITHUB REPO</span>
+                  <ExternalLink size={10} className="text-[#71717a]" />
                 </a>
               </li>
               <li>
@@ -77,10 +77,10 @@ export default function Footer() {
                   href="https://www.rfc-editor.org/rfc/rfc8785"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-cyan-400 transition inline-flex items-center gap-1"
+                  className="hover:text-white transition inline-flex items-center gap-1"
                 >
-                  <span>RFC 8785 Canonical JSON</span>
-                  <ExternalLink size={10} className="text-slate-500" />
+                  <span>RFC 8785 CANONICAL</span>
+                  <ExternalLink size={10} className="text-[#71717a]" />
                 </a>
               </li>
               <li>
@@ -88,10 +88,10 @@ export default function Footer() {
                   href="https://csrc.nist.gov/pubs/fips/186-5/final"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-cyan-400 transition inline-flex items-center gap-1"
+                  className="hover:text-white transition inline-flex items-center gap-1"
                 >
-                  <span>FIPS 186-5 Ed25519</span>
-                  <ExternalLink size={10} className="text-slate-500" />
+                  <span>FIPS 186-5 ED25519</span>
+                  <ExternalLink size={10} className="text-[#71717a]" />
                 </a>
               </li>
             </ul>
@@ -99,10 +99,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div>© 2026 Open Source under MIT License</div>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#71717a] font-mono">
+          <div>© 2026 OPEN SOURCE UNDER MIT LICENSE</div>
           <div className="flex items-center gap-4">
-            <a href="https://bartholomew.info" className="text-slate-400 hover:text-white transition">
+            <a href="https://bartholomew.info" className="text-[#a1a1aa] hover:text-white transition">
               bartholomew.info
             </a>
           </div>
