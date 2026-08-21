@@ -1,0 +1,12 @@
+[package]
+name = "btp-guard"
+version = "2.2.0"
+edition = "2021"
+description = "Sub-millisecond cryptographic execution guard for autonomous AI agents."
+license = "Apache-2.0"
+repository = "https://github.com/ivegotahunnitonit/bartholomew"
+
+[dependencies]
+sha2 = "0.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
