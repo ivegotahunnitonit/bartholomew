@@ -1,28 +1,35 @@
-#  Security Policy & Vulnerability Disclosure Procedure
+# Security Policy and Vulnerability Disclosure Procedure
 
 ## 1. Supported Versions
 
-We release security patches for the following versions of Bartholomew AI Agent Security:
+Security updates are provided for the following versions of the Bartholomew Trust Protocol:
 
 | Version | Supported |
-|---|---|
-| 5.0.x | :white_check_mark: Yes |
-| 4.0.x | :white_check_mark: Yes |
-| < 4.0 | :x: No (Upgrade Recommended) |
+| :--- | :--- |
+| 2.2.x | Supported (Active) |
+| 2.1.x | Supported (Security Patches Only) |
+| < 2.0 | Unsupported |
 
 ---
 
 ## 2. Reporting a Vulnerability
 
-If you discover a security vulnerability, credential leak, or bypass in Bartholomew, please disclose it responsibly:
+The Bartholomew team takes software security and vulnerability reports seriously. If you discover a security flaw, sandbox breakout, or cryptographic defect, please report it via private disclosure:
 
-- **Email:** `security@bartholomew.info` / `contact@bartholomew.info`
-- **Response SLA:** Within 24 hours of receipt.
-- **Fix SLA:** Patch released within 72 hours for critical/high vulnerabilities.
+* **Private Security Email**: `security@bartholomew.info`
+* **Encrypted Advisory**: You may also report vulnerabilities privately through GitHub Private Vulnerability Reporting at `https://github.com/ivegotahunnitonit/bartholomew/security/advisories/new`.
 
-Please include:
-1. Description of the vulnerability or prompt injection bypass.
-2. Steps to reproduce or sample trajectory payload.
-3. Potential impact assessment.
+### Information to Include:
+1. Clear description of the vulnerability, attack vector, or evasion method.
+2. Minimal reproducible proof-of-concept (PoC) script or test trajectory.
+3. Assessment of potential severity and affected components.
 
-Do **NOT** open public GitHub issues for unpatched zero-day vulnerabilities.
+---
+
+## 3. Vulnerability Response SLA
+
+* **Initial Acknowledgment**: Within 24 hours of receipt (guaranteed < 7 business days).
+* **Triage & Reproduction**: Within 48 hours.
+* **Security Patch Release**: Within 7 days for critical severity issues.
+
+Please do not disclose security issues publicly on public issue trackers until a patched release has been published and coordinated.
