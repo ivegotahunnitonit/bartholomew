@@ -117,7 +117,7 @@ if result["allowed"]:
               paddingBottom: '0.18em'
             }}
           >
-            Stop AI Agents from Breaking Things.
+            Let Bartholomew Handle Agent Safety.
           </h1>
         </div>
 
