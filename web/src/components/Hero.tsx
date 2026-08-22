@@ -107,11 +107,11 @@ if result["allowed"]:
         </div>
 
         {/* Hero Headline */}
-        <div className="text-center max-w-4xl mx-auto mb-4 px-2">
+        <div className="text-center max-w-5xl mx-auto mb-4 px-2">
           <h1
-            className="font-bold font-sans hero-metallic-title text-center inline-block"
+            className="font-bold font-sans hero-metallic-title text-center inline-block whitespace-nowrap"
             style={{
-              fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
+              fontSize: 'clamp(1.6rem, 3.1vw, 2.65rem)',
               lineHeight: 1.25,
               letterSpacing: '-0.02em',
               paddingBottom: '0.18em'
