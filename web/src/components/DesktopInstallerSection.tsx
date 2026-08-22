@@ -6,17 +6,17 @@ export default function DesktopInstallerSection() {
   const [copied, setCopied] = useState<string | null>(null)
 
   const commands = {
-    pip: 'pip install btp-guard',
-    npm: 'npm install @bartholomew/btp-guard',
+    pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    npm: 'npm install git+https://github.com/ivegotahunnitonit/bartholomew.git',
     vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
-    source: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && python ci_security_gate.py'
+    source: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
   const tabLabels = {
-    pip: '[PYTHON PYPI]',
-    npm: '[NODE.JS NPM]',
+    pip: '[PYTHON PIP (GIT)]',
+    npm: '[NODE.JS (GIT)]',
     vscode: '[VS CODE / CURSOR VSIX]',
-    source: '[AUDITABLE SOURCE]'
+    source: '[SOURCE REPO]'
   }
 
   const directDownloadFiles = {

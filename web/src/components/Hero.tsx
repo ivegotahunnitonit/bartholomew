@@ -11,10 +11,10 @@ export default function Hero() {
   const [copiedCommand, setCopiedCommand] = useState(false)
 
   const installCommands = {
-    pip: 'pip install btp-guard',
-    npm: 'npm install @bartholomew/btp-guard',
-    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
-    git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew'
+    pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .',
+    npm: 'npm install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix'
   }
 
   const agentPairingSnippets: Record<AgentTarget, { title: string; filename: string; code: string; desc: string }> = {
