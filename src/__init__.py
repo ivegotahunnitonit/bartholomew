@@ -72,4 +72,24 @@ class Guard:
         return wrapper
 
 
-__all__ = ["Guard", "BartholomewTrustAuthority", "IndependentTrustVerifier"]
+def wrap_client(client, spend_cap: float = 100.0, guard: Guard = None):
+    """
+    1-Line client wrapper for OpenAI, Anthropic, or custom client instances.
+    """
+    active_guard = guard or Guard(spend_cap=spend_cap)
+    
+    class WrappedClient:
+        def __init__(self, target_client, btp_guard):
+            self._client = target_client
+            self._guard = btp_guard
+
+        def __getattr__(self, name):
+            attr = getattr(self._client, name)
+            if callable(attr):
+                return active_guard.protect(attr)
+            return attr
+
+    return WrappedClient(client, active_guard)
+
+
+__all__ = ["Guard", "wrap_client", "BartholomewTrustAuthority", "IndependentTrustVerifier"]

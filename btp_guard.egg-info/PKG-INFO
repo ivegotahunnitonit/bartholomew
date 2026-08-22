@@ -59,20 +59,26 @@ Dynamic: requires-python
 
 ---
 
-### **⚡ 60-Second Multi-Language Quickstarts**
+### ** 60-Second Multi-Language Quickstarts**
 
 #### **1. Python (`pip install btp-guard`)**
 ```python
-from btp_guard import BartholomewTrustAuthority, IndependentTrustVerifier
+from btp_guard import Guard
 
-authority = BartholomewTrustAuthority()
-# Evaluates & signs action in <60 µs
-receipt = authority.evaluate_intent(
-    agent_id="my-agent",
-    action_type="DB_QUERY",
-    payload={"query": "SELECT * FROM orders;"}
-)
-print("Verdict:", receipt["attestation"]["verdict"]) # "ALLOW"
+# Set spend limit and max retries
+guard = Guard(spend_cap=100.0, max_retries=5)
+
+# Protect any agent tool or function with a decorator
+@guard.protect
+def execute_database_query(sql_query: str):
+    # If the agent attempts a DROP TABLE or exceeds budget,
+    # it is blocked in <5 microseconds before executing.
+    return db.execute(sql_query)
+
+# Or check actions directly:
+result = guard.check("rm -rf /var/data")
+print(result["allowed"]) # False
+print(result["reason"])  # "Policy Violation: Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
 #### **2. TypeScript / Node.js (`npm install @bartholomew/btp-guard`)**

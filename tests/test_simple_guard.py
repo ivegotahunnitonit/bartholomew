@@ -6,7 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
-from src import Guard
+from src import Guard, wrap_client
 
 
 def test_guard_direct_check():
@@ -45,7 +45,24 @@ def test_guard_decorator():
     assert "Bartholomew Blocked Action" in str(exc_info.value)
 
 
+def test_wrap_client_integration():
+    class DummyClient:
+        def execute(self, cmd: str):
+            return f"Ran: {cmd}"
+
+    client = DummyClient()
+    protected_client = wrap_client(client, spend_cap=50.0)
+
+    # Safe call executes
+    assert protected_client.execute("ls -la") == "Ran: ls -la"
+
+    # Destructive call blocked
+    with pytest.raises(PermissionError):
+        protected_client.execute("rm -rf /")
+
+
 if __name__ == "__main__":
     test_guard_direct_check()
     test_guard_decorator()
+    test_wrap_client_integration()
     print("[OK] ALL SIMPLE GUARD TESTS PASSED!")
