@@ -1,0 +1,9 @@
+apiVersion: v2
+name: bartholomew-guard
+description: Bartholomew Zero-Trust Autonomous Agent Security Sidecar Helm Chart
+type: application
+version: 2.2.0
+appVersion: "2.2.0"
+maintainers:
+  - name: Bartholomew Security Team
+    email: help@bartholomew.info

@@ -36,6 +36,7 @@ def run_gate():
         ("13. Test Advanced Cosmology, PCP & Neuro-Epistemic Engine", ["python", "tests/test_advanced_cosmology_neuro_engine.py"]),
         ("14. Test Unified Classical & Physical Invariant Engine", ["python", "tests/test_unified_physics_invariant_engine.py"]),
         ("15. Test Hawking Information Preservation & Deterministic Gate", ["python", "tests/test_hawking_information_preservation.py"]),
+        ("16. Test Compliance & SOC 2 Audit Report Generator", ["python", "tests/test_compliance_report_generator.py"]),
     ]
 
     all_passed = True

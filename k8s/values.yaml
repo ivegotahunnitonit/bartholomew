@@ -1,0 +1,25 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/ivegotahunnitonit/bartholomew-sidecar
+  pullPolicy: IfNotPresent
+  tag: "2.2.0"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+policy:
+  id: "urn:btp:policy:k8s-cluster-default"
+  spendCapUsd: 500.00
+  enableAstValidation: true
+  enableLdmuThrottling: true
+  ldmuDecayRate: 0.35
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sidecar
+  labels:
+    app.kubernetes.io/name: bartholomew-sidecar
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bartholomew-sidecar
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bartholomew-sidecar
+    spec:
+      containers:
+        - name: bartholomew-guard
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              name: http
+          env:
+            - name: BTP_PORT
+              value: "{{ .Values.service.port }}"
+            - name: BTP_POLICY_ID
+              value: "{{ .Values.policy.id }}"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /v1/status
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
