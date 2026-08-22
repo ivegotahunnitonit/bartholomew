@@ -20,20 +20,11 @@ export default function Footer() {
 
             {/* Seals Badges Grid */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {/* OpenSSF Passing/Silver/Gold Badge */}
-              <a
-                href="https://www.bestpractices.dev/projects/14198"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#000000] border border-[#333333] hover:border-[#10b981] transition shadow-md group"
-                title="OpenSSF (Linux Foundation) Best Practices Certified Badge"
-              >
-                <img
-                  src="https://www.bestpractices.dev/projects/14198/badge"
-                  alt="OpenSSF Best Practices Passing Badge"
-                  className="h-5"
-                />
-              </a>
+              {/* 17/17 CI Gate Seal */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
+                <Cpu size={12} className="text-[#10b981]" />
+                <span className="text-[#10b981] font-bold">17/17 CI TEST GATES</span>
+              </div>
 
               {/* FIPS 186-5 Cryptographic Seal */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
@@ -47,10 +38,10 @@ export default function Footer() {
                 <span>RFC 8785 CANONICAL</span>
               </div>
 
-              {/* 17/17 CI Gate Seal */}
+              {/* Apache 2.0 Open Source */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
-                <Cpu size={12} className="text-[#10b981]" />
-                <span>17/17 CI TEST SUITES</span>
+                <Code2 size={12} className="text-[#a1a1aa]" />
+                <span>OPEN SOURCE (APACHE-2.0)</span>
               </div>
             </div>
           </div>
@@ -144,17 +135,6 @@ export default function Footer() {
                   <Code2 size={12} />
                   <span>GITHUB REPO</span>
                   <ExternalLink size={10} className="text-[#71717a]" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.bestpractices.dev/projects/14198"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#10b981] hover:text-white transition inline-flex items-center gap-1 font-bold"
-                >
-                  <span>[OPENSFF BEST PRACTICES: CERTIFIED]</span>
-                  <ExternalLink size={10} className="text-[#10b981]" />
                 </a>
               </li>
               <li>
