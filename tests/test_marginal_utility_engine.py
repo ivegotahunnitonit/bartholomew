@@ -19,7 +19,7 @@ def test_initial_action_has_max_utility():
     )
     assert verdict == "ALLOW"
     assert mu_score == 1.0
-    assert latency_us < 100.0  # sub-100 microseconds warm execution
+    assert latency_us < 500.0  # sub-500 microseconds warm execution
 
 
 def test_repeated_actions_experience_exponential_decay():

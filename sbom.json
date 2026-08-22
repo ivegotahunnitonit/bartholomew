@@ -1,0 +1,359 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:bartholomew-btp-v2.2.0-1787368884",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-22T03:21:24Z",
+    "component": {
+      "type": "library",
+      "name": "btp-guard",
+      "version": "2.2.0",
+      "description": "Bartholomew Autonomous Trust Protocol & Invariant Engine",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "cryptography",
+      "version": ">=42.0.0",
+      "purl": "pkg:pypi/cryptography"
+    },
+    {
+      "type": "library",
+      "name": "pyyaml",
+      "version": ">=6.0.1",
+      "purl": "pkg:pypi/pyyaml"
+    },
+    {
+      "type": "library",
+      "name": "pytest",
+      "version": ">=8.0.0",
+      "purl": "pkg:pypi/pytest"
+    }
+  ],
+  "files": [
+    {
+      "name": "src/advanced_cosmology_neuro_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7bf169fef27159373a099102c493b436662aa6aaa918425cd0ac91e48580dceb"
+        }
+      ]
+    },
+    {
+      "name": "src/agent_discovery_daemon.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e6e4f28d620a38761e7e1e2a76a1592719d599524999c257006e2d64cf00d43a"
+        }
+      ]
+    },
+    {
+      "name": "src/agent_social_network.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2bb62217340a222eec952cf1e94b793293d12d9a14b77ba54557f17c2104045c"
+        }
+      ]
+    },
+    {
+      "name": "src/ast_validator.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "558ff7405b5d7ed3763194e81a6e89e076e5e809252557ac667a572236c8c43e"
+        }
+      ]
+    },
+    {
+      "name": "src/audit_ledger.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "84fce897f0e5d7859d16143bc3f578e2a4775f6b42df6d532c4195469ae74534"
+        }
+      ]
+    },
+    {
+      "name": "src/audit_merkle_tree.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2c7d5b9e0fd3c19af10445134033eb95af7e094278cd3a09f0f69c4a172ca7a4"
+        }
+      ]
+    },
+    {
+      "name": "src/bonded_warranty.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fefb6f46144b1bb3cf13dc87373907db9afea2d416981ccfc51cb9ce085fcd9f"
+        }
+      ]
+    },
+    {
+      "name": "src/cli.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a05a69486a619a8b5bfe67694a2fe047f581cb769e0f3113968df378a543ecc1"
+        }
+      ]
+    },
+    {
+      "name": "src/client_wrapper.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "741e9a8c5ba1aad0c14b4a2519de5741dc5e20cfafd6538cea0b86c544232ff6"
+        }
+      ]
+    },
+    {
+      "name": "src/compliance_exporter.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b55eb9c77baf9ebdc7e6201294be2911d53f5a44b549db86890a3392bc1d30d4"
+        }
+      ]
+    },
+    {
+      "name": "src/compliance_report_generator.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "194322fd4724017792578b6cb86c68aeb7786a1bc6586f7b3c176fc1a525f0b6"
+        }
+      ]
+    },
+    {
+      "name": "src/cross_framework_adapter.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "63a2f221c84febd9fb7eca5d7390bd95896a6a0cec7042859ed016fd9f911bb8"
+        }
+      ]
+    },
+    {
+      "name": "src/declarative_policy_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d8d57bca6332e36b353f00d94002696d4853e1568588a04d647cb3b81df01d3c"
+        }
+      ]
+    },
+    {
+      "name": "src/deploy_gate.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4055ee44a38afc58245d32dba99f62535650404daf893f1e82d705375641be6c"
+        }
+      ]
+    },
+    {
+      "name": "src/docker_runner.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "66efcb7b2c778476d1c3fb449f19ef27758855929cdb53669c7f3e91901f1351"
+        }
+      ]
+    },
+    {
+      "name": "src/entropy_grounding_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f3fbd825554eb38453befe1ce3c1c1b0680947c624f499769cd8bf437e5ac04b"
+        }
+      ]
+    },
+    {
+      "name": "src/epistemic_physics_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "44daa27524335c3f5d05561cbc188ea2ed19016e1b2a65c62e58aa8149e02954"
+        }
+      ]
+    },
+    {
+      "name": "src/fleet_telemetry.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c5bcb55dbcb4020d5c463a628bbcb00d079d397b8226011cd6de28dbff137f52"
+        }
+      ]
+    },
+    {
+      "name": "src/gateway_server.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "644ce7af0d04546e5dd04077925119f88e6116969a45ae0ceb0d12c5cf4dc7bb"
+        }
+      ]
+    },
+    {
+      "name": "src/hawking_information_preservation_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2bef778c7382e9a40f837c5721d775bc828eb7387d9aa1731e492b1e10f9b108"
+        }
+      ]
+    },
+    {
+      "name": "src/hermetic_sandbox.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8f3cf058f01551cea76df5e1e065a8bad5f263bc83d430b1f37958c3465857aa"
+        }
+      ]
+    },
+    {
+      "name": "src/kernel_interceptor.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c3026ea96b5c4c87dd1d726c67440c8dd5183e2705692875db49d210efeb5a17"
+        }
+      ]
+    },
+    {
+      "name": "src/langchain_guard.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c5c1ea15234c96a198538d87c739b5f39bab9b65aba9b40871941667a6da16da"
+        }
+      ]
+    },
+    {
+      "name": "src/marginal_utility_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6343def6412b0791ccbf56c997e2362e14caddb5351f0e64bf807581dde5a573"
+        }
+      ]
+    },
+    {
+      "name": "src/policy_synthesizer.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1ba9c4b8511c341c4d153f1774e1030641df4b845b564fe9e68c1b720596d8de"
+        }
+      ]
+    },
+    {
+      "name": "src/rfc8785.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1f523eecbe2a59a841f3ca40db18156610dd759734a39305eb49231a3272e5ed"
+        }
+      ]
+    },
+    {
+      "name": "src/sovereign_agent_worker.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7d042b03b4516396b70bf5ab1b67de66791557d880e6ea3014c50b0888d6c727"
+        }
+      ]
+    },
+    {
+      "name": "src/telemetry_exporter.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ef42882d569b3c033627395ac1f58ffa3473c82a11e72906662b6f205689488c"
+        }
+      ]
+    },
+    {
+      "name": "src/trust_protocol.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5d70d94abb56bbdba52851f37d47097b95263e8c5884279fa231c8e5051ae000"
+        }
+      ]
+    },
+    {
+      "name": "src/tui_monitor.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eb78de40a10193b410244a65b0dffc587fa0d9d5eec0dee32f033a677b09b67d"
+        }
+      ]
+    },
+    {
+      "name": "src/unified_physics_invariant_engine.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "18aea17d28af00343178c5711510fddcd21f5d0cd4e742460be2c3279f2cbef4"
+        }
+      ]
+    },
+    {
+      "name": "src/verification_sla.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9901d2c0dc172a0bbc05eeb0cb1f0a4f3039cb91204f45896bf86a47d606fa4d"
+        }
+      ]
+    },
+    {
+      "name": "src/__init__.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dcdd3abc3174657fbada60ebcf1239c45bcdc71cfbda1e842110e6ced7b31d56"
+        }
+      ]
+    },
+    {
+      "name": "src/native_core/btp_fast_engine.c",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1c3400e855449ad43e0e4ecb2de2c4fecda0dd22f8d2da12c38c89734f8a746c"
+        }
+      ]
+    },
+    {
+      "name": "src/native_core/btp_ffi.py",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7e4c122550550665b45fd285ba61bcbebbff354241e81ef37180e8c01acd4c75"
+        }
+      ]
+    }
+  ]
+}
