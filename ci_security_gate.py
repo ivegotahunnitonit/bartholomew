@@ -34,6 +34,7 @@ def run_gate():
         ("11. Test Information Theory & Epistemic Grounding Engine", ["python", "tests/test_entropy_grounding_engine.py"]),
         ("12. Test Epistemic & Physical Invariant Engine", ["python", "tests/test_epistemic_physics_engine.py"]),
         ("13. Test Advanced Cosmology, PCP & Neuro-Epistemic Engine", ["python", "tests/test_advanced_cosmology_neuro_engine.py"]),
+        ("14. Test Unified Classical & Physical Invariant Engine", ["python", "tests/test_unified_physics_invariant_engine.py"]),
     ]
 
     all_passed = True
