@@ -4,7 +4,7 @@
  * Version: 3.0 | Go-first, zero-latency, OWASP-hardened
  */
 
-/* ─── CSS Custom Properties ────────────────────────────────────────────────── */
+/*  CSS Custom Properties  */
 :root {
   /* Backgrounds */
   --bg-cyber: #02040a;
@@ -61,11 +61,11 @@
   --glow-rose: rgba(244, 63, 94, 0.15);
 }
 
-/* ─── Reset ─────────────────────────────────────────────────────────────────── */
+/*  Reset  */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+/*  Layout  */
 .bw-container {
   max-width: 1440px;
   margin: 2rem auto;
@@ -78,13 +78,13 @@ html { scroll-behavior: smooth; }
   padding: 0 1.5rem;
 }
 
-/* ─── Grid System ────────────────────────────────────────────────────────────── */
+/*  Grid System  */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
 .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
 
-/* ─── Typography Utilities ───────────────────────────────────────────────────── */
+/*  Typography Utilities  */
 .text-emerald  { color: var(--emerald-light); }
 .text-cyan     { color: var(--cyan-light); }
 .text-amber    { color: var(--amber-light); }
@@ -114,7 +114,7 @@ html { scroll-behavior: smooth; }
   -webkit-text-fill-color: transparent;
 }
 
-/* ─── Spacing ────────────────────────────────────────────────────────────────── */
+/*  Spacing  */
 .mt-xs { margin-top: 0.25rem; }
 .mt-sm { margin-top: 0.5rem; }
 .mt-md { margin-top: 1rem; }
@@ -126,7 +126,7 @@ html { scroll-behavior: smooth; }
 .mb-lg { margin-bottom: 1.5rem; }
 .mb-xl { margin-bottom: 2rem; }
 
-/* ─── Cards ──────────────────────────────────────────────────────────────────── */
+/*  Cards  */
 .bw-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -170,7 +170,7 @@ html { scroll-behavior: smooth; }
   padding: 1.35rem;
 }
 
-/* ─── Metric Tiles ───────────────────────────────────────────────────────────── */
+/*  Metric Tiles  */
 .metric-tile {
   background: var(--bg-card);
   border: 1px solid var(--border-cyber);
@@ -209,7 +209,7 @@ html { scroll-behavior: smooth; }
 .metric-tile-orange { border-color: rgba(249,115,22,0.4);  box-shadow: 0 0 15px rgba(249,115,22,0.12); }
 .metric-tile-red    { border-color: var(--border-rose);    box-shadow: 0 0 15px var(--glow-rose); }
 
-/* ─── Badges ─────────────────────────────────────────────────────────────────── */
+/*  Badges  */
 .bw-badge {
   display: inline-flex;
   align-items: center;
@@ -231,7 +231,7 @@ html { scroll-behavior: smooth; }
 .badge-staging { background: rgba(245,158,11,0.1); color: var(--amber-light);   border: 1px solid rgba(245,158,11,0.3); }
 .badge-dev    { background: rgba(56,189,248,0.1);  color: var(--cyan-light);    border: 1px solid rgba(56,189,248,0.3); }
 
-/* ─── Buttons ────────────────────────────────────────────────────────────────── */
+/*  Buttons  */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -286,7 +286,7 @@ html { scroll-behavior: smooth; }
 
 .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
 
-/* ─── Navigation ─────────────────────────────────────────────────────────────── */
+/*  Navigation  */
 .bw-navbar {
   display: flex;
   justify-content: space-between;
@@ -316,7 +316,7 @@ html { scroll-behavior: smooth; }
   backdrop-filter: blur(16px);
 }
 
-/* ─── Status Row ─────────────────────────────────────────────────────────────── */
+/*  Status Row  */
 .status-row {
   display: flex;
   align-items: center;
@@ -341,7 +341,7 @@ html { scroll-behavior: smooth; }
   50%       { opacity: 0.5; transform: scale(1.3); }
 }
 
-/* ─── Section Labels ─────────────────────────────────────────────────────────── */
+/*  Section Labels  */
 .section-label {
   font-size: 0.7rem;
   font-weight: 800;
@@ -357,7 +357,7 @@ html { scroll-behavior: smooth; }
 .section-label-amber  { color: var(--amber-light);   border-color: var(--border-amber); }
 .section-label-red    { color: var(--rose-light);    border-color: var(--border-rose); }
 
-/* ─── OWASP Matrix Row ───────────────────────────────────────────────────────── */
+/*  OWASP Matrix Row  */
 .owasp-row {
   display: flex;
   justify-content: space-between;
@@ -395,7 +395,7 @@ html { scroll-behavior: smooth; }
 .owasp-critical { background: rgba(244,63,94,0.15);  color: var(--rose-light); }
 .owasp-warning  { background: rgba(245,158,11,0.15); color: var(--amber-light); }
 
-/* ─── Severity Tiers ─────────────────────────────────────────────────────────── */
+/*  Severity Tiers  */
 .tier-badge {
   display: inline-block;
   font-family: var(--font-code);
@@ -412,7 +412,7 @@ html { scroll-behavior: smooth; }
 .tier-3 { background: rgba(249,115,22,0.2);  color: #fb923c; }              /* HIGH */
 .tier-4 { background: rgba(244,63,94,0.2);   color: var(--rose-light); }   /* CRITICAL */
 
-/* ─── Audit Log Entry ─────────────────────────────────────────────────────────── */
+/*  Audit Log Entry  */
 .audit-entry {
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--border-subtle);
@@ -435,7 +435,7 @@ html { scroll-behavior: smooth; }
   word-break: break-all;
 }
 
-/* ─── Progress / Meter Bars ───────────────────────────────────────────────────── */
+/*  Progress / Meter Bars  */
 .progress-track {
   background: rgba(255,255,255,0.05);
   border-radius: 99px;
@@ -455,7 +455,7 @@ html { scroll-behavior: smooth; }
 .progress-bar-rose   { background: linear-gradient(90deg, var(--rose), var(--rose-light)); }
 .progress-bar-cyan   { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-cyan-glow)); }
 
-/* ─── Terminal / Code Console ─────────────────────────────────────────────────── */
+/*  Terminal / Code Console  */
 .bw-console {
   background: #010409;
   border: 1px solid var(--border-cyber);
@@ -477,7 +477,7 @@ html { scroll-behavior: smooth; }
 .console-prefix-ok    { color: var(--emerald); }
 .console-prefix-err   { color: var(--rose); }
 
-/* ─── Trajectory Timeline ─────────────────────────────────────────────────────── */
+/*  Trajectory Timeline  */
 .trajectory-step {
   display: flex;
   gap: 1rem;
@@ -517,7 +517,7 @@ html { scroll-behavior: smooth; }
 .step-type    { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
 .step-text    { font-family: var(--font-code); font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
-/* ─── Modal Overlay ───────────────────────────────────────────────────────────── */
+/*  Modal Overlay  */
 .bw-modal-overlay {
   position: fixed;
   inset: 0;
@@ -541,7 +541,7 @@ html { scroll-behavior: smooth; }
   position: relative;
 }
 
-/* ─── Alert / Kill-Switch Banner ─────────────────────────────────────────────── */
+/*  Alert / Kill-Switch Banner  */
 .bw-alert {
   padding: 1rem 1.5rem;
   border-radius: 12px;
@@ -568,7 +568,7 @@ html { scroll-behavior: smooth; }
   border-left: 4px solid var(--emerald);
 }
 
-/* ─── Sidebar Navigation ─────────────────────────────────────────────────────── */
+/*  Sidebar Navigation  */
 .bw-sidebar {
   width: 70px;
   background: rgba(4, 9, 20, 0.98);
@@ -601,7 +601,7 @@ html { scroll-behavior: smooth; }
 .sidebar-icon:hover  { background: rgba(56,189,248,0.1); border-color: var(--border-cyber); }
 .sidebar-icon.active { background: rgba(56,189,248,0.15); border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(6,182,212,0.3); }
 
-/* ─── Risk Gauge ─────────────────────────────────────────────────────────────── */
+/*  Risk Gauge  */
 .risk-gauge-wrap {
   text-align: center;
   padding: 1.5rem;
@@ -618,7 +618,7 @@ html { scroll-behavior: smooth; }
 .risk-score-medium { color: var(--amber-light);   text-shadow: 0 0 20px rgba(245,158,11,0.5); }
 .risk-score-high   { color: var(--rose-light);    text-shadow: 0 0 20px rgba(244,63,94,0.5); }
 
-/* ─── Misc Utilities ─────────────────────────────────────────────────────────── */
+/*  Misc Utilities  */
 .d-flex          { display: flex; }
 .d-grid          { display: grid; }
 .align-center    { align-items: center; }
@@ -636,7 +636,7 @@ html { scroll-behavior: smooth; }
 .cursor-pointer  { cursor: pointer; }
 .no-wrap         { white-space: nowrap; }
 
-/* ─── Input Fields ───────────────────────────────────────────────────────────── */
+/*  Input Fields  */
 .bw-input {
   width: 100%;
   background: #060c1a;
@@ -656,7 +656,7 @@ html { scroll-behavior: smooth; }
   box-shadow: 0 0 0 2px rgba(6,182,212,0.15);
 }
 
-/* ─── Table ──────────────────────────────────────────────────────────────────── */
+/*  Table  */
 .bw-table {
   width: 100%;
   border-collapse: collapse;
@@ -681,7 +681,7 @@ html { scroll-behavior: smooth; }
 
 .bw-table tr:hover td { background: rgba(255,255,255,0.02); }
 
-/* ─── Founder Photo ──────────────────────────────────────────────────────────── */
+/*  Founder Photo  */
 .founder-avatar {
   width: 200px;
   height: 200px;
@@ -693,7 +693,7 @@ html { scroll-behavior: smooth; }
   margin: 0 auto;
 }
 
-/* ─── Slide-out Panel ────────────────────────────────────────────────────────── */
+/*  Slide-out Panel  */
 .slide-panel {
   position: fixed;
   right: 0;
@@ -712,7 +712,7 @@ html { scroll-behavior: smooth; }
 
 .slide-panel.open { transform: translateX(0); }
 
-/* ─── Latency Comparison Numbers ─────────────────────────────────────────────── */
+/*  Latency Comparison Numbers  */
 .latency-value-green  { color: var(--emerald-light); text-shadow: 0 0 12px rgba(16,185,129,0.6); }
 .latency-value-amber  { color: var(--amber-light);   text-shadow: 0 0 12px rgba(245,158,11,0.5); }
 .latency-value-orange { color: #fb923c;               text-shadow: 0 0 12px rgba(249,115,22,0.5); }

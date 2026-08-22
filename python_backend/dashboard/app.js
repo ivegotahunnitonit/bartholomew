@@ -1,6 +1,6 @@
-// ═══════════════════════════════════════════════════════
+// 
 // ACN Operator Dashboard — app.js
-// ═══════════════════════════════════════════════════════
+// 
 const API_BASE = window.location.origin;
 
 // Global state
@@ -14,9 +14,9 @@ let allTransactions  = [];
 let rotateCounter    = 0;
 window.networkMode   = localStorage.getItem('acn-network-mode') || 'mainnet';
 
-// ─────────────────────────────────────────────────────
+// 
 // INIT
-// ─────────────────────────────────────────────────────
+// 
 window.addEventListener('DOMContentLoaded', () => {
   initRouter();
   initApp();
@@ -75,10 +75,10 @@ async function updatePricingRecommendation() {
     if (res.ok) {
       const data = await res.json();
       if (data.recommended) {
-        recEl.innerHTML = `<span style="color:#ef4444; font-weight:700;">💡 Bartholomew Recommendation:</span> <span style="color:var(--text-muted);">${data.message}</span>`;
+        recEl.innerHTML = `<span style="color:#ef4444; font-weight:700;"> Bartholomew Recommendation:</span> <span style="color:var(--text-muted);">${data.message}</span>`;
         recEl.style.display = 'block';
       } else {
-        recEl.innerHTML = `<span style="color:#10b981; font-weight:700;">✓ Competitively Priced:</span> <span style="color:var(--text-muted);">${data.message}</span>`;
+        recEl.innerHTML = `<span style="color:#10b981; font-weight:700;"> Competitively Priced:</span> <span style="color:var(--text-muted);">${data.message}</span>`;
         recEl.style.display = 'block';
       }
     } else {
@@ -89,9 +89,9 @@ async function updatePricingRecommendation() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // CLIENT-SIDE PAGE ROUTER
-// ─────────────────────────────────────────────────────
+// 
 const PAGE_TITLES = {
   dashboard:    { title: 'Circularity Command',     crumb: 'ACN / Command' },
   marketplace:  { title: 'Resource Marketplace',   crumb: 'ACN / Marketplace' },
@@ -144,9 +144,9 @@ function navigateTo(page) {
 }
 window.navigateTo = navigateTo;
 
-// ─────────────────────────────────────────────────────
+// 
 // FETCH: STATUS
-// ─────────────────────────────────────────────────────
+// 
 async function fetchStatus() {
   try {
     const res = await fetch(`${API_BASE}/api/status`);
@@ -242,9 +242,9 @@ async function fetchStatus() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // FETCH: LISTINGS
-// ─────────────────────────────────────────────────────
+// 
 async function fetchListings() {
   try {
     const res = await fetch(`${API_BASE}/api/listings`);
@@ -275,9 +275,9 @@ async function fetchListings() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // FETCH: MATCHES
-// ─────────────────────────────────────────────────────
+// 
 async function fetchMatches() {
   try {
     const res = await fetch(`${API_BASE}/api/matches`);
@@ -326,9 +326,9 @@ async function fetchMatches() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // FETCH: TRANSACTIONS (with tab filtering)
-// ─────────────────────────────────────────────────────
+// 
 async function fetchTransactions() {
   try {
     const res = await fetch(`${API_BASE}/api/transactions`);
@@ -353,12 +353,12 @@ function renderTransactions() {
     return;
   }
 
-  const icons = { lightning: '⚡', solana: '◎', base: '🛡' };
+  const icons = { lightning: '', solana: '', base: '' };
 
   container.innerHTML = list.map(t => `
     <div class="tx-item">
       <div class="tx-info">
-        <span class="tx-details">${icons[t.payment_method] || '○'} Fee Settlement (Match: ${t.match_id.substring(0, 8)})</span>
+        <span class="tx-details">${icons[t.payment_method] || ''} Fee Settlement (Match: ${t.match_id.substring(0, 8)})</span>
         <span class="tx-id" onclick="openExplorerModal('${t.id}')">hash: ${t.tx_hash ? t.tx_hash.substring(0, 22) + '...' : 'processing...'}</span>
       </div>
       <div class="tx-status-amount">
@@ -377,9 +377,9 @@ function switchLedgerTab(filter, btn) {
 }
 window.switchLedgerTab = switchLedgerTab;
 
-// ─────────────────────────────────────────────────────
+// 
 // FETCH: PEERS
-// ─────────────────────────────────────────────────────
+// 
 async function fetchPeers() {
   try {
     const res = await fetch(`${API_BASE}/api/peers`);
@@ -410,9 +410,9 @@ async function fetchPeers() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // POLL: GOSSIP LOGS
-// ─────────────────────────────────────────────────────
+// 
 async function pollSystemLogs() {
   try {
     const res = await fetch(`${API_BASE}/api/logs`);
@@ -452,9 +452,9 @@ async function pollSystemLogs() {
   } catch (_) {}
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // SETTINGS PAGE
-// ─────────────────────────────────────────────────────
+// 
 async function populateSettings() {
   try {
     const res = await fetch(`${API_BASE}/api/status`);
@@ -473,9 +473,9 @@ async function populateSettings() {
   }
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // FORM HANDLERS
-// ─────────────────────────────────────────────────────
+// 
 async function handleFormSubmit(e) {
   e.preventDefault();
   const btn = e.target.querySelector('[type=submit]');
@@ -541,9 +541,9 @@ function fillNodeLocation() {
   document.getElementById('listing-lng').value = nodeCoords.lng;
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // COPY TO CLIPBOARD
-// ─────────────────────────────────────────────────────
+// 
 function copyToClipboard(elementId) {
   const text = document.getElementById(elementId)?.textContent || '';
   navigator.clipboard.writeText(text).catch(() => {});
@@ -554,9 +554,9 @@ window.copyToClipboard = copyToClipboard;
 
 
 
-// ─────────────────────────────────────────────────────
+// 
 // MODAL HELPERS
-// ─────────────────────────────────────────────────────
+// 
 function openModal(id) { const m = document.getElementById(id); if (m) m.classList.add('active'); }
 function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('active'); }
 window.openModal = openModal;
@@ -564,9 +564,9 @@ window.closeModal = closeModal;
 
 
 
-// ─────────────────────────────────────────────────────
+// 
 // PAYMENT MODAL
-// ─────────────────────────────────────────────────────
+// 
 function openPaymentModal(matchId, savingsUsd, feeUsd) {
   activeMatch = { id: matchId, savings: savingsUsd, fee: feeUsd, step: 1, txId: null };
   selectedNetwork = 'lightning';
@@ -744,9 +744,9 @@ async function simulatePaymentWorkflow() {
 }
 window.simulatePaymentWorkflow = simulatePaymentWorkflow;
 
-// ─────────────────────────────────────────────────────
+// 
 // BLOCKCHAIN EXPLORER MODAL
-// ─────────────────────────────────────────────────────
+// 
 async function openExplorerModal(txId) {
   try {
     const res = await fetch(`${API_BASE}/api/transactions/${txId}`);
@@ -756,7 +756,7 @@ async function openExplorerModal(txId) {
     document.getElementById('explorer-tx-id').textContent = tx.id;
     document.getElementById('explorer-status').innerHTML = `<span class="tx-status ${tx.status}">${tx.status}</span>`;
 
-    const icons = { lightning: '⚡ Bitcoin Lightning', solana: '◎ Solana (Archived)', base: '🛡 Base L2', bitcoin: '₿ Bitcoin' };
+    const icons = { lightning: ' Bitcoin Lightning', solana: ' Solana (Archived)', base: ' Base L2', bitcoin: '₿ Bitcoin' };
     document.getElementById('explorer-network').textContent      = icons[tx.payment_method] || tx.payment_method;
     document.getElementById('explorer-tx-hash').textContent      = tx.tx_hash || 'Pending broadcast...';
     document.getElementById('explorer-block-height').textContent = tx.block_number || 'Awaiting inclusion...';
@@ -773,9 +773,9 @@ async function openExplorerModal(txId) {
 }
 window.openExplorerModal = openExplorerModal;
 
-// ─────────────────────────────────────────────────────
+// 
 // UTILITY
-// ─────────────────────────────────────────────────────
+// 
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -813,12 +813,12 @@ function renderReceipts(receipts) {
     container.innerHTML = '<div class="empty-state">No discovery receipts yet. Scout cycles every 45s.</div>';
     return;
   }
-  const srcIcons = { peer_node: '🌐', task: '⚙️', material: '♻️', challenge: '🧩', compute: '🧠' };
+  const srcIcons = { peer_node: '', task: '', material: '', challenge: '', compute: '' };
   container.innerHTML = receipts.map(r => `
     <div class="receipt-card">
       <div class="receipt-header">
         <div class="receipt-source">
-          <span class="receipt-icon">${srcIcons[r.source_type] || '❓'}</span>
+          <span class="receipt-icon">${srcIcons[r.source_type] || ''}</span>
           <div>
             <span class="receipt-source-label">${escapeHtml(r.source_label)}</span>
             <span class="receipt-agent"> via ${escapeHtml(r.agent)}</span>
@@ -836,7 +836,7 @@ function renderReceipts(receipts) {
           <span class="receipt-qty">${r.quantity} ${escapeHtml(r.unit)} @ $${r.price_per_unit.toFixed(3)}/${escapeHtml(r.unit)}</span>
         </div>
         <div class="receipt-row receipt-location">
-          📍 ${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}
+           ${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}
           ${r.match_id ? ' | Match: ' + r.match_id.substring(0,8) + '...' : ''}
         </div>
         ${r.notes ? '<div class="receipt-notes">' + escapeHtml(r.notes) + '</div>' : ''}
@@ -845,9 +845,9 @@ function renderReceipts(receipts) {
   `).join('');
 }
 
-// ─────────────────────────────────────────────────────
+// 
 // INTAKE DIAGNOSTICS & UPDATES
-// ─────────────────────────────────────────────────────
+// 
 async function fetchScoutStats() {
   try {
     const res = await fetch(`${API_BASE}/api/scout/stats`);
@@ -919,9 +919,9 @@ async function saveIntakeMode() {
 }
 window.saveIntakeMode = saveIntakeMode;
 
-// ─────────────────────────────────────────────────────
+// 
 // PAYPAL PAGE FUNCTIONS
-// ─────────────────────────────────────────────────────
+// 
 
 async function refreshPayPalBalances() {
   try {
@@ -975,7 +975,7 @@ async function handlePayPalWithdraw() {
   const method = methodSelect.value;
 
   if (!amount || amount <= 0) {
-    statusEl.textContent = '⚠ Please enter a valid amount.';
+    statusEl.textContent = ' Please enter a valid amount.';
     statusEl.className = 'paypal-status paypal-status-error';
     return;
   }
@@ -993,22 +993,22 @@ async function handlePayPalWithdraw() {
     });
     const contentType = res.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
-      statusEl.textContent = '✗ Server returned non-JSON response. Please restart the ACN server to load the new endpoints.';
+      statusEl.textContent = ' Server returned non-JSON response. Please restart the ACN server to load the new endpoints.';
       statusEl.className = 'paypal-status paypal-status-error';
       return;
     }
     const data = await res.json();
     if (data.success) {
-      statusEl.textContent = `✓ Withdrawal of $${amount.toFixed(2)} via ${method} successful! TX: ${data.tx_id}`;
+      statusEl.textContent = ` Withdrawal of $${amount.toFixed(2)} via ${method} successful! TX: ${data.tx_id}`;
       statusEl.className = 'paypal-status paypal-status-success';
       amountInput.value = '';
       refreshPayPalBalances();
     } else {
-      statusEl.textContent = `✗ ${data.error || 'Withdrawal failed.'}`;
+      statusEl.textContent = ` ${data.error || 'Withdrawal failed.'}`;
       statusEl.className = 'paypal-status paypal-status-error';
     }
   } catch (err) {
-    statusEl.textContent = `✗ Network error: ${err.message}`;
+    statusEl.textContent = ` Network error: ${err.message}`;
     statusEl.className = 'paypal-status paypal-status-error';
   } finally {
     btn.disabled = false;
@@ -1029,22 +1029,22 @@ async function handleProcessPending() {
     });
     const contentType = res.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
-      statusEl.textContent = '✗ Server returned non-JSON response. Please restart the ACN server to load the new endpoints.';
+      statusEl.textContent = ' Server returned non-JSON response. Please restart the ACN server to load the new endpoints.';
       statusEl.className = 'paypal-status paypal-status-error';
       return;
     }
     const data = await res.json();
     if (data.success) {
       const w = data.wallet;
-      statusEl.textContent = `✓ Settlements processed. ${w.pending_transactions} still pending, ${w.confirmed_transactions} confirmed.`;
+      statusEl.textContent = ` Settlements processed. ${w.pending_transactions} still pending, ${w.confirmed_transactions} confirmed.`;
       statusEl.className = 'paypal-status paypal-status-success';
       refreshPayPalBalances();
     } else {
-      statusEl.textContent = `✗ ${data.error || 'Settlement processing failed.'}`;
+      statusEl.textContent = ` ${data.error || 'Settlement processing failed.'}`;
       statusEl.className = 'paypal-status paypal-status-error';
     }
   } catch (err) {
-    statusEl.textContent = `✗ Network error: ${err.message}`;
+    statusEl.textContent = ` Network error: ${err.message}`;
     statusEl.className = 'paypal-status paypal-status-error';
   }
 }
@@ -1087,27 +1087,27 @@ function saveAutoWithdrawSettings() {
   .then(data => {
     if (statusEl) {
       if (data.success) {
-        statusEl.textContent = '✓ Auto-withdraw settings saved successfully.';
+        statusEl.textContent = ' Auto-withdraw settings saved successfully.';
         statusEl.className = 'paypal-status paypal-status-success';
         setTimeout(() => { statusEl.textContent = ''; }, 3000);
       } else {
-        statusEl.textContent = '✗ Failed to save settings: ' + (data.error || 'unknown');
+        statusEl.textContent = ' Failed to save settings: ' + (data.error || 'unknown');
         statusEl.className = 'paypal-status paypal-status-error';
       }
     }
   })
   .catch(err => {
     if (statusEl) {
-      statusEl.textContent = '✗ Connection error: ' + err.message;
+      statusEl.textContent = ' Connection error: ' + err.message;
       statusEl.className = 'paypal-status paypal-status-error';
     }
   });
 }
 window.saveAutoWithdrawSettings = saveAutoWithdrawSettings;
 
-// ─────────────────────────────────────────────────────
+// 
 // PAYPAL CREDENTIALS
-// ─────────────────────────────────────────────────────
+// 
 async function fetchPayPalSettings() {
   try {
     const res = await fetch(`${API_BASE}/api/settings/paypal`);
@@ -1149,17 +1149,17 @@ async function savePayPalSettings() {
     const data = await res.json();
     if (statusEl) {
       if (data.success) {
-        statusEl.textContent = '✓ PayPal settings saved successfully.';
+        statusEl.textContent = ' PayPal settings saved successfully.';
         statusEl.className = 'paypal-status paypal-status-success';
         setTimeout(() => { statusEl.textContent = ''; }, 3000);
       } else {
-        statusEl.textContent = '✗ Failed: ' + (data.error || 'unknown');
+        statusEl.textContent = ' Failed: ' + (data.error || 'unknown');
         statusEl.className = 'paypal-status paypal-status-error';
       }
     }
   } catch (err) {
     if (statusEl) {
-      statusEl.textContent = '✗ Connection error: ' + err.message;
+      statusEl.textContent = ' Connection error: ' + err.message;
       statusEl.className = 'paypal-status paypal-status-error';
     }
   }
@@ -1167,9 +1167,9 @@ async function savePayPalSettings() {
 window.savePayPalSettings = savePayPalSettings;
 
 
-// ─────────────────────────────────────────────────────
+// 
 // CLUSTER ORCHESTRATOR ACTIONS
-// ─────────────────────────────────────────────────────
+// 
 async function fetchCluster() {
   try {
     const res = await fetch(`${API_BASE}/api/orchestrator/status`);

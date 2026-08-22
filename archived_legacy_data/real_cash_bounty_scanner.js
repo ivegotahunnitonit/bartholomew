@@ -14,10 +14,10 @@ const HEADERS = {
 
 async function searchGlobalCashBounties() {
   console.log('====================================================');
-  console.log('  💰 REAL-CASH BOUNTY SCANNER & AUTO-PAYOUT DISPATCHER');
+  console.log('   REAL-CASH BOUNTY SCANNER & AUTO-PAYOUT DISPATCHER');
   console.log('====================================================\n');
-  console.log(`📌 Primary Payout Destination: Base USDC (${TARGET_WALLETS.BASE_USDC})`);
-  console.log(`📌 Crypto Payout Destination: Akash AKT (${TARGET_WALLETS.AKASH_AKT})\n`);
+  console.log(` Primary Payout Destination: Base USDC (${TARGET_WALLETS.BASE_USDC})`);
+  console.log(` Crypto Payout Destination: Akash AKT (${TARGET_WALLETS.AKASH_AKT})\n`);
 
   const EXCLUDED_REPOS = [
     'zhangjiayang6835-cyber/bounty-plaza',
@@ -80,7 +80,7 @@ async function searchGlobalCashBounties() {
   fs.writeFileSync('REAL_PROFIT_BOUNTIES.json', JSON.stringify(outputData, null, 2));
 
   console.log(`====================================================`);
-  console.log(`  ✅ DISPATCHER AUDIT — ${uniqueBounties.length} CASH BOUNTIES FOUND`);
+  console.log(`   DISPATCHER AUDIT — ${uniqueBounties.length} CASH BOUNTIES FOUND`);
   console.log(`  All payout instructions linked to: ${TARGET_WALLETS.BASE_USDC}`);
   console.log(`====================================================\n`);
 }

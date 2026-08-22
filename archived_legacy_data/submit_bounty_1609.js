@@ -142,7 +142,7 @@ Adds a **Path B (Unsupported Sources)** migration showcase for [Bounty #1609](ht
 
 ---
 
-## 🚀 Features
+##  Features
 
 - **Multi-Source Support**: Parses CrewAI SQLite storage (\`.db\` / \`.sqlite\`) and JSON memory exports.
 - **OKF Schema Mapping**: Categorizes CrewAI entries into standard OKF types (\`fact\`, \`preference\`, \`context\`, \`entity\`).
@@ -152,7 +152,7 @@ Adds a **Path B (Unsupported Sources)** migration showcase for [Bounty #1609](ht
 
 ---
 
-## 📊 Reproducible Evidence
+##  Reproducible Evidence
 
 Run the showcase:
 \`\`\`bash
@@ -178,7 +178,7 @@ Run the showcase:
   );
 
   if (prUrl) {
-    console.log(`\n🎉 BOUNTY #1609 PR SUBMITTED: ${prUrl}`);
+    console.log(`\n BOUNTY #1609 PR SUBMITTED: ${prUrl}`);
 
     // Update BOUNTY_LEDGER.json
     const ledger = JSON.parse(fs.readFileSync('BOUNTY_LEDGER.json', 'utf8'));

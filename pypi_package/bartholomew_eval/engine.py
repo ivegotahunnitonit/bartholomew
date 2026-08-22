@@ -153,7 +153,7 @@ class BartholomewEngine:
         contents = [str(s.get("content", "")) for s in steps]
         combined_text = " ".join(contents)
 
-        # ── Optimization D: Cheap-Path Cache Lookup ────────────────────────────
+        #  Optimization D: Cheap-Path Cache Lookup 
         # For short, deterministic single-step inputs, check the cache first.
         if len(steps) == 1 and len(combined_text) < 512:
             cached = self.cache.get(agent_name, "evaluate", combined_text[:64], cache_policy)
@@ -248,7 +248,7 @@ class BartholomewEngine:
             "self_healing": healing_record,
         }
 
-        # ── Optimization D: Cache Write-Back ──────────────────────────────────
+        #  Optimization D: Cache Write-Back 
         # Store verified PASS decisions for single-step clean evaluations.
         if compliance_status == "SOC2_PASSED" and len(steps) == 1 and len(combined_text) < 512:
             self.cache.put(agent_name, "evaluate", combined_text[:64], cache_policy, result, estimated_tokens=380)

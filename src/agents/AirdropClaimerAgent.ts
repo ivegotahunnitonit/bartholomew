@@ -66,7 +66,7 @@ export class AirdropClaimerAgent {
       );
 
       if (totalClaimsExecuted % 3 === 0) {
-        console.log(`[AirdropClaimer] 🎁 Claimed Routine Node Airdrop: ${protocol.name} | Payout: +$${payout.toFixed(2)} | Tx: ${txHash.substring(0,12)}... | Total Node Payouts: $${totalAirdropsClaimedUSD.toFixed(2)}`);
+        console.log(`[AirdropClaimer]  Claimed Routine Node Airdrop: ${protocol.name} | Payout: +$${payout.toFixed(2)} | Tx: ${txHash.substring(0,12)}... | Total Node Payouts: $${totalAirdropsClaimedUSD.toFixed(2)}`);
       }
     } catch (err: any) {
       // Suppress minor database errors

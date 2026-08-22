@@ -45,7 +45,7 @@ export class QuotaBillingEngine {
     }
 
     totalSearchRevenueUSD += amountUSD;
-    console.log(`[QuotaBilling] 💰 Credited $${amountUSD.toFixed(2)} (${tier.toUpperCase()}) to API Key ${apiKey.substring(0, 10)}... (+${requestsToAdd} queries at $${costPerReq}/req)`);
+    console.log(`[QuotaBilling]  Credited $${amountUSD.toFixed(2)} (${tier.toUpperCase()}) to API Key ${apiKey.substring(0, 10)}... (+${requestsToAdd} queries at $${costPerReq}/req)`);
 
     return this.getAccount(apiKey)!;
   }

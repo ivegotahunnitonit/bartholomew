@@ -20,7 +20,7 @@
 
 ---
 
-### **⚡ 60-Second Multi-Language Quickstarts**
+### ** 60-Second Multi-Language Quickstarts**
 
 #### **1. Python (`pip install btp-guard`)**
 ```python

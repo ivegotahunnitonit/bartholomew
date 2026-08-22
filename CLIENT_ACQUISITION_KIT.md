@@ -50,13 +50,13 @@ Happy to take a look at the repo or failure log if you want this unblocked today
 ## 3. The Intake & Delivery SLA
 
 ```text
-┌────────────────────────┬────────────────────────────────────────────────────────┐
-│ STEP                   │ ACTION                                                 │
-├────────────────────────┼────────────────────────────────────────────────────────┤
-│ 1. Intake              │ Receive client repo link / branch / CI run logs.       │
-│ 2. Bartholomew Run     │ Ingest workspace -> Reproduce failure -> Apply fix.    │
-│ 3. Verification        │ Confirm all pre-existing tests pass cleanly.           │
-│ 4. Delivery Artifact   │ Export git diff + root-cause summary + test telemetry. │
-│ 5. Settlement          │ Client merges fix and releases the $75 payment.        │
-└────────────────────────┴────────────────────────────────────────────────────────┘
+
+ STEP                    ACTION                                                 
+
+ 1. Intake               Receive client repo link / branch / CI run logs.       
+ 2. Bartholomew Run      Ingest workspace -> Reproduce failure -> Apply fix.    
+ 3. Verification         Confirm all pre-existing tests pass cleanly.           
+ 4. Delivery Artifact    Export git diff + root-cause summary + test telemetry. 
+ 5. Settlement           Client merges fix and releases the $75 payment.        
+
 ```

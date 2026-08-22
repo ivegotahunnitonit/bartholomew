@@ -59,7 +59,7 @@ Can you produce a valid receipt that causes a conforming recipient to violate an
 ```text
 1/ Autonomous agents are communicating across frameworks (LangGraph <-> AutoGen <-> CrewAI), but there is zero cryptographic standard for delegation.
 
-Today we're releasing the frozen specification for BTP v2.2 (Bartholomew Trust Protocol). 🧵👇
+Today we're releasing the frozen specification for BTP v2.2 (Bartholomew Trust Protocol). 
 
 2/ BTP is an open trust protocol:
 - Pre-flight sandbox verification

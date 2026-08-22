@@ -29,9 +29,9 @@ except ImportError:
 from app.inference_engine import inference_engine
 from app.depin_adapters import depin
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Config
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 PROJECT_ID        = os.getenv("GCP_PROJECT", "project-69103dd0-70f5-4f9c-a2a")
 HEARTBEAT_SEC     = 30       # node heartbeat interval
@@ -60,9 +60,9 @@ SUPERNODE_IDS = [
     "supernode-render-001","supernode-pokt-001",
 ]
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Firestore helper (safe — works even if DB unavailable)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 _db: Optional[object] = None
 
@@ -105,9 +105,9 @@ def db_get(collection: str, doc_id: str) -> Optional[dict]:
             print(f"[Worker Daemon] db_get error: {e}")
     return None
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Daemon Tasks
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 async def heartbeat_loop():
     """Keep all supernodes alive in Firestore. Runs every HEARTBEAT_SEC."""
@@ -340,9 +340,9 @@ async def gcp_node_manager_loop():
             print(f"[GCP Manager error] {e}")
         await asyncio.sleep(300)  # every 5 min
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Daemon Entry Point
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 _daemon_running = False
 _daemon_tasks = []

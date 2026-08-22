@@ -113,7 +113,7 @@ class SelfHealingEngine:
             "function": func_name,
             "error_type": type(exception).__name__,
             "error_detail": str(exception),
-            "fallback_response": f"🚨 [Self-Healing Engine]: Auto-recovered fault in function `{func_name}`.",
+            "fallback_response": f" [Self-Healing Engine]: Auto-recovered fault in function `{func_name}`.",
         }
         self.healing_history.append(record)
         return record

@@ -42,11 +42,11 @@ Autonomous AI developer copilot for GitHub. Diagnoses failing CI/CD runs, synthe
 Bartholomew AI is an autonomous developer copilot built for modern software engineers, DevOps teams, and open-source contributors.
 
 ### Key Capabilities:
-⚡ Instant CI/CD Failure Diagnosis: Detects async event loop leaks, parallel pytest fixture collisions, and dependency mismatches directly inside GitHub Actions logs.
-🧪 Autonomous Reproduction Synthesizer: Generates standalone, zero-dependency reproduction tests to isolate bugs in seconds.
-🛠️ AST Code Refactoring: Modernizes legacy AST nodes, cleans deprecations, and fixes syntax across Python, JavaScript, and Go.
-💬 Gemini-Style Persistent Side Panel: Interactive AI engineering companion that stays with you across all tabs and repositories.
-🌐 Context Menu Acceleration: Highlight any code snippet on the web and right-click to instantly explain or refactor with Bartholomew.
+ Instant CI/CD Failure Diagnosis: Detects async event loop leaks, parallel pytest fixture collisions, and dependency mismatches directly inside GitHub Actions logs.
+ Autonomous Reproduction Synthesizer: Generates standalone, zero-dependency reproduction tests to isolate bugs in seconds.
+ AST Code Refactoring: Modernizes legacy AST nodes, cleans deprecations, and fixes syntax across Python, JavaScript, and Go.
+ Gemini-Style Persistent Side Panel: Interactive AI engineering companion that stays with you across all tabs and repositories.
+ Context Menu Acceleration: Highlight any code snippet on the web and right-click to instantly explain or refactor with Bartholomew.
 
 ### Privacy & Security:
 • 100% Client-Side Evaluation & Privacy Controls

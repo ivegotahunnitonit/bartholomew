@@ -42,18 +42,18 @@ def main(args: Optional[List[str]] = None) -> int:
 
     command = args[0].lower()
 
-    # ── verify ────────────────────────────────────────────────────────────────
+    #  verify 
     if command == "verify":
         from .verifier import main as verifier_main
         return verifier_main(args)
 
-    # ── version ──────────────────────────────────────────────────────────────
+    #  version 
     if command in ("-v", "--version", "version"):
         from . import __version__
         print(f"bartholomew-eval v{__version__}")
         return 0
 
-    # ── advisories ────────────────────────────────────────────────────────────
+    #  advisories 
     if command == "advisories":
         engine = BartholomewEngine(secret_key="bartholomew-cli-demo")
         advisories = engine.get_security_advisories()
@@ -65,7 +65,7 @@ def main(args: Optional[List[str]] = None) -> int:
             print()
         return 0
 
-    # ── init ──────────────────────────────────────────────────────────────────
+    #  init 
     if command == "init":
         filename = "secured_agent_sample.py"
         sample_code = (
@@ -85,7 +85,7 @@ def main(args: Optional[List[str]] = None) -> int:
             print(f"[ERROR] Failed to create template: {e}")
             return 1
 
-    # ── scan ──────────────────────────────────────────────────────────────────
+    #  scan 
     if command in ("scan", "audit"):
         if len(args) < 2:
             print("[ERROR] Missing JSON trajectory file path. Usage: bartholomew scan <file.json>")
@@ -103,7 +103,7 @@ def main(args: Optional[List[str]] = None) -> int:
             print(f"[ERROR] Failed to scan `{filepath}`: {e}")
             return 1
 
-    # ── scan-codebase ─────────────────────────────────────────────────────────
+    #  scan-codebase 
     if command in ("scan-codebase", "scan-vulnerabilities", "vuln-scan"):
         from .vulnerability_scanner import BartholomewVulnerabilityScanner
         target_dir = args[1] if len(args) > 1 else "."
@@ -113,7 +113,7 @@ def main(args: Optional[List[str]] = None) -> int:
         print(json.dumps(report, indent=2))
         return 0 if report.get("total_vulnerabilities", 0) == 0 else 1
 
-    # ── report ────────────────────────────────────────────────────────────────
+    #  report 
     if command == "report":
         if len(args) < 2:
             print("[ERROR] Missing JSON trajectory file. Usage: bartholomew report <file.json>")
@@ -136,7 +136,7 @@ def main(args: Optional[List[str]] = None) -> int:
             print(f"[ERROR] Failed to generate report: {e}")
             return 1
 
-    # ── benchmark ─────────────────────────────────────────────────────────────
+    #  benchmark 
     if command == "benchmark":
         n = int(args[1]) if len(args) > 1 and args[1].isdigit() else 100
         print(f"[BARTHOLOMEW] Running latency & throughput benchmark ({n} synthetic trajectories)...")
@@ -169,7 +169,7 @@ def main(args: Optional[List[str]] = None) -> int:
         print(f"{'-'*60}\n")
         return 0
 
-    # ── swarm ─────────────────────────────────────────────────────────────────
+    #  swarm 
     if command == "swarm":
         if len(args) < 2:
             print("[ERROR] Missing proposals JSON. Usage: bartholomew swarm <proposals.json>")

@@ -6,7 +6,7 @@ This showcase provides a production-ready migration path for **AutoGen** multi-a
 
 ---
 
-## 🌟 Highlights
+##  Highlights
 
 - **Multi-Agent State Parsing**: Extracts messages across `UserProxy`, `AssistantAgent`, and custom AutoGen roles.
 - **OKF Type Mapping**: Maps messages into canonical types (`fact`, `preference`, `context`, `entity`).
@@ -15,7 +15,7 @@ This showcase provides a production-ready migration path for **AutoGen** multi-a
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 python3 migrate_autogen.py --source sample_data.json --output ./sample_output/okf

@@ -91,9 +91,9 @@ except Exception as e:
     print(f"[Firestore Warning] {e}")
     db = None
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Rate Limiting (In-Memory sliding window)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 _rate_limit_store: Dict[str, List[float]] = {}
 RATE_LIMIT_REQUESTS = 60  # max requests
@@ -113,7 +113,7 @@ def check_rate_limit(request: Request):
     timestamps.append(now)
     _rate_limit_store[client_ip] = timestamps
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 import asyncio
 
 @asynccontextmanager
@@ -173,9 +173,9 @@ def get_favicon_svg():
             return FileResponse(str(cand), media_type="image/svg+xml")
     raise HTTPException(status_code=404, detail="Favicon not found")
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Models
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class TaskCreate(BaseModel):
     name: str
@@ -195,9 +195,9 @@ class WithdrawalRequest(BaseModel):
     amount: float = 10.0
     method: str = "paypal"
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Public Endpoints (Unauthenticated, Safe, Aggregated Only)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.get("/", dependencies=[Depends(check_rate_limit)])
 def health_check(request: Request):
@@ -247,9 +247,9 @@ def get_simulator_page():
 def get_docs_page():
     return _serve_file_html("docs.html")
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # BTP v2.2 Standards Track Machine Discovery & Evaluation RPC Routes
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 try:
     from src.trust_protocol import BartholomewTrustAuthority
     from standalone_btp_verifier import independent_verify_btp_receipt
@@ -410,9 +410,9 @@ def get_public_status():
         }
     }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Bartholomew v9.0 Sovereign Epistemic Kernel API Endpoints
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 from bartholomew_eval import (
     DeterministicDecisionCache,
@@ -522,9 +522,9 @@ def evaluate_v9_stopping_function(payload: Dict[str, Any] = Body(...)):
         "stopping_eval": eval_res
     }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Vulnerability Scanner Gateway
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.post("/api/v1/scan-codebase", dependencies=[Depends(check_rate_limit)])
 def scan_codebase_vulnerabilities(target_dir: str = "."):
@@ -541,9 +541,9 @@ def scan_codebase_vulnerabilities(target_dir: str = "."):
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f"Vulnerability Scan Error: {str(ex)}")
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Admin Endpoints (Authenticated via Bearer / Operator Token)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.get("/api/admin/status", dependencies=[Depends(check_rate_limit)])
 def get_admin_status(auth_token: str = Depends(verify_operator_auth)):
@@ -569,9 +569,9 @@ def get_admin_yield(auth_token: str = Depends(verify_operator_auth)):
     """Private DePIN protocol yield pipeline."""
     return depin.all_earnings() if _modules_ok else {"error": "DePIN adapters not initialized"}
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # LLM Inference API
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.post("/api/inference", dependencies=[Depends(check_rate_limit)])
 async def run_inference(req: InferenceRequest):
@@ -605,9 +605,9 @@ async def run_inference(req: InferenceRequest):
 def inference_status():
     return inference_engine.full_status() if _modules_ok else {}
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Tasks & Nodes
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.get("/api/nodes")
 def list_nodes():
@@ -633,9 +633,9 @@ def list_tasks():
         return [{**(t.to_dict() or {}), "id": t.id} for t in db.collection("tasks").stream()]
     return []
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Payout Sweeps (Withdrawals)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.post("/api/withdraw/request", dependencies=[Depends(check_rate_limit)])
 @app.post("/api/payoutSweep")
@@ -675,7 +675,7 @@ def get_wallets():
         }
     }
 
-# ── ENTERPRISE STRIPE BILLING & API KEY GATEWAY ──────────────────────────────
+#  ENTERPRISE STRIPE BILLING & API KEY GATEWAY 
 try:
     from app.stripe_billing_engine import stripe_engine
     from app.enterprise_api_keys import api_key_manager
@@ -707,7 +707,7 @@ try:
 except Exception as e:
     print(f"[Stripe Billing Gateway Warning]: {e}")
 
-# ── ENTERPRISE AGENTIC QA & OBSERVABILITY AUDIT ENGINE ───────────────────────────
+#  ENTERPRISE AGENTIC QA & OBSERVABILITY AUDIT ENGINE 
 
 try:
     from app.agent_eval_janitor import janitor_engine
@@ -726,7 +726,7 @@ except Exception as e:
     print(f"[Agentic QA Janitor Warning]: {e}")
 
 
-# ── ENTERPRISE AES-256 & SHA-256 CRYPTOGRAPHIC SECURITY ENGINE ─────────────────────
+#  ENTERPRISE AES-256 & SHA-256 CRYPTOGRAPHIC SECURITY ENGINE 
 try:
     from app.encryption_and_security import security_engine
     @app.post("/api/security/ai-proof")
@@ -738,7 +738,7 @@ try:
 except Exception as e:
     print(f"[Security Engine Warning]: {e}")
 
-# ── AI AGENT SECURITY & RELIABILITY BENCHMARK LEADERBOARD ──────────────────────────
+#  AI AGENT SECURITY & RELIABILITY BENCHMARK LEADERBOARD 
 try:
     from app.agent_eval_leaderboard import leaderboard_engine
     @app.get("/api/benchmark/leaderboard")
@@ -755,7 +755,7 @@ try:
 except Exception as e:
     print(f"[Leaderboard Engine Warning]: {e}")
 
-# ── SERVERLESS MICRO-API SUITE (SECRET SCRUBBING & TRAJECTORY SANITIZER) ─────────
+#  SERVERLESS MICRO-API SUITE (SECRET SCRUBBING & TRAJECTORY SANITIZER) 
 try:
     from app.micro_api_suite import micro_api_suite
     @app.post("/api/v1/mask-secrets")
@@ -798,7 +798,7 @@ except Exception as e:
     print(f"[Micro API Suite Warning]: {e}")
 
 
-# ── REAL-TIME ON-CHAIN EVM DATA CONTEXT INDEXER ─────────────────────────────────
+#  REAL-TIME ON-CHAIN EVM DATA CONTEXT INDEXER 
 try:
     from app.onchain_context_indexer import onchain_indexer
     @app.get("/api/v1/onchain-context")
@@ -808,7 +808,7 @@ try:
 except Exception as e:
     print(f"[OnChain Indexer Warning]: {e}")
 
-# ── MICRO-SAAS & DOMAIN ARBITRAGE ENGINE ───────────────────────────────────────
+#  MICRO-SAAS & DOMAIN ARBITRAGE ENGINE 
 try:
     from app.domain_saas_arbitrage import arbitrage_engine
     @app.get("/api/arbitrage/opportunities")
@@ -830,7 +830,7 @@ try:
 except Exception as e:
     print(f"[Arbitrage Engine Warning]: {e}")
 
-# ── VIRAL SECURITY BADGE & PUBLIC AUDIT VERIFICATION ENGINE ────────────────────
+#  VIRAL SECURITY BADGE & PUBLIC AUDIT VERIFICATION ENGINE 
 from fastapi.responses import Response, HTMLResponse
 
 @app.get("/api/v1/badge/secured.svg")
@@ -875,7 +875,7 @@ def verify_audit_certificate(cert_id: str):
 </head>
 <body>
   <div class="card">
-    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🛡️</div>
+    <div style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
     <span class="badge">Verified SOC2 & OWASP LLM Top 10 Aligned</span>
     <h1 style="font-size: 1.8rem; font-weight: 900; margin: 1rem 0 0.5rem;">Official AI Agent Audit Certificate</h1>
     <p style="color: #94a3b8; font-size: 0.9rem;">Issued by Agentic-Eval Security Engine (v2.0.0-ENTERPRISE)</p>
@@ -910,7 +910,7 @@ def dispatch_security_webhook(payload: dict):
     webhook_url = payload.get("webhook_url", "")
 
     alert_message = {
-        "text": f"🚨 [Agentic-Eval Security Alert]: OWASP Security Risk detected in AI agent `{agent_name}`!\nIssue: {issue}"
+        "text": f" [Agentic-Eval Security Alert]: OWASP Security Risk detected in AI agent `{agent_name}`!\nIssue: {issue}"
     }
 
     if webhook_url and webhook_url.startswith("http"):
@@ -1668,9 +1668,9 @@ def stripe_status():
     }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Autonomous Agent-to-Agent (A2A) Machine Discovery & Runtime Sidecar Gateway
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @app.get("/llms.txt", response_class=HTMLResponse)
 def get_llms_txt():

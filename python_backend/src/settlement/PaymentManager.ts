@@ -20,9 +20,9 @@ const ECPair = ECPairFactory(ecc);
 bitcoin.initEccLib(ecc);
 import { signTransaction } from '../engine/CryptoUtils.ts';
 
-// ─────────────────────────────────────────────
+// 
 // Types & Constants
-// ─────────────────────────────────────────────
+// 
 
 export interface PaymentInvoice {
   invoice_id: string;
@@ -97,9 +97,9 @@ export function getRecentLogs(): SystemLog[] {
   return systemLogs;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Real Wallet Balance Cache & Update Loop
-// ─────────────────────────────────────────────
+// 
 
 let lastBalanceCheck = 0;
 const BALANCE_CACHE_TTL = 30_000; // 30 seconds
@@ -127,9 +127,9 @@ async function updateRealBalances() {
   }
 }
 
-// ─────────────────────────────────────────────
+// 
 // Wallet Address Generators (Deterministic)
-// ─────────────────────────────────────────────
+// 
 
 function getSolanaAddress(nodeId: string): string {
   if (config.SOLANA_WALLET_ADDRESS) {
@@ -177,9 +177,9 @@ function getBtcAddress(nodeId: string): string {
   return `${prefix}${seed.substring(0, 34)}`;
 }
 
-// ─────────────────────────────────────────────
+// 
 // PaymentManager Class
-// ─────────────────────────────────────────────
+// 
 
 export class PaymentManager {
   /**
@@ -580,11 +580,11 @@ export class PaymentManager {
         if (verified) {
           clearInterval(interval);
           db.prepare("UPDATE transactions SET status = 'confirmed' WHERE id = ?").run(txId);
-          addSystemLog('payment', `🔒 Real-world verification complete! Transaction ${txId.substring(0, 8)} confirmed on-chain.`);
+          addSystemLog('payment', ` Real-world verification complete! Transaction ${txId.substring(0, 8)} confirmed on-chain.`);
         } else if (attempts >= maxAttempts) {
           clearInterval(interval);
           db.prepare("UPDATE transactions SET status = 'failed' WHERE id = ?").run(txId);
-          addSystemLog('payment', `❌ Real-world verification timed out. Transaction ${txId.substring(0, 8)} set to failed.`);
+          addSystemLog('payment', ` Real-world verification timed out. Transaction ${txId.substring(0, 8)} set to failed.`);
         } else {
           addSystemLog('payment', `Polling RPC node for transaction signature... (Attempt ${attempts}/${maxAttempts})`);
         }
@@ -601,7 +601,7 @@ export class PaymentManager {
           if (checkTx && checkTx.status === 'confirming') {
             const simulatedHash = checkTx.payment_method + '_tx_' + crypto.randomBytes(32).toString('hex');
             db.prepare("UPDATE transactions SET status = 'confirmed', tx_hash = ? WHERE id = ?").run(simulatedHash, txId);
-            addSystemLog('payment', `🔒 Simulation complete! Transaction ${txId.substring(0, 8)} confirmed.`);
+            addSystemLog('payment', ` Simulation complete! Transaction ${txId.substring(0, 8)} confirmed.`);
           }
         } catch (err: any) {
           console.error('[PaymentManager] Simulation timeout error:', err.message);
@@ -610,7 +610,7 @@ export class PaymentManager {
 
     } else {
       // Production Mode & On-chain: Reject simulated or missing hashes
-      addSystemLog('payment', `❌ Transaction ${txId.substring(0, 8)} rejected. Invalid or missing on-chain hash.`);
+      addSystemLog('payment', ` Transaction ${txId.substring(0, 8)} rejected. Invalid or missing on-chain hash.`);
       db.prepare("UPDATE transactions SET status = 'failed' WHERE id = ?").run(txId);
     }
 
@@ -890,9 +890,9 @@ export class PaymentManager {
   }
 }
 
-// ─────────────────────────────────────────────
+// 
 // Settlement Engine Loop
-// ─────────────────────────────────────────────
+// 
 
 export function startSettlementEngine(): void {
   addSystemLog('system', 'Payment settlement engine initialized.');

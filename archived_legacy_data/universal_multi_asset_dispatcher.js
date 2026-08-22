@@ -37,13 +37,13 @@ export function getPayoutInstructions(asset = 'USDC') {
 
 async function auditUniversalWallets() {
   console.log('====================================================');
-  console.log('  🌐 UNIVERSAL MULTI-ASSET WALLET & DISPATCHER AUDIT');
+  console.log('   UNIVERSAL MULTI-ASSET WALLET & DISPATCHER AUDIT');
   console.log('====================================================\n');
-  console.log('📌 MetaMask EVM (Base/ETH/Poly/Arb/OP/BNB):', UNIVERSAL_WALLETS.METAMASK_EVM);
-  console.log('📌 Solana Wallet (SOL/SPL):               ', UNIVERSAL_WALLETS.SOLANA_WALLET);
-  console.log('📌 Bitcoin Address (BTC Native):          ', UNIVERSAL_WALLETS.BITCOIN_WALLET);
-  console.log('📌 Akash Wallet (AKT):                    ', UNIVERSAL_WALLETS.AKASH_WALLET);
-  console.log('\n✅ 10 Tradeable Assets Supported & Audited.');
+  console.log(' MetaMask EVM (Base/ETH/Poly/Arb/OP/BNB):', UNIVERSAL_WALLETS.METAMASK_EVM);
+  console.log(' Solana Wallet (SOL/SPL):               ', UNIVERSAL_WALLETS.SOLANA_WALLET);
+  console.log(' Bitcoin Address (BTC Native):          ', UNIVERSAL_WALLETS.BITCOIN_WALLET);
+  console.log(' Akash Wallet (AKT):                    ', UNIVERSAL_WALLETS.AKASH_WALLET);
+  console.log('\n 10 Tradeable Assets Supported & Audited.');
   console.log('====================================================\n');
 }
 

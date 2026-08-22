@@ -37,7 +37,7 @@ def run_bidirectional_challenge():
         "service": "billing_v2",
         "action": "AST_SLA_MIGRATION",
         "delta_lines": 3,
-        "unicode_check": "🔒 Verifiable Trust ⚡ 日本語"
+        "unicode_check": " Verifiable Trust  日本語"
     }
 
     # -------------------------------------------------------------------------
@@ -62,10 +62,10 @@ def run_bidirectional_challenge():
         expected_recipient_context="Agent-Production-Cluster"
     )
     
-    print(f"  ├─ Origin Issuer:       {cleanroom_receipt['attestation']['authority']}")
-    print(f"  ├─ Verifier Engine:     Bartholomew Standalone Reference Verifier")
-    print(f"  ├─ Verification Status: [{'SUCCESS (AUTHORIZED)' if ok1 else 'FAIL'}]")
-    print(f"  └─ Diagnostic Msg:      {msg1}")
+    print(f"   Origin Issuer:       {cleanroom_receipt['attestation']['authority']}")
+    print(f"   Verifier Engine:     Bartholomew Standalone Reference Verifier")
+    print(f"   Verification Status: [{'SUCCESS (AUTHORIZED)' if ok1 else 'FAIL'}]")
+    print(f"   Diagnostic Msg:      {msg1}")
     assert ok1
 
     # -------------------------------------------------------------------------
@@ -93,10 +93,10 @@ def run_bidirectional_challenge():
         expected_recipient="Agent-CleanRoom-Worker"
     )
 
-    print(f"  ├─ Origin Issuer:       {bartholomew_receipt['attestation']['authority']}")
-    print(f"  ├─ Verifier Engine:     Clean-Room Independent Verifier")
-    print(f"  ├─ Verification Status: [{'SUCCESS (AUTHORIZED)' if ok2 else 'FAIL'}]")
-    print(f"  └─ Diagnostic Msg:      {msg2}")
+    print(f"   Origin Issuer:       {bartholomew_receipt['attestation']['authority']}")
+    print(f"   Verifier Engine:     Clean-Room Independent Verifier")
+    print(f"   Verification Status: [{'SUCCESS (AUTHORIZED)' if ok2 else 'FAIL'}]")
+    print(f"   Diagnostic Msg:      {msg2}")
     assert ok2
 
     print("\n" + "=" * 80)

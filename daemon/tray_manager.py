@@ -40,7 +40,7 @@ def launch_tray():
             sys.exit(0)
 
         menu = pystray.Menu(
-            pystray.MenuItem("🟢 Bartholomew Guard: Active", lambda: None, enabled=False),
+            pystray.MenuItem(" Bartholomew Guard: Active", lambda: None, enabled=False),
             pystray.MenuItem("Open Operator Portal", open_portal, default=True),
             pystray.MenuItem("Visit bartholomew.info", open_website),
             pystray.Menu.SEPARATOR,

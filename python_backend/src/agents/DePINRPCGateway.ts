@@ -65,7 +65,7 @@ export class DePINRPCGateway {
       );
 
       if (totalRPCCallsServed % 200 === 0) {
-        console.log(`[DePINRPC] ⚡ Served ${callsInBatch} RPC Relays via ${marketplace} | Payout: +$${batchRevenue.toFixed(2)} | Total RPC Revenue: $${totalRPCRevenueUSD.toFixed(2)}`);
+        console.log(`[DePINRPC]  Served ${callsInBatch} RPC Relays via ${marketplace} | Payout: +$${batchRevenue.toFixed(2)} | Total RPC Revenue: $${totalRPCRevenueUSD.toFixed(2)}`);
       }
     } catch (err: any) {
       // Suppress minor database errors

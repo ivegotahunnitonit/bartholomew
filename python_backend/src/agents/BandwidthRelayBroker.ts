@@ -58,7 +58,7 @@ export class BandwidthRelayBroker {
       );
 
       if (Math.round(totalGBRented) % 20 === 0) {
-        console.log(`[BandwidthBroker] 🌐 Rented ${gbRented.toFixed(2)}GB via ${aggregator} | Payout: +$${payout.toFixed(2)} | Total Bandwidth Earned: $${totalBandwidthRevenueUSD.toFixed(2)}`);
+        console.log(`[BandwidthBroker]  Rented ${gbRented.toFixed(2)}GB via ${aggregator} | Payout: +$${payout.toFixed(2)} | Total Bandwidth Earned: $${totalBandwidthRevenueUSD.toFixed(2)}`);
       }
     } catch (err: any) {
       // Suppress minor errors

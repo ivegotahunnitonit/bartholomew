@@ -194,7 +194,7 @@ def main():
     memories = parse_autogen_json(args.source)
     print(f"[AutoGen Adapter] Extracted {len(memories)} memory records.")
     exported, manifest_file = export_to_okf(memories, args.output)
-    print(f"[AutoGen Adapter] ✅ Successfully exported {exported} OKF records to '{args.output}'.")
+    print(f"[AutoGen Adapter]  Successfully exported {exported} OKF records to '{args.output}'.")
     print(f"[AutoGen Adapter] Manifest: {manifest_file}")
 
 if __name__ == "__main__":

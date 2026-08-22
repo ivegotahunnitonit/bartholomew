@@ -20,7 +20,7 @@ import { ArbitrageEngine } from '../settlement/ArbitrageEngine.ts';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ─── Security: only allow requests from localhost ───────────────────────────
+//  Security: only allow requests from localhost 
 const ALLOWED_ORIGINS = [
   'http://localhost',
   'http://127.0.0.1',
@@ -997,7 +997,7 @@ export function startServer() {
           return;
         }
 
-        // ── Balance guard: ensure confirmed earnings cover the requested withdrawal ──
+        //  Balance guard: ensure confirmed earnings cover the requested withdrawal 
         const walletInfo = PaymentManager.getWalletInfo();
         const allConfirmed =
           walletInfo.wallets.lightning.confirmed_balance +

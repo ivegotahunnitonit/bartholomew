@@ -1,33 +1,33 @@
-# 📚 TECHNICAL DOCUMENTATION & DEPLOYMENT GUIDE
+#  TECHNICAL DOCUMENTATION & DEPLOYMENT GUIDE
 
 ## Architecture Summary
 
 Agentic-Eval is constructed as a decoupled, multi-language microservices architecture:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  GLASSMORPHISM FRONTEND UI (dashboard/orchestrator.html)     │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ HTTP / REST API Calls
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  FASTAPI PYTHON BACKEND (python_backend/app/main.py)         │
-│  - Agentic QA Evaluation Engine (agent_eval_janitor.py)      │
-│  - Cryptographic Security Engine (encryption_and_security.py)│
-│  - AI Benchmark Leaderboard (agent_eval_leaderboard.py)     │
-│  - Micro-SaaS Arbitrage Engine (domain_saas_arbitrage.py)   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ Local Inter-Service Calls
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  GO SECURITY MICROSERVICE (go_services/main.go)              │
-│  - Port 8085 High-Speed Security Probes                      │
-└─────────────────────────────────────────────────────────────┘
+
+  GLASSMORPHISM FRONTEND UI (dashboard/orchestrator.html)     
+
+                                HTTP / REST API Calls
+                               
+
+  FASTAPI PYTHON BACKEND (python_backend/app/main.py)         
+  - Agentic QA Evaluation Engine (agent_eval_janitor.py)      
+  - Cryptographic Security Engine (encryption_and_security.py)
+  - AI Benchmark Leaderboard (agent_eval_leaderboard.py)     
+  - Micro-SaaS Arbitrage Engine (domain_saas_arbitrage.py)   
+
+                                Local Inter-Service Calls
+                               
+
+  GO SECURITY MICROSERVICE (go_services/main.go)              
+  - Port 8085 High-Speed Security Probes                      
+
 ```
 
 ---
 
-## 🚀 Quick 1-Click Deployment Setup
+##  Quick 1-Click Deployment Setup
 
 ### Option 1: Render ($0.00 Free Hosting)
 1. Fork or upload the repository to GitHub.
@@ -40,7 +40,7 @@ Agentic-Eval is constructed as a decoupled, multi-language microservices archite
 
 ---
 
-## 🔌 Mounted API Endpoints
+##  Mounted API Endpoints
 
 - `POST /api/janitor/audit` — Evaluates AI Agent step trajectory JSON for secret leaks and loop errors.
 - `POST /api/security/ai-proof` — Generates SHA-256 checksum attestations and AES-256 ciphertext.
@@ -54,7 +54,7 @@ Agentic-Eval is constructed as a decoupled, multi-language microservices archite
 
 ---
 
-## 🧪 System Verification
+##  System Verification
 
 Run automated test suite:
 ```bash

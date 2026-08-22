@@ -39,10 +39,10 @@ export class CpuMinerAgent {
       
       if (baseYield > ducoYield && this.activePoolName !== 'base-optimizer') {
         this.activePoolName = 'base-optimizer';
-        addSystemLog('payment', '⛏️ [Miner] [Profit-Switching] Switched to Base Hashrate Optimizer (+40% dynamic yield boost!)');
+        addSystemLog('payment', ' [Miner] [Profit-Switching] Switched to Base Hashrate Optimizer (+40% dynamic yield boost!)');
       } else if (ducoYield >= baseYield && this.activePoolName !== 'duino-coin') {
         this.activePoolName = 'duino-coin';
-        addSystemLog('payment', '⛏️ [Miner] [Profit-Switching] Switched back to Duino-Coin pool.');
+        addSystemLog('payment', ' [Miner] [Profit-Switching] Switched back to Duino-Coin pool.');
       }
     }, 90_000);
   }
@@ -103,7 +103,7 @@ export class CpuMinerAgent {
 
         if (this.sharesMined % 10 === 0 || this.sharesMined === 1) {
           const poolLabel = CpuMinerAgent.activePoolName === 'base-optimizer' ? 'Base Optimizer' : 'Duino-Coin';
-          addSystemLog('payment', `⛏️ [Miner] Share accepted! Total: ${this.sharesMined} shares. Mined: ${this.totalDucoEarned.toFixed(4)} DUCO (~$${(this.totalDucoEarned * 0.01).toFixed(6)} USD) [Pool: ${poolLabel}]`);
+          addSystemLog('payment', ` [Miner] Share accepted! Total: ${this.sharesMined} shares. Mined: ${this.totalDucoEarned.toFixed(4)} DUCO (~$${(this.totalDucoEarned * 0.01).toFixed(6)} USD) [Pool: ${poolLabel}]`);
         }
 
         // DB write disabled in production mode (no mock transactions)

@@ -194,7 +194,7 @@ def main():
     memories = parse_chatgpt_export(args.source)
     print(f"[ChatGPT Adapter] Extracted {len(memories)} memory records.")
     exported, manifest_file = export_to_okf(memories, args.output)
-    print(f"[ChatGPT Adapter] ✅ Successfully exported {exported} OKF records to '{args.output}'.")
+    print(f"[ChatGPT Adapter]  Successfully exported {exported} OKF records to '{args.output}'.")
     print(f"[ChatGPT Adapter] Manifest: {manifest_file}")
 
 if __name__ == "__main__":

@@ -8,19 +8,19 @@ chrome.runtime.onInstalled.addListener(() => {
   // Create context menu items for code selection
   chrome.contextMenus.create({
     id: 'bartholomew-explain',
-    title: '✨ Ask Bartholomew to Explain Code',
+    title: ' Ask Bartholomew to Explain Code',
     contexts: ['selection']
   });
 
   chrome.contextMenus.create({
     id: 'bartholomew-refactor',
-    title: '🛠️ Suggest Refactor & Fix with Bartholomew',
+    title: ' Suggest Refactor & Fix with Bartholomew',
     contexts: ['selection']
   });
 
   chrome.contextMenus.create({
     id: 'bartholomew-diagnose-ci',
-    title: '⚡ Diagnose CI Failure on this page',
+    title: ' Diagnose CI Failure on this page',
     contexts: ['page']
   });
 

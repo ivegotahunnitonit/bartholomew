@@ -43,7 +43,7 @@ class TestSessionService:
         """Test namespace generation"""
         namespace = session_service._generate_namespace("test-agent")
         assert namespace == "memanto_agent_test-agent"
-        print(f"✅ Namespace format correct: {namespace}")
+        print(f" Namespace format correct: {namespace}")
 
     def test_create_session(self, session_service):
         """Test session creation"""
@@ -63,7 +63,7 @@ class TestSessionService:
         time_diff = (session.expires_at - session.started_at).total_seconds()
         assert 3.9 * 3600 < time_diff < 4.1 * 3600
 
-        print("✅ Session created successfully")
+        print(" Session created successfully")
         print(f"   Session ID: {session.session_id}")
         print(f"   Namespace: {session.namespace}")
         print(f"   Expires in: {time_diff / 3600:.2f} hours")
@@ -81,7 +81,7 @@ class TestSessionService:
         assert token_payload.agent_id == "test-agent"
         assert token_payload.namespace == "memanto_agent_test-agent"
 
-        print("✅ Session validation successful")
+        print(" Session validation successful")
 
     def test_session_status_handles_aware_expiration_timestamp(self):
         """Session status helpers must handle ISO timestamps with a UTC timezone."""
@@ -179,7 +179,7 @@ class TestSessionService:
         # This should fail because session is expired
         # Note: We can't easily test this without manipulating time
         # Just verify the logic exists
-        print("✅ Session expiration logic exists")
+        print(" Session expiration logic exists")
 
     def test_end_session(self, session_service):
         """Test ending session"""
@@ -196,7 +196,7 @@ class TestSessionService:
         assert summary.session_id == session.session_id
         assert summary.duration_hours >= 0
 
-        print("✅ Session ended successfully")
+        print(" Session ended successfully")
         print(f"   Duration: {summary.duration_hours} hours")
 
     def test_settings_default_does_not_embed_public_jwt_secret(self, monkeypatch):
@@ -302,7 +302,7 @@ class TestAgentService:
         """Test namespace generation"""
         namespace = agent_service._generate_namespace("customer-support")
         assert namespace == "memanto_agent_customer-support"
-        print(f"✅ Agent namespace correct: {namespace}")
+        print(f" Agent namespace correct: {namespace}")
 
     def test_create_agent(self, agent_service):
         """Test agent creation"""
@@ -322,7 +322,7 @@ class TestAgentService:
         assert agent.description == "Test agent"
         assert agent.status == "ready"
 
-        print("✅ Agent created successfully")
+        print(" Agent created successfully")
         print(f"   Agent ID: {agent.agent_id}")
         print(f"   Namespace: {agent.namespace}")
 
@@ -355,7 +355,7 @@ class TestAgentService:
         assert agent_list.count == 3
         assert len(agent_list.agents) == 3
 
-        print(f"✅ Listed {agent_list.count} agents")
+        print(f" Listed {agent_list.count} agents")
 
     def test_get_agent(self, agent_service):
         """Test getting agent info"""
@@ -370,7 +370,7 @@ class TestAgentService:
         assert agent.agent_id == "test-agent"
         assert agent.pattern == AgentPattern.PROJECT
 
-        print("✅ Agent retrieved successfully")
+        print(" Agent retrieved successfully")
 
     def test_update_agent_stats(self, agent_service):
         """Test updating agent statistics"""
@@ -388,7 +388,7 @@ class TestAgentService:
         assert updated_agent.session_count == 1
         assert updated_agent.last_session is not None
 
-        print("✅ Agent stats updated")
+        print(" Agent stats updated")
         print(f"   Session count: {updated_agent.session_count}")
 
     def test_delete_agent(self, agent_service):
@@ -406,7 +406,7 @@ class TestAgentService:
         # Verify deleted
         assert not agent_service.agent_exists("test-agent")
 
-        print("✅ Agent deleted successfully")
+        print(" Agent deleted successfully")
 
 
 class TestMemoryWriteServiceDelete:
@@ -934,8 +934,8 @@ class TestMEMANTOArchitecture:
         # Verify it doesn't contain "tenant" string
         assert "tenant" not in namespace.lower()
 
-        print(f"✅ V2 namespace format confirmed: {namespace}")
-        print("   ✅ NO tenant_id required!")
+        print(f" V2 namespace format confirmed: {namespace}")
+        print("    NO tenant_id required!")
 
     def test_jwt_token_structure(self):
         """Verify JWT token contains correct fields"""
@@ -957,9 +957,9 @@ class TestMEMANTOArchitecture:
         # Verify NO tenant_id in token
         assert "tenant_id" not in payload
 
-        print("✅ JWT token structure correct")
+        print(" JWT token structure correct")
         print(f"   Fields: {list(payload.keys())}")
-        print("   ✅ NO tenant_id in token!")
+        print("    NO tenant_id in token!")
 
 
 def test_conflict_report_handles_non_object_json_items(tmp_path, monkeypatch):

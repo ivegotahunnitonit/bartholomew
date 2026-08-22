@@ -1,4 +1,4 @@
-# 🛡️ ACN Agentic Security & Secret Scanner (GitHub Action)
+#  ACN Agentic Security & Secret Scanner (GitHub Action)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8.svg)](https://go.dev)
@@ -8,7 +8,7 @@ Prevent API key leaks, credential exposure, and silent error fallbacks in your A
 
 ---
 
-## ⚡ Quick Start
+##  Quick Start
 
 Add the following step to your `.github/workflows/security.yml` file:
 
@@ -37,7 +37,7 @@ jobs:
 
 ---
 
-## 🔒 Key Features
+##  Key Features
 
 1. **Automated Secret Leak Prevention:** Detects OpenAI (`sk-`), GitHub (`ghp_`), AWS (`AKIA`), and custom tokens in commits.
 2. **Trajectory & Error Fallback Checks:** Identifies unhandled exceptions and silent null returns in step dispatchers.
@@ -46,7 +46,7 @@ jobs:
 
 ---
 
-## 💼 Licensing & Commercial Retainers
+##  Licensing & Commercial Retainers
 
 For enterprise custom rules, dedicated SLA support, or custom FastAPI routing patches, contact the ACN Security Team at `security@acn-network.org` or visit our live auditor dashboard:
 

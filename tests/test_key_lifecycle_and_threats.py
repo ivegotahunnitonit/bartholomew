@@ -41,7 +41,7 @@ def test_key_revocation_and_crl():
 
     print(f"[TEST 1: KEY REVOCATION CRL] {crl_msg}")
     assert crl_rejected
-    print("  └─ [PASS] Compromised root key revoked instantly with zero ecosystem downtime.")
+    print("   [PASS] Compromised root key revoked instantly with zero ecosystem downtime.")
 
 def test_toctou_race_defense():
     print("\n" + "=" * 80)
@@ -67,7 +67,7 @@ def test_toctou_race_defense():
     print(f"[TEST 2: TOCTOU RACE DEFENSE] {msg}")
     assert not ok
     assert "ARTIFACT_SUBSTITUTION_DETECTED" in msg
-    print("  └─ [PASS] TOCTOU race attack neutralized via SHA-256 canonical hash binding.")
+    print("   [PASS] TOCTOU race attack neutralized via SHA-256 canonical hash binding.")
 
 if __name__ == "__main__":
     test_key_revocation_and_crl()

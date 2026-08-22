@@ -17,7 +17,7 @@ const BASE_ADDRESS = '0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4';
 
 async function submitSASMEXSolution() {
   console.log(`====================================================`);
-  console.log(`  🚀 SUBMITTING SOLUTION FOR $5 SASMEX BOUNTY`);
+  console.log(`   SUBMITTING SOLUTION FOR $5 SASMEX BOUNTY`);
   console.log(`  Target: ${REPO} Issue #${ISSUE_NUM}`);
   console.log(`====================================================\n`);
 
@@ -43,7 +43,7 @@ Please disburse the **$5 USD** reward to PayPal or Base USDC:
   });
 
   const data = await res.json();
-  console.log(`✅ Solution Comment Posted! URL: ${data.html_url}`);
+  console.log(` Solution Comment Posted! URL: ${data.html_url}`);
 }
 
 submitSASMEXSolution().catch(console.error);

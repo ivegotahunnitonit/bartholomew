@@ -53,9 +53,9 @@ async function claimBounty(repo, issueNumber) {
 }
 
 async function scanAndClaim() {
-  console.log('═════════════════════════════════════════════════════');
+  console.log('');
   console.log('   ACN AUTOSCALE BOUNTY HUNTER — SCANNING REPOS      ');
-  console.log('═════════════════════════════════════════════════════');
+  console.log('');
 
   const ledger = JSON.parse(fs.readFileSync('BOUNTY_LEDGER.json', 'utf8'));
   if (!ledger['ivegotahunnitonit']) {
@@ -65,7 +65,7 @@ async function scanAndClaim() {
   let newClaims = 0;
 
   for (const repo of TARGET_REPOS) {
-    console.log(`\n🔍 Scanning repository: ${repo}...`);
+    console.log(`\n Scanning repository: ${repo}...`);
     const { data: issues } = await ghFetch(`https://api.github.com/repos/${repo}/issues?state=open&per_page=30`);
 
     if (!Array.isArray(issues)) {
@@ -82,7 +82,7 @@ async function scanAndClaim() {
       // Check if already in ledger
       const existing = ledger['ivegotahunnitonit'].submissions.find(s => s.issue === issue.number);
       if (existing) {
-        console.log(`    ↳ Already claimed / submitted in ledger.`);
+        console.log(`     Already claimed / submitted in ledger.`);
         continue;
       }
 
@@ -107,10 +107,10 @@ async function scanAndClaim() {
 
   fs.writeFileSync('BOUNTY_LEDGER.json', JSON.stringify(ledger, null, 2));
 
-  console.log('\n═════════════════════════════════════════════════════');
+  console.log('\n');
   console.log(`   SCAN COMPLETE — ${newClaims} NEW BOUNTIES CLAIMED & LOCKED!`);
   console.log(`   TOTAL BOUNTY REWARDS LEDGER: ${ledger['ivegotahunnitonit'].total} POINTS`);
-  console.log('═════════════════════════════════════════════════════');
+  console.log('');
 }
 
 scanAndClaim().catch(err => console.error('[Bounty Hunter Error]', err));

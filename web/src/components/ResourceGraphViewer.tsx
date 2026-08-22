@@ -160,12 +160,12 @@ export default function ResourceGraphViewer() {
             <div className="space-y-4 text-xs font-mono">
               <div className="p-4 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-2">
                 <span className="text-emerald-400 font-bold block uppercase tracking-wider text-[11px]">
-                  ✓ Verified Observed Facts:
+                   Verified Observed Facts:
                 </span>
                 <ul className="space-y-1.5 text-slate-300">
                   {activeCycle.observed_facts.map((fact, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-emerald-400 shrink-0">❯</span>
+                      <span className="text-emerald-400 shrink-0"></span>
                       <span>{fact}</span>
                     </li>
                   ))}
@@ -174,12 +174,12 @@ export default function ResourceGraphViewer() {
 
               <div className="p-4 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
                 <span className="text-amber-400 font-bold block uppercase tracking-wider text-[11px]">
-                  ⚠ Explicit Estimates &amp; Hypotheses:
+                   Explicit Estimates &amp; Hypotheses:
                 </span>
                 <ul className="space-y-1.5 text-slate-300">
                   {activeCycle.estimates.map((est, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-amber-400 shrink-0">❯</span>
+                      <span className="text-amber-400 shrink-0"></span>
                       <span>{est}</span>
                     </li>
                   ))}

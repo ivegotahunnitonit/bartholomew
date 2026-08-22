@@ -66,16 +66,16 @@ runs:
           const issue_number = context.issue.number;
           const repo = context.repo;
 
-          const commentBody = `## 🛡️ Agentic-Eval OWASP AI Agent Security Audit Report
+          const commentBody = `##  Agentic-Eval OWASP AI Agent Security Audit Report
           
           | Metric | Audit Finding |
           |---|---|
-          | **Compliance Status** | 🟢 **SOC2 PASSED / OWASP Top 10 Verified** |
+          | **Compliance Status** |  **SOC2 PASSED / OWASP Top 10 Verified** |
           | **Reliability Score** | \`95% / 100%\` |
           | **Secret Leaks Detected** | \`0 Unmasked Credentials\` |
           | **Infinite Loop Traps** | \`0 Redundant Calls\` |
           
-          ### 🏅 Verification Badge
+          ###  Verification Badge
           [![Secured by Agentic-Eval](https://agentic-eval.com/api/v1/badge/secured.svg?score=95)](https://agentic-eval.com/verify/SOC2-OWASP-PASSED)
           
           *Automated CI/CD security audit performed by [Agentic-Eval Action v2.0](https://github.com/ivegotahunnitonit/agentic-eval).*`;

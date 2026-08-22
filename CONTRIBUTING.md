@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the **Bartholomew Trust Protocol 
 
 ---
 
-## 🛠️ Development Setup
+##  Development Setup
 
 1. **Clone the Repository**:
    ```bash
@@ -24,7 +24,7 @@ Thank you for your interest in contributing to the **Bartholomew Trust Protocol 
 
 ---
 
-## 📐 Architecture Overview
+##  Architecture Overview
 
 * `src/trust_protocol.py`: Core RFC 8785 canonicalization & Ed25519 cryptographic attestation engine.
 * `src/declarative_policy_engine.py`: Fast YAML/JSON policy-as-code parser.
@@ -36,7 +36,7 @@ Thank you for your interest in contributing to the **Bartholomew Trust Protocol 
 
 ---
 
-## 🧪 Testing Guidelines
+##  Testing Guidelines
 
 Before submitting a pull request, ensure all tests pass:
 ```bash
@@ -50,6 +50,6 @@ python ci_security_gate.py
 
 ---
 
-## 📜 License
+##  License
 * Client SDKs: **Apache-2.0**
 * Core Engine: **Business Source License (BSL 1.1)**

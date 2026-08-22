@@ -1,7 +1,7 @@
-// ═══════════════════════════════════════════════════════════════════════════
+// 
 // ACN Bounty Engine — Auto-submit PRs for Memanto SDK open issues
 // Targets: Issue #1436 (auth enforcement), Issue #1453 (race condition)
-// ═══════════════════════════════════════════════════════════════════════════
+// 
 import fs from 'fs';
 
 const envContent = fs.readFileSync('.env', 'utf8');
@@ -31,9 +31,9 @@ async function ghFetch(path, opts = {}) {
   return { status: res.status, data };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // Get current default branch SHA (for creating branches)
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 async function getMainSHA() {
   const { data } = await ghFetch(`/repos/${FORK}/git/refs/heads/main`);
   if (data.object) return data.object.sha;
@@ -42,9 +42,9 @@ async function getMainSHA() {
   return d2.object?.sha || null;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // Create branch on fork
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 async function createBranch(branchName, sha) {
   const { status, data } = await ghFetch(`/repos/${FORK}/git/refs`, {
     method: 'POST',
@@ -62,9 +62,9 @@ async function createBranch(branchName, sha) {
   return false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // Commit a file to a branch
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 async function commitFile(branch, filePath, content, message) {
   // Get existing file SHA if exists
   let existingSHA = null;
@@ -91,9 +91,9 @@ async function commitFile(branch, filePath, content, message) {
   return false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // Open PR
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 async function openPR(title, branch, body) {
   const { status, data } = await ghFetch(`/repos/${REPO}/pulls`, {
     method: 'POST',
@@ -117,10 +117,10 @@ async function openPR(title, branch, body) {
   return null;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // BOUNTY 1: Issue #1436 — Missing caller auth on agent management endpoints
 // Fix: Add verify_caller_api_key dependency + secure /status endpoint
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 
 const FIX_AUTH_DEPS = `"""
 auth_deps.py — Caller authentication dependencies
@@ -206,7 +206,7 @@ Fixes the authentication enforcement gap reported in [Issue #1436](https://githu
 
 ---
 
-## 🔴 Root Cause
+##  Root Cause
 
 \`get_moorcheh_api_key()\` in \`auth_deps.py\` checked whether the **server** had a key configured — it did NOT verify that the **caller** presented a valid key. This meant all agent management endpoints (\`POST /api/v2/agents\`, \`GET /api/v2/agents\`, \`DELETE /api/v2/agents/{id}\`, \`POST /api/v2/agents/{id}/activate\`) were completely unauthenticated in practice.
 
@@ -214,7 +214,7 @@ Additionally, \`GET /api/v2/status\` had **zero** \`Depends\` — returning acti
 
 ---
 
-## ✅ Fixes
+##  Fixes
 
 ### 1. \`memanto/app/routes/auth_deps.py\`
 
@@ -254,10 +254,10 @@ Added \`session: Session = Depends(get_current_session)\` — consistent with al
 
 *Submitted via ACN Bounty Engine v4.0*`;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // BOUNTY 2: Issue #1453 — Agent creation race condition (Community plan limit)
 // Fix: Atomic check-and-increment with Redis/DB locking
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 
 const FIX_AGENT_CREATE = `"""
 agents.py — Fixed race condition in agent creation (Issue #1453)
@@ -409,7 +409,7 @@ Fixes the race condition in \`POST /api/v2/agents\` reported in [Issue #1453](ht
 
 ---
 
-## 🔴 Root Cause
+##  Root Cause
 
 The agent creation flow was:
 1. \`COUNT agents\` — read current count (non-atomic)
@@ -420,7 +420,7 @@ Under concurrent load, 50 parallel requests all executed step 1 simultaneously, 
 
 ---
 
-## ✅ Fix
+##  Fix
 
 Wrapped steps 1-3 in an \`asyncio.Lock()\` (single-process) with a note to use Redis \`SETNX\`/advisory lock for multi-process deployments:
 
@@ -449,14 +449,14 @@ Additionally changed the error response from silent HTTP 200 to **HTTP 429** wit
 
 *Submitted via ACN Bounty Engine v4.0*`;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 // MAIN
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 
 async function main() {
-  console.log('═══════════════════════════════════════');
+  console.log('');
   console.log('ACN Bounty Engine v4.0 — Auto-Submit');
-  console.log('═══════════════════════════════════════');
+  console.log('');
 
   const ledger = JSON.parse(fs.readFileSync('BOUNTY_LEDGER.json', 'utf8'));
   const results = { submitted: [], errors: [], timestamp: new Date().toISOString() };
@@ -468,7 +468,7 @@ async function main() {
   }
   console.log(`[Fork] Main SHA: ${sha.slice(0, 8)}...`);
 
-  // ── Bounty #1: Issue #1436 — Auth enforcement ──────────────────────────────
+  //  Bounty #1: Issue #1436 — Auth enforcement 
   console.log('\n[Bounty 1/2] Issue #1436 — Caller auth enforcement');
   const branch1436 = 'fix-caller-auth-enforcement-1436';
 
@@ -493,14 +493,14 @@ async function main() {
       );
       if (prUrl) {
         results.submitted.push({ issue: 1436, pr_url: prUrl, branch: branch1436 });
-        console.log(`✅ PR submitted: ${prUrl}`);
+        console.log(` PR submitted: ${prUrl}`);
       } else {
         results.errors.push({ issue: 1436, error: 'PR creation failed' });
       }
     }
   }
 
-  // ── Bounty #2: Issue #1453 — Race condition ─────────────────────────────────
+  //  Bounty #2: Issue #1453 — Race condition 
   console.log('\n[Bounty 2/2] Issue #1453 — Agent creation race condition');
   const branch1453 = 'fix-agent-creation-race-condition-1453';
 
@@ -525,14 +525,14 @@ async function main() {
       );
       if (prUrl) {
         results.submitted.push({ issue: 1453, pr_url: prUrl, branch: branch1453 });
-        console.log(`✅ PR submitted: ${prUrl}`);
+        console.log(` PR submitted: ${prUrl}`);
       } else {
         results.errors.push({ issue: 1453, error: 'PR creation failed' });
       }
     }
   }
 
-  // ── Update Bounty Ledger ────────────────────────────────────────────────────
+  //  Update Bounty Ledger 
   if (!ledger['ivegotahunnitonit']) {
     ledger['ivegotahunnitonit'] = { total: 0, submissions: [], task_count: 0 };
   }
@@ -552,8 +552,8 @@ async function main() {
   fs.writeFileSync('BOUNTY_LEDGER.json', JSON.stringify(ledger, null, 2));
   fs.writeFileSync('bounty_engine_results.json', JSON.stringify(results, null, 2));
 
-  // ── Summary ─────────────────────────────────────────────────────────────────
-  console.log('\n═══════════════════════════════════════');
+  //  Summary 
+  console.log('\n');
   console.log(`DONE — ${results.submitted.length} PR(s) submitted, ${results.errors.length} error(s)`);
   if (results.submitted.length > 0) {
     console.log('PRs:');
@@ -562,7 +562,7 @@ async function main() {
   if (results.errors.length > 0) {
     console.log('Errors:', results.errors);
   }
-  console.log('═══════════════════════════════════════');
+  console.log('');
 }
 
 main().catch(err => {

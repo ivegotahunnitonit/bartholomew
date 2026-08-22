@@ -103,7 +103,7 @@ class ContradictionEngine:
         conflicting_node = self._find_contradiction(claim)
         
         if conflicting_node:
-            # 🔴 CONTRADICTION DETECTED! Do NOT overwrite existing claim.
+            #  CONTRADICTION DETECTED! Do NOT overwrite existing claim.
             conflict_event = {
                 "conflict_id": f"conflict-{uuid.uuid4().hex[:8]}",
                 "existing_node_id": conflicting_node.node_id,

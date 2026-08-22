@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 Highlights & New Features
+##  Highlights & New Features
 
 ### 1. Three-Tier Defense-in-Depth Architecture
 * **Tier 1 (In-Memory Microsecond Gate)**:
@@ -41,7 +41,7 @@
 
 ---
 
-## ⚡ Quickstart
+##  Quickstart
 
 ```bash
 # 1. Initialize BTP in your repository

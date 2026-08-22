@@ -6,7 +6,7 @@ This showcase provides a production-ready migration path for **LangMem** and **L
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 python3 migrate_langmem.py --source sample_data.json --output ./sample_output/okf

@@ -44,7 +44,7 @@ def main(args: Optional[List[str]] = None) -> int:
 
     command = args[0].lower()
 
-    # ── diagnose ──────────────────────────────────────────────────────────────
+    #  diagnose 
     if command == "diagnose":
         target = args[1] if len(args) > 1 else "."
         print(f"\n[BARTHOLOMEW] Running Autonomous CI & Test Diagnostics on: {target}")
@@ -58,7 +58,7 @@ def main(args: Optional[List[str]] = None) -> int:
         print("  * AST Version Conflicts: 0 detected (Constant nodes modernized).")
         return 0
 
-    # ── repro ─────────────────────────────────────────────────────────────────
+    #  repro 
     if command == "repro":
         test_path = args[1] if len(args) > 1 else "tests/test_reproduction.py"
         print(f"\n[BARTHOLOMEW] Synthesizing Minimal Standalone Reproduction Test for: {test_path}")
@@ -73,7 +73,7 @@ def test_reproduce_isolated_boundary():
         print(f"Generated successfully. Run with: pytest {test_path}")
         return 0
 
-    # ── fix ───────────────────────────────────────────────────────────────────
+    #  fix 
     if command == "fix":
         print("\n[BARTHOLOMEW] Analyzing Repository AST & Fixture Scopes...")
         time.sleep(0.3)
@@ -83,7 +83,7 @@ def test_reproduce_isolated_boundary():
         print("\n[OK] FIX APPLIED & VERIFIED: 100% clean passes across all test suites.")
         return 0
 
-    # ── server ────────────────────────────────────────────────────────────────
+    #  server 
     if command == "server":
         port = 8080
         if "--port" in args:
@@ -94,18 +94,18 @@ def test_reproduce_isolated_boundary():
         import subprocess
         return subprocess.call([sys.executable, "saas_app.py"])
 
-    # ── verify ────────────────────────────────────────────────────────────────
+    #  verify 
     if command == "verify":
         from .verifier import main as verifier_main
         return verifier_main(args)
 
-    # ── version ──────────────────────────────────────────────────────────────
+    #  version 
     if command in ("-v", "--version", "version"):
         from . import __version__
         print(f"bartholomew-eval v{__version__}")
         return 0
 
-    # ── quarantine ───────────────────────────────────────────────────────────
+    #  quarantine 
     if command == "quarantine":
         test_name = args[1] if len(args) > 1 else "test_async_worker_timeout"
         from .flaky_quarantine import FlakyTestQuarantineEngine
@@ -122,7 +122,7 @@ def test_reproduce_isolated_boundary():
         print(f"  * Applied Decorator   : @pytest.mark.quarantine")
         return 0
 
-    # ── eval-models ──────────────────────────────────────────────────────────
+    #  eval-models 
     if command in ("eval-models", "leaderboard"):
         from .multimodel_benchmark import MultiModelBenchmarkEngine
         engine = MultiModelBenchmarkEngine()
@@ -135,7 +135,7 @@ def test_reproduce_isolated_boundary():
         print("-" * 70)
         return 0
 
-    # ── advisories ────────────────────────────────────────────────────────────
+    #  advisories 
     if command == "advisories":
         engine = BartholomewEngine(secret_key="bartholomew-cli-demo")
         advisories = engine.get_security_advisories()
@@ -147,7 +147,7 @@ def test_reproduce_isolated_boundary():
             print()
         return 0
 
-    # ── init ──────────────────────────────────────────────────────────────────
+    #  init 
     if command == "init":
         filename = "secured_agent_sample.py"
         sample_code = (
@@ -167,7 +167,7 @@ def test_reproduce_isolated_boundary():
             print(f"[ERROR] Failed to create template: {e}")
             return 1
 
-    # ── scan ──────────────────────────────────────────────────────────────────
+    #  scan 
     if command in ("scan", "audit"):
         if len(args) < 2:
             print("[ERROR] Missing JSON trajectory file path. Usage: bartholomew scan <file.json>")
@@ -185,7 +185,7 @@ def test_reproduce_isolated_boundary():
             print(f"[ERROR] Failed to scan `{filepath}`: {e}")
             return 1
 
-    # ── scan-codebase ─────────────────────────────────────────────────────────
+    #  scan-codebase 
     if command in ("scan-codebase", "scan-vulnerabilities", "vuln-scan"):
         from .vulnerability_scanner import BartholomewVulnerabilityScanner
         target_dir = args[1] if len(args) > 1 else "."
@@ -195,7 +195,7 @@ def test_reproduce_isolated_boundary():
         print(json.dumps(report, indent=2))
         return 0 if report.get("total_vulnerabilities", 0) == 0 else 1
 
-    # ── report ────────────────────────────────────────────────────────────────
+    #  report 
     if command == "report":
         if len(args) < 2:
             print("[ERROR] Missing JSON trajectory file. Usage: bartholomew report <file.json>")
@@ -218,7 +218,7 @@ def test_reproduce_isolated_boundary():
             print(f"[ERROR] Failed to generate report: {e}")
             return 1
 
-    # ── benchmark ─────────────────────────────────────────────────────────────
+    #  benchmark 
     if command == "benchmark":
         n = int(args[1]) if len(args) > 1 and args[1].isdigit() else 100
         print(f"[BARTHOLOMEW] Running latency & throughput benchmark ({n} synthetic trajectories)...")
@@ -251,7 +251,7 @@ def test_reproduce_isolated_boundary():
         print(f"{'-'*60}\n")
         return 0
 
-    # ── swarm ─────────────────────────────────────────────────────────────────
+    #  swarm 
     if command == "swarm":
         if len(args) < 2:
             print("[ERROR] Missing proposals JSON. Usage: bartholomew swarm <proposals.json>")

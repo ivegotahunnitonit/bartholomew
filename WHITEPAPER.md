@@ -17,9 +17,9 @@ BTP canonicalizes arbitrary execution payloads using **RFC 8785 (JSON Canonicali
 
 ```
                        [ BTP v2.2 THREE-TIER DEFENSE ARCHITECTURE ]
-                                             │
-      ┌──────────────────────────────────────┼──────────────────────────────────────┐
-      ▼                                      ▼                                      ▼
+                                             
+      
+                                                                                  
 [ Tier 1: In-Memory Fast Gate ]   [ Tier 2: Hermetic OS Process ]   [ Tier 3: Disposable Container ]
   • RFC 8785 + Ed25519              • Argv tokenization (shlex)       • Ephemeral Docker microVM
   • AST static analysis             • os.path.commonpath containment  • --network none (0 egress)

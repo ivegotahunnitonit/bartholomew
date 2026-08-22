@@ -60,13 +60,13 @@ function runInstantEngineCycle() {
   const timestamp = new Date().toISOString();
 
   console.log(`\n====================================================`);
-  console.log(`  ⚡ UN-BOTTLENECKED INSTANT REVENUE ENGINE — CYCLE #${cycleCount}`);
-  console.log(`  🕒 Timestamp: ${timestamp}`);
-  console.log(`  🚫 Policy: 0% Human Review / 0% Bottleneck / $0.00 Outgoing`);
+  console.log(`   UN-BOTTLENECKED INSTANT REVENUE ENGINE — CYCLE #${cycleCount}`);
+  console.log(`   Timestamp: ${timestamp}`);
+  console.log(`   Policy: 0% Human Review / 0% Bottleneck / $0.00 Outgoing`);
   console.log(`====================================================`);
 
   INSTANT_CHANNELS.forEach(ch => {
-    console.log(`✓ [${ch.id}] ${ch.name} | Status: ${ch.bottleneck_status} | Speed: ${ch.payout_speed}`);
+    console.log(` [${ch.id}] ${ch.name} | Status: ${ch.bottleneck_status} | Speed: ${ch.payout_speed}`);
   });
 
   fs.writeFileSync('INSTANT_ENGINE_STATUS.json', JSON.stringify({
@@ -84,6 +84,6 @@ function runInstantEngineCycle() {
   console.log(`====================================================\n`);
 }
 
-console.log('🚀 INSTANT UN-BOTTLENECKED ENGINE LAUNCHED — POLLING PROGRAMMATIC CHANNELS 24/7');
+console.log(' INSTANT UN-BOTTLENECKED ENGINE LAUNCHED — POLLING PROGRAMMATIC CHANNELS 24/7');
 runInstantEngineCycle();
 setInterval(runInstantEngineCycle, 10000); // 10s loop

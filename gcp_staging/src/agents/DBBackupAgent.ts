@@ -60,9 +60,9 @@ export class DBBackupAgent {
       }
 
       const sizeMB = (fs.statSync(backupPath).size / 1024 / 1024).toFixed(2);
-      console.log(`[DBBackup] ✅ Backup #${backupCount}: ${path.basename(backupPath)} (${sizeMB}MB)`);
+      console.log(`[DBBackup]  Backup #${backupCount}: ${path.basename(backupPath)} (${sizeMB}MB)`);
     } catch (err: any) {
-      console.error(`[DBBackup] ❌ Backup failed: ${err.message}`);
+      console.error(`[DBBackup]  Backup failed: ${err.message}`);
       this.attemptRestore();
     }
   }
@@ -74,9 +74,9 @@ export class DBBackupAgent {
     }
     try {
       fs.copyFileSync(lastCleanBackup, DB_PATH);
-      console.log(`[DBBackup] ✅ Database restored from: ${path.basename(lastCleanBackup)}`);
+      console.log(`[DBBackup]  Database restored from: ${path.basename(lastCleanBackup)}`);
     } catch (err: any) {
-      console.error(`[DBBackup] ❌ Restore failed: ${err.message}`);
+      console.error(`[DBBackup]  Restore failed: ${err.message}`);
     }
   }
 

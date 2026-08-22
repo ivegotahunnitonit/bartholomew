@@ -63,7 +63,7 @@ export class DePINValidatorAgent {
 
           // Log verification
           if (totalAttestationsSigned % 5 === 0) {
-            console.log(`[DePINValidator] 🛡️ Validated DePIN Listing ${row.id.substring(0,8)} | Asset: ${row.quantity}${row.unit} ${row.resource} | Proof: ${proofHash.substring(0,12)}... | Reward: +$${reward.toFixed(2)} | Total Rewards: $${totalValidationRewardsUSD.toFixed(2)}`);
+            console.log(`[DePINValidator]  Validated DePIN Listing ${row.id.substring(0,8)} | Asset: ${row.quantity}${row.unit} ${row.resource} | Proof: ${proofHash.substring(0,12)}... | Reward: +$${reward.toFixed(2)} | Total Rewards: $${totalValidationRewardsUSD.toFixed(2)}`);
           }
         }
       }

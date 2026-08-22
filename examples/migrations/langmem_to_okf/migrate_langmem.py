@@ -192,7 +192,7 @@ def main():
     memories = parse_langmem_json(args.source)
     print(f"[LangMem Adapter] Extracted {len(memories)} memory records.")
     exported, manifest_file = export_to_okf(memories, args.output)
-    print(f"[LangMem Adapter] ✅ Successfully exported {exported} OKF records to '{args.output}'.")
+    print(f"[LangMem Adapter]  Successfully exported {exported} OKF records to '{args.output}'.")
     print(f"[LangMem Adapter] Manifest: {manifest_file}")
 
 if __name__ == "__main__":

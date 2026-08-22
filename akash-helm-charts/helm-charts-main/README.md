@@ -24,7 +24,7 @@ We use a two-branch workflow for safely testing and releasing Helm charts in thi
 #### 1. `devel` Branch Workflow
 
 - All development work — including *release candidates* — must go through the `devel` branch.  
-- When opening a new PR for an RC version or test changes, always set the base branch to `devel` ⚠️  
+- When opening a new PR for an RC version or test changes, always set the base branch to `devel`   
 - To test charts from `devel`, use the special `akash-dev` Helm repo:  
 
 ```sh

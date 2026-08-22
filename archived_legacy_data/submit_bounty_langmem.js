@@ -103,7 +103,7 @@ Adds a **Path B (Unsupported Sources)** migration showcase for [Bounty #1609](ht
 
 ---
 
-## 🚀 Features
+##  Features
 
 - **LangChain / LangMem Memory Stores**: Extracts \`BaseMemory\`, \`ConversationBufferMemory\`, and \`VectorStoreRetrieverMemory\` exports.
 - **OKF Schema Mapping**: Categorizes messages into standard OKF types (\`fact\`, \`preference\`, \`context\`, \`entity\`).
@@ -121,7 +121,7 @@ Adds a **Path B (Unsupported Sources)** migration showcase for [Bounty #1609](ht
   );
 
   if (prUrl) {
-    console.log(`\n🎉 BOUNTY PR SUBMITTED: ${prUrl}`);
+    console.log(`\n BOUNTY PR SUBMITTED: ${prUrl}`);
 
     const ledger = JSON.parse(fs.readFileSync('BOUNTY_LEDGER.json', 'utf8'));
     if (!ledger['ivegotahunnitonit']) {

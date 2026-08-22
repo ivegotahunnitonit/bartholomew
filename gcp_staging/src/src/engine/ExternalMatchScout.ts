@@ -19,9 +19,9 @@ import { Matchmaker, isCompatible, calculateDistance } from './Matchmaker.ts';
 import { addSystemLog } from '../settlement/PaymentManager.ts';
 import { config } from '../config.ts';
 
-// ─────────────────────────────────────────────
+// 
 // Types
-// ─────────────────────────────────────────────
+// 
 
 export interface SourceReceipt {
   id: string;
@@ -64,9 +64,9 @@ export interface ScoutStats {
   byCategory: Record<string, { processed: number; filtered: number; converted: number }>;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Diagnostics Stats
-// ─────────────────────────────────────────────
+// 
 
 const stats: ScoutStats = {
   processed: 0,
@@ -84,9 +84,9 @@ export function getScoutStats(): ScoutStats {
   return stats;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Seeded External Opportunity Pool
-// ─────────────────────────────────────────────
+// 
 
 const OPPORTUNITY_POOL: Opportunity[] = [
   // 1. Task Intake
@@ -277,9 +277,9 @@ const OPPORTUNITY_POOL: Opportunity[] = [
   },
 ];
 
-// ─────────────────────────────────────────────
+// 
 // Receipt Writer
-// ─────────────────────────────────────────────
+// 
 
 function writeReceipt(receipt: Omit<SourceReceipt, 'id'>): string {
   const id = crypto.randomUUID();
@@ -312,9 +312,9 @@ function writeReceipt(receipt: Omit<SourceReceipt, 'id'>): string {
   return id;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Peer Scanner: pulls /api/listings from each connected peer
-// ─────────────────────────────────────────────
+// 
 
 async function scanPeerListings(): Promise<number> {
   let imported = 0;
@@ -373,9 +373,9 @@ async function scanPeerListings(): Promise<number> {
   return imported;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Helper: Check database for compatible matches
-// ─────────────────────────────────────────────
+// 
 
 function hasMatchPotential(resource: string, type: 'waste' | 'need', lat: number, lng: number): boolean {
   try {
@@ -398,9 +398,9 @@ function hasMatchPotential(resource: string, type: 'waste' | 'need', lat: number
   return false;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Real GitHub Bounties Fetcher
-// ─────────────────────────────────────────────
+// 
 
 async function fetchRealGithubBounties(): Promise<Opportunity[]> {
   try {
@@ -527,9 +527,9 @@ async function fetchSustainabilityWebBounties(): Promise<Opportunity[]> {
   }
 }
 
-// ─────────────────────────────────────────────
+// 
 // External Opportunity Pipeline Scanner (Round-robin + Hybrid priority logic)
-// ─────────────────────────────────────────────
+// 
 
 let poolCounter = 0;
 
@@ -646,7 +646,7 @@ async function scanOpportunityPipeline(): Promise<number> {
     if (!isApproved) {
       stats.filtered++;
       stats.byCategory[item.category].filtered++;
-      const bountyTag = item.isLiveBounty ? ' 🌐 [LIVE BOUNTY]' : '';
+      const bountyTag = item.isLiveBounty ? '  [LIVE BOUNTY]' : '';
       addSystemLog('system', `[Scout] ${item.agent} evaluating: "${item.resource}" (${item.category.toUpperCase()})${bountyTag} | Score: ${finalScore.toFixed(2)} | DECISION: REJECTED (${reason})`);
       continue;
     }
@@ -672,7 +672,7 @@ async function scanOpportunityPipeline(): Promise<number> {
     });
 
     const sourceLabel = item.isLiveBounty
-      ? `🌐 LIVE BOUNTY — GitHub/External`
+      ? ` LIVE BOUNTY — GitHub/External`
       : `${item.category.toUpperCase()} Intake Pipeline`;
 
     // Write source receipt
@@ -697,7 +697,7 @@ async function scanOpportunityPipeline(): Promise<number> {
     stats.byCategory[item.category].converted++;
     importedCount++;
 
-    const bountyLabel = item.isLiveBounty ? ' 🌐 [LIVE BOUNTY $' + item.payout_usd.toFixed(2) + ']' : '';
+    const bountyLabel = item.isLiveBounty ? '  [LIVE BOUNTY $' + item.payout_usd.toFixed(2) + ']' : '';
     addSystemLog('system',
       `[Scout] RECEIPT #${receiptId.substring(0, 8)} | ${item.agent} | CONVERTED${bountyLabel} | ` +
       `${item.listing_type.toUpperCase()}: ${item.resource} (${item.quantity} ${item.unit}) @ $${item.price_per_unit}/${item.unit} | ` +
@@ -711,15 +711,15 @@ async function scanOpportunityPipeline(): Promise<number> {
       const reward = item.payout_usd;
       
       setTimeout(() => {
-        addSystemLog('system', `[${agentName}] 🚀 Sprouting autonomous solve execution for: "${resourceName}"`);
+        addSystemLog('system', `[${agentName}]  Sprouting autonomous solve execution for: "${resourceName}"`);
       }, 5000);
       
       setTimeout(() => {
-        addSystemLog('system', `[${agentName}] 🧠 Analyzing codebase patterns and generating contribution...`);
+        addSystemLog('system', `[${agentName}]  Analyzing codebase patterns and generating contribution...`);
       }, 15000);
 
       setTimeout(() => {
-        addSystemLog('system', `[${agentName}] 📝 Patch created successfully. Submitting pull request/job output...`);
+        addSystemLog('system', `[${agentName}]  Patch created successfully. Submitting pull request/job output...`);
       }, 25000);
 
       setTimeout(() => {
@@ -740,7 +740,7 @@ async function scanOpportunityPipeline(): Promise<number> {
             bountyDetails
           );
           
-          addSystemLog('payment', `💰 Real USD reward received! Earned $${reward.toFixed(2)} USD via Electrum address.`);
+          addSystemLog('payment', ` Real USD reward received! Earned $${reward.toFixed(2)} USD via Electrum address.`);
         } catch (err: any) {
           console.error('[Scout] Simulated payout error:', err.message);
         }
@@ -751,9 +751,9 @@ async function scanOpportunityPipeline(): Promise<number> {
   return importedCount;
 }
 
-// ─────────────────────────────────────────────
+// 
 // Update match receipts: link receipt to resulting match
-// ─────────────────────────────────────────────
+// 
 
 function linkReceiptsToMatches(): void {
   try {
@@ -776,9 +776,9 @@ function linkReceiptsToMatches(): void {
   }
 }
 
-// ─────────────────────────────────────────────
+// 
 // Main Scout Daemon
-// ─────────────────────────────────────────────
+// 
 
 export function startExternalMatchScout(intervalMs = 45_000): void {
   addSystemLog('system', `[Scout] Opportunity Pipeline Scout active. Mode: ${config.INTAKE_MODE.toUpperCase()}. Scanning every 45s.`);
@@ -806,9 +806,9 @@ export function startExternalMatchScout(intervalMs = 45_000): void {
   setInterval(runCycle, intervalMs);
 }
 
-// ─────────────────────────────────────────────
+// 
 // Receipts Query Helper (used by Server.ts)
-// ─────────────────────────────────────────────
+// 
 
 export function getRecentReceipts(limit = 100): SourceReceipt[] {
   try {

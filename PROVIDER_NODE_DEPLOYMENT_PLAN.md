@@ -1,10 +1,10 @@
-# 🚀 BARTHOLOMEW MAINNET PROVIDER NODE DEPLOYMENT & UNIT ECONOMICS
+#  BARTHOLOMEW MAINNET PROVIDER NODE DEPLOYMENT & UNIT ECONOMICS
 
 This document outlines the unit economics, ROI projection, and deployment automation for running Bartholomew-guarded mainnet compute provider nodes on Golem and Akash networks.
 
 ---
 
-## 💰 Unit Economics & Profit Margin (Favorable Returns)
+##  Unit Economics & Profit Margin (Favorable Returns)
 
 | Parameter | Single Node Cost / Month | Expected Monthly Revenue | Net Monthly Profit | Net Profit Margin |
 | :--- | :--- | :--- | :--- | :--- |
@@ -16,7 +16,7 @@ This document outlines the unit economics, ROI projection, and deployment automa
 
 ---
 
-## 🔑 Payout Sink Wallet Address
+##  Payout Sink Wallet Address
 - **Owner / Creator**: Bartholomew AI Contributors
 - **Email**: `contact@bartholomew.info`
 - **EVM Mainnet Payout Wallet**: `0x71C7656EC7ab88b098defB751B7401B5f6d8976F`
@@ -24,7 +24,7 @@ This document outlines the unit economics, ROI projection, and deployment automa
 
 ---
 
-## 🛠️ Step-by-Step Node Deployment Commands
+##  Step-by-Step Node Deployment Commands
 
 ### 1. Provision Ubuntu 24.04 LTS Server
 ```bash

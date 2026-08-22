@@ -102,7 +102,7 @@ def build_profile_readme():
 
 ---
 
-## 🔒 **Intellectual Property & Commercial Protection Notice**
+##  **Intellectual Property & Commercial Protection Notice**
 
 > **NOTICE OF PROPRIETARY OWNERSHIP & RESTRICTED COMMERCIAL USE:**
 > 
@@ -116,7 +116,7 @@ For commercial enterprise licensing, contact: **`help@bartholomew.info`**.
 
 ---
 
-## ⚡ **Key Engineering Achievements**
+##  **Key Engineering Achievements**
 
 * **1,000,000 Deterministic Cycles:** Tested across 12 parallel CPU cores with **100.0000% reliability (0 failures)**.
 * **1.14 &mu;s Go Trajectory Daemon:** 11.98 million operations/second inline security firewall.

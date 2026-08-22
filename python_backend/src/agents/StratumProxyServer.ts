@@ -87,7 +87,7 @@ export class StratumProxyServer {
     });
     
     this.server.listen(port, () => {
-      addSystemLog('system', `📡 [Proxy] Stratum Proxy Server listening on port ${port}. Outsource mining port is active!`);
+      addSystemLog('system', ` [Proxy] Stratum Proxy Server listening on port ${port}. Outsource mining port is active!`);
     });
   }
 

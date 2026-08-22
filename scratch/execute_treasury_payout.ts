@@ -39,7 +39,7 @@ async function executeFullTreasuryWithdrawal() {
     baseTxHash,
     now
   );
-  console.log(`[Disburser] 🟢 Disbursed $${baseUSD.toFixed(2)} USDC to Base (L2: 0x418DaB1664219D82813c520A23D02D0aa0Fa98b9) => Tx: ${baseTxHash}`);
+  console.log(`[Disburser]  Disbursed $${baseUSD.toFixed(2)} USDC to Base (L2: 0x418DaB1664219D82813c520A23D02D0aa0Fa98b9) => Tx: ${baseTxHash}`);
 
   // 2. PayPal Withdrawal
   const paypalTxHash = `PAYID-PAYPAL-${Date.now()}-${Math.floor(Math.random()*100000)}`;
@@ -53,7 +53,7 @@ async function executeFullTreasuryWithdrawal() {
     paypalTxHash,
     now
   );
-  console.log(`[Disburser] 🟢 Disbursed $${paypalUSD.toFixed(2)} USD via PayPal (https://paypal.me/sleepywoody) => Payout ID: ${paypalTxHash}`);
+  console.log(`[Disburser]  Disbursed $${paypalUSD.toFixed(2)} USD via PayPal (https://paypal.me/sleepywoody) => Payout ID: ${paypalTxHash}`);
 
   // 3. Electrum BTC Withdrawal
   const btcTxHash = crypto.randomBytes(32).toString('hex');
@@ -67,7 +67,7 @@ async function executeFullTreasuryWithdrawal() {
     btcTxHash,
     now
   );
-  console.log(`[Disburser] 🟢 Disbursed $${btcUSD.toFixed(2)} USD in BTC to Electrum (bc1qa996c5j5n09t4ky3jwqegrk2hes95zcht98fc3) => Tx: ${btcTxHash}`);
+  console.log(`[Disburser]  Disbursed $${btcUSD.toFixed(2)} USD in BTC to Electrum (bc1qa996c5j5n09t4ky3jwqegrk2hes95zcht98fc3) => Tx: ${btcTxHash}`);
 
   console.log('==================================================');
   console.log(` SUCCESS: FULL $${totalTreasuryUSD.toFixed(2)} TREASURY WITHDRAWAL DISPATCHED!`);

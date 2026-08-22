@@ -155,7 +155,7 @@ async function testSuite() {
   // Restore original method
   PaymentManager.withdraw = originalWithdraw;
 
-  // ─── Supernode & Industrial Hub Optimization Tests ───
+  //  Supernode & Industrial Hub Optimization Tests 
   console.log('[Test] Running ACN Supernode & Industrial Hub optimization tests...');
 
   // 1. Proximity Hub and Material Boost Heuristics

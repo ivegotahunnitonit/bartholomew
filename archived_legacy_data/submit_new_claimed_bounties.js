@@ -144,7 +144,7 @@ Implemented strict egress IP validation: resolves target hostname to IP address 
 ];
 
 async function submitSolutions() {
-  console.log('🚀 Submitting PRs for newly claimed bounties...\n');
+  console.log(' Submitting PRs for newly claimed bounties...\n');
 
   for (const sol of NEW_BOUNTY_SOLUTIONS) {
     const issueCommentUrl = `https://api.github.com/repos/${sol.repo}/issues/${sol.issue}/comments`;
@@ -156,13 +156,13 @@ async function submitSolutions() {
     });
 
     if (status === 201) {
-      console.log(`✅ [Comment Submitted] ${sol.repo} #${sol.issue} ($${sol.reward_usd} USD) → ${data.html_url}`);
+      console.log(` [Comment Submitted] ${sol.repo} #${sol.issue} ($${sol.reward_usd} USD) → ${data.html_url}`);
     } else {
-      console.log(`⚠️ [Comment Result ${status}] ${sol.repo} #${sol.issue}: ${data.message || JSON.stringify(data)}`);
+      console.log(` [Comment Result ${status}] ${sol.repo} #${sol.issue}: ${data.message || JSON.stringify(data)}`);
     }
   }
 
-  console.log('\n🎉 ALL NEW BOUNTY SOLUTIONS SUBMITTED & LOGGED!');
+  console.log('\n ALL NEW BOUNTY SOLUTIONS SUBMITTED & LOGGED!');
 }
 
 submitSolutions();

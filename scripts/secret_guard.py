@@ -74,7 +74,7 @@ def install_git_hook(root_dir):
         "# Bartholomew Secret Guard Pre-Commit Hook\n"
         "python scripts/secret_guard.py .\n"
         "if [ $? -ne 0 ]; then\n"
-        "  echo '🚨 [BARTHOLOMEW SECRET GUARD] Pre-commit hook failed! Fix exposed Bearer tokens or credentials before committing.'\n"
+        "  echo ' [BARTHOLOMEW SECRET GUARD] Pre-commit hook failed! Fix exposed Bearer tokens or credentials before committing.'\n"
         "  exit 1\n"
         "fi\n"
     )

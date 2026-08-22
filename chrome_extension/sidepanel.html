@@ -15,7 +15,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="brand">
-        <div class="logo-circle">⚡</div>
+        <div class="logo-circle"></div>
         <div>
           <h2>Bartholomew</h2>
           <span class="version-tag">Autonomous Copilot</span>
@@ -26,7 +26,7 @@
           <span class="status-dot online"></span>
           <span class="status-text">Connected</span>
         </div>
-        <button class="icon-btn" id="settings-toggle-btn" title="Model & API Key Settings">⚙️</button>
+        <button class="icon-btn" id="settings-toggle-btn" title="Model & API Key Settings"></button>
       </div>
     </header>
 
@@ -34,7 +34,7 @@
     <div class="settings-modal" id="settings-modal" style="display: none;">
       <div class="settings-content">
         <div class="settings-header">
-          <h3>⚙️ AI Provider Settings</h3>
+          <h3> AI Provider Settings</h3>
           <span class="close-settings" id="close-settings-btn">×</span>
         </div>
         <div class="settings-body">
@@ -63,14 +63,14 @@
 
     <!-- Mode Selector Tabs -->
     <nav class="mode-tabs">
-      <button class="tab-btn active" data-mode="ci-rescue">⚡ CI Rescue</button>
-      <button class="tab-btn" data-mode="code-audit">🔍 Audit & Refactor</button>
-      <button class="tab-btn" data-mode="assistant">💬 Chat</button>
+      <button class="tab-btn active" data-mode="ci-rescue"> CI Rescue</button>
+      <button class="tab-btn" data-mode="code-audit"> Audit & Refactor</button>
+      <button class="tab-btn" data-mode="assistant"> Chat</button>
     </nav>
 
     <!-- Context Bar (shows active repo/page) -->
     <div class="context-bar" id="context-bar">
-      <span class="context-icon">🌐</span>
+      <span class="context-icon"></span>
       <span class="context-text" id="active-tab-title">Inspecting Active GitHub Tab...</span>
     </div>
 
@@ -78,7 +78,7 @@
     <main class="chat-area" id="chat-messages">
       <!-- Welcome Message -->
       <div class="message system-msg">
-        <div class="avatar">⚡</div>
+        <div class="avatar"></div>
         <div class="msg-body">
           <p><strong>Hello! I am Bartholomew.</strong></p>
           <p>I'm your autonomous developer companion. When you encounter a failing CI run, broken test, or complex code on GitHub, I can:</p>
@@ -93,9 +93,9 @@
 
     <!-- Quick Action Pills -->
     <div class="quick-pills">
-      <button class="pill" id="pill-diagnose">🔍 Diagnose Failing CI</button>
-      <button class="pill" id="pill-repro">🧪 Generate Reproducer</button>
-      <button class="pill" id="pill-refactor">🛠️ Refactor Code</button>
+      <button class="pill" id="pill-diagnose"> Diagnose Failing CI</button>
+      <button class="pill" id="pill-repro"> Generate Reproducer</button>
+      <button class="pill" id="pill-refactor"> Refactor Code</button>
     </div>
 
     <!-- Input Bar -->

@@ -60,8 +60,8 @@ ledger_instance = AuditFirmLedger()
 def main():
     ledger_instance.record_audit_certificate("FintechBot_v1", "hash_123456789")
     ledger_instance.record_audit_certificate("SupportBot_v2", "hash_987654321")
-    print(f"✅ Audit Ledger Hashchain Length: {len(ledger_instance.chain)}")
-    print(f"🔒 Cryptographic Integrity Verified: {ledger_instance.verify_ledger_integrity()}")
+    print(f" Audit Ledger Hashchain Length: {len(ledger_instance.chain)}")
+    print(f" Cryptographic Integrity Verified: {ledger_instance.verify_ledger_integrity()}")
     print(json.dumps(ledger_instance.chain, indent=2))
 
 if __name__ == "__main__":

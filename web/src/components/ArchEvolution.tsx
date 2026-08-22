@@ -101,7 +101,7 @@ export default function ArchEvolution() {
                   <ul className="flex flex-col gap-1.5">
                     {era.milestones.map(m => (
                       <li key={m} className="flex items-start gap-2 text-sm" style={{ color: '#94a3b8' }}>
-                        <span className="text-xs mt-0.5" style={{ color: era.color }}>▸</span>
+                        <span className="text-xs mt-0.5" style={{ color: era.color }}></span>
                         {m}
                       </li>
                     ))}

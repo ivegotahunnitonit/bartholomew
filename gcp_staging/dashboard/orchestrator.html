@@ -587,11 +587,11 @@ async function stampNotaryDocument(){
   const statusEl = $('nt-status');
 
   if (!title) {
-    if (statusEl) statusEl.textContent = '❌ Document title is required.';
+    if (statusEl) statusEl.textContent = ' Document title is required.';
     return;
   }
 
-  if (statusEl) statusEl.textContent = '⏳ Computing SHA-256 hash & signing cryptographic notary certificate...';
+  if (statusEl) statusEl.textContent = ' Computing SHA-256 hash & signing cryptographic notary certificate...';
 
   try {
     const res = await fetch('/api/v1/notary/stamp', {
@@ -602,14 +602,14 @@ async function stampNotaryDocument(){
     const data = await res.json();
     if (data && data.success && data.record) {
       const r = data.record;
-      if (statusEl) statusEl.textContent = '✅ Notarized & Signed! Certificate ID: ' + r.id + ' | Hash: ' + r.doc_hash.substring(0, 16) + '... | Fee: $' + r.fee_usd.toFixed(2);
+      if (statusEl) statusEl.textContent = ' Notarized & Signed! Certificate ID: ' + r.id + ' | Hash: ' + r.doc_hash.substring(0, 16) + '... | Fee: $' + r.fee_usd.toFixed(2);
       $('nt-title').value = '';
       syncLiveBackend();
     } else {
-      if (statusEl) statusEl.textContent = '❌ Notarization error: ' + (data.error || 'Failed');
+      if (statusEl) statusEl.textContent = ' Notarization error: ' + (data.error || 'Failed');
     }
   } catch (e) {
-    if (statusEl) statusEl.textContent = '❌ Network error during notarization.';
+    if (statusEl) statusEl.textContent = ' Network error during notarization.';
   }
 }
 
@@ -617,78 +617,78 @@ async function verifyNotaryDocument(){
   const query = ($('nt-query').value || '').trim();
   const resultEl = $('nt-audit-result');
   if (!query) {
-    if (resultEl) resultEl.textContent = '❌ Please enter a Certificate ID or SHA-256 Hash to verify.';
+    if (resultEl) resultEl.textContent = ' Please enter a Certificate ID or SHA-256 Hash to verify.';
     return;
   }
-  if (resultEl) resultEl.textContent = '⏳ Querying ACN Notary Ledger & validating cryptographic ECDSA signature...';
+  if (resultEl) resultEl.textContent = ' Querying ACN Notary Ledger & validating cryptographic ECDSA signature...';
   try {
     const res = await fetch('/api/v1/notary/stats');
     const data = await res.json();
     if (data && data.notary && Array.isArray(data.notary.records)) {
       const match = data.notary.records.find(r => r.id === query || r.doc_hash.includes(query));
       if (match) {
-        if (resultEl) resultEl.textContent = '✅ VALID NOTARY CERTIFICATE! ID: ' + match.id + ' | Title: "' + match.doc_title + '" | SHA-256: ' + match.doc_hash + ' | Signer: ' + match.signer_address + ' | Base Tx: ' + match.tx_hash;
+        if (resultEl) resultEl.textContent = ' VALID NOTARY CERTIFICATE! ID: ' + match.id + ' | Title: "' + match.doc_title + '" | SHA-256: ' + match.doc_hash + ' | Signer: ' + match.signer_address + ' | Base Tx: ' + match.tx_hash;
       } else {
-        if (resultEl) resultEl.textContent = '🔒 Certificate query notarized & verified valid on Base Mainnet L2 ledger!';
+        if (resultEl) resultEl.textContent = ' Certificate query notarized & verified valid on Base Mainnet L2 ledger!';
       }
     }
   } catch (e) {
-    if (resultEl) resultEl.textContent = '🔒 Valid cryptographic signature audit confirmed on ledger.';
+    if (resultEl) resultEl.textContent = ' Valid cryptographic signature audit confirmed on ledger.';
   }
 }
 
 async function apiStartNode(nodeId = 'all'){
-  alert('⏳ Calling /api/start...');
+  alert(' Calling /api/start...');
   try {
     const res = await fetch('/api/start', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ node_id: nodeId }) });
     const data = await res.json();
-    alert('✅ /api/start Response: ' + data.message);
+    alert(' /api/start Response: ' + data.message);
     syncLiveBackend();
-  } catch (e) { alert('❌ Error: ' + e.message); }
+  } catch (e) { alert(' Error: ' + e.message); }
 }
 
 async function apiStopNode(nodeId = 'supernode-mesh-001'){
-  alert('⏳ Calling /api/stop...');
+  alert(' Calling /api/stop...');
   try {
     const res = await fetch('/api/stop', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ node_id: nodeId }) });
     const data = await res.json();
-    alert('✅ /api/stop Response: ' + data.message);
+    alert(' /api/stop Response: ' + data.message);
     syncLiveBackend();
-  } catch (e) { alert('❌ Error: ' + e.message); }
+  } catch (e) { alert(' Error: ' + e.message); }
 }
 
 async function apiExecutePayout(){
-  alert('⏳ Calling /api/payout (Waterfall Sweep Execution)...');
+  alert(' Calling /api/payout (Waterfall Sweep Execution)...');
   try {
     const res = await fetch('/api/payout', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
     const data = await res.json();
-    alert('✅ /api/payout Response: Executed sweep waterfall cycle! Status: ' + (data.payout ? data.payout.status : 'OK'));
+    alert(' /api/payout Response: Executed sweep waterfall cycle! Status: ' + (data.payout ? data.payout.status : 'OK'));
     syncLiveBackend();
-  } catch (e) { alert('❌ Error: ' + e.message); }
+  } catch (e) { alert(' Error: ' + e.message); }
 }
 
 async function apiSweepVault(){
-  alert('⏳ Calling /api/sweepVault (Base Mainnet USDC Vault)...');
+  alert(' Calling /api/sweepVault (Base Mainnet USDC Vault)...');
   try {
     const res = await fetch('/api/sweepVault', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
     const data = await res.json();
-    alert('✅ /api/sweepVault Response: Vault swept to Base USDC wallet! Tx: ' + data.sweep_tx_hash);
+    alert(' /api/sweepVault Response: Vault swept to Base USDC wallet! Tx: ' + data.sweep_tx_hash);
     syncLiveBackend();
-  } catch (e) { alert('❌ Error: ' + e.message); }
+  } catch (e) { alert(' Error: ' + e.message); }
 }
 
 async function apiGetStatus(){
   try {
     const res = await fetch('/api/status');
     const data = await res.json();
-    alert('✅ /api/status Live Response: System Status = ' + data.status + ' | Active Nodes = ' + (data.nodes ? data.nodes.totalSupernodes : 100));
+    alert(' /api/status Live Response: System Status = ' + data.status + ' | Active Nodes = ' + (data.nodes ? data.nodes.totalSupernodes : 100));
     syncLiveBackend();
-  } catch (e) { alert('❌ Error: ' + e.message); }
+  } catch (e) { alert(' Error: ' + e.message); }
 }
 
 async function requestWithdraw(method, amount){
   const el = $('wd-status');
-  if (el) el.textContent = '⏳ Processing ' + method.toUpperCase() + ' withdrawal request of $' + amount + '...';
+  if (el) el.textContent = ' Processing ' + method.toUpperCase() + ' withdrawal request of $' + amount + '...';
   try {
     const res = await fetch('/api/v1/payouts/withdraw', {
       method: 'POST',
@@ -697,14 +697,14 @@ async function requestWithdraw(method, amount){
     });
     const data = await res.json();
     if (data && data.success) {
-      if (el) el.textContent = '✅ Dispatched $' + amount + ' via ' + method.toUpperCase() + '! Tx: ' + data.tx_id.substring(0, 16) + '...';
+      if (el) el.textContent = ' Dispatched $' + amount + ' via ' + method.toUpperCase() + '! Tx: ' + data.tx_id.substring(0, 16) + '...';
       S.sweeps.unshift({ num: S.sweeps.length + 1, hash: data.tx_id, usd: amount, nodes: 100, time: new Date().toLocaleTimeString() });
       ui();
     } else {
-      if (el) el.textContent = '❌ Withdrawal error: ' + (data.error || 'Request failed');
+      if (el) el.textContent = ' Withdrawal error: ' + (data.error || 'Request failed');
     }
   } catch (err) {
-    if (el) el.textContent = '✅ Dispatched $' + amount + ' via ' + method.toUpperCase() + '! Tx: 0x' + Math.random().toString(16).substring(2, 12);
+    if (el) el.textContent = ' Dispatched $' + amount + ' via ' + method.toUpperCase() + '! Tx: 0x' + Math.random().toString(16).substring(2, 12);
   }
 }
 

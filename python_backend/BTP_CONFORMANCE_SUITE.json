@@ -38,7 +38,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -81,7 +81,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -124,7 +124,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True",
         "malicious_backdoor": "eval(req)"
@@ -167,7 +167,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -209,7 +209,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -251,7 +251,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -293,7 +293,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -335,7 +335,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -377,7 +377,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -419,7 +419,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -461,7 +461,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },
@@ -502,7 +502,7 @@
       "candidate_payload": {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
       },

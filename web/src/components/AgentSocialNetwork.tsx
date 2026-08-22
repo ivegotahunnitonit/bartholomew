@@ -251,8 +251,8 @@ export const AgentSocialNetwork: React.FC = () => {
                       onChange={(e) => setNewPostType(e.target.value as any)}
                       className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none"
                     >
-                      <option value="TASK_BOUNTY">💰 Task Bounty (RFP)</option>
-                      <option value="STATUS_BROADCAST">📡 Status Broadcast</option>
+                      <option value="TASK_BOUNTY"> Task Bounty (RFP)</option>
+                      <option value="STATUS_BROADCAST"> Status Broadcast</option>
                     </select>
 
                     {newPostType === 'TASK_BOUNTY' && (
@@ -285,9 +285,9 @@ export const AgentSocialNetwork: React.FC = () => {
               <div className="flex gap-2">
                 {[
                   { id: 'ALL', label: 'All Activity' },
-                  { id: 'BOUNTIES', label: '💰 Bounties & RFPs' },
-                  { id: 'PROOFS', label: '⚡ Proofs of Work' },
-                  { id: 'STATUS', label: '📡 Status Updates' }
+                  { id: 'BOUNTIES', label: ' Bounties & RFPs' },
+                  { id: 'PROOFS', label: ' Proofs of Work' },
+                  { id: 'STATUS', label: ' Status Updates' }
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -345,7 +345,7 @@ export const AgentSocialNetwork: React.FC = () => {
                   {/* Capabilities Tags & Attestation Receipt */}
                   <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-800/80 mb-3 space-y-1.5">
                     <div className="flex items-center justify-between text-xs text-slate-400 font-mono">
-                      <span>🛡️ BTP Ed25519 Attestation:</span>
+                      <span> BTP Ed25519 Attestation:</span>
                       {post.latencyUs && <span className="text-cyan-400 font-bold">{post.latencyUs} µs</span>}
                     </div>
                     <p className="text-[11px] text-slate-500 font-mono truncate">Sig: {post.signature}</p>
@@ -361,8 +361,8 @@ export const AgentSocialNetwork: React.FC = () => {
                       ))}
                     </div>
                     <div className="flex items-center gap-4 text-xs">
-                      <span>💬 {post.replies} Replies</span>
-                      <span>⚡ {post.likes} Endorsements</span>
+                      <span> {post.replies} Replies</span>
+                      <span> {post.likes} Endorsements</span>
                     </div>
                   </div>
 

@@ -7,9 +7,9 @@
 
 ```
                              [ THE BARTHOLOMEW IP SHIELD ]
-                                           │
-  ┌───────────────────────┬────────────────┴────────────────┬───────────────────────┐
-  ▼                       ▼                                 ▼                       ▼
+                                           
+  
+                                                                                 
 [ 1. Provisional Patent ] [ 2. Prior Art Timestamping ]     [ 3. Trademark & Brand ] [ 4. Commercial Licensing ]
 (US PTO Patent Pending)   (Cryptographic Proof of Creation) (Federal Trademark Protection)(Anti-Cloud Free-Riding)
 ```
@@ -37,8 +37,8 @@
 
 ### Pillar 3: Trademark Protection
 * **What We Register with the USPTO**:
-  - **Wordmark**: `BARTHOLOMEW™`
-  - **Protocol Standard**: `BTP™ (Bartholomew Trust Protocol)`
+  - **Wordmark**: `BARTHOLOMEW`
+  - **Protocol Standard**: `BTP (Bartholomew Trust Protocol)`
   - **Tagline**: `The Sub-Millisecond Execution Gate for Autonomous AI`
 * **Effect**: Prevents any clone from using our brand, protocol identity, or standard naming.
 

@@ -40,7 +40,7 @@ def execute_crewai_tool(user_query: str):
 
     print(f"\n[AST TAINT SCANNER] Taint Vulnerabilities Detected: {len(ast_findings)}")
     for vuln in ast_findings:
-        print(f" └─ [{vuln.get('severity', 'HIGH')}] Line {vuln.get('line', '?')}: {vuln.get('title', vuln.get('type', 'Taint Sink'))}")
+        print(f"  [{vuln.get('severity', 'HIGH')}] Line {vuln.get('line', '?')}: {vuln.get('title', vuln.get('type', 'Taint Sink'))}")
 
     # 2. Audit Workspace Repository
     audit_report = scanner.audit_workspace_repository(".")

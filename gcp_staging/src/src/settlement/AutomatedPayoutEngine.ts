@@ -55,7 +55,7 @@ export class AutomatedPayoutEngine {
             totalDisbursedUSD += chunk;
             amountToProcess -= chunk;
             totalPayoutsExecuted++;
-            console.log(`[PayoutWaterfall] 💸 Tier 1 PayPal: Dispatched $${chunk.toFixed(2)} USD (PayPal Total: $${paypalDisbursedUSD.toFixed(2)}/100)`);
+            console.log(`[PayoutWaterfall]  Tier 1 PayPal: Dispatched $${chunk.toFixed(2)} USD (PayPal Total: $${paypalDisbursedUSD.toFixed(2)}/100)`);
           } catch (e: any) {
             console.warn('[PayoutWaterfall] PayPal payout error:', e.message);
           }
@@ -71,7 +71,7 @@ export class AutomatedPayoutEngine {
             totalDisbursedUSD += chunk;
             amountToProcess -= chunk;
             totalPayoutsExecuted++;
-            console.log(`[PayoutWaterfall] 💳 Tier 2 Stripe: Dispatched $${chunk.toFixed(2)} USD (Stripe Total: $${stripeDisbursedUSD.toFixed(2)}/100)`);
+            console.log(`[PayoutWaterfall]  Tier 2 Stripe: Dispatched $${chunk.toFixed(2)} USD (Stripe Total: $${stripeDisbursedUSD.toFixed(2)}/100)`);
           } catch (e: any) {
             console.warn('[PayoutWaterfall] Stripe payout error:', e.message);
           }
@@ -82,7 +82,7 @@ export class AutomatedPayoutEngine {
           vaultBankedUSD += amountToProcess;
           totalDisbursedUSD += amountToProcess;
           totalPayoutsExecuted++;
-          console.log(`[PayoutWaterfall] 🏦 Tier 3 Vault: Banked $${amountToProcess.toFixed(2)} USD into Base USDC Vault (Vault Total: $${vaultBankedUSD.toFixed(2)})`);
+          console.log(`[PayoutWaterfall]  Tier 3 Vault: Banked $${amountToProcess.toFixed(2)} USD into Base USDC Vault (Vault Total: $${vaultBankedUSD.toFixed(2)})`);
         }
       }
     } catch (err: any) {

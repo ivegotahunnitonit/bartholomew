@@ -2,9 +2,9 @@
 > How Bartholomew survives when Git, Cloud Providers, DNS, or Central Payment Rails fail.
 
 ```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        BARTHOLOMEW ZERO-DEPENDENCY RESILIENCE                          │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+
+                        BARTHOLOMEW ZERO-DEPENDENCY RESILIENCE                          
+
 ```
 
 ---

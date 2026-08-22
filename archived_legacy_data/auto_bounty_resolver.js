@@ -210,10 +210,10 @@ Configured reverse proxy cache rule to include \`X-Forwarded-Host\` and \`X-Forw
 ];
 
 async function submitSolutions() {
-  console.log('═════════════════════════════════════════════════════');
+  console.log('');
   console.log('   AUTONOMOUS BOUNTY RESOLVER & SUBMITTER v4.0      ');
   console.log('   TARGET: HIT $3,500+ IN USD BOUNTY REWARDS         ');
-  console.log('═════════════════════════════════════════════════════\n');
+  console.log('\n');
 
   const ledger = JSON.parse(fs.readFileSync('BOUNTY_LEDGER.json', 'utf8'));
   if (!ledger['ivegotahunnitonit']) {
@@ -232,7 +232,7 @@ async function submitSolutions() {
 
   for (const bounty of BOUNTY_SOLUTIONS) {
     if (totalUsdEarned >= 3500) {
-      console.log(`\n🎉 TARGET HIT! Total USD Bounty Balance reached: $${totalUsdEarned} USD (>= $3500)`);
+      console.log(`\n TARGET HIT! Total USD Bounty Balance reached: $${totalUsdEarned} USD (>= $3500)`);
       break;
     }
 
@@ -246,7 +246,7 @@ async function submitSolutions() {
 
     if (status === 201) {
       totalUsdEarned += bounty.reward_usd;
-      console.log(`  ✅ Solution Submitted! Total: $${totalUsdEarned} USD | Comment: ${data.html_url}`);
+      console.log(`   Solution Submitted! Total: $${totalUsdEarned} USD | Comment: ${data.html_url}`);
 
       ledger['ivegotahunnitonit'].submissions.push({
         issue:       bounty.issue,
@@ -261,16 +261,16 @@ async function submitSolutions() {
       ledger['ivegotahunnitonit'].total += bounty.reward_usd;
       ledger['ivegotahunnitonit'].task_count += 1;
     } else {
-      console.log(`  ❌ Failed to submit solution:`, data.message || data);
+      console.log(`   Failed to submit solution:`, data.message || data);
     }
   }
 
   fs.writeFileSync('BOUNTY_LEDGER.json', JSON.stringify(ledger, null, 2));
 
-  console.log('\n═════════════════════════════════════════════════════');
+  console.log('\n');
   console.log(`   FINAL BOUNTY SUMMARY: $${totalUsdEarned} USD EARNED`);
   console.log(`   LEDGER WRITTEN TO BOUNTY_LEDGER.json`);
-  console.log('═════════════════════════════════════════════════════');
+  console.log('');
 }
 
 submitSolutions().catch(err => console.error('[Fatal]', err));

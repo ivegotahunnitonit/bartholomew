@@ -27,7 +27,7 @@ try:
 except ImportError:
     pass
 
-# ─── Plan Tier Lookup by Amount ───────────────────────────────────────────────
+#  Plan Tier Lookup by Amount 
 # Matches the 3 Stripe products: Developer ($0), Pro ($49), Team ($199)
 AMOUNT_TO_TIER: Dict[int, str] = {
     0:     "DEVELOPER_FREE",

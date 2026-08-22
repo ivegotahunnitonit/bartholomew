@@ -67,10 +67,10 @@ def run_cross_framework_handshake_tests():
         seen_nonces=seen_nonces
     )
     
-    print(f"  ├─ Origin Framework:    {normalized_btp_payload['source_framework']}")
-    print(f"  ├─ Target Framework:    Microsoft AutoGen (Worker Agent)")
-    print(f"  ├─ Cryptographic Proof: Ed25519 Signature Verified (100% Offline)")
-    print(f"  └─ Handshake Status:    [{'AUTHORIZED' if verified_by_autogen else 'REFUSED'}] ({msg})")
+    print(f"   Origin Framework:    {normalized_btp_payload['source_framework']}")
+    print(f"   Target Framework:    Microsoft AutoGen (Worker Agent)")
+    print(f"   Cryptographic Proof: Ed25519 Signature Verified (100% Offline)")
+    print(f"   Handshake Status:    [{'AUTHORIZED' if verified_by_autogen else 'REFUSED'}] ({msg})")
     assert verified_by_autogen
 
     # -------------------------------------------------------------------------
@@ -101,10 +101,10 @@ def run_cross_framework_handshake_tests():
         seen_nonces=seen_nonces
     )
     
-    print(f"  ├─ Origin Framework:    {normalized_autogen_payload['source_framework']}")
-    print(f"  ├─ Target Framework:    CrewAI (Senior Developer Role)")
-    print(f"  ├─ Cryptographic Proof: Ed25519 Signature Verified (100% Offline)")
-    print(f"  └─ Handshake Status:    [{'AUTHORIZED' if verified_by_crewai else 'REFUSED'}] ({msg})")
+    print(f"   Origin Framework:    {normalized_autogen_payload['source_framework']}")
+    print(f"   Target Framework:    CrewAI (Senior Developer Role)")
+    print(f"   Cryptographic Proof: Ed25519 Signature Verified (100% Offline)")
+    print(f"   Handshake Status:    [{'AUTHORIZED' if verified_by_crewai else 'REFUSED'}] ({msg})")
     assert verified_by_crewai
 
     # -------------------------------------------------------------------------
@@ -128,10 +128,10 @@ def run_cross_framework_handshake_tests():
     
     # Downstream OpenAI execution environment checks BTP verdict
     verdict = attestation_packet_3["attestation"]["verdict"]
-    print(f"  ├─ Origin Framework:    {normalized_crewai_payload['source_framework']}")
-    print(f"  ├─ Target Framework:    OpenAI Function Calling Runner")
-    print(f"  ├─ Threat Detected:     {attestation_packet_3['attestation']['reason']}")
-    print(f"  └─ Handshake Status:    [{'BLOCKED (SAFE)' if verdict == 'DENY' else 'ESCAPE'}]")
+    print(f"   Origin Framework:    {normalized_crewai_payload['source_framework']}")
+    print(f"   Target Framework:    OpenAI Function Calling Runner")
+    print(f"   Threat Detected:     {attestation_packet_3['attestation']['reason']}")
+    print(f"   Handshake Status:    [{'BLOCKED (SAFE)' if verdict == 'DENY' else 'ESCAPE'}]")
     assert verdict == "DENY"
 
     print("\n" + "=" * 80)

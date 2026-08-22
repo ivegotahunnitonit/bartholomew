@@ -62,7 +62,7 @@ async function auditAkashNetwork() {
 
 async function runAudit() {
   console.log('====================================================');
-  console.log('  🔍 MULTI-CHAIN LINGERING FUNDS & REVENUE AUDIT');
+  console.log('   MULTI-CHAIN LINGERING FUNDS & REVENUE AUDIT');
   console.log('====================================================\n');
 
   const base = await auditBaseMainnet();
@@ -86,13 +86,13 @@ async function runAudit() {
 
   fs.writeFileSync('LINGERING_FUNDS_AUDIT.json', JSON.stringify(auditResults, null, 2));
 
-  console.log('📌 Base Mainnet Wallet:', BASE_ADDRESS);
+  console.log(' Base Mainnet Wallet:', BASE_ADDRESS);
   console.log(`   ETH Balance:  ${base.eth.toFixed(6)} ETH`);
   console.log(`   USDC Balance: ${base.usdc.toFixed(2)} USDC`);
-  console.log('📌 Akash Wallet:', AKASH_ADDRESS);
+  console.log(' Akash Wallet:', AKASH_ADDRESS);
   console.log(`   AKT Balance:  ${akash.akt.toFixed(4)} AKT\n`);
   console.log('====================================================');
-  console.log('  ✅ MULTI-CHAIN AUDIT COMPLETE — RESULTSpersisted');
+  console.log('   MULTI-CHAIN AUDIT COMPLETE — RESULTSpersisted');
   console.log('====================================================\n');
 }
 

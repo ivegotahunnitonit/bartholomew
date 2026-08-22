@@ -7,11 +7,11 @@ Runs an unguided, persistent mission against an external world (e.g. GitHub repo
 with zero preconceived assumptions, no task queue, and first-class terminal states:
 
   MISSION_RESULT:
-  ├── VERIFIED_VALUE
-  ├── NEEDS_EXTERNAL_FEEDBACK
-  ├── INSUFFICIENT_EVIDENCE
-  ├── NO_OPPORTUNITY (DO NOTHING)
-  └── FAILED_AND_REVERTED
+   VERIFIED_VALUE
+   NEEDS_EXTERNAL_FEEDBACK
+   INSUFFICIENT_EVIDENCE
+   NO_OPPORTUNITY (DO NOTHING)
+   FAILED_AND_REVERTED
 
 Architecture:
   ONE MANDATE -> OBSERVE WORLD -> WHAT IS POSSIBLE? -> WHAT MATTERS? ->

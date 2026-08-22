@@ -1,4 +1,4 @@
-# 🛡️ Official Anthropic Model Context Protocol (MCP) Registry Submission Kit
+#  Official Anthropic Model Context Protocol (MCP) Registry Submission Kit
 
 ---
 

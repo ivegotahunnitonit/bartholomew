@@ -17,13 +17,13 @@ Navigate to **[GitHub Apps Registration](https://github.com/settings/apps/new)**
 
 ### Permissions Required
 ```
-┌──────────────────────────────────────┬────────────────┬────────────────────────────────────────────┐
-│ PERMISSION NAME                      │ ACCESS LEVEL   │ REASON / FUNCTIONALITY                     │
-├──────────────────────────────────────┼────────────────┼────────────────────────────────────────────┤
-│ 1. Repository contents               │ Read & write   │ To checkout failing commit & push fix branch│
-│ 2. Pull requests                     │ Read & write   │ To open automated green pull requests      │
-│ 3. Checks / Workflow runs            │ Read-only      │ To listen for failed CI runs & error logs  │
-└──────────────────────────────────────┴────────────────┴────────────────────────────────────────────┘
+
+ PERMISSION NAME                       ACCESS LEVEL    REASON / FUNCTIONALITY                     
+
+ 1. Repository contents                Read & write    To checkout failing commit & push fix branch
+ 2. Pull requests                      Read & write    To open automated green pull requests      
+ 3. Checks / Workflow runs             Read-only       To listen for failed CI runs & error logs  
+
 ```
 
 ### Subscribe to Events (Checkboxes)

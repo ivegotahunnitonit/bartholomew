@@ -13,7 +13,7 @@
   widget.id = 'bartholomew-floating-widget';
   widget.innerHTML = `
     <div class="bartholomew-badge" id="bartholomew-trigger-btn" title="Open Bartholomew AI Copilot">
-      <div class="bartholomew-logo-icon">⚡</div>
+      <div class="bartholomew-logo-icon"></div>
       <span class="bartholomew-badge-label">Bartholomew</span>
     </div>
     <div class="bartholomew-quick-menu" id="bartholomew-quick-menu" style="display: none;">
@@ -22,9 +22,9 @@
         <span class="close-menu" id="close-quick-menu">×</span>
       </div>
       <div class="menu-actions">
-        <button class="action-btn" id="btn-scan-ci">🔍 Diagnose Failing CI on this Page</button>
-        <button class="action-btn" id="btn-explain-pr">📝 Summarize Pull Request Changes</button>
-        <button class="action-btn" id="btn-generate-repro">🧪 Generate Reproduction Test</button>
+        <button class="action-btn" id="btn-scan-ci"> Diagnose Failing CI on this Page</button>
+        <button class="action-btn" id="btn-explain-pr"> Summarize Pull Request Changes</button>
+        <button class="action-btn" id="btn-generate-repro"> Generate Reproduction Test</button>
       </div>
       <div id="quick-results-box" class="quick-results" style="display: none;"></div>
     </div>
@@ -59,7 +59,7 @@
       if (errorLogsText) {
         resultsBox.innerHTML = `
           <div class="result-card success">
-            <h4>⚡ Failure Diagnosed by Bartholomew:</h4>
+            <h4> Failure Diagnosed by Bartholomew:</h4>
             <div class="code-snippet">${escapeHtml(errorLogsText.substring(0, 200))}...</div>
             <p><strong>Root Cause:</strong> Async teardown lifecycle conflict detected in test matrix.</p>
             <button class="run-fix-btn" id="btn-open-full-panel">Open Full Analysis in Side Panel →</button>
@@ -68,7 +68,7 @@
       } else {
         resultsBox.innerHTML = `
           <div class="result-card info">
-            <h4>ℹ️ Page Scanned</h4>
+            <h4>ℹ Page Scanned</h4>
             <p>Active Repository: <code>${escapeHtml(getRepoName())}</code></p>
             <p>Ready to assist. Highlight any code or open the Side Panel for interactive chat.</p>
           </div>
@@ -82,7 +82,7 @@
     resultsBox.style.display = 'block';
     resultsBox.innerHTML = `
       <div class="result-card">
-        <h4>📋 Pull Request Summary:</h4>
+        <h4> Pull Request Summary:</h4>
         <p><strong>Repository:</strong> ${escapeHtml(getRepoName())}</p>
         <p><strong>Analysis:</strong> AST cleanup & cross-version constant node modernization across Python 3.8-3.14.</p>
         <p><strong>Verification:</strong> 100% clean passes, zero deprecation warnings.</p>
@@ -95,7 +95,7 @@
     resultsBox.style.display = 'block';
     resultsBox.innerHTML = `
       <div class="result-card success">
-        <h4>🧪 Standalone Reproducer Synthesized:</h4>
+        <h4> Standalone Reproducer Synthesized:</h4>
         <pre class="code-block"><code>def test_reproduce_failure():\n    # Isolated minimal reproduction\n    assert run_isolated_fixture() == True</code></pre>
       </div>
     `;

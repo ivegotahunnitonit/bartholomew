@@ -1,4 +1,4 @@
-# 🚀 ACQUIRE.COM / FLIPPA LISTING MANIFEST
+#  ACQUIRE.COM / FLIPPA LISTING MANIFEST
 
 ## Listing Overview
 - **Project Name:** Agentic-Eval (Turnkey AI Agent Observability & Security Platform)
@@ -12,7 +12,7 @@
 
 ---
 
-## 📌 Listing Sales Copy (Copy & Paste to Acquire.com)
+##  Listing Sales Copy (Copy & Paste to Acquire.com)
 
 ### Headline:
 **Turnkey AI Agent Observability & Security Micro-SaaS (FastAPI + Go + Glassmorphism UI + GitHub Action)**
@@ -45,7 +45,7 @@ The platform comes pre-configured with a complete developer ecosystem including 
 
 ---
 
-## 🛠️ Transfer & Onboarding Checklist for Buyer
+##  Transfer & Onboarding Checklist for Buyer
 1. Buyer receives GitHub repository access and PyPI maintainer token.
 2. Buyer links their own Stripe or Base USDC wallet to `app/main.py`.
 3. Buyer deploys to Render / Vercel in 1 click using included `render.yaml`.

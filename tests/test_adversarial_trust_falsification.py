@@ -49,7 +49,7 @@ def run_falsification_battery():
         seen_nonces=seen_nonces
     )
     print(f"\n[TEST 1: BASELINE VERIFICATION]")
-    print(f"  └─ Result: {msg}")
+    print(f"   Result: {msg}")
     assert ok
 
     # -------------------------------------------------------------------------
@@ -62,8 +62,8 @@ def run_falsification_battery():
         seen_nonces=seen_nonces
     )
     print(f"\n[TEST 2: REPLAY ATTACK]")
-    print(f"  ├─ Attacker Action: Re-submitting previous valid attestation packet...")
-    print(f"  └─ Gate Defense: {msg}")
+    print(f"   Attacker Action: Re-submitting previous valid attestation packet...")
+    print(f"   Gate Defense: {msg}")
     assert not ok
     assert "REPLAY_ATTACK_DETECTED" in msg
 
@@ -83,8 +83,8 @@ def run_falsification_battery():
         current_timestamp=future_time
     )
     print(f"\n[TEST 3: EXPIRED ATTESTATION EXPLOIT]")
-    print(f"  ├─ Attacker Action: Submitting attestation after TTL expiry (+120s)...")
-    print(f"  └─ Gate Defense: {msg}")
+    print(f"   Attacker Action: Submitting attestation after TTL expiry (+120s)...")
+    print(f"   Gate Defense: {msg}")
     assert not ok
     assert "EXPIRED_ATTESTATION" in msg
 
@@ -98,8 +98,8 @@ def run_falsification_battery():
         trusted_root_pubkey=trusted_root_pubkey
     )
     print(f"\n[TEST 4: ARTIFACT SUBSTITUTION (BAIT-AND-SWITCH)]")
-    print(f"  ├─ Attacker Action: Attestation generated on safe code, then substituted with malicious code...")
-    print(f"  └─ Gate Defense: {msg}")
+    print(f"   Attacker Action: Attestation generated on safe code, then substituted with malicious code...")
+    print(f"   Gate Defense: {msg}")
     assert not ok
     assert "ARTIFACT_SUBSTITUTION_DETECTED" in msg
 
@@ -118,8 +118,8 @@ def run_falsification_battery():
         trusted_root_pubkey=trusted_root_pubkey # Verified against real root key
     )
     print(f"\n[TEST 5: SELF-SIGNED / FORGED AUTHORITY KEY]")
-    print(f"  ├─ Attacker Action: Attacker generates rogue Ed25519 keypair and signs attestation...")
-    print(f"  └─ Gate Defense: {msg}")
+    print(f"   Attacker Action: Attacker generates rogue Ed25519 keypair and signs attestation...")
+    print(f"   Gate Defense: {msg}")
     assert not ok
     assert "FORGERY_DETECTED" in msg
 
@@ -134,9 +134,9 @@ def run_falsification_battery():
     )
     offline_latency_us = (time.perf_counter() - t0) * 1_000_000
     print(f"\n[TEST 6: ZERO-NETWORK OFFLINE INDEPENDENCE]")
-    print(f"  ├─ Network Status: Completely Offline (0 HTTP calls, 0 cloud dependencies)")
-    print(f"  ├─ Verification Latency: {offline_latency_us:.2f} µs")
-    print(f"  └─ Verification Result: {offline_msg}")
+    print(f"   Network Status: Completely Offline (0 HTTP calls, 0 cloud dependencies)")
+    print(f"   Verification Latency: {offline_latency_us:.2f} µs")
+    print(f"   Verification Result: {offline_msg}")
     assert offline_verified
 
     print("\n" + "=" * 80)

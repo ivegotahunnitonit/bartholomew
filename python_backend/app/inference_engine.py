@@ -24,9 +24,9 @@ from typing import Optional, Dict, List, Any, Tuple
 from collections import OrderedDict, deque
 from dataclasses import dataclass, field
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Configuration
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 MAX_BATCH_SIZE        = 32          # max requests per batch cycle
 MAX_BATCH_TOKENS      = 4096        # max total tokens in one batch
@@ -40,9 +40,9 @@ MAX_MINUTE_TOKENS     = 8_000       # per-minute rate limit
 BATCH_COLLECT_MS      = 50          # ms to wait for batch to fill before dispatch
 PROVIDER_RETRY_DELAY  = 30          # seconds before retrying quota-exhausted provider
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Data Structures
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 @dataclass
 class InferenceRequest:
@@ -81,9 +81,9 @@ class ProviderState:
     total_requests: int = 0
     successful_requests: int = 0
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # KV Page Cache  (PagedAttention-inspired)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class KVPageCache:
     """
@@ -149,9 +149,9 @@ class KVPageCache:
             "hit_rate_pct": hit_rate
         }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Semantic Route Cache  (cosine similarity dedup)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class SemanticRouteCache:
     """
@@ -224,9 +224,9 @@ class SemanticRouteCache:
             "threshold": SEMANTIC_SIM_THRESHOLD
         }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Provider Stack  (quota-aware, auto-failover)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class ProviderStack:
     """
@@ -301,9 +301,9 @@ class ProviderStack:
             for p in self.providers
         }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Prefill / Decode Disaggregation
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class PrefillDecodeScheduler:
     """
@@ -342,9 +342,9 @@ class PrefillDecodeScheduler:
     def estimate_decode_tokens(self, max_tokens: int, partial_result: str) -> int:
         return max_tokens - int(len(partial_result) * 0.75)
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Continuous Batch Scheduler
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class ContinuousBatchScheduler:
     """
@@ -420,9 +420,9 @@ class ContinuousBatchScheduler:
             "queue_depth": len(self._pending)
         }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # LLM Inference Core
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 RULE_RESPONSES = {
     "hello": "Hello! ACN inference engine online. How can I assist with your compute task?",
@@ -473,9 +473,9 @@ def _rule_based_inference(prompt: str) -> str:
         )
     return f"ACN inference engine (offline mode): received '{prompt[:60]}'. Quota refresh pending."
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Master Inference Engine
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 class ACNInferenceEngine:
     """
@@ -697,8 +697,8 @@ class ACNInferenceEngine:
             }
         }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Singleton — import this in main.py
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 inference_engine = ACNInferenceEngine()

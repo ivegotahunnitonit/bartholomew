@@ -173,7 +173,7 @@ First fully autonomous circular economy exchange API. Features:
   });
 
   if (status === 201) {
-    console.log(`[ForkAndPR] ✅ PR OPENED: ${data.html_url}`);
+    console.log(`[ForkAndPR]  PR OPENED: ${data.html_url}`);
     return data.html_url;
   } else {
     console.log(`[ForkAndPR] PR status: ${status}`, JSON.stringify(data).slice(0, 200));

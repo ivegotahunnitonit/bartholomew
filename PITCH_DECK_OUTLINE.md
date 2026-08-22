@@ -1,4 +1,4 @@
-# 🎯 Bartholomew — VC Pitch Deck Outline
+#  Bartholomew — VC Pitch Deck Outline
 
 **Company**: Bartholomew Inc.  
 **Tagline**: *See Inside Any Stack, Any App, At Any Scale, Anywhere — Enterprise AI Security Platform.*  

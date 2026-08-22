@@ -63,7 +63,7 @@ class BartholomewFastAPIMiddleware:
             if summary.get("compliance_status") == "SECURITY_RISK" and summary.get("credential_leaks", 0) > 0:
                 response_body = json.dumps({
                     "error": "SECURITY_BOUNDARY_VIOLATION",
-                    "detail": "🚨 [Bartholomew Guard]: Credential leak detected in request payload!",
+                    "detail": " [Bartholomew Guard]: Credential leak detected in request payload!",
                     "attestation_sha256": summary.get("attestation_sha256"),
                 }).encode("utf-8")
 
@@ -105,9 +105,9 @@ class BartholomewLangChainCallback:
             summary = res.get("audit_summary", {})
 
             if summary.get("prompt_injections", 0) > 0:
-                raise GuardViolation("🚨 [Bartholomew Guard]: Prompt injection intercepted in LangChain prompt!", summary)
+                raise GuardViolation(" [Bartholomew Guard]: Prompt injection intercepted in LangChain prompt!", summary)
             if summary.get("credential_leaks", 0) > 0:
-                raise GuardViolation("🚨 [Bartholomew Guard]: Credential leak intercepted in LangChain prompt!", summary)
+                raise GuardViolation(" [Bartholomew Guard]: Credential leak intercepted in LangChain prompt!", summary)
 
     def on_tool_start(self, serialized: Dict[str, Any], input_str: str, **kwargs: Any) -> None:
         trajectory = {
@@ -118,4 +118,4 @@ class BartholomewLangChainCallback:
         summary = res.get("audit_summary", {})
 
         if summary.get("compliance_status") == "SECURITY_RISK":
-            raise GuardViolation("🚨 [Bartholomew Guard]: Security boundary violation in LangChain tool execution!", summary)
+            raise GuardViolation(" [Bartholomew Guard]: Security boundary violation in LangChain tool execution!", summary)

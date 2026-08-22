@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({ bartholomewConfig: config }, () => {
         settingsModal.style.display = 'none';
-        addMessage('ai', `⚙️ Settings saved. Active provider: <strong>${config.provider.toUpperCase()} (${config.model})</strong>`);
+        addMessage('ai', ` Settings saved. Active provider: <strong>${config.provider.toUpperCase()} (${config.model})</strong>`);
       });
     } else {
       settingsModal.style.display = 'none';
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addMessage('user', text);
     userInput.value = '';
 
-    const thinkingMsg = addMessage('ai', '<div class="typing-indicator">⚡ Bartholomew is analyzing...</div>');
+    const thinkingMsg = addMessage('ai', '<div class="typing-indicator"> Bartholomew is analyzing...</div>');
 
     try {
       let responseHtml = '';
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (lower.includes('ci') || lower.includes('fail') || lower.includes('error') || mode === 'ci-rescue') {
       return `
-        <p><strong>⚡ CI Failure Diagnosis:</strong></p>
+        <p><strong> CI Failure Diagnosis:</strong></p>
         <p>Detected asynchronous fixture teardown collision in test worker process.</p>
         <div class="code-card">
 # Synthesizing deterministic reproduction test
@@ -239,7 +239,7 @@ def test_reproduce_ci_failure():
 
     if (lower.includes('repro') || lower.includes('test')) {
       return `
-        <p><strong>🧪 Deterministic Reproduction Test:</strong></p>
+        <p><strong> Deterministic Reproduction Test:</strong></p>
         <div class="code-card">
 import pytest
 
@@ -254,7 +254,7 @@ def test_isolated_reproduction():
 
     if (lower.includes('refactor') || lower.includes('ast') || mode === 'code-audit') {
       return `
-        <p><strong>🛠️ Code Refactor & AST Optimization:</strong></p>
+        <p><strong> Code Refactor & AST Optimization:</strong></p>
         <p>Standardized AST node handling to eliminate legacy version branching:</p>
         <div class="code-card">
 # Modernized AST constant node across Python 3.8-3.14+
@@ -273,7 +273,7 @@ _StrNode = ast.Constant
   function addMessage(sender, contentHtml) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender === 'user' ? 'user-msg' : 'ai-msg'}`;
-    const avatar = sender === 'user' ? '👤' : '⚡';
+    const avatar = sender === 'user' ? '' : '';
 
     msgDiv.innerHTML = `
       <div class="avatar">${avatar}</div>

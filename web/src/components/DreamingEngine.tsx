@@ -117,7 +117,7 @@ export default function DreamingEngine() {
                 ) : (
                   dreamLog.map((log, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <span className="text-emerald-400 shrink-0">❯</span>
+                      <span className="text-emerald-400 shrink-0"></span>
                       <span className="break-all">{log}</span>
                     </div>
                   ))

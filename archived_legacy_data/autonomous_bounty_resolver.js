@@ -24,7 +24,7 @@ const BASE_ADDRESS = '0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4';
 
 async function runAutonomousResolverCycle() {
   console.log(`====================================================`);
-  console.log(`  ⚡ AUTONOMOUS BOUNTY RESOLVER & B2B PROSPECTING ENGINE`);
+  console.log(`   AUTONOMOUS BOUNTY RESOLVER & B2B PROSPECTING ENGINE`);
   console.log(`====================================================\n`);
 
   // Step 1: Scan for high-confidence solvable issue bounties
@@ -35,11 +35,11 @@ async function runAutonomousResolverCycle() {
     
     if (res.ok) {
       const data = await res.json();
-      console.log(`📌 Active Solvable Bounties Scanned: ${data.items ? data.items.length : 0}`);
+      console.log(` Active Solvable Bounties Scanned: ${data.items ? data.items.length : 0}`);
       
       if (data.items && data.items.length > 0) {
         const topIssue = data.items[0];
-        console.log(`🎯 Top Target Bounty: [${topIssue.repository_url.replace('https://api.github.com/repos/', '')}] #${topIssue.number} - ${topIssue.title}`);
+        console.log(` Top Target Bounty: [${topIssue.repository_url.replace('https://api.github.com/repos/', '')}] #${topIssue.number} - ${topIssue.title}`);
       }
     }
   } catch (err) {
@@ -49,11 +49,11 @@ async function runAutonomousResolverCycle() {
   // Step 2: Audit B2B Outreach Lead Dispatches
   if (fs.existsSync('B2B_AUDIT_LEADS.json')) {
     const leads = JSON.parse(fs.readFileSync('B2B_AUDIT_LEADS.json', 'utf8'));
-    console.log(`✅ B2B Prospecting Leads Verified: ${leads.total_leads_found} Active Targets across 4 Grounds.`);
+    console.log(` B2B Prospecting Leads Verified: ${leads.total_leads_found} Active Targets across 4 Grounds.`);
   }
 
   console.log(`\n====================================================`);
-  console.log(`  🛡️ SECURITY & AI-PROOF AUDIT: 100% PASSED`);
+  console.log(`   SECURITY & AI-PROOF AUDIT: 100% PASSED`);
   console.log(`  All solution payloads encrypted & secret-scrubbed.`);
   console.log(`====================================================\n`);
 }

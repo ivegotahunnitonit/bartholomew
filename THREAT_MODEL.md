@@ -46,15 +46,15 @@ BTP is explicitly designed to operate under zero-trust assumptions:
 ## **4. Key Lifecycle, Revocation & Disaster Recovery**
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        KEY LIFECYCLE & REVOCATION                      │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. ROOT KEY PINNING: Public keys are pinned in downstream verifiers.   │
-│ 2. KEY ROTATION: Authority rolls keys via signed root transition cert. │
-│ 3. CRL / REVOCATION: Compromised keys are published to the CRL table.  │
-│ 4. FAIL-CLOSED DEFAULT: If a key is revoked, all subsequent            │
-│    attestations signed by that key are strictly REFUSED.               │
-└────────────────────────────────────────────────────────────────────────┘
+
+                        KEY LIFECYCLE & REVOCATION                      
+
+ 1. ROOT KEY PINNING: Public keys are pinned in downstream verifiers.   
+ 2. KEY ROTATION: Authority rolls keys via signed root transition cert. 
+ 3. CRL / REVOCATION: Compromised keys are published to the CRL table.  
+ 4. FAIL-CLOSED DEFAULT: If a key is revoked, all subsequent            
+    attestations signed by that key are strictly REFUSED.               
+
 ```
 
 ---

@@ -95,7 +95,7 @@ export class AlgoraBountyScanner {
       };
       discovered.push(bounty);
       totalDiscoveredValue += reward;
-      console.log(`[AlgoraBountyScanner] 🎯 REAL BOUNTY FOUND: $${reward} | ${bounty.title} | ${bounty.url}`);
+      console.log(`[AlgoraBountyScanner]  REAL BOUNTY FOUND: $${reward} | ${bounty.title} | ${bounty.url}`);
     }
   }
 
@@ -127,7 +127,7 @@ export class AlgoraBountyScanner {
       };
       discovered.push(bounty);
       totalDiscoveredValue += reward;
-      console.log(`[AlgoraBountyScanner] 🎯 OPIRE BOUNTY: $${reward} | ${bounty.title} | ${bounty.url}`);
+      console.log(`[AlgoraBountyScanner]  OPIRE BOUNTY: $${reward} | ${bounty.title} | ${bounty.url}`);
     }
   }
 

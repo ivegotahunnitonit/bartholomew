@@ -48,12 +48,12 @@ class AgenticQAJanitorEngine:
         Routes to native Golang daemon (1.44 μs latency) when active for maximum performance.
         Uses in-memory LRU cache to eliminate duplicate payload evaluation overhead.
         """
-        # ⚡ Ultra-fast cache lookup
+        #  Ultra-fast cache lookup
         cache_key = json.dumps(trajectory_data, sort_keys=True)
         if cache_key in self._audit_cache:
             return self._audit_cache[cache_key]
 
-        # ⚡ Fast-route: Delegate to native Golang daemon using session connection pool
+        #  Fast-route: Delegate to native Golang daemon using session connection pool
         go_daemon_url = os.getenv("GO_DAEMON_URL", "http://127.0.0.1:8085/api/v1/go/scan-trajectory")
         try:
             go_res = self.http_session.post(go_daemon_url, json=trajectory_data, timeout=0.03)

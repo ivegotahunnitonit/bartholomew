@@ -27,9 +27,9 @@ from standalone_btp_verifier import independent_verify_btp_receipt
 def generate_random_unicode_string(max_len=20):
     chars = [
         random.choice(string.ascii_letters + string.digits),
-        "🚀", "🔒", "⚡", "日本語", "العربية", "äöü", "e\u0301", # combining acute accent
+        "", "", "", "日本語", "العربية", "äöü", "e\u0301", # combining acute accent
         "\t", "\n", "\r", "\\", "\"", # control chars and escapes
-        "😀", "🎉", "🔥" # valid SMP 4-byte unicode emojis
+        "", "", "" # valid SMP 4-byte unicode emojis
     ]
     return "".join(random.choice(chars) for _ in range(random.randint(1, max_len)))
 

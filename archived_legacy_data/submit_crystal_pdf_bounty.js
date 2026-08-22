@@ -74,7 +74,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#050e18] text-slate-200 relative">
-      {/* ── CSS ─────────────────────────────────────────────── */}
+      {/*  CSS  */}
       <style>{\`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap');
 
@@ -179,7 +179,7 @@ export default function LandingPage() {
         }
       \`}</style>
 
-      {/* ── Ambient glow ───────────────────────────────────── */}
+      {/*  Ambient glow  */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden>
         <div
           className="absolute -top-[30%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] sm:w-[900px] sm:h-[900px] rounded-full"
@@ -191,7 +191,7 @@ export default function LandingPage() {
         />
       </div>
 
-      {/* ── Nav ────────────────────────────────────────────── */}
+      {/*  Nav  */}
       <nav
         className="sticky top-0 z-50 backdrop-blur-xl border-b border-white/[.04]"
         style={{ background: 'rgba(5,14,24,.85)' }}
@@ -260,7 +260,7 @@ export default function LandingPage() {
         )}
       </nav>
 
-      {/* ── Hero ───────────────────────────────────────────── */}
+      {/*  Hero  */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16 sm:pt-20 sm:pb-24 md:pt-32 md:pb-36 grid md:grid-cols-[1fr,auto] items-center gap-8 md:gap-12">
         {/* Text column */}
         <div className="max-w-2xl text-center md:text-left mx-auto md:mx-0">
@@ -300,7 +300,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Tools grid ─────────────────────────────────────── */}
+      {/*  Tools grid  */}
       <section className="relative z-10 dot-grid">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
           <div className="max-w-lg mb-10 sm:mb-14 text-center sm:text-left mx-auto sm:mx-0">
@@ -334,7 +334,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── How it works ───────────────────────────────────── */}
+      {/*  How it works  */}
       <section className="relative z-10 border-t border-white/[.04]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
           <div className="text-center max-w-lg mx-auto mb-12 sm:mb-16">
@@ -380,7 +380,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ────────────────────────────────────────────── */}
+      {/*  CTA  */}
       <section className="relative z-10 border-t border-white/[.04]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 md:py-36 text-center">
           <div
@@ -411,7 +411,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────── */}
+      {/*  Footer  */}
       <footer className="relative z-10 border-t border-white/[.04]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center sm:justify-between gap-3 text-center sm:text-left">
           <span className="font-semibold text-sm text-slate-600">
@@ -428,23 +428,23 @@ export default function LandingPage() {
 `;
 
 async function main() {
-  console.log('🚀 Submitting Crystal-PDF mobile-responsive PR for $100 bounty...\n');
+  console.log(' Submitting Crystal-PDF mobile-responsive PR for $100 bounty...\n');
 
   // 1. Verify auth
   const me = await api('GET', '/user');
-  console.log(`✅ Authenticated as: ${me.login}`);
+  console.log(` Authenticated as: ${me.login}`);
 
   // 2. Check if fork exists
   let fork;
   try {
     fork = await api('GET', `/repos/${me.login}/${UPSTREAM_REPO}`);
-    console.log(`✅ Fork exists: ${fork.full_name}`);
+    console.log(` Fork exists: ${fork.full_name}`);
   } catch {
-    console.log('🔄 Forking repository...');
+    console.log(' Forking repository...');
     fork = await api('POST', `/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/forks`, {
       default_branch_only: true
     });
-    console.log(`✅ Forked: ${fork.full_name}`);
+    console.log(` Forked: ${fork.full_name}`);
     // Wait for fork to be ready
     await new Promise(r => setTimeout(r, 5000));
   }
@@ -452,14 +452,14 @@ async function main() {
   // 3. Get the SHA of the default branch (main)
   const upstreamRef = await api('GET', `/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/git/refs/heads/main`);
   const latestSha = upstreamRef.object.sha;
-  console.log(`✅ Latest main SHA: ${latestSha}`);
+  console.log(` Latest main SHA: ${latestSha}`);
 
   // 4. Create or update the branch in our fork
   let branchExists = false;
   try {
     await api('GET', `/repos/${me.login}/${UPSTREAM_REPO}/git/refs/heads/${BRANCH_NAME}`);
     branchExists = true;
-    console.log(`✅ Branch already exists: ${BRANCH_NAME}`);
+    console.log(` Branch already exists: ${BRANCH_NAME}`);
   } catch {
     // Branch doesn't exist, create it
   }
@@ -469,7 +469,7 @@ async function main() {
       ref: `refs/heads/${BRANCH_NAME}`,
       sha: latestSha
     });
-    console.log(`✅ Created branch: ${BRANCH_NAME}`);
+    console.log(` Created branch: ${BRANCH_NAME}`);
   }
 
   // 5. Get the current file SHA from upstream (needed for update)
@@ -477,9 +477,9 @@ async function main() {
   try {
     const fileInfo = await api('GET', `/repos/${me.login}/${UPSTREAM_REPO}/contents/${FILE_PATH}?ref=${BRANCH_NAME}`);
     fileSha = fileInfo.sha;
-    console.log(`✅ Got existing file SHA: ${fileSha}`);
+    console.log(` Got existing file SHA: ${fileSha}`);
   } catch {
-    console.log('📄 File not in fork yet, will create it');
+    console.log(' File not in fork yet, will create it');
   }
 
   // 6. Commit the mobile-responsive LandingPage.tsx
@@ -492,12 +492,12 @@ async function main() {
   if (fileSha) commitBody.sha = fileSha;
 
   const commit = await api('PUT', `/repos/${me.login}/${UPSTREAM_REPO}/contents/${FILE_PATH}`, commitBody);
-  console.log(`✅ Committed: ${commit.commit.sha}`);
+  console.log(` Committed: ${commit.commit.sha}`);
 
   // 7. Check if PR already exists
   const existingPRs = await api('GET', `/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/pulls?state=open&head=${me.login}:${BRANCH_NAME}`);
   if (existingPRs.length > 0) {
-    console.log(`✅ PR already exists: ${existingPRs[0].html_url}`);
+    console.log(` PR already exists: ${existingPRs[0].html_url}`);
     return;
   }
 
@@ -546,12 +546,12 @@ This PR makes the Crystal-PDF landing page fully responsive for mobile devices.
     maintainer_can_modify: true
   });
 
-  console.log(`\n🎉 PR CREATED SUCCESSFULLY!`);
-  console.log(`📋 PR URL: ${pr.html_url}`);
-  console.log(`📌 PR #${pr.number}: ${pr.title}`);
+  console.log(`\n PR CREATED SUCCESSFULLY!`);
+  console.log(` PR URL: ${pr.html_url}`);
+  console.log(` PR #${pr.number}: ${pr.title}`);
 }
 
 main().catch(err => {
-  console.error('❌ Error:', err.message);
+  console.error(' Error:', err.message);
   process.exit(1);
 });

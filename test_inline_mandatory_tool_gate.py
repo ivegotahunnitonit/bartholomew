@@ -34,9 +34,9 @@ def run_tests():
 
     gate.register_tool("write_file", write_file_tool)
 
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     # Test 1: Aliased Import Evasion (import os as o; o.system(...))
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     alias_code = """
 import os as o
 def do_bad():
@@ -49,9 +49,9 @@ def do_bad():
     assert safe1 is False
     assert any("os.system" in v for v in meta1['violations_found'])
 
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     # Test 2: Dynamic getattr Evasion (getattr(os, "system")(...))
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     getattr_code = """
 import os
 def do_dynamic():
@@ -65,9 +65,9 @@ def do_dynamic():
     assert safe2 is False
     assert any("getattr" in v for v in meta2['violations_found'])
 
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     # Test 3: Mandatory In-Line Execution Interception
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     tool_executed_flag = False
     res = gate.execute_gated_tool(
         agent_id="claude-desktop",
@@ -84,9 +84,9 @@ def do_dynamic():
     assert res['tool_executed'] is False
     assert tool_executed_flag is False
 
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     # Test 4: Legitimate Code Passes Cleanly
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     tool_executed_flag = False
     clean_code = """
 def add(a: int, b: int) -> int:

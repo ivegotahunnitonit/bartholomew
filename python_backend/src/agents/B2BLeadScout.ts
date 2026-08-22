@@ -65,7 +65,7 @@ export class B2BLeadScout {
       );
 
       if (totalLeadsGenerated % 2 === 0) {
-        console.log(`[B2BLeadScout] 🎯 Injected B2B Commercial Lead: ${target.name} | Resource: ${target.demandResource} | Budget: $${target.monthlyBudgetUSD.toLocaleString()}/mo | Total Pipeline: $${totalPipelineVolumeUSD.toLocaleString()}`);
+        console.log(`[B2BLeadScout]  Injected B2B Commercial Lead: ${target.name} | Resource: ${target.demandResource} | Budget: $${target.monthlyBudgetUSD.toLocaleString()}/mo | Total Pipeline: $${totalPipelineVolumeUSD.toLocaleString()}`);
       }
     } catch (err: any) {
       // Suppress minor database errors

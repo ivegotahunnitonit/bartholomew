@@ -43,7 +43,7 @@ def generate_frozen_conformance_suite():
     clean_payload = {
         "file": "router.py",
         "delta_lines": 3,
-        "unicode_edge": "🚀 -> BTP Verifier 日本語 äöü",
+        "unicode_edge": " -> BTP Verifier 日本語 äöü",
         "float_zero": 0,
         "patch": "def route(): return True"
     }

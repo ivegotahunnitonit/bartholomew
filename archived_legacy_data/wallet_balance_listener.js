@@ -23,7 +23,7 @@ async function checkOnChainBalance() {
 
     if (lastUsdcBalance !== -1 && usdc > lastUsdcBalance) {
       const diff = usdc - lastUsdcBalance;
-      console.log(`\n🎉 🎉 INCOMING PAYOUT DETECTED ON-CHAIN! Received +${diff.toFixed(2)} USDC! Total: ${usdc.toFixed(2)} USDC\n`);
+      console.log(`\n  INCOMING PAYOUT DETECTED ON-CHAIN! Received +${diff.toFixed(2)} USDC! Total: ${usdc.toFixed(2)} USDC\n`);
       fs.writeFileSync('PAYOUT_ALERT.json', JSON.stringify({
         timestamp: new Date().toISOString(),
         amount_received_usdc: diff,
@@ -39,6 +39,6 @@ async function checkOnChainBalance() {
   }
 }
 
-console.log('👀 BASE USDC ON-CHAIN BALANCE LISTENER ACTIVE — MONITORING 0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4 24/7');
+console.log(' BASE USDC ON-CHAIN BALANCE LISTENER ACTIVE — MONITORING 0xaD38221a686318aB1049fa5D60fA5b15DBB73ba4 24/7');
 checkOnChainBalance();
 setInterval(checkOnChainBalance, 10000);

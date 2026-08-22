@@ -26,9 +26,9 @@ from typing import Dict, Any, List, Tuple
 
 OKF_VERSION = "1.0"
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # Redaction Rules (PII & Security)
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 SECRET_PATTERNS = [
     (re.compile(r'sk-[a-zA-Z0-9]{20,}', re.IGNORECASE), '[REDACTED_API_KEY]'),
@@ -46,9 +46,9 @@ def sanitize_text(text: str) -> str:
         sanitized = pattern.sub(replacement, sanitized)
     return sanitized
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # CrewAI Memory Parsers
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 def parse_crewai_json(json_path: str) -> List[Dict[str, Any]]:
     """Parses a CrewAI memory JSON export."""
@@ -123,9 +123,9 @@ def _normalize_item(item: Dict[str, Any], idx: int) -> Dict[str, Any]:
         "tags": ["crewai", memory_type, "okf_migrated"],
     }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # OKF Bundle Generator
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 def export_to_okf(memories: List[Dict[str, Any]], output_dir: str) -> Tuple[int, str]:
     """Writes memories out as standard OKF markdown files."""
@@ -225,9 +225,9 @@ memanto migrate okf {output_dir} --dry-run
 
     return exported_count, manifest_path
 
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 # CLI Entry Point
-# ─────────────────────────────────────────────────────────────────────────────
+# 
 
 def main():
     parser = argparse.ArgumentParser(description="Migrate CrewAI memories to Open Knowledge Format (OKF)")
@@ -250,7 +250,7 @@ def main():
 
     print(f"[CrewAI Adapter] Extracted {len(memories)} memory records.")
     exported, manifest_file = export_to_okf(memories, args.output)
-    print(f"[CrewAI Adapter] ✅ Successfully exported {exported} OKF records to '{args.output}'.")
+    print(f"[CrewAI Adapter]  Successfully exported {exported} OKF records to '{args.output}'.")
     print(f"[CrewAI Adapter] Manifest: {manifest_file}")
 
 if __name__ == "__main__":

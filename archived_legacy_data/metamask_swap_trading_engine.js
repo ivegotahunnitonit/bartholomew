@@ -67,6 +67,6 @@ async function runMetaMaskSwapTrader() {
   }
 }
 
-console.log('⚡ METAMASK BASE DEX SWAP & TRADING ENGINE LAUNCHED — POLLING 24/7');
+console.log(' METAMASK BASE DEX SWAP & TRADING ENGINE LAUNCHED — POLLING 24/7');
 runMetaMaskSwapTrader();
 setInterval(runMetaMaskSwapTrader, 12000); // 12s loop

@@ -143,16 +143,16 @@ def run_trust_adaptation_experiment():
         
         # 1. Decision WITHOUT Bartholomew
         res_without = agent_a_baseline.decide_and_execute_delegation(p["target"], p["task"], bartholomew)
-        print(f"  ├─ [WITHOUT BARTHOLOMEW]: Strategy: {res_without['strategy']}")
-        print(f"  │  └─ Outcome: {res_without['risk_outcome']}")
+        print(f"   [WITHOUT BARTHOLOMEW]: Strategy: {res_without['strategy']}")
+        print(f"     Outcome: {res_without['risk_outcome']}")
 
         # 2. Decision WITH Bartholomew
         res_with = agent_a_with_b.decide_and_execute_delegation(p["target"], p["task"], bartholomew)
-        print(f"  ├─ [WITH BARTHOLOMEW]:    Strategy: {res_with['strategy']}")
-        print(f"  │  └─ Decision: {res_with['decision']} | Reason: {res_with.get('reason')}")
+        print(f"   [WITH BARTHOLOMEW]:    Strategy: {res_with['strategy']}")
+        print(f"     Decision: {res_with['decision']} | Reason: {res_with.get('reason')}")
 
         strategy_adapted = (res_with["strategy"] == p["expected_strategy_with"])
-        print(f"  └─ Material Decision Improvement: [{'YES (PROVEN)' if strategy_adapted else 'NO'}]")
+        print(f"   Material Decision Improvement: [{'YES (PROVEN)' if strategy_adapted else 'NO'}]")
         
         results.append({
             "persona": p["name"],

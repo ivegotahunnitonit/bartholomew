@@ -65,8 +65,8 @@ export function activate(context: ExtensionContext) {
     const isConfigured = fs.existsSync(btpDir);
 
     const message = isConfigured
-      ? `🛡️ Bartholomew Autonomous AI Guard (BTP v2.2.0)\n\n• Status: ACTIVE\n• AST Gating: Sub-35 µs\n• Hermetic Sandbox: ENABLED\n• LDMU Decay Limiter: ACTIVE\n• Claude/Cursor MCP Server: REGISTERED`
-      : `⚠️ Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'python cli.py init' in terminal to generate keys & policy.`;
+      ? ` Bartholomew Autonomous AI Guard (BTP v2.2.0)\n\n• Status: ACTIVE\n• AST Gating: Sub-35 µs\n• Hermetic Sandbox: ENABLED\n• LDMU Decay Limiter: ACTIVE\n• Claude/Cursor MCP Server: REGISTERED`
+      : ` Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'python cli.py init' in terminal to generate keys & policy.`;
 
     vscode.window.showInformationMessage(message, 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
       if (selection === 'Open Web Dashboard') {
@@ -78,7 +78,7 @@ export function activate(context: ExtensionContext) {
   });
 
   const validatePolicyCmd = vscode.commands.registerCommand('bartholomew.validatePolicy', () => {
-    vscode.window.showInformationMessage('✅ BTP Declarative Policy: Invariant assertions validated with 0 errors.');
+    vscode.window.showInformationMessage(' BTP Declarative Policy: Invariant assertions validated with 0 errors.');
   });
 
   const openDashboardCmd = vscode.commands.registerCommand('bartholomew.openDashboard', () => {

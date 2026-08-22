@@ -29,7 +29,7 @@ def test_verification_commitment_sla():
         sandbox_tests_total=48
     )
     print(f"[RECEIPT ISSUED] ID: {receipt['receipt_id']} | Status: {receipt['status']}")
-    print(f"  └─ Audit: {receipt['sandbox_audit']}")
+    print(f"   Audit: {receipt['sandbox_audit']}")
     assert receipt["status"] == "VERIFIED_ACTIVE"
     
     # 2. Test Invalid Claim

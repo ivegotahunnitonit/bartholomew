@@ -17,14 +17,14 @@ BTP v2.2 is **formally frozen**. It enables autonomous systems to establish iden
 BTP does not mandate a single centralized authority. Instead, **any organization, agent network, or sovereign enterprise cluster can configure its own root trust store**:
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   DECENTRALIZED MULTI-AUTHORITY STORE                  │
-├────────────────────────────────────────────────────────────────────────┤
-│ [Recipient Agent / Deployment Gate]                                    │
-│    ├── Trust Store: [Pubkey_Authority_A, Pubkey_Authority_B]           │
-│    ├── Validates:   Attestation signed by any recognized authority     │
-│    └── Rejects:     Attestations from unrecognized/rogue keys          │
-└────────────────────────────────────────────────────────────────────────┘
+
+                   DECENTRALIZED MULTI-AUTHORITY STORE                  
+
+ [Recipient Agent / Deployment Gate]                                    
+     Trust Store: [Pubkey_Authority_A, Pubkey_Authority_B]           
+     Validates:   Attestation signed by any recognized authority     
+     Rejects:     Attestations from unrecognized/rogue keys          
+
 ```
 
 ---

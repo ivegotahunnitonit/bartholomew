@@ -77,9 +77,9 @@ export class SecurityDriftAuditor {
     if (auditHistory.length > 50) auditHistory.shift();
 
     if (violations.length > 0) {
-      console.warn(`[SecurityAudit] ⚠️  Audit #${totalAuditsCompleted} detected ${violations.length} issue(s):`, violations.join(' | '));
+      console.warn(`[SecurityAudit]   Audit #${totalAuditsCompleted} detected ${violations.length} issue(s):`, violations.join(' | '));
     } else if (totalAuditsCompleted % 10 === 0) {
-      console.log(`[SecurityAudit] ✅ Audit #${totalAuditsCompleted} PASSED | RAM: ${memUsageMB}MB | Config: CLEAN | RateLimits: ACTIVE | SSL: OK`);
+      console.log(`[SecurityAudit]  Audit #${totalAuditsCompleted} PASSED | RAM: ${memUsageMB}MB | Config: CLEAN | RateLimits: ACTIVE | SSL: OK`);
     }
 
     return result;

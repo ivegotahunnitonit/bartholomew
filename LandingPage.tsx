@@ -98,7 +98,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#050914] text-slate-100 font-sans selection:bg-emerald-500/30 selection:text-emerald-300">
-      {/* ── Top Bar ─────────────────────────────────────────────── */}
+      {/*  Top Bar  */}
       <nav className="border-b border-slate-800/80 bg-[#050914]/90 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
@@ -127,7 +127,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero Section ────────────────────────────────────────── */}
+      {/*  Hero Section  */}
       <section className="relative pt-20 pb-16 px-6 max-w-6xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium mb-6">
           <Zap className="w-3.5 h-3.5 text-emerald-400" /> Powered by Compiled Native Golang (<span className="text-emerald-400 font-mono">&lt; 1ms</span> Sub-Millisecond Speed)
@@ -181,10 +181,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Interactive Live Audit Sandbox ───────────────────────── */}
+      {/*  Interactive Live Audit Sandbox  */}
       <section id="sandbox" className="py-16 px-6 max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-black text-white tracking-tight mb-2">⚡ Interactive Trajectory Audit Sandbox</h2>
+          <h2 className="text-3xl font-black text-white tracking-tight mb-2"> Interactive Trajectory Audit Sandbox</h2>
           <p className="text-slate-400 text-sm">Test our sub-millisecond Golang security engine with a sample AI agent step dump.</p>
         </div>
 
@@ -323,7 +323,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Pricing Section ─────────────────────────────────────── */}
+      {/*  Pricing Section  */}
       <section className="py-16 px-6 max-w-6xl mx-auto border-t border-slate-800/80">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-black text-white tracking-tight mb-2">Transparent B2B Pricing Tiers</h2>
@@ -390,7 +390,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────────── */}
+      {/*  Footer  */}
       <footer className="border-t border-slate-800/80 bg-[#03060d] px-6 py-8 text-center text-slate-500 text-xs">
         <div className="flex justify-center items-center gap-2 mb-2 font-bold text-slate-400">
           <Shield className="w-4 h-4 text-emerald-400" /> Agentic-Eval Security Engine v2.0.0

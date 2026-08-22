@@ -132,19 +132,19 @@ class MemoryExplainService:
 
         if "memory_type" in filters:
             if metadata.get("memory_type") == filters["memory_type"]:
-                status_parts.append(f"✓ Type match: {filters['memory_type']}")
+                status_parts.append(f" Type match: {filters['memory_type']}")
             else:
                 status_parts.append(
-                    f"✗ Type mismatch: expected {filters['memory_type']}, got {metadata.get('memory_type')}"
+                    f" Type mismatch: expected {filters['memory_type']}, got {metadata.get('memory_type')}"
                 )
 
         if "confidence_min" in filters:
             conf = metadata.get("confidence", 0.0)
             if conf >= filters["confidence_min"]:
-                status_parts.append(f"✓ Confidence OK: {conf}")
+                status_parts.append(f" Confidence OK: {conf}")
             else:
                 status_parts.append(
-                    f"✗ Low confidence: {conf} < {filters['confidence_min']}"
+                    f" Low confidence: {conf} < {filters['confidence_min']}"
                 )
 
         return "; ".join(status_parts) if status_parts else "Passed all filters"

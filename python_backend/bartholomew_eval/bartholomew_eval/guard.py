@@ -73,7 +73,7 @@ def guard(
             estimated_tokens = max(1, len(payload_str) // 4)
             if estimated_tokens > max_budget_tokens:
                 raise GuardViolation(
-                    f"🚨 [Bartholomew Guard]: Token budget cap exceeded ({estimated_tokens} > {max_budget_tokens})!",
+                    f" [Bartholomew Guard]: Token budget cap exceeded ({estimated_tokens} > {max_budget_tokens})!",
                     audit_summary=summary,
                 )
 

@@ -20,13 +20,13 @@ We evaluated **12,000 total task executions** across **3 bidirectional delegatio
 2. **Treatment Condition (BTP v2.2 Enabled):** Actions require an RFC 8785 canonical hash binding and FIPS 186-5 Ed25519 digital signature verified independently and offline by the recipient.
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        3 EVALUATED DELEGATION CHANNELS                 │
-├────────────────────────────────────────────────────────────────────────┤
-│ CHANNEL 1: LangChain/LangGraph  ──(BTP v2.2)──► Microsoft AutoGen      │
-│ CHANNEL 2: Microsoft AutoGen    ──(BTP v2.2)──► LangChain/LangGraph    │
-│ CHANNEL 3: CrewAI Orchestrator  ──(BTP v2.2)──► ReAct Tool Runner      │
-└────────────────────────────────────────────────────────────────────────┘
+
+                        3 EVALUATED DELEGATION CHANNELS                 
+
+ CHANNEL 1: LangChain/LangGraph  (BTP v2.2) Microsoft AutoGen      
+ CHANNEL 2: Microsoft AutoGen    (BTP v2.2) LangChain/LangGraph    
+ CHANNEL 3: CrewAI Orchestrator  (BTP v2.2) ReAct Tool Runner      
+
 ```
 
 ---

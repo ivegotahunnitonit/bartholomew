@@ -1,10 +1,10 @@
-# 🚀 Bartholomew — Crowdsourcing & Investment Launch Roadmap
+#  Bartholomew — Crowdsourcing & Investment Launch Roadmap
 
 **Target**: Launch Bartholomew, secure initial $2.5M VC Seed Funding / Crowdsourcing, and onboard the first 10 Enterprise Design Partners.
 
 ---
 
-## 📌 Phase 1: Founder Data Room & Artifact Preparation (Days 1–7)
+##  Phase 1: Founder Data Room & Artifact Preparation (Days 1–7)
 
 Before reaching out to investors or launching public crowdsourcing, assemble your **Investor Data Room**:
 
@@ -21,15 +21,15 @@ Before reaching out to investors or launching public crowdsourcing, assemble you
 
 ---
 
-## 💼 Phase 2: VC & Angel Investor Outreach (Days 8–21)
+##  Phase 2: VC & Angel Investor Outreach (Days 8–21)
 
-### 🎯 Target Investor Profiles
+###  Target Investor Profiles
 Target Seed-stage venture capital firms specializing in **AI Infrastructure**, **Cybersecurity**, and **Developer Tools**:
 - **Tier 1 Tech VCs**: Sequoia Capital, Andreessen Horowitz (a16z), Founders Fund, Accel, Benchmark.
 - **Cybersecurity Focused VCs**: YL Ventures, Ballistic Ventures, ForgePoint Capital.
 - **AI Infrastructure Angels**: Early engineers and CISOs at Datadog, CrowdStrike, OpenAI, Anthropic, Scale AI.
 
-### 📧 Investor Cold Pitch Template (The One-Liner)
+###  Investor Cold Pitch Template (The One-Liner)
 ```text
 Subject: Bartholomew (1.44 μs Golang AI Security Engine — Datadog + CrowdStrike for AI Agents)
 
@@ -53,7 +53,7 @@ Founder, Bartholomew
 
 ---
 
-## 🌐 Phase 3: Public Crowdsourcing & Community Launch (Days 22–35)
+##  Phase 3: Public Crowdsourcing & Community Launch (Days 22–35)
 
 ### 1. Developer Community Crowdsourcing
 - **GitHub Action Launch**: Publish `ivegotahunnitonit/bartholomew-action@v2` to the GitHub Marketplace.
@@ -66,7 +66,7 @@ Founder, Bartholomew
 
 ---
 
-## 🏢 Phase 4: Enterprise Design Partner Onboarding (Days 36–60)
+##  Phase 4: Enterprise Design Partner Onboarding (Days 36–60)
 
 Target 5–10 Enterprise Design Partners for initial pilots:
 1. Offer **Zero-Risk 30-Day Air-Gapped Proof of Concept (PoC)**.
@@ -76,7 +76,7 @@ Target 5–10 Enterprise Design Partners for initial pilots:
 
 ---
 
-## 🏁 Summary Checklist
+##  Summary Checklist
 
 - [x] Full-Stack App Usability Streamlined & Simplified
 - [x] Removal of $ Pricing Values from Solution Cards

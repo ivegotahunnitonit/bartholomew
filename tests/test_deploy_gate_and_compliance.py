@@ -77,9 +77,9 @@ def test_soc2_compliance_exporter():
     out_file = exporter.export_to_file(bundle, "SOC2_COMPLIANCE_EVIDENCE_PACK.json")
     
     print(f"[COMPLIANCE BUNDLE GENERATED] File: {out_file} | Report ID: {bundle['report_id']}")
-    print(f"  ├─ Monitored Actions: {bundle['telemetry_summary']['total_autonomous_actions_monitored']}")
-    print(f"  ├─ Threats Blocked:   {bundle['telemetry_summary']['security_threats_blocked']}")
-    print(f"  └─ Frameworks:        {len(bundle['frameworks_covered'])} Standard Certifications Mapped")
+    print(f"   Monitored Actions: {bundle['telemetry_summary']['total_autonomous_actions_monitored']}")
+    print(f"   Threats Blocked:   {bundle['telemetry_summary']['security_threats_blocked']}")
+    print(f"   Frameworks:        {len(bundle['frameworks_covered'])} Standard Certifications Mapped")
     
     assert bundle["telemetry_summary"]["cryptographic_integrity_rate"] == "100.00%"
     assert os.path.exists(out_file)

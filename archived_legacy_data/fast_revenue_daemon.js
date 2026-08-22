@@ -108,6 +108,6 @@ async function runUniversalMultiAssetScan() {
   }
 }
 
-console.log('🌍 ACN UNIVERSAL MULTI-ASSET DAEMON v9.0 LAUNCHED — POLLING ALL CRYPTO ASSETS 24/7');
+console.log(' ACN UNIVERSAL MULTI-ASSET DAEMON v9.0 LAUNCHED — POLLING ALL CRYPTO ASSETS 24/7');
 runUniversalMultiAssetScan();
 setInterval(runUniversalMultiAssetScan, 10000); // 10s loop

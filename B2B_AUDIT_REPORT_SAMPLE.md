@@ -1,4 +1,4 @@
-# 📜 OFFICIAL AI AGENT AUDIT & RELIABILITY CERTIFICATE
+#  OFFICIAL AI AGENT AUDIT & RELIABILITY CERTIFICATE
 
 **Issued by:** Agentic-Eval Security Engine (v2.0.0-ENTERPRISE)  
 **Target Framework:** Custom LangChain / Python Step Agent  
@@ -7,7 +7,7 @@
 
 ---
 
-## 📊 Executive Audit Summary
+##  Executive Audit Summary
 
 | Metric | Evaluation Result | Compliance Status |
 | :--- | :--- | :--- |
@@ -20,7 +20,7 @@
 
 ---
 
-## 🔍 Detailed OWASP LLM Top 10 Finding Log
+##  Detailed OWASP LLM Top 10 Finding Log
 
 ### Finding 1: Multi-Step Tool Loop Recursion (Medium Severity)
 - **OWASP Category**: `LLM08: Excessive Dependence & Infinite Loop`
@@ -31,7 +31,7 @@
 
 ---
 
-## 🛠️ Generated Remediation Patch Code
+##  Generated Remediation Patch Code
 
 Copy and apply this decorator patch to enforce an exponential backoff loop breaker on tool execution:
 
@@ -61,7 +61,7 @@ def loop_breaker_guard(max_retries=2, backoff_sec=1.0):
 
 ---
 
-## ✅ Final Attestation Statement
+##  Final Attestation Statement
 
 This certificate confirms that the target AI Agent trajectory was evaluated against **OWASP Top 10 for LLMs** and **SOC2 AI Security Standards**. The codebase exhibits zero credential leaks and meets production deployment criteria.
 

@@ -6,7 +6,7 @@ This showcase provides a production-ready migration path for **CrewAI** agents t
 
 ---
 
-## 🌟 Highlights
+##  Highlights
 
 - **Multi-Store Support**: Automatically parses CrewAI SQLite database files (`.db`/`.sqlite`) and JSON export dumps.
 - **OKF Type Mapping**: Categorizes CrewAI entries into standard OKF schema types (`fact`, `preference`, `context`, `entity`).
@@ -16,7 +16,7 @@ This showcase provides a production-ready migration path for **CrewAI** agents t
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Run Sample Migration
 
@@ -39,7 +39,7 @@ memanto migrate okf ./sample_output/okf --dry-run
 
 ---
 
-## 📊 Recall Parity & Verification Matrix
+##  Recall Parity & Verification Matrix
 
 | Metric | Result |
 |---|---|
@@ -51,7 +51,7 @@ memanto migrate okf ./sample_output/okf --dry-run
 
 ---
 
-## 🧪 Unit Tests
+##  Unit Tests
 
 Run unit test suite:
 ```bash

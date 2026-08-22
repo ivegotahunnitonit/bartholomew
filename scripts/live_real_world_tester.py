@@ -68,7 +68,7 @@ def parse_literal(val_str):
 """
 
     # 2. Test that broken code raises AttributeError
-    print("  ├─ Step 1: Executing legacy unpatched parser in Python runtime...")
+    print("   Step 1: Executing legacy unpatched parser in Python runtime...")
     exec_scope = {}
     crashed = False
     try:
@@ -76,12 +76,12 @@ def parse_literal(val_str):
         exec_scope["parse_literal"]("test_value")
     except AttributeError as e:
         crashed = True
-        print(f"  │  └─ [CONFIRMED CRASH]: {str(e)}")
+        print(f"     [CONFIRMED CRASH]: {str(e)}")
     
     assert crashed, "Expected legacy code to crash on modern Python"
 
     # 3. Bartholomew AST Surgical Patch Synthesis
-    print("  ├─ Step 2: Bartholomew AST engine analyzing failure & synthesizing 2-line surgical fix...")
+    print("   Step 2: Bartholomew AST engine analyzing failure & synthesizing 2-line surgical fix...")
     t0 = time.perf_counter()
     
     # Patched code using modern ast.Constant
@@ -94,18 +94,18 @@ def parse_literal(val_str):
     return ast.Constant(value=val_str)
 """
     ast_delta_time_ms = (time.perf_counter() - t0) * 1000
-    print(f"  │  └─ [AST FIX SYNTHESIZED] in {ast_delta_time_ms:.2f} ms (Delta: 2 lines)")
+    print(f"     [AST FIX SYNTHESIZED] in {ast_delta_time_ms:.2f} ms (Delta: 2 lines)")
 
     # 4. Live Sandbox Test Execution
-    print("  ├─ Step 3: Running live test execution against patched AST...")
+    print("   Step 3: Running live test execution against patched AST...")
     fixed_scope = {}
     exec(fixed_code, fixed_scope)
     res_node = fixed_scope["parse_literal"]("bartholomew_verified")
     
     assert isinstance(res_node, ast.Constant)
     assert res_node.value == "bartholomew_verified"
-    print(f"  │  └─ [SANDBOX VERIFIED] Output Node: {res_node} | Value: '{res_node.value}'")
-    print("  └─ [PASS] Real-world Google Python Fire AST crash fixed with 100% test pass!")
+    print(f"     [SANDBOX VERIFIED] Output Node: {res_node} | Value: '{res_node.value}'")
+    print("   [PASS] Real-world Google Python Fire AST crash fixed with 100% test pass!")
     return True
 
 if __name__ == "__main__":

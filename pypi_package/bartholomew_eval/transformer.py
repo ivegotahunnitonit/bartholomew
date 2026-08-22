@@ -90,7 +90,7 @@ class BartholomewTransformerEngine:
             }
 
         if _NUMPY_AVAILABLE:
-            # ⚡ Ultra-fast NumPy vectorized matrix evaluation (< 20 microseconds)
+            #  Ultra-fast NumPy vectorized matrix evaluation (< 20 microseconds)
             embeddings = np.array([self._text_to_embedding_vector(str(s.get("content", ""))) for s in steps], dtype=np.float32)
             n_steps = embeddings.shape[0]
 

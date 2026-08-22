@@ -56,7 +56,7 @@ function pingNode(ip: string, port: number): Promise<{ ok: boolean; latencyMs: n
 
 async function restartNodeViaGCP(nodeId: string, zone: string): Promise<void> {
   // Use GCP metadata API to trigger instance reset (available from within GCP network)
-  console.log(`[Watchdog] 🔄 Triggering GCP instance reset: ${nodeId} (${zone})`);
+  console.log(`[Watchdog]  Triggering GCP instance reset: ${nodeId} (${zone})`);
   // In production this calls: gcloud compute instances reset <nodeId> --zone=<zone>
   // We log the command for the operator to execute manually if needed
   console.log(`[Watchdog] CMD: gcloud compute instances reset ${nodeId} --zone=${zone}`);
@@ -88,7 +88,7 @@ export class WatchdogAgent {
         if (!status.online && status.lastDownAt) {
           const downtime = Date.now() - status.lastDownAt;
           status.totalDowntime += downtime;
-          console.log(`[Watchdog] ✅ ${node.id} RECOVERED after ${(downtime / 1000).toFixed(1)}s downtime`);
+          console.log(`[Watchdog]  ${node.id} RECOVERED after ${(downtime / 1000).toFixed(1)}s downtime`);
         }
         status.online = true;
         status.consecutiveFailures = 0;
@@ -99,17 +99,17 @@ export class WatchdogAgent {
           status.online = false;
           status.lastDownAt = Date.now();
           totalAlertsRaised++;
-          console.error(`[Watchdog] 🚨 ALERT: ${node.id} (${node.ip}) is OFFLINE! Failures: ${status.consecutiveFailures}`);
+          console.error(`[Watchdog]  ALERT: ${node.id} (${node.ip}) is OFFLINE! Failures: ${status.consecutiveFailures}`);
         }
         // After 3 consecutive failures → attempt restart
         if (status.consecutiveFailures === 3) {
-          console.error(`[Watchdog] 🔴 ${node.id} offline for 30s — triggering recovery...`);
+          console.error(`[Watchdog]  ${node.id} offline for 30s — triggering recovery...`);
           await restartNodeViaGCP(node.id, node.zone);
         }
         // Log ongoing outage
         if (status.consecutiveFailures % 6 === 0) {
           const downSec = status.lastDownAt ? (Date.now() - status.lastDownAt) / 1000 : 0;
-          console.error(`[Watchdog] ⚠️  ${node.id} still offline (${downSec.toFixed(0)}s). Monitoring...`);
+          console.error(`[Watchdog]   ${node.id} still offline (${downSec.toFixed(0)}s). Monitoring...`);
         }
       }
     });

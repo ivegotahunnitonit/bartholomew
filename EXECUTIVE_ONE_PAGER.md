@@ -52,22 +52,22 @@ Bartholomew operates via a dual-layered execution architecture:
 - **Python Enterprise Policy & Remediation Suite (`python_backend/`)**: Real-time token budget enforcement, automated code patch generation, and cryptographic attestation generation.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  BARTHOLOMEW CLI / CI/CD SECURITY GATE                       │
-│  - Inspects pre-commit trajectories & blocks vulnerabilities │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ Sub-Millisecond Inspection (<1ms)
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  GOLANG NATIVE TELEMETRY ENGINE (go_services/main.go)        │
-│  - Real-time OWASP pattern match & trajectory isolation      │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ Cryptographic Verification
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  ENTERPRISE POLICY GATEWAY (python_backend/app/main.py)      │
-│  - Token budget kill-switches & SOC2 attestation generation   │
-└──────────────────────────────┴──────────────────────────────┘
+
+  BARTHOLOMEW CLI / CI/CD SECURITY GATE                       
+  - Inspects pre-commit trajectories & blocks vulnerabilities 
+
+                                Sub-Millisecond Inspection (<1ms)
+                               
+
+  GOLANG NATIVE TELEMETRY ENGINE (go_services/main.go)        
+  - Real-time OWASP pattern match & trajectory isolation      
+
+                                Cryptographic Verification
+                               
+
+  ENTERPRISE POLICY GATEWAY (python_backend/app/main.py)      
+  - Token budget kill-switches & SOC2 attestation generation   
+
 ```
 
 ---

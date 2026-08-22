@@ -213,7 +213,7 @@ export default function EpistemicEngines() {
           <div className="mb-6 p-5 rounded-xl" style={{ background: 'rgba(6,15,31,0.9)', border: `1px solid ${engine.color}30` }}>
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono font-bold uppercase tracking-widest" style={{ color: engine.color }}>
-                ⚡ Live Engine Calculator
+                 Live Engine Calculator
               </span>
               <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
                 Real-Time Computation

@@ -12,9 +12,9 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
   <!-- LEFT SIDEBAR NAV                                               -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,9 +70,9 @@
     </div>
   </nav>
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
   <!-- MAIN CONTENT AREA                                              -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
   <div class="main-content">
 
     <!-- Top Bar -->
@@ -97,7 +97,7 @@
       </div>
     </header>
 
-    <!-- ─────────────────────────────────── PAGE: COMMAND CENTER ─── -->
+    <!--  PAGE: COMMAND CENTER  -->
     <section class="page active" id="page-dashboard">
       <!-- Stats Row -->
       <div class="stats-grid">
@@ -212,7 +212,7 @@
 
 
 
-    <!-- ─────────────────────────────────── PAGE: MARKETPLACE ─── -->
+    <!--  PAGE: MARKETPLACE  -->
     <section class="page" id="page-marketplace">
       <div class="workspace-layout">
         <!-- Listings Table -->
@@ -315,7 +315,7 @@
     </section>
 
 
-    <!-- ────────────────────────────── PAGE: TREASURY & LEDGER ─── -->
+    <!--  PAGE: TREASURY & LEDGER  -->
     <section class="page" id="page-wallet">
       <div class="paypal-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
         
@@ -328,11 +328,11 @@
             </div>
             <div class="paypal-balance-list">
               <div class="paypal-balance-item">
-                <span class="paypal-balance-label">⚡ Lightning (BOLT11)</span>
+                <span class="paypal-balance-label"> Lightning (BOLT11)</span>
                 <span class="paypal-balance-value" id="pp-bal-lightning">$0.00</span>
               </div>
               <div class="paypal-balance-item">
-                <span class="paypal-balance-label">🛡 Base USDC (Layer 2)</span>
+                <span class="paypal-balance-label"> Base USDC (Layer 2)</span>
                 <span class="paypal-balance-value" id="pp-bal-base">$0.00</span>
               </div>
               <div class="paypal-balance-item">
@@ -359,14 +359,14 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
               <div>
-                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;">⚡ Lightning Invoice Address</span>
+                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;"> Lightning Invoice Address</span>
                 <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:6px; padding:0.4rem 0.6rem;">
                   <span id="wallet-addr-lightning" style="font-family:var(--font-mono); font-size:0.75rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:80%;">loading...</span>
                   <button class="btn btn-sm btn-secondary" onclick="copyToClipboard('wallet-addr-lightning')">Copy</button>
                 </div>
               </div>
               <div>
-                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;">🛡 Base USDC Wallet</span>
+                <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem;"> Base USDC Wallet</span>
                 <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:6px; padding:0.4rem 0.6rem;">
                   <span id="wallet-addr-base" style="font-family:var(--font-mono); font-size:0.75rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:80%;">loading...</span>
                   <button class="btn btn-sm btn-secondary" onclick="copyToClipboard('wallet-addr-base')">Copy</button>
@@ -510,7 +510,7 @@
       </div>
     </section>
 
-    <!-- ────────────────────────────── PAGE: ORCHESTRATOR & MINERS ─── -->
+    <!--  PAGE: ORCHESTRATOR & MINERS  -->
     <section class="page" id="page-orchestrator">
       
       <!-- Combined Mining & Cluster Stats -->
@@ -596,7 +596,7 @@
       </div>
     </section>
 
-    <!-- ──────────────────────────────── PAGE: P2P NETWORK ─── -->
+    <!--  PAGE: P2P NETWORK  -->
     <section class="page" id="page-network">
       <div class="workspace-layout">
         <div class="primary-column">
@@ -639,7 +639,7 @@
       </div>
     </section>
 
-    <!-- ──────────────────────────────────── PAGE: SETTINGS ─── -->
+    <!--  PAGE: SETTINGS  -->
     <section class="page" id="page-settings">
       <div class="workspace-layout">
         <div class="primary-column">
@@ -768,9 +768,9 @@
   </div><!-- /main-content -->
 
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
   <!-- MODALS                                                         -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  -->
 
   <!-- MODAL: Payment Settlement -->
   <div class="modal-overlay" id="payment-modal">
@@ -892,7 +892,7 @@
 
         <!-- Jester special controls -->
         <div id="modal-jester-controls" style="display:none;">
-          <button class="btn btn-sm w-full" style="border-color:#ff6b35;color:#ff6b35;margin-bottom:0.5rem;" onclick="roastNetwork()">🔥 Roast the Network</button>
+          <button class="btn btn-sm w-full" style="border-color:#ff6b35;color:#ff6b35;margin-bottom:0.5rem;" onclick="roastNetwork()"> Roast the Network</button>
           <div id="jester-roast-output" style="font-size:0.75rem;color:var(--accent-amber);min-height:2rem;padding:0.5rem;border:1px dashed var(--panel-border);"></div>
         </div>
 

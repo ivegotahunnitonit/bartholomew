@@ -6,7 +6,7 @@ This showcase provides a production-ready migration path for official **OpenAI C
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 python3 migrate_chatgpt.py --source sample_data.json --output ./sample_output/okf

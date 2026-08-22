@@ -82,7 +82,7 @@ export class BountyClaimer {
       const status = await postComment(parsed.owner, parsed.repo, parsed.number, claimComment);
       if (status === 201) {
         claimed.add(bounty.id);
-        console.log(`[BountyClaimer] ✅ CLAIMED: $${bounty.rewardUsd} bounty on ${bounty.url} (HTTP ${status})`);
+        console.log(`[BountyClaimer]  CLAIMED: $${bounty.rewardUsd} bounty on ${bounty.url} (HTTP ${status})`);
       } else {
         console.log(`[BountyClaimer] Claim attempt failed: HTTP ${status} on ${bounty.url}`);
       }
