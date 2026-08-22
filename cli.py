@@ -1,22 +1,25 @@
-#!/usr/bin/env python3
 """
-Bartholomew CLI — Sub-Millisecond AI Agent Guardrail, Daemon & MCP Controller
+Bartholomew CLI Tool (BTP v2.2.0)
+=================================
+Command line interface for initializing, managing, and inspecting
+Bartholomew sovereign trust roots, local daemons, and MCP servers.
 """
 
 import sys
 import os
 import argparse
 import subprocess
-import time
-import urllib.request
 import json
+import urllib.request
 
+# Ensure parent directory in path
 parent_dir = os.path.dirname(os.path.abspath(__file__))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 from src.trust_protocol import BartholomewTrustAuthority
 from src.declarative_policy_engine import DeclarativePolicyEngine
+from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
@@ -28,21 +31,30 @@ def cmd_version(args):
 def cmd_init(args):
     print("[+] Initializing local Bartholomew sovereign trust root...")
     authority = BartholomewTrustAuthority()
-    policy_dir = os.path.join(os.getcwd(), ".btp")
-    os.makedirs(policy_dir, exist_ok=True)
-    policy_path = os.path.join(policy_dir, "policy.yaml")
+    
+    dot_btp = os.path.join(parent_dir, ".btp")
+    os.makedirs(dot_btp, exist_ok=True)
 
+    policy_path = os.path.join(dot_btp, "policy.yaml")
     if not os.path.exists(policy_path):
         sample_policy = """version: "2.2.0"
-policy_id: "urn:btp:policy:default"
+policy_id: "urn:btp:policy:local-workspace"
+description: "Local workspace invariant security policy"
+
 rules:
   - id: "RULE_SPEND_CAP"
-    field: "amount_usd"
     type: "max_threshold"
+    field: "amount_usd"
     value: 500.00
     action: "DENY"
 
-  - id: "RULE_FORBIDDEN_COMMANDS"
+  - id: "RULE_DIMINISHING_MARGINAL_UTILITY"
+    type: "diminishing_marginal_utility"
+    decay_rate: 0.35
+    min_utility_threshold: 0.15
+    action: "DENY"
+
+  - id: "RULE_DESTRUCTIVE_AST"
     type: "forbidden_substrings"
     patterns:
       - "rm -rf"
@@ -85,36 +97,47 @@ def cmd_daemon_status(args):
     url = f"http://127.0.0.1:{port}/v1/status"
     try:
         req = urllib.request.Request(url)
-        with urllib.request.urlopen(req, timeout=3) as resp:
+        with urllib.request.urlopen(req, timeout=1.5) as resp:
             data = json.loads(resp.read().decode())
-            print("==================================================")
-            print("  BARTHOLOMEW LOCAL DAEMON STATUS: ACTIVE (🟢)   ")
-            print("==================================================")
-            print(f"Version:            {data.get('version')}")
-            print(f"Host:               {data.get('host')}:{data.get('port')}")
-            print(f"Uptime:             {data.get('uptime_seconds')}s")
-            print(f"Total Evaluations:  {data.get('total_evaluations')}")
-            print(f"Total Allowed:      {data.get('total_allowed')}")
-            print(f"Total Blocked:      {data.get('total_blocked')}")
-            print(f"Average Latency:    {data.get('average_latency_us')} µs")
-            print(f"Active Approvals:   {data.get('active_approvals_count')}")
-            print(f"Public Key:         {data.get('public_key')}")
-            print("==================================================")
+            print(f"[OK] Bartholomew Daemon is ONLINE (PID / Uptime: {data.get('uptime_seconds')}s)")
+            print(f"  * Public Key    : {data.get('public_key')}")
+            print(f"  * Total Evals   : {data.get('total_evaluations')}")
+            print(f"  * Blocked Attacks: {data.get('total_blocked')}")
+            print(f"  * Average Latency: {data.get('average_latency_us')} us")
     except Exception:
         print("[!] Bartholomew daemon is currently OFFLINE.")
         print("    Run 'python cli.py daemon start' to launch.")
 
 
 def cmd_mcp_start(args):
-    from mcp_server import BartholomewMCPServer
-    server = BartholomewMCPServer(workspace_root=args.workspace)
-    server.run_stdio()
+    from mcp_server import start_mcp_server
+    workspace = args.workspace or os.path.join(parent_dir, "workspace")
+    start_mcp_server(workspace_root=workspace)
 
 
 def cmd_mcp_install(args):
-    from mcp_installer import install_mcp_config
-    target = getattr(args, "target", "claude")
-    install_mcp_config(target=target)
+    from mcp_installer import install_mcp_for_target
+    target = args.target or "claude"
+    install_mcp_for_target(target=target)
+
+
+def cmd_policy_validate(args):
+    file_path = args.file or "policies/default_security_policy.yaml"
+    if not os.path.isabs(file_path):
+        file_path = os.path.join(parent_dir, file_path)
+    print(f"[*] Validating declarative policy at {file_path}...")
+    engine = DeclarativePolicyEngine(file_path)
+    print(f"[OK] Policy '{engine.policy_id}' validated successfully ({len(engine.rules)} rules active).")
+
+
+def cmd_policy_synthesize(args):
+    print("[*] Running Autonomous Policy Synthesizer on workspace traces...")
+    synthesizer = PolicySynthesizer()
+    out_yaml = synthesizer.synthesize_yaml()
+    out_file = args.output or "policies/synthesized_policy.yaml"
+    with open(os.path.join(parent_dir, out_file), "w", encoding="utf-8") as f:
+        f.write(out_yaml)
+    print(f"[OK] Synthesized policy written to {out_file}")
 
 
 def main():
@@ -150,6 +173,16 @@ def main():
     mcp_inst_p = mcp_sub.add_parser("install", help="1-Click auto-install into Claude Desktop / Cursor config")
     mcp_inst_p.add_argument("--target", type=str, default="claude", choices=["claude", "cursor"], help="Target IDE")
 
+    # policy
+    policy_parser = subparsers.add_parser("policy", help="Manage declarative security policies")
+    policy_sub = policy_parser.add_subparsers(dest="policy_cmd")
+
+    val_p = policy_sub.add_parser("validate", help="Validate declarative YAML policy")
+    val_p.add_argument("--file", "-f", type=str, default="policies/default_security_policy.yaml", help="Path to policy YAML")
+
+    syn_p = policy_sub.add_parser("synthesize", help="Auto-synthesize least-privilege policy from traces")
+    syn_p.add_argument("--output", "-o", type=str, default="policies/synthesized_policy.yaml", help="Output YAML file path")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -170,6 +203,13 @@ def main():
             cmd_mcp_install(args)
         else:
             mcp_parser.print_help()
+    elif args.command == "policy":
+        if args.policy_cmd == "validate":
+            cmd_policy_validate(args)
+        elif args.policy_cmd == "synthesize":
+            cmd_policy_synthesize(args)
+        else:
+            policy_parser.print_help()
     else:
         parser.print_help()
 
