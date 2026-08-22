@@ -1,21 +1,28 @@
-# Smithery / Public Model Context Protocol (MCP) Server Configuration
-# Enables external autonomous agents (Cursor, Claude, Devin, AutoGen) to discover Bartholomew tools
-name: bartholomew-guard
-version: 2.2.0
-description: Sub-millisecond cryptographic attestation and invariant guardrail for autonomous AI agent tool execution.
-command: python
-args:
-  - -m
-  - mcp_server.server
-env:
-  PYTHONUNBUFFERED: "1"
-  BTP_POLICY_FILE: "policies/default_security_policy.yaml"
-tools:
-  - name: btp_evaluate_intent
-    description: Pre-flight invariant and spend limit check with RFC 8785 Ed25519 cryptographic receipts (<40 µs).
-  - name: btp_verify_ast_safety
-    description: Deep Abstract Syntax Tree static analysis with alias tracking and constant-folding.
-  - name: btp_safe_run_command
-    description: Hermetic command execution sandbox with argv tokenization and workspace boundary containment.
-  - name: btp_safe_write_file
-    description: Hermetic filesystem write with path traversal and composition attack protection.
+# Smithery MCP Server Specification for Bartholomew BTP Guard
+# Official registry configuration for Claude Desktop, Cursor, and Windsurf
+name: "@bartholomew/mcp-server"
+description: "Sub-5 microsecond pre-flight cryptographic guardrails, spend caps, and LDMU loop termination for Claude Desktop and Cursor."
+version: "2.2.0"
+runtime: "python"
+entrypoint: "mcp_server/server.py"
+configSchema:
+  type: object
+  properties:
+    spendCap:
+      type: number
+      description: "Maximum financial spend cap in USD for autonomous tools."
+      default: 50.0
+    maxRetries:
+      type: integer
+      description: "Maximum repetitive tool invocations before LDMU loop damping halts execution."
+      default: 5
+    sandboxRoot:
+      type: string
+      description: "Restricted workspace path for file containment."
+      default: "."
+command:
+  type: stdio
+  executable: python
+  args:
+    - "-m"
+    - "mcp_server.server"
