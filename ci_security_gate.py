@@ -37,6 +37,7 @@ def run_gate():
         ("14. Test Unified Classical & Physical Invariant Engine", ["python", "tests/test_unified_physics_invariant_engine.py"]),
         ("15. Test Hawking Information Preservation & Deterministic Gate", ["python", "tests/test_hawking_information_preservation.py"]),
         ("16. Test Compliance & SOC 2 Audit Report Generator", ["python", "tests/test_compliance_report_generator.py"]),
+        ("17. Test Simple Drop-In Guard Interface", ["python", "tests/test_simple_guard.py"]),
     ]
 
     all_passed = True
