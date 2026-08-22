@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "postbuild": "xcopy /E /Y /I ..\\dashboard dist\\dashboard\\ && copy ..\\founder_avatar.jpg dist\\founder_avatar.jpg && copy ..\\ARCHITECTURE.md dist\\ARCHITECTURE.md && copy ..\\SECURITY.md dist\\SECURITY.md && copy ..\\EXECUTIVE_SUMMARY.md dist\\EXECUTIVE_SUMMARY.md && copy ..\\PITCH_DECK.html dist\\PITCH_DECK.html && copy ..\\LICENSE.md dist\\LICENSE.md && copy /Y dist\\index.html ..\\index.html",
+    "postbuild": "xcopy /E /Y /I ..\\dashboard dist\\dashboard\\ && copy ..\\founder_avatar.jpg dist\\founder_avatar.jpg && copy ..\\ARCHITECTURE.md dist\\ARCHITECTURE.md && copy ..\\SECURITY.md dist\\SECURITY.md && copy ..\\EXECUTIVE_SUMMARY.md dist\\EXECUTIVE_SUMMARY.md && copy ..\\LICENSE.md dist\\LICENSE.md && copy /Y dist\\index.html ..\\index.html",
     "lint": "oxlint",
     "preview": "vite preview"
   },

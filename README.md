@@ -3,11 +3,11 @@
 
 <div align="center">
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
 [![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.2_FROZEN-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
-[![Conformance Suite](https://img.shields.io/badge/Conformance-12%2F12_Passed_(100%25)-00e676?style=for-the-badge&logo=checkmarx&logoColor=040813)](BTP_CONFORMANCE_SUITE.json)
-[![Challenge Package](https://img.shields.io/badge/Red--Team_Challenge-8_Formal_Invariants-fbbf24?style=for-the-badge&logo=target&logoColor=040813)](CHALLENGE_PACKAGE.md)
+[![CI Security Gate](https://img.shields.io/badge/CI_Gate-17%2F17_Suites_Passing-00e676?style=for-the-badge&logo=githubactions&logoColor=040813)](ci_security_gate.py)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![MCP Server](https://img.shields.io/badge/Anthropic_MCP-Security_Server-a855f7?style=for-the-badge&logo=anthropic&logoColor=ffffff)](mcp_server/)
-[![Framework Adapters](https://img.shields.io/badge/Frameworks-LangGraph_%7C_AutoGen_%7C_CrewAI-38bdf8?style=for-the-badge&logo=python&logoColor=040813)](framework_adapters/)
 
 </div>
 
@@ -20,7 +20,7 @@
 
 ---
 
-### ** 60-Second Multi-Language Quickstarts**
+### **60-Second Multi-Language Quickstarts**
 
 #### **1. Python (`pip install btp-guard`)**
 ```python
