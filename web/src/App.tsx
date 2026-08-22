@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
+import SecurityThreatModelSection from './components/SecurityThreatModelSection'
 import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
@@ -35,6 +36,7 @@ function HomeView() {
     <>
       <Hero />
       <DesktopInstallerSection />
+      <SecurityThreatModelSection />
       <InteractiveAgentSandbox />
       <RuntimeThesisProof />
       <div id="policy-editor">
