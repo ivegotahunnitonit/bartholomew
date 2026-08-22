@@ -1,10 +1,21 @@
 # Contributing to Bartholomew & BTP
 
-Thank you for your interest in contributing to the **Bartholomew Trust Protocol (BTP)**!
+Thank you for your interest in contributing to the **Bartholomew Autonomous Trust Protocol (BTP)**.
+
+We welcome contributions from the community to help secure autonomous AI agents and distributed machine execution.
 
 ---
 
-##  Development Setup
+## 1. Code of Conduct and Standards
+
+To maintain high software engineering and security standards:
+* **Coding Style**: Follow PEP 8 for Python code and standard TypeScript/Go conventions.
+* **Formatting**: Maintain clean documentation and code without decorative emojis.
+* **Security First**: Never check in secrets, credentials, API keys, or unverified binary blobs.
+
+---
+
+## 2. Development Setup
 
 1. **Clone the Repository**:
    ```bash
@@ -12,44 +23,43 @@ Thank you for your interest in contributing to the **Bartholomew Trust Protocol 
    cd bartholomew
    ```
 
-2. **Install Python Dependencies**:
+2. **Set Up Python Environment**:
    ```bash
-   pip install -r requirements.txt
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -e .
+   pip install pytest pyyaml cryptography
    ```
 
-3. **Run the Master CI/CD Test Suite**:
+3. **Run the 17-Suite Security & Invariant Gate**:
    ```bash
    python ci_security_gate.py
    ```
 
 ---
 
-##  Architecture Overview
+## 3. Contribution Workflow (Pull Requests)
 
-* `src/trust_protocol.py`: Core RFC 8785 canonicalization & Ed25519 cryptographic attestation engine.
-* `src/declarative_policy_engine.py`: Fast YAML/JSON policy-as-code parser.
-* `src/ast_validator.py`: Deep Abstract Syntax Tree (AST) static analysis for Python code.
-* `src/hermetic_sandbox.py`: Shlex-based command allowlists and `os.path.commonpath` filesystem containment.
-* `src/docker_runner.py`: Ephemeral Docker container isolation runner.
-* `mcp_server/`: Official Model Context Protocol (MCP) server for Claude Desktop and Cursor.
-* `sidecar/`: Docker/Kubernetes network reverse-proxy gateway.
+We use the standard GitHub Pull Request workflow:
 
----
-
-##  Testing Guidelines
-
-Before submitting a pull request, ensure all tests pass:
-```bash
-python ci_security_gate.py
-```
-
-### Adding New Declarative Rules
-1. Add your rule to `policies/default_security_policy.yaml`.
-2. Validate with `python -m src.cli policy validate --file policies/default_security_policy.yaml`.
-3. Add a test case in `test_declarative_policy_engine.py`.
+1. **Fork or Branch**: Create a descriptive feature branch from `main`:
+   ```bash
+   git checkout -b feat/your-feature-name
+   ```
+2. **Implement Changes**: Write clean, modular code with accompanying unit tests in `tests/`.
+3. **Verify CI Tests**: Ensure all 17 test suites pass 100% clean locally before opening a pull request.
+4. **Submit PR**: Open a Pull Request targeting `main` with a clear description of the problem solved, architectural rationale, and verification steps.
+5. **Code Review**: Maintainers will review the submission, request revisions if necessary, and merge once tests pass.
 
 ---
 
-##  License
-* Client SDKs: **Apache-2.0**
-* Core Engine: **Business Source License (BSL 1.1)**
+## 4. Reporting Issues and Vulnerabilities
+
+* **Bug Reports & Enhancements**: Open an issue at [https://github.com/ivegotahunnitonit/bartholomew/issues](https://github.com/ivegotahunnitonit/bartholomew/issues).
+* **Security Vulnerabilities**: For responsible disclosure of security flaws, please refer to [SECURITY.md](SECURITY.md) or email security@bartholomew.info.
+
+---
+
+## 5. Licensing of Contributions
+
+By contributing to this repository, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE) (Apache License 2.0 / BSL 1.1).
