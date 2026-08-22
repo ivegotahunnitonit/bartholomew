@@ -138,19 +138,18 @@ rules:
   }
 
   return (
-    <section id="policy-editor" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#222222]">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
-            <Sliders size={13} />
-            <span>[ POLICY-AS-CODE &amp; ECONOMIC UTILITY ENGINE ]</span>
+    <section className="py-20 bg-black text-white border-t border-[#1c1c1c]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
+            <Sliders size={13} className="text-[#f59e0b]" />
+            <span>[ IN-BROWSER RULE SIMULATOR &amp; YAML GENERATOR ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
             Customize AI Safety &amp; Marginal Utility Rules
           </h2>
-          <p className="mt-3 text-[#d4d4d8] text-sm sm:text-base leading-relaxed font-sans">
-            Tune hard cryptographic boundaries and the economic Law of Diminishing Marginal Utility (LDMU) to automatically stop runaway agent loops and flash spending.
+          <p className="mt-4 text-base text-[#a1a1aa] font-sans">
+            Simulate safety thresholds and loop dampening in your browser, then export the generated YAML directly into your local agent environment.
           </p>
         </div>
 
