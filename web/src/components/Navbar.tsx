@@ -34,7 +34,7 @@ export default function Navbar() {
         </div>
 
         {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-mono font-semibold text-[#a1a1aa]">
+        <nav className="hidden md:flex items-center gap-7 text-xs font-mono font-semibold text-[#a1a1aa]">
           <a href="#how-it-works" className="hover:text-[#ffffff] transition">
             [HOW IT WORKS]
           </a>
@@ -43,9 +43,6 @@ export default function Navbar() {
           </a>
           <a href="#policy-editor" className="hover:text-[#ffffff] transition">
             [IN-BROWSER TESTER]
-          </a>
-          <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank" rel="noreferrer" className="text-[#f59e0b] hover:text-[#ffffff] transition">
-            [WHITE PAPER]
           </a>
           <a href="#sdk" className="hover:text-[#ffffff] transition">
             [PYTHON / JS SDK]

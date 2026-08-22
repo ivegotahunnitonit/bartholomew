@@ -57,9 +57,31 @@ export default function Footer() {
           {/* Standards & Open Source */}
           <div className="md:col-span-3 space-y-3">
             <div className="text-xs font-bold uppercase tracking-wider text-white font-mono">
-              [OPEN STANDARDS]
+              [SPECIFICATIONS]
             </div>
             <ul className="space-y-2 text-xs font-mono">
+              <li>
+                <a
+                  href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#f59e0b] hover:text-white transition inline-flex items-center gap-1 font-bold"
+                >
+                  <span>[ARCHITECTURE WHITE PAPER]</span>
+                  <ExternalLink size={10} className="text-[#f59e0b]" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition inline-flex items-center gap-1"
+                >
+                  <span>[THREAT MODEL SPEC (.MD)]</span>
+                  <ExternalLink size={10} className="text-[#71717a]" />
+                </a>
+              </li>
               <li>
                 <a
                   href="https://github.com/ivegotahunnitonit/bartholomew"
