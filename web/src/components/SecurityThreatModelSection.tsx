@@ -13,7 +13,7 @@ const FAQS: FAQItem[] = [
     question: 'Why avoid piped shell installer scripts (curl | bash or irm | iex)?',
     category: 'SUPPLY_CHAIN',
     shortAnswer: 'Piped shell execution is a supply-chain anti-pattern. We distribute exclusively through standard package registries.',
-    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through standard, hash-verifiable channels: Python PyPI (pip install btp-guard), Node.js NPM (@bartholomew/btp-guard), standard VS Code VSIX, or auditable source clones (git clone) with reproducible CI test gates.'
+    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through auditable source repositories: Python Git install (pip install git+https://github.com/ivegotahunnitonit/bartholomew.git), standard VS Code VSIX, or direct source clones (git clone) with reproducible CI test gates.'
   },
   {
     question: 'Does Bartholomew require a background proxy daemon (Confused Deputy Risk)?',
@@ -83,7 +83,7 @@ export default function SecurityThreatModelSection() {
               <span>VERIFIED PACKAGE REGISTRIES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Distributed exclusively via standard PyPI (pip install btp-guard), NPM, and auditable GitHub source clones. No raw shell script piping.
+              Distributed exclusively via auditable GitHub repositories (pip install git+https://github.com/ivegotahunnitonit/bartholomew.git) and source clones. No raw shell script piping.
             </p>
           </div>
 

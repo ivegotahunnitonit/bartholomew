@@ -38,13 +38,13 @@ export default function DesktopInstallerSection() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
             <Lock size={13} className="text-[#f59e0b]" />
-            <span>[ VERIFIED PACKAGE DISTRIBUTION &amp; OFFLINE INSPECTION ]</span>
+            <span>[ VERIFIED SOURCE INSTALLATION &amp; OFFLINE INSPECTION ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
-            Install via Standard Package Managers
+            Install Directly from GitHub Repositories
           </h2>
           <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            Bartholomew is 100% open source. Install directly via PyPI, NPM, VS Code VSIX, or clone the repository to run the 16-suite CI security gate on your own machine with zero remote script execution.
+            Bartholomew is 100% open source. Install directly via pip (git), VS Code VSIX, or clone the repository to run the 17-suite CI security gate on your own machine with zero remote script execution.
           </p>
         </div>
 

@@ -107,7 +107,7 @@ export const LiveAttestationInspector: React.FC = () => {
           <Info size={16} className="text-[#38bdf8] shrink-0 mt-0.5" />
           <div>
             <span className="text-white font-bold">[CLIENT-SIDE PLAYGROUND NOTICE]: </span>
-            This UI widget runs locally in your browser JavaScript environment for testing and demonstration. For production agent deployments, install the native in-process Python/C library (<code>pip install btp-guard</code>) which executes AST parsing and Ed25519 signatures in &lt;5.0 µs on your host CPU.
+            This UI widget runs locally in your browser JavaScript environment for testing and demonstration. For production agent deployments, install the native in-process Python/C library (<code>pip install git+https://github.com/ivegotahunnitonit/bartholomew.git</code>) which executes AST parsing and Ed25519 signatures in &lt;5.0 µs on your host CPU.
           </div>
         </div>
 
