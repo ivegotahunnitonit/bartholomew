@@ -1,37 +1,69 @@
 """
-Bartholomew VS Code / Cursor Extension Packager
-==============================================
-Packs the compiled extension into a standard .vsix / .zip archive.
+Bartholomew VS Code VSIX Extension Packager
+===========================================
+Packages the compiled extension into a standard Open Packaging Conventions
+(OPC) .vsix archive compatible with Visual Studio Code and Cursor.
 """
 
 import os
 import zipfile
-import shutil
+import json
+from pathlib import Path
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-EXT_DIR = os.path.join(ROOT_DIR, "vscode-extension")
-OUTPUT_VSIX = os.path.join(ROOT_DIR, "web", "public", "bartholomew.vsix")
-OUTPUT_ZIP = os.path.join(ROOT_DIR, "web", "public", "bartholomew-vscode-extension.zip")
+ROOT = Path(__file__).parent.parent
+EXT_DIR = ROOT / "vscode-extension"
+PUBLIC_OUT = ROOT / "web" / "public" / "bartholomew.vsix"
+DIST_OUT = ROOT / "web" / "dist" / "bartholomew.vsix"
 
-FILES_TO_PACK = [
-    ("package.json", "extension/package.json"),
-    ("dist/extension.js", "extension/dist/extension.js"),
-    ("dist/extension.js.map", "extension/dist/extension.js.map"),
-]
+CONTENT_TYPES_XML = """<?xml version="1.0" encoding="utf-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="json" ContentType="application/json"/>
+  <Default Extension="js" ContentType="application/javascript"/>
+  <Default Extension="map" ContentType="application/json"/>
+  <Default Extension="md" ContentType="text/markdown"/>
+  <Default Extension="vsixmanifest" ContentType="text/xml"/>
+</Types>
+"""
 
-def pack_extension():
-    os.makedirs(os.path.dirname(OUTPUT_VSIX), exist_ok=True)
-    print(f"[*] Packaging VS Code / Cursor extension to {OUTPUT_VSIX}...")
+VSIX_MANIFEST_XML = """<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <Identity Id="bartholomew-guard-vscode" Version="2.2.0" Publisher="Bartholomew" />
+    <DisplayName>Bartholomew Autonomous AI Guard</DisplayName>
+    <Description xml:space="preserve">Sub-millisecond cryptographic attestation and invariant guard for Cursor and VS Code agent sessions.</Description>
+    <Categories>Security,Machine Learning,Programming Languages</Categories>
+    <License>extension/LICENSE.txt</License>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Code"/>
+  </Installation>
+  <Dependencies/>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.Code.Manifest" Path="extension/package.json" Addressable="true" />
+    <Asset Type="Microsoft.VisualStudio.Services.Content.Details" Path="extension/README.md" Addressable="true" />
+  </Assets>
+</PackageManifest>
+"""
 
-    with zipfile.ZipFile(OUTPUT_VSIX, "w", zipfile.ZIP_DEFLATED) as zipf:
-        for src_rel, dest_rel in FILES_TO_PACK:
-            full_src = os.path.join(EXT_DIR, src_rel)
-            if os.path.exists(full_src):
-                zipf.write(full_src, dest_rel)
+def build_vsix():
+    print("[VSIX] Building Bartholomew VS Code Extension VSIX package...")
+    PUBLIC_OUT.parent.mkdir(parents=True, exist_ok=True)
+    DIST_OUT.parent.mkdir(parents=True, exist_ok=True)
 
-    shutil.copy2(OUTPUT_VSIX, OUTPUT_ZIP)
-    size_kb = os.path.getsize(OUTPUT_VSIX) / 1024
-    print(f"[OK] VS Code Extension Packaged: {size_kb:.2f} KB")
+    package_json = EXT_DIR / "package.json"
+    extension_js = EXT_DIR / "dist" / "extension.js"
+    readme_md = ROOT / "README.md"
+    license_md = ROOT / "LICENSE.md"
+
+    for target in [PUBLIC_OUT, DIST_OUT]:
+        with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as z:
+            z.writestr("[Content_Types].xml", CONTENT_TYPES_XML.strip())
+            z.writestr("extension.vsixmanifest", VSIX_MANIFEST_XML.strip())
+            z.write(package_json, "extension/package.json")
+            z.write(extension_js, "extension/dist/extension.js")
+            z.write(readme_md, "extension/README.md")
+            z.write(license_md, "extension/LICENSE.txt")
+        print(f"[VSIX] Generated: {target} ({target.stat().st_size} bytes)")
 
 if __name__ == "__main__":
-    pack_extension()
+    build_vsix()

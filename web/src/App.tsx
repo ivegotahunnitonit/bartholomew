@@ -8,6 +8,7 @@ import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
+import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
 import SDK from './components/SDK'
 import LiveAPI from './components/LiveAPI'
 import Footer from './components/Footer'
@@ -45,6 +46,7 @@ function HomeView() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <LiveAttestationInspector />
       </div>
+      <ContinuousComplianceTimeline />
       <SDK />
       <LiveAPI />
     </>
