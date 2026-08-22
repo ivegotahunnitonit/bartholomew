@@ -1,22 +1,29 @@
 import { useState } from 'react'
-import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, ArrowRight, Download } from 'lucide-react'
+import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, Download, Lock } from 'lucide-react'
 
 export default function DesktopInstallerSection() {
-  const [activeTab, setActiveTab] = useState<'windows' | 'mac' | 'linux' | 'pip'>('windows')
+  const [activeTab, setActiveTab] = useState<'pip' | 'npm' | 'vscode' | 'source'>('pip')
   const [copied, setCopied] = useState<string | null>(null)
 
   const commands = {
-    windows: 'irm https://bartholomew.info/install.ps1 | iex',
-    mac: 'curl -fsSL https://bartholomew.info/install.sh | bash',
-    linux: 'curl -fsSL https://bartholomew.info/install.sh | bash',
-    pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git'
+    pip: 'pip install btp-guard',
+    npm: 'npm install @bartholomew/btp-guard',
+    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
+    source: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && python ci_security_gate.py'
+  }
+
+  const tabLabels = {
+    pip: '[PYTHON PYPI]',
+    npm: '[NODE.JS NPM]',
+    vscode: '[VS CODE / CURSOR VSIX]',
+    source: '[AUDITABLE SOURCE]'
   }
 
   const directDownloadFiles = {
-    windows: { filename: 'install.bat', href: '/install.bat', label: 'DOWNLOAD INSTALL.BAT' },
-    mac: { filename: 'install.sh', href: '/install.sh', label: 'DOWNLOAD INSTALL.SH' },
-    linux: { filename: 'install.sh', href: '/install.sh', label: 'DOWNLOAD INSTALL.SH' },
-    pip: { filename: 'install.ps1', href: '/install.ps1', label: 'DOWNLOAD SCRIPT' }
+    pip: { filename: 'btp_guard-latest.whl', href: '/btp_guard-latest.whl', label: 'DOWNLOAD WHEEL' },
+    npm: { filename: 'bartholomew-npm.tgz', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW NPM PACKAGE' },
+    vscode: { filename: 'bartholomew.vsix', href: '/bartholomew.vsix', label: 'DOWNLOAD .VSIX' },
+    source: { filename: 'bartholomew-desktop.zip', href: '/bartholomew-desktop.zip', label: 'DOWNLOAD SOURCE ZIP' }
   }
 
   const handleCopy = (tab: keyof typeof commands) => {
@@ -30,18 +37,18 @@ export default function DesktopInstallerSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
-            <Shield size={13} className="text-[#f59e0b]" />
-            <span>[ 1-CLICK DESKTOP DISTRIBUTION ]</span>
+            <Lock size={13} className="text-[#f59e0b]" />
+            <span>[ VERIFIED PACKAGE DISTRIBUTION &amp; OFFLINE INSPECTION ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
-            Install Bartholomew on Your Desktop
+            Install via Standard Package Managers
           </h2>
           <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            One click to download the direct installer, or one command to run the sub-millisecond BTP cryptographic guardrail engine directly in your terminal.
+            Bartholomew is 100% open source. Install directly via PyPI, NPM, VS Code VSIX, or clone the repository to run the 16-suite CI security gate on your own machine with zero remote script execution.
           </p>
         </div>
 
-        {/* OS Selector & Terminal Card with Cyber-Terminal Styling */}
+        {/* OS Selector & Terminal Card */}
         <div className="max-w-4xl mx-auto bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
           {/* Terminal Window Header */}
           <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
@@ -50,13 +57,13 @@ export default function DesktopInstallerSection() {
               <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
               <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
-            <span className="text-[11px] font-mono text-[#71717a]">terminal — install-bartholomew</span>
+            <span className="text-[11px] font-mono text-[#71717a]">terminal — verified-install-channel</span>
             <div className="w-12" />
           </div>
 
-          {/* OS Selector Tabs */}
+          {/* Selector Tabs */}
           <div className="flex border-b border-[#222222] bg-[#000000] p-2 gap-2">
-            {(['windows', 'mac', 'linux', 'pip'] as const).map((tab) => (
+            {(['pip', 'npm', 'vscode', 'source'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -66,15 +73,12 @@ export default function DesktopInstallerSection() {
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                {tab === 'windows' && <span>[WINDOWS]</span>}
-                {tab === 'mac' && <span>[MACOS]</span>}
-                {tab === 'linux' && <span>[LINUX]</span>}
-                {tab === 'pip' && <span>[PYTHON PIP]</span>}
+                <span>{tabLabels[tab]}</span>
               </button>
             ))}
           </div>
 
-          {/* Terminal Command Display & 1-Click Direct Download Action */}
+          {/* Terminal Command Display & Action */}
           <div className="p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#000000] border border-[#222222] p-4 font-mono text-xs sm:text-sm text-[#f59e0b]">
               <span className="truncate flex-1">$ {commands[activeTab]}</span>
@@ -85,7 +89,7 @@ export default function DesktopInstallerSection() {
                   className="px-3.5 py-2 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center gap-1.5"
                 >
                   <Download size={12} />
-                  <span>[DOWNLOAD FILE]</span>
+                  <span>[{directDownloadFiles[activeTab].label}]</span>
                 </a>
                 <button
                   onClick={() => handleCopy(activeTab)}
@@ -98,77 +102,67 @@ export default function DesktopInstallerSection() {
                   {copied === activeTab ? (
                     <>
                       <Check size={12} />
-                      <span>[COPIED]</span>
+                      <span>COPIED</span>
                     </>
                   ) : (
                     <>
                       <Copy size={12} />
-                      <span>[COPY]</span>
+                      <span>COPY</span>
                     </>
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Quickstart Command Cheatsheet with Square Cards */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-[#000000] border border-[#222222]">
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#f59e0b] uppercase tracking-wider mb-2">
-                  <Cpu size={13} />
-                  <span>[STEP 1]</span>
+            {/* In-Process Library Highlight Banner */}
+            <div className="mt-6 p-4 bg-[#050505] border border-[#222222] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs text-[#a1a1aa]">
+              <div className="space-y-1">
+                <div className="text-white font-bold flex items-center gap-2">
+                  <Shield size={14} className="text-[#10b981]" />
+                  <span>EMBEDDED IN-PROCESS MODE (ZERO DAEMON REQUIRED)</span>
                 </div>
-                <div className="font-mono text-xs text-[#ffffff] bg-[#0a0a0a] px-2.5 py-1.5 border border-[#1a1a1a]">
-                  bartholomew version
-                </div>
-                <p className="text-xs text-[#a1a1aa] mt-2 font-sans">Verify BTP/2.2 protocol active state and sub-50 µs latency.</p>
+                <p className="text-[#71717a] font-sans">
+                  Run directly in your Python or Node.js script. Evaluates AST invariants in &lt;5.0 microseconds with zero IPC, zero background daemons, and zero network sockets.
+                </p>
               </div>
-
-              <div className="p-4 bg-[#000000] border border-[#222222]">
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#10b981] uppercase tracking-wider mb-2">
-                  <Shield size={13} />
-                  <span>[STEP 2]</span>
-                </div>
-                <div className="font-mono text-xs text-[#ffffff] bg-[#0a0a0a] px-2.5 py-1.5 border border-[#1a1a1a]">
-                  bartholomew init
-                </div>
-                <p className="text-xs text-[#a1a1aa] mt-2 font-sans">Generates sovereign Ed25519 keypair and project security policy.</p>
-              </div>
-
-              <div className="p-4 bg-[#000000] border border-[#222222]">
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#ffffff] uppercase tracking-wider mb-2">
-                  <FileCode size={13} />
-                  <span>[STEP 3]</span>
-                </div>
-                <div className="font-mono text-xs text-[#ffffff] bg-[#0a0a0a] px-2.5 py-1.5 border border-[#1a1a1a]">
-                  bartholomew daemon start
-                </div>
-                <p className="text-xs text-[#a1a1aa] mt-2 font-sans">Starts background guard daemon on localhost with desktop alerts.</p>
-              </div>
+              <a
+                href="#sdk"
+                className="px-3 py-1.5 bg-[#141414] hover:bg-[#222222] text-[#f59e0b] border border-[#333333] transition shrink-0 font-bold"
+              >
+                [VIEW 1-LINE CODE]
+              </a>
             </div>
 
-            {/* Source / GitHub Direct Link */}
-            <div className="mt-8 pt-6 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between text-xs text-[#a1a1aa] gap-3 font-mono">
-              <div>
-                <span>Source repository: </span>
-                <a
-                  href="https://github.com/ivegotahunnitonit/bartholomew"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#f59e0b] hover:underline font-semibold inline-flex items-center gap-1"
-                >
-                  github.com/ivegotahunnitonit/bartholomew
-                  <ArrowRight size={11} />
-                </a>
+            {/* Verification Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="p-4 bg-[#000000] border border-[#222222]">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
+                  <CheckCircle2 size={14} className="text-[#10b981]" />
+                  <span>AUDITABLE CODEBASE</span>
+                </div>
+                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
+                  Every parser, invariant checker, and cryptographic signing routine is readable in 35-line reference files.
+                </p>
               </div>
-              <div className="flex items-center gap-4 text-[#a1a1aa]">
-                <span className="flex items-center gap-1 text-[#10b981]">
-                  <CheckCircle2 size={12} />
-                  100% Offline Compatible
-                </span>
-                <span className="flex items-center gap-1 text-[#ffffff]">
-                  <CheckCircle2 size={12} />
-                  Zero Cloud Telemetry
-                </span>
+
+              <div className="p-4 bg-[#000000] border border-[#222222]">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
+                  <FileCode size={14} className="text-[#f59e0b]" />
+                  <span>RFC 8785 DETERMINISM</span>
+                </div>
+                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
+                  JSON Canonicalization Scheme ensures identical byte-level hash determinism across Python, Go, and C.
+                </p>
+              </div>
+
+              <div className="p-4 bg-[#000000] border border-[#222222]">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
+                  <Cpu size={14} className="text-[#38bdf8]" />
+                  <span>NO PROXY BOTTLENECK</span>
+                </div>
+                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
+                  Compiled pure-C FFI executes in &lt;5 µs, avoiding the latency and failure modes of remote webhooks.
+                </p>
               </div>
             </div>
           </div>
