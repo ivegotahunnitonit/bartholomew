@@ -32,6 +32,7 @@ def run_gate():
         ("9. Test Autonomous Policy Synthesizer", ["python", "-m", "pytest", "tests/test_policy_synthesizer.py"]),
         ("10. Test LangChain Guardrails", ["python", "test_langchain_guard.py"]),
         ("11. Test Information Theory & Epistemic Grounding Engine", ["python", "tests/test_entropy_grounding_engine.py"]),
+        ("12. Test Epistemic & Physical Invariant Engine", ["python", "tests/test_epistemic_physics_engine.py"]),
     ]
 
     all_passed = True
