@@ -1,2 +1,0 @@
-[console_scripts]
-agent-qa-guard = agent_qa_guard:main
