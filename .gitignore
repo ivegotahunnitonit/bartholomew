@@ -66,3 +66,6 @@ web/node_modules/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Workspace Sandbox
+workspace/

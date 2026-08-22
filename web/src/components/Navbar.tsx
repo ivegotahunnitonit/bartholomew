@@ -25,18 +25,12 @@ export default function Navbar() {
           <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
             <Logo size={28} showText={true} />
           </Link>
-          <a
-            href="https://www.bestpractices.dev/projects/14198"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] hover:border-[#10b981] text-[11px] font-mono transition"
-            title="OpenSSF Best Practices Passing Badge"
-          >
+          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[11px] font-mono">
             <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981] font-bold">[OPENSFF: PASSING]</span>
+            <span className="text-[#10b981] font-bold">[STATUS: ACTIVE]</span>
             <span className="text-[#555555]">|</span>
-            <span className="text-[#a1a1aa]">LINUX FOUNDATION</span>
-          </a>
+            <span className="text-[#a1a1aa]">17/17 CI SUITES PASSING</span>
+          </div>
         </div>
 
         {/* Monospace Desktop Nav Links */}
