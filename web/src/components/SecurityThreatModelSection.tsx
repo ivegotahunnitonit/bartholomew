@@ -139,16 +139,25 @@ export default function SecurityThreatModelSection() {
           })}
         </div>
 
-        {/* Link to White Paper */}
-        <div className="mt-14 text-center">
+        {/* Direct Links to Standalone White Paper and Markdown Spec */}
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.md"
+            href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#141414] text-[#f59e0b] hover:text-white border border-[#333333] font-mono text-xs font-bold transition"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] font-mono text-xs font-bold transition border border-[#f59e0b]"
           >
             <FileCode size={14} />
-            <span>[ READ FORMAL ARCHITECTURE WHITE PAPER &amp; THREAT MODEL (PDF/MD) ]</span>
+            <span>[ OPEN WHITE PAPER (STANDALONE HTML) ]</span>
+          </a>
+          <a
+            href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.md"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#141414] text-[#a1a1aa] hover:text-white border border-[#333333] font-mono text-xs font-bold transition"
+          >
+            <FileCode size={14} />
+            <span>[ VIEW RAW SPECIFICATION (.MD) ]</span>
           </a>
         </div>
       </div>
