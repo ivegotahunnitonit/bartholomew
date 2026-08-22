@@ -154,7 +154,10 @@ export function runNodeJsConformance() {
   console.log("  BTP FROZEN v2.2 FORMAL CONFORMANCE SUITE (NODE.JS REFERENCE RUNNER)");
   console.log("=".repeat(80));
 
-  const suitePath = path.join(__dirname, "BTP_CONFORMANCE_SUITE.json");
+  let suitePath = path.join(__dirname, "BTP_CONFORMANCE_SUITE.json");
+  if (!fs.existsSync(suitePath)) {
+    suitePath = path.join(__dirname, "..", "BTP_CONFORMANCE_SUITE.json");
+  }
   const suite = JSON.parse(fs.readFileSync(suitePath, "utf8"));
   const vectors = suite.test_vectors;
   let passed = 0;
