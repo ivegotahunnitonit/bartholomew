@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, Download, Lock } from 'lucide-react'
+import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, Lock } from 'lucide-react'
 
 export default function DesktopInstallerSection() {
   const [activeTab, setActiveTab] = useState<'pip' | 'npm' | 'vscode' | 'source'>('pip')
@@ -85,10 +85,10 @@ export default function DesktopInstallerSection() {
               <div className="flex items-center gap-2 shrink-0">
                 <a
                   href={directDownloadFiles[activeTab].href}
-                  download={directDownloadFiles[activeTab].filename}
+                  target="_blank"
+                  rel="noreferrer"
                   className="px-3.5 py-2 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center gap-1.5"
                 >
-                  <Download size={12} />
                   <span>[{directDownloadFiles[activeTab].label}]</span>
                 </a>
                 <button
