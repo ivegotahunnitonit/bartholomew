@@ -153,10 +153,10 @@ if result["allowed"]:
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                {tab === 'pip' && '[PYTHON PYPI]'}
-                {tab === 'npm' && '[NODE NPM]'}
+                {tab === 'pip' && '[PIP (GITHUB)]'}
+                {tab === 'npm' && '[NODE (GITHUB)]'}
                 {tab === 'vscode' && '[VS CODE VSIX]'}
-                {tab === 'git' && '[AUDITABLE SOURCE]'}
+                {tab === 'git' && '[SOURCE CLONE]'}
               </button>
             ))}
           </div>

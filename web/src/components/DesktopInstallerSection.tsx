@@ -20,10 +20,10 @@ export default function DesktopInstallerSection() {
   }
 
   const directDownloadFiles = {
-    pip: { filename: 'btp_guard-latest.whl', href: '/btp_guard-latest.whl', label: 'DOWNLOAD WHEEL' },
-    npm: { filename: 'bartholomew-npm.tgz', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW NPM PACKAGE' },
-    vscode: { filename: 'bartholomew.vsix', href: '/bartholomew.vsix', label: 'DOWNLOAD .VSIX' },
-    source: { filename: 'bartholomew-desktop.zip', href: '/bartholomew-desktop.zip', label: 'DOWNLOAD SOURCE ZIP' }
+    pip: { filename: 'github-repo', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW GITHUB REPO' },
+    npm: { filename: 'bartholomew-npm', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW REPOSITORY' },
+    vscode: { filename: 'bartholomew.vsix', href: 'https://github.com/ivegotahunnitonit/bartholomew/releases', label: 'DOWNLOAD RELEASES' },
+    source: { filename: 'source-main.zip', href: 'https://github.com/ivegotahunnitonit/bartholomew/archive/refs/heads/main.zip', label: 'DOWNLOAD SOURCE ZIP' }
   }
 
   const handleCopy = (tab: keyof typeof commands) => {
