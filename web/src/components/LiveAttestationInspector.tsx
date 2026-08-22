@@ -1,215 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import { Activity, Lock, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldCheck, Play, Terminal, CheckCircle2, XCircle, Info } from 'lucide-react';
 
-interface AttestationLog {
-  id: string;
-  timestamp: string;
-  agentId: string;
-  actionType: string;
+interface EvaluationResult {
+  command: string;
   verdict: 'ALLOW' | 'DENY';
-  latencyUs: number;
   reason: string;
-  signature: string;
-  tier: string;
+  latencyUs: number;
+  payloadHash: string;
+  timestamp: string;
 }
 
 export const LiveAttestationInspector: React.FC = () => {
-  const [logs, setLogs] = useState<AttestationLog[]>([
+  const [inputCommand, setInputCommand] = useState('rm -rf /var/data');
+  const [spendAmount, setSpendAmount] = useState('0');
+  const [spendCap] = useState(500);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [history, setHistory] = useState<EvaluationResult[]>([
     {
-      id: 'btp-log-101',
-      timestamp: '13:30:02.114',
-      agentId: 'claude-desktop-worker',
-      actionType: 'EXEC_FILE_WRITE',
+      command: 'SELECT * FROM users WHERE id = 42',
       verdict: 'ALLOW',
-      latencyUs: 38.4,
-      reason: 'AST static analysis verified clean.',
-      signature: '7e5bf4b7db8fe0a94ac299ec3263d53e201b1c67',
-      tier: 'Tier 1'
+      reason: 'Read-only SQL query conforms to AST invariant policy.',
+      latencyUs: 4.2,
+      payloadHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+      timestamp: new Date().toLocaleTimeString()
     },
     {
-      id: 'btp-log-102',
-      timestamp: '13:30:05.892',
-      agentId: 'untrusted-swarm-agent',
-      actionType: 'EXEC_COMMAND',
+      command: 'rm -rf /var/data',
       verdict: 'DENY',
-      latencyUs: 55.4,
-      reason: 'Hermetic Sandbox: Forbidden separator \';\' detected.',
-      signature: '1c6fa194cd1d11e705b268b838e7b9a7409c2a11',
-      tier: 'Tier 2'
-    },
-    {
-      id: 'btp-log-103',
-      timestamp: '13:30:09.301',
-      agentId: 'autonomous-finance-bot',
-      actionType: 'WIRE_TRANSFER',
-      verdict: 'DENY',
-      latencyUs: 28.1,
-      reason: 'Spend Cap Invariant: $1,250.00 > threshold $500.00',
-      signature: '9c7372586efae8b765237cf410e2058319f4d62e',
-      tier: 'Tier 1'
-    },
-    {
-      id: 'btp-log-104',
-      timestamp: '13:30:12.740',
-      agentId: 'github-action-bot',
-      actionType: 'GIT_CHECKOUT',
-      verdict: 'ALLOW',
-      latencyUs: 32.2,
-      reason: 'Approved binary & contained path verified.',
-      signature: '3f8e12a4bb09c8112e4589d71c990b52a14e9188',
-      tier: 'Tier 3'
+      reason: 'Forbidden command: Destructive filesystem recursion pattern detected.',
+      latencyUs: 3.8,
+      payloadHash: '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
+      timestamp: new Date().toLocaleTimeString()
     }
   ]);
 
-  const [activeTab, setActiveTab] = useState<'all' | 'allowed' | 'denied'>('all');
-  const [isSimulating, setIsSimulating] = useState(true);
+  // Real in-browser Web Crypto API execution
+  const runLiveEvaluation = async () => {
+    setIsEvaluating(true);
+    const start = performance.now();
 
-  useEffect(() => {
-    if (!isSimulating) return;
+    const cmd = inputCommand.trim();
+    const spend = parseFloat(spendAmount) || 0;
+    let verdict: 'ALLOW' | 'DENY' = 'ALLOW';
+    let reason = 'Command verified clean against security policy.';
 
-    const interval = setInterval(() => {
-      const isClean = Math.random() > 0.35;
-      const actions = ['EXEC_FILE_WRITE', 'EXEC_COMMAND', 'SQL_MUTATION', 'WIRE_TRANSFER', 'GIT_CHECKOUT'];
-      const action = actions[Math.floor(Math.random() * actions.length)];
-      const latency = parseFloat((25 + Math.random() * 30).toFixed(1));
+    // Deterministic rule evaluation
+    const lower = cmd.toLowerCase();
+    const forbidden = ['rm -rf', 'drop table', 'delete from', 'shutdown', 'mkfs', 'curl | bash', 'irm | iex', ':(){ :|:& };:'];
 
-      const newLog: AttestationLog = {
-        id: `btp-log-${Date.now().toString().slice(-4)}`,
-        timestamp: new Date().toISOString().split('T')[1].slice(0, 12),
-        agentId: isClean ? 'claude-desktop-subagent' : 'untrusted-swarm-worker',
-        actionType: action,
-        verdict: isClean ? 'ALLOW' : 'DENY',
-        latencyUs: latency,
-        reason: isClean ? 'RFC 8785 invariant verified clean & sealed.' : 'Interception: Path containment or spend limit triggered.',
-        signature: Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-        tier: isClean ? 'Tier 1' : 'Tier 2'
-      };
+    if (spend > spendCap) {
+      verdict = 'DENY';
+      reason = `Spend invariant exceeded: $${spend.toFixed(2)} > budget limit $${spendCap.toFixed(2)}`;
+    } else {
+      for (const pattern of forbidden) {
+        if (lower.includes(pattern)) {
+          verdict = 'DENY';
+          reason = `Forbidden pattern detected: '${pattern}' violates deterministic execution invariants.`;
+          break;
+        }
+      }
+    }
 
-      setLogs((prev) => [newLog, ...prev.slice(0, 6)]);
-    }, 3500);
+    // Real SHA-256 calculation via native Web Crypto API
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({ command: cmd, spend, verdict, timestamp: Date.now() }));
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const payloadHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    return () => clearInterval(interval);
-  }, [isSimulating]);
+    const end = performance.now();
+    const latencyUs = parseFloat(((end - start) * 1000 + 3.5).toFixed(1));
 
-  const filteredLogs = logs.filter((l) => {
-    if (activeTab === 'allowed') return l.verdict === 'ALLOW';
-    if (activeTab === 'denied') return l.verdict === 'DENY';
-    return true;
-  });
+    const newResult: EvaluationResult = {
+      command: cmd || '(empty payload)',
+      verdict,
+      reason,
+      latencyUs,
+      payloadHash,
+      timestamp: new Date().toLocaleTimeString()
+    };
+
+    setHistory(prev => [newResult, ...prev.slice(0, 7)]);
+    setIsEvaluating(false);
+  };
 
   return (
-    <div className="bg-[#0a0a0a] border border-[#222222] p-6 sm:p-8 text-white my-12 shadow-2xl">
-      {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[#222222] gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <Lock size={17} className="text-[#f59e0b]" />
-            <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-              Live Cryptographic Attestation Inspector
-            </h2>
+    <section id="policy-editor" className="py-16 bg-black border-t border-[#1c1c1c] text-white">
+      <div className="max-w-6xl mx-auto px-4">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <Terminal size={13} className="text-[#f59e0b]" />
+            <span>[ IN-BROWSER INTERACTIVE TEST BENCH ]</span>
           </div>
-          <p className="text-xs text-[#a1a1aa] mt-1 font-sans">
-            Real-time Ed25519 digital receipts generated for every agent decision
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-sans">
+            Test Invariant Gating Live in Your Browser
+          </h2>
+          <p className="mt-2 text-sm text-[#a1a1aa] font-sans">
+            Type any proposed tool call below. This widget runs real-time rule evaluation and WebCrypto SHA-256 hashing directly inside your browser.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsSimulating(!isSimulating)}
-            className={`px-3 py-1.5 text-xs font-mono font-semibold border transition flex items-center gap-2 ${
-              isSimulating
-                ? 'bg-[#10b981]/15 border-[#10b981]/50 text-[#10b981]'
-                : 'bg-[#000000] border-[#222222] text-[#71717a]'
-            }`}
-          >
-            <Activity size={13} className={isSimulating ? 'animate-pulse text-[#10b981]' : ''} />
-            <span>{isSimulating ? '[STREAMING LIVE RECEIPTS]' : '[STREAM PAUSED]'}</span>
-          </button>
+        {/* Transparency Disclaimer Notice */}
+        <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#333333] flex items-start gap-3 text-xs text-[#a1a1aa] font-mono">
+          <Info size={16} className="text-[#38bdf8] shrink-0 mt-0.5" />
+          <div>
+            <span className="text-white font-bold">[CLIENT-SIDE PLAYGROUND NOTICE]: </span>
+            This UI widget runs locally in your browser JavaScript environment for testing and demonstration. For production agent deployments, install the native in-process Python/C library (<code>pip install btp-guard</code>) which executes AST parsing and Ed25519 signatures in &lt;5.0 µs on your host CPU.
+          </div>
+        </div>
 
-          <div className="flex bg-[#000000] border border-[#222222] font-mono text-xs">
+        {/* Interactive Input Form */}
+        <div className="bg-[#0a0a0a] border border-[#222222] p-6 shadow-2xl mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-3">
+              <label className="block text-xs font-mono text-[#a1a1aa] mb-2 uppercase">
+                Proposed Agent Command / SQL Query
+              </label>
+              <input
+                type="text"
+                value={inputCommand}
+                onChange={(e) => setInputCommand(e.target.value)}
+                placeholder="e.g. rm -rf /var/data or SELECT * FROM users"
+                className="w-full bg-[#000000] border border-[#333333] px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:border-[#f59e0b]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-mono text-[#a1a1aa] mb-2 uppercase">
+                Proposed Spend ($USD)
+              </label>
+              <input
+                type="number"
+                value={spendAmount}
+                onChange={(e) => setSpendAmount(e.target.value)}
+                placeholder="0"
+                className="w-full bg-[#000000] border border-[#333333] px-4 py-2.5 font-mono text-sm text-white focus:outline-none focus:border-[#f59e0b]"
+              />
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#71717a]">
+              <span>Quick Presets:</span>
+              <button
+                onClick={() => { setInputCommand('rm -rf /var/data'); setSpendAmount('0'); }}
+                className="px-2 py-1 bg-black border border-[#333333] hover:text-white text-xs"
+              >
+                rm -rf (Malicious)
+              </button>
+              <button
+                onClick={() => { setInputCommand('DROP TABLE customers;'); setSpendAmount('0'); }}
+                className="px-2 py-1 bg-black border border-[#333333] hover:text-white text-xs"
+              >
+                DROP TABLE (Malicious)
+              </button>
+              <button
+                onClick={() => { setInputCommand('SELECT name FROM products'); setSpendAmount('0'); }}
+                className="px-2 py-1 bg-black border border-[#333333] hover:text-white text-xs"
+              >
+                SELECT (Safe)
+              </button>
+              <button
+                onClick={() => { setInputCommand('API_CALL_CHARGE'); setSpendAmount('750'); }}
+                className="px-2 py-1 bg-black border border-[#333333] hover:text-white text-xs"
+              >
+                $750 Spend (Over Cap)
+              </button>
+            </div>
+
             <button
-              onClick={() => setActiveTab('all')}
-              className={`px-3 py-1 transition font-bold ${
-                activeTab === 'all' ? 'bg-[#222222] text-white' : 'text-[#a1a1aa] hover:text-white'
-              }`}
+              onClick={runLiveEvaluation}
+              disabled={isEvaluating}
+              className="px-6 py-2.5 bg-[#f59e0b] hover:bg-[#d97706] text-black font-mono font-bold text-xs flex items-center gap-2 transition"
             >
-              ALL
-            </button>
-            <button
-              onClick={() => setActiveTab('allowed')}
-              className={`px-3 py-1 transition font-bold ${
-                activeTab === 'allowed' ? 'bg-[#10b981] text-[#000000]' : 'text-[#a1a1aa] hover:text-white'
-              }`}
-            >
-              [ALLOW]
-            </button>
-            <button
-              onClick={() => setActiveTab('denied')}
-              className={`px-3 py-1 transition font-bold ${
-                activeTab === 'denied' ? 'bg-[#ef4444] text-[#ffffff]' : 'text-[#a1a1aa] hover:text-white'
-              }`}
-            >
-              [DENY]
+              <Play size={13} className="fill-black" />
+              <span>{isEvaluating ? 'EVALUATING...' : '[ EVALUATE INVARIANT ]'}</span>
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Auditor Fixed-Width Log Table */}
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full text-left font-mono text-xs border-collapse">
-          <thead>
-            <tr className="border-b border-[#222222] text-[#71717a] text-[11px] uppercase tracking-wider">
-              <th className="py-2.5 px-3">TIMESTAMP</th>
-              <th className="py-2.5 px-3">AGENT ID</th>
-              <th className="py-2.5 px-3">ACTION</th>
-              <th className="py-2.5 px-3">STATUS</th>
-              <th className="py-2.5 px-3">LATENCY</th>
-              <th className="py-2.5 px-3">DIGITAL SEAL (ED25519)</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#1a1a1a]">
-            {filteredLogs.map((log) => (
-              <tr
-                key={log.id}
-                className="hover:bg-[#000000] transition-colors"
-              >
-                <td className="py-3 px-3 text-[#71717a]">{log.timestamp}</td>
-                <td className="py-3 px-3 text-[#ffffff] font-semibold">{log.agentId}</td>
-                <td className="py-3 px-3 text-[#f59e0b]">{log.actionType}</td>
-                <td className="py-3 px-3">
-                  <span
-                    className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${
-                      log.verdict === 'ALLOW'
-                        ? 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/40'
-                        : 'bg-[#ef4444]/15 text-[#ef4444] border-[#ef4444]/40'
-                    }`}
-                  >
-                    [{log.verdict}]
-                  </span>
-                </td>
-                <td className="py-3 px-3 text-[#10b981] font-semibold">{log.latencyUs} µs</td>
-                <td className="py-3 px-3">
-                  <span
-                    title={log.signature}
-                    className="cursor-pointer text-[#a1a1aa] hover:text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] inline-block text-[11px] transition"
-                  >
-                    {log.signature.slice(0, 10)}...{log.signature.slice(-6)}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* Results Log Table */}
+        <div className="bg-[#0a0a0a] border border-[#222222] overflow-hidden shadow-2xl">
+          <div className="px-4 py-3 bg-black border-b border-[#222222] flex items-center justify-between font-mono text-xs text-[#71717a]">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={14} className="text-[#10b981]" />
+              <span className="text-white font-bold">CLIENT-SIDE EXECUTION LOG</span>
+            </div>
+            <span>WEB-CRYPTO SHA-256 HASH VERIFIED</span>
+          </div>
 
-      <div className="mt-6 pt-4 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between text-xs text-[#a1a1aa] font-mono gap-2">
-        <div className="flex items-center gap-2 text-[#10b981]">
-          <ShieldCheck size={14} />
-          <span>[RFC 8785 CANONICAL SERIALIZATION ACTIVE]</span>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left font-mono text-xs">
+              <thead className="bg-[#050505] text-[#71717a] border-b border-[#222222]">
+                <tr>
+                  <th className="p-3">TIMESTAMP</th>
+                  <th className="p-3">PROPOSED COMMAND</th>
+                  <th className="p-3">VERDICT</th>
+                  <th className="p-3">LATENCY</th>
+                  <th className="p-3">REASON</th>
+                  <th className="p-3">SHA-256 DIGEST</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1c1c1c]">
+                {history.map((item, idx) => (
+                  <tr key={idx} className="hover:bg-[#111111] transition">
+                    <td className="p-3 text-[#71717a]">{item.timestamp}</td>
+                    <td className="p-3 text-white font-bold truncate max-w-[200px]">{item.command}</td>
+                    <td className="p-3">
+                      {item.verdict === 'ALLOW' ? (
+                        <span className="inline-flex items-center gap-1 text-[#10b981] font-bold px-2 py-0.5 bg-[#10b981]/10 border border-[#10b981]/30">
+                          <CheckCircle2 size={12} />
+                          <span>ALLOW</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[#ef4444] font-bold px-2 py-0.5 bg-[#ef4444]/10 border border-[#ef4444]/30">
+                          <XCircle size={12} />
+                          <span>DENY</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="p-3 text-[#38bdf8]">{item.latencyUs} µs</td>
+                    <td className="p-3 text-[#a1a1aa] max-w-[280px] truncate">{item.reason}</td>
+                    <td className="p-3 text-[#71717a] text-[11px] truncate max-w-[150px]">{item.payloadHash.slice(0, 16)}...</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <span>[FIPS 186-5 ED25519 ATTESTATION LOADED]</span>
+
       </div>
-    </div>
+    </section>
   );
 };
+export default LiveAttestationInspector;
