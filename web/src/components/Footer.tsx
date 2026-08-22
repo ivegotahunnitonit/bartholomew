@@ -96,6 +96,17 @@ export default function Footer() {
               </li>
               <li>
                 <a
+                  href="https://www.bestpractices.dev/projects/14198"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#10b981] hover:text-white transition inline-flex items-center gap-1 font-bold"
+                >
+                  <span>[OPENSFF BEST PRACTICES: CERTIFIED]</span>
+                  <ExternalLink size={10} className="text-[#10b981]" />
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://www.rfc-editor.org/rfc/rfc8785"
                   target="_blank"
                   rel="noreferrer"
