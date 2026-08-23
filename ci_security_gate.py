@@ -43,13 +43,18 @@ def run_gate():
 
     all_passed = True
 
+    env = os.environ.copy()
+    env["PYTHONPATH"] = "."
+
     for item in steps:
         name = item[0]
-        cmd = item[1]
+        cmd = list(item[1])
+        if cmd and cmd[0] == "python":
+            cmd[0] = sys.executable
         cwd = item[2] if len(item) > 2 else "."
 
         print(f"[*] Running: {name}...")
-        res = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+        res = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True)
         if res.returncode == 0:
             print(f"    [PASSED] {name}")
         else:

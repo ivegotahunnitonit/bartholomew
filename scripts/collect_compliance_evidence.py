@@ -63,8 +63,11 @@ def run_ci_gate() -> dict:
     """Runs the 18-suite CI security gate and returns results."""
     print("[BARTHOLOMEW] Running 18-suite CI Security Gate...")
     start_t = time.time()
+    env = os.environ.copy()
+    env["PYTHONPATH"] = "."
     proc = subprocess.run(
-        ["python", "ci_security_gate.py"],
+        [sys.executable, "ci_security_gate.py"],
+        env=env,
         capture_output=True,
         text=True
     )

@@ -26,18 +26,23 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Runtime Dependencies
+      - name: Install Runtime & Test Dependencies
         run: |
-          pip install --no-cache-dir -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir -r requirements.txt pytest pyyaml
 
       - name: Run 18-Suite Master CI Security Gate
         id: ci_gate
+        env:
+          PYTHONPATH: .
         run: |
           python ci_security_gate.py
           echo "ci_exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Generate Merkle-Rooted SOC 2 Evidence Record
         id: evidence
+        env:
+          PYTHONPATH: .
         run: |
           python scripts/collect_compliance_evidence.py
           echo "evidence_generated=true" >> $GITHUB_OUTPUT
@@ -55,6 +60,7 @@ jobs:
           DATE=$(date -u +%Y-%m-%d)
           git add audit_evidence/ || true
           git diff --staged --quiet || git commit -m "evidence(soc2): Daily compliance receipt ${DATE} [automated]"
+          git pull --rebase origin main || true
           git push origin main || true
 
       - name: Upload Evidence Package as GitHub Artifact
