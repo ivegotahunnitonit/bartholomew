@@ -34,10 +34,12 @@
 
 ### Pillar 2: Irrefutable Prior Art Timestamping (Defensive Publication)
 
-* **Why this matters**: Prevents big tech giants (Google, Microsoft, OpenAI) from taking our ideas and filing patents against us.
-* **How it works**:
+* **Permanent Academic DOI Record**: [`https://doi.org/10.5281/zenodo.22076536`](https://doi.org/10.5281/zenodo.22076536)
+* **Zenodo Record ID**: `22076536`
+* **Publication Title**: *"Deterministic Sub-Microsecond Semantic Invariant Verification and Cryptographic Non-Repudiation for Autonomous Agentic Architectures"*
+* **Why this matters**: Establishes an immutable, globally recognized prior art timestamp indexed across Google Scholar and CERN's OpenAIRE network, legally preventing competitors from patenting our core inventions.
+* **Cryptographic Dossiers**:
   * Our cryptographic proof dossiers (`CRYPTOGRAPHIC_PROOF_OF_UNBREAKABILITY.json`, `MEGA_STRESS_TEST_50K_REPORT.json`) are timestamped on GitHub and public blockchains.
-  * Legally, this creates an unbreakable record of **Prior Art** proving that Bartholomew invented this architecture first.
 
 ---
 

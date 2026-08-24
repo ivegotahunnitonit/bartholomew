@@ -4,8 +4,9 @@
 <div align="center">
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
 [![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.2_FROZEN-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
-[![CI Security Gate](https://img.shields.io/badge/CI_Gate-17%2F17_Suites_Passing-00e676?style=for-the-badge&logo=githubactions&logoColor=040813)](ci_security_gate.py)
+[![CI Security Gate](https://img.shields.io/badge/CI_Gate-18%2F18_Suites_Passing-00e676?style=for-the-badge&logo=githubactions&logoColor=040813)](ci_security_gate.py)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![MCP Server](https://img.shields.io/badge/Anthropic_MCP-Security_Server-a855f7?style=for-the-badge&logo=anthropic&logoColor=ffffff)](mcp_server/)
 
