@@ -131,6 +131,10 @@ def main():
     # version Subcommand
     subparsers.add_parser("version", help="Print version and protocol information")
 
+    # agent Subcommand (Interactive REPL)
+    agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
+    agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -142,6 +146,11 @@ def main():
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)
+        return
+
+    elif args.command == "agent":
+        from src.interactive_agent_repl import run_agent_repl
+        run_agent_repl()
         return
 
     elif args.command == "init":

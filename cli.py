@@ -187,6 +187,10 @@ def main():
     demo_p = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
     demo_p.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
 
+    # agent (Interactive REPL)
+    agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
+    agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -194,6 +198,9 @@ def main():
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)
+    elif args.command == "agent":
+        from src.interactive_agent_repl import run_agent_repl
+        run_agent_repl()
     elif args.command == "init":
         cmd_init(args)
     elif args.command == "daemon":
