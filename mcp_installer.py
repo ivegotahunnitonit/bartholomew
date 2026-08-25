@@ -59,5 +59,9 @@ def install_mcp_config(target: str = "claude", custom_path: str = None) -> bool:
         return False
 
 
+# Backward compatibility alias
+install_mcp_for_target = install_mcp_config
+
+
 if __name__ == "__main__":
     install_mcp_config()
