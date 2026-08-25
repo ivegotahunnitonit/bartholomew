@@ -170,7 +170,7 @@
         <span class="pulse-dot" id="conn-dot"></span>
         <span id="conn-text" style="color: var(--accent-emerald);">[DAEMON: CONNECTED]</span>
       </div>
-      <a href="https://bartholomew.info" target="_blank" class="btn btn-dark font-mono">[WEBSITE]</a>
+      <a href="https://bartholomew.info" target="_blank" rel="noopener noreferrer" class="btn btn-dark font-mono">[WEBSITE]</a>
     </div>
   </header>
 
@@ -235,7 +235,7 @@
           <button class="btn btn-amber" onclick="sendTestPayload()">[EXECUTE &lt;50 µs SCAN]</button>
         </div>
         <div class="card-body">
-          <textarea id="test-intent" class="font-mono" style="width:100%; height:90px; background:#000; border:1px solid var(--border-subtle); color:var(--accent-amber); padding:0.75rem; font-size:0.75rem; resize:none;">{
+          <textarea id="test-intent" title="Test Agent Intent JSON" aria-label="Test Agent Intent JSON" placeholder="Enter JSON payload..." class="font-mono" style="width:100%; height:90px; background:#000; border:1px solid var(--border-subtle); color:var(--accent-amber); padding:0.75rem; font-size:0.75rem; resize:none;">{
   "agent_id": "desktop-claude-agent",
   "action_type": "EXEC_COMMAND",
   "payload": {

@@ -13,11 +13,18 @@ import json
 import re
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
-from src.polyglot_ast_validator import PolyglotASTValidator
-from src.hermetic_sandbox import HermeticFileSandbox, HermeticCommandSandbox
-from src.marginal_utility_engine import MarginalUtilityTracker
+try:
+    from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+    from src.polyglot_ast_validator import PolyglotASTValidator
+    from src.hermetic_sandbox import HermeticFileSandbox, HermeticCommandSandbox
+    from src.marginal_utility_engine import MarginalUtilityTracker
+except ImportError:
+    from trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+    from polyglot_ast_validator import PolyglotASTValidator
+    from hermetic_sandbox import HermeticFileSandbox, HermeticCommandSandbox
+    from marginal_utility_engine import MarginalUtilityTracker
 
 
 # Terminal ANSI Colors

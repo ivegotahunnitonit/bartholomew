@@ -596,7 +596,7 @@
               <span class="policy-label">MAX FINANCIAL SPEND CAP</span>
               <span class="policy-val" id="val-spend">$500.00 USD</span>
             </div>
-            <input type="range" class="slider" min="50" max="5000" step="50" value="500" oninput="updateSpend(this.value)" />
+            <input type="range" class="slider" min="50" max="5000" step="50" value="500" title="Max Financial Spend Cap" aria-label="Max Financial Spend Cap" oninput="updateSpend(this.value)" />
             <div class="policy-desc">Autonomous transactions exceeding this value trigger hard cryptographic veto.</div>
           </div>
 
@@ -606,7 +606,7 @@
               <span class="policy-label">LDMU MAX RETRY LOOP CAP</span>
               <span class="policy-val" id="val-loop">5 Iterations</span>
             </div>
-            <input type="range" class="slider" min="1" max="20" step="1" value="5" oninput="updateLoop(this.value)" />
+            <input type="range" class="slider" min="1" max="20" step="1" value="5" title="LDMU Max Retry Loop Cap" aria-label="LDMU Max Retry Loop Cap" oninput="updateLoop(this.value)" />
             <div class="policy-desc">Law of Diminishing Marginal Utility stops runaway agent recursion loops.</div>
           </div>
 
@@ -684,7 +684,7 @@
   <footer>
     <div>BARTHOLOMEW AUTONOMOUS TRUST PROTOCOL (BTP v2.2) // APACHE-2.0 OPEN SOURCE</div>
     <div style="margin-top: 0.3rem; color: var(--text-muted);">
-      Permanent Academic DOI: <a href="https://doi.org/10.5281/zenodo.22076536" target="_blank" style="color: var(--amber); text-decoration: none;">10.5281/zenodo.22076536</a> · AICPA SOC 2 &amp; ISO 27001 Ready
+      Permanent Academic DOI: <a href="https://doi.org/10.5281/zenodo.22076536" target="_blank" rel="noopener noreferrer" style="color: var(--amber); text-decoration: none;">10.5281/zenodo.22076536</a> · AICPA SOC 2 &amp; ISO 27001 Ready
     </div>
   </footer>
 
