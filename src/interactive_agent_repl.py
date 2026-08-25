@@ -140,12 +140,10 @@ def run_agent_repl():
             if user_input.isdigit() and 1 <= int(user_input) <= len(sample_prompts):
                 user_input = sample_prompts[int(user_input) - 1]
 
-            print(f"\n{DIM}[1] Ingesting operator intent: '{user_input}'{RESET}")
             actions = simulate_agent_reasoning(user_input)
 
             for step_idx, act in enumerate(actions, 1):
-                print(f"{DIM}[2] Agent Proposed Action [{step_idx}/{len(actions)}]: {act['summary']}{RESET}")
-                print(f"{DIM}    Action Type : {act['type']}{RESET}")
+                print(f"  {BOLD}🧠 [PLAN]{RESET}  {act['summary']}")
                 
                 # Check with Bartholomew Invariant Gate
                 t0 = time.perf_counter()
@@ -157,9 +155,7 @@ def run_agent_repl():
                     is_ast_safe, ast_msg, ast_meta = PolyglotASTValidator.validate_code(code_payload, language=lang)
                     if not is_ast_safe:
                         lat_us = (time.perf_counter() - t0) * 1_000_000
-                        print(f"    {BOLD}{CRIMSON}🛑 [VERDICT: DENIED - BTP-AST-GATE]{RESET}")
-                        print(f"    {CRIMSON}Reason  : {ast_msg}{RESET}")
-                        print(f"    {DIM}Latency : {lat_us:.2f} µs (Static Polyglot AST Engine){RESET}\n")
+                        print(f"  {BOLD}{CRIMSON}🛑 [GATE]{RESET}  {CRIMSON}Blocked ({lat_us:.1f} µs): {ast_msg}{RESET}\n")
                         continue
 
                 # 2. Trust Authority Pre-flight Evaluation
@@ -175,16 +171,11 @@ def run_agent_repl():
                 sig = receipt.get("signature", "")
 
                 if verdict == "ALLOW":
-                    print(f"    {BOLD}{GREEN}✅ [VERDICT: APPROVED - EXECUTION PERMITTED]{RESET}")
-                    print(f"    {GREEN}Reason    : {reason}{RESET}")
-                    print(f"    {DIM}Latency   : {lat_us:.2f} µs{RESET}")
-                    print(f"    {CYAN}Ed25519   : {sig[:32]}...{RESET}")
-                    print(f"    {DIM}Execution : 100% Deterministic Safe Dispatch Stamped{RESET}\n")
+                    print(f"  {BOLD}{CYAN}⚡ [GATE]{RESET}  Polyglot Invariant: PASS · Latency: {lat_us:.1f} µs")
+                    print(f"  {BOLD}{GREEN}✅ [EXEC]{RESET}  {GREEN}Approved & Signed [Ed25519: {sig[:16]}...] · Success{RESET}\n")
                 else:
-                    print(f"    {BOLD}{CRIMSON}🛑 [VERDICT: DENIED - PRE-FLIGHT INTERCEPTION]{RESET}")
-                    print(f"    {CRIMSON}Reason    : {reason}{RESET}")
-                    print(f"    {DIM}Latency   : {lat_us:.2f} µs{RESET}")
-                    print(f"    {AMBER}Audit Sig : {sig[:32]}...{RESET}\n")
+                    print(f"  {BOLD}{CRIMSON}🛑 [GATE]{RESET}  {CRIMSON}Blocked ({lat_us:.1f} µs): {reason}{RESET}")
+                    print(f"  {DIM}🔒 [RECP]{RESET}  {AMBER}Audit Proof Logged [Ed25519: {sig[:16]}...]{RESET}\n")
 
         except (KeyboardInterrupt, EOFError):
             print(f"\n{DIM}[*] Interrupted. Goodbye!{RESET}\n")
