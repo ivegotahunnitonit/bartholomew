@@ -5,73 +5,41 @@ export default function Footer() {
   return (
     <footer className="py-14 px-5 sm:px-8 bg-black text-[#a1a1aa] border-t border-[#1c1c1c]">
       <div className="max-w-6xl mx-auto space-y-12">
-        {/* Visual Certification Seals & Linux Foundation OpenSSF Banner */}
+        {/* Visual Certification Seals Banner */}
         <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-2xl">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="space-y-1 text-center lg:text-left">
-              <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] flex items-center justify-center lg:justify-start gap-2">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-1 text-center md:text-left">
+              <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] flex items-center justify-center md:justify-start gap-2">
                 <ShieldCheck size={14} className="text-[#10b981]" />
-                <span>[ LINUX FOUNDATION OPENSSF &amp; AUDIT CERTIFICATIONS ]</span>
+                <span>[ VERIFIED COMPLIANCE &amp; SECURITY SEALS ]</span>
               </div>
               <p className="text-xs text-[#a1a1aa] font-sans">
-                Independently verifiable open-source security baselines, Linux POSIX runtime isolation, and cryptographic integrity standards.
+                Independently verifiable open-source security baselines, deterministic cryptography, and formal audit standards.
               </p>
             </div>
 
-            {/* Official Embedded Badges & Seals Grid */}
+            {/* Seals Badges Grid */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {/* Live Linux Foundation OpenSSF Best Practices Badge */}
-              <a
-                href="https://www.bestpractices.dev/projects/14198"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 p-1 bg-[#000000] border border-[#222222] hover:border-[#10b981] transition rounded"
-                title="Linux Foundation OpenSSF Best Practices Certified"
-              >
-                <img
-                  src="https://www.bestpractices.dev/projects/14198/badge"
-                  alt="OpenSSF Best Practices"
-                  className="h-5"
-                  loading="lazy"
-                />
-              </a>
-
-              {/* Live Zenodo DOI Badge */}
-              <a
-                href="https://doi.org/10.5281/zenodo.22076536"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 p-1 bg-[#000000] border border-[#222222] hover:border-[#f59e0b] transition rounded"
-                title="Zenodo Academic DOI Permanent Research Record"
-              >
-                <img
-                  src="https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg"
-                  alt="Zenodo DOI 10.5281/zenodo.22076536"
-                  className="h-5"
-                  loading="lazy"
-                />
-              </a>
-
-              {/* 18/18 Multi-OS CI Gate Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
+              {/* 18/18 CI Gate Seal */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
                 <Cpu size={12} className="text-[#10b981]" />
                 <span className="text-[#10b981] font-bold">18/18 CI GATES</span>
               </div>
 
               {/* FIPS 186-5 Cryptographic Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
                 <Lock size={12} className="text-[#f59e0b]" />
                 <span>FIPS 186-5 ED25519</span>
               </div>
 
               {/* RFC 8785 Canonical Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
                 <FileCheck2 size={12} className="text-[#38bdf8]" />
                 <span>RFC 8785 CANONICAL</span>
               </div>
 
               {/* Apache 2.0 Open Source */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
                 <Code2 size={12} className="text-[#a1a1aa]" />
                 <span>APACHE-2.0</span>
               </div>
@@ -154,18 +122,6 @@ export default function Footer() {
                   className="hover:text-white transition inline-flex items-center gap-1"
                 >
                   <span>[THREAT MODEL SPEC (.MD)]</span>
-                  <ExternalLink size={10} className="text-[#71717a]" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.bestpractices.dev/projects/14198"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-white transition inline-flex items-center gap-1"
-                >
-                  <ShieldCheck size={12} className="text-[#10b981]" />
-                  <span>OPENSSF BEST PRACTICES</span>
                   <ExternalLink size={10} className="text-[#71717a]" />
                 </a>
               </li>
