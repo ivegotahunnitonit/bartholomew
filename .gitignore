@@ -55,6 +55,7 @@ web/node_modules/
 
 # BTP Runtime Local Cache
 .archive/
+scratch/
 .btp/
 .firebase/
 .terraform/

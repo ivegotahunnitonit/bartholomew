@@ -1,66 +1,115 @@
-import { ArrowRight } from 'lucide-react'
+import { ExternalLink, Code2, Mail, ShieldCheck, FileText, Globe } from 'lucide-react'
 
 export default function Founder() {
   return (
-    <section className="py-24 px-5 sm:px-8">
-      <div className="section-divider mb-24" />
-      <div className="max-w-4xl mx-auto">
-        <div
-          className="rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8"
-          style={{
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.06), rgba(139,92,246,0.05))',
-            border: '1px solid rgba(56,189,248,0.2)',
-          }}
-        >
-          {/* Avatar */}
-          <div className="shrink-0">
-            <img
-              src="../founder_avatar.jpg"
-              alt="Founder"
-              className="rounded-full object-cover"
-              style={{
-                width: '120px',
-                height: '120px',
-                border: '3px solid rgba(52,211,153,0.4)',
-                boxShadow: '0 0 30px rgba(16,185,129,0.25)',
-              }}
-              onError={e => {
-                (e.target as HTMLImageElement).style.display = 'none'
-              }}
-            />
+    <section id="founder" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#10b981] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <ShieldCheck size={13} />
+            <span>[ OPERATIONAL TRANSPARENCY & CORE LEADERSHIP ]</span>
           </div>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
+            Founder &amp; Engineering Leadership
+          </h2>
+          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base font-sans">
+            Bartholomew is an independently built, sovereign security architecture backed by verifiable academic prior art and open cryptographic standards.
+          </p>
+        </div>
 
-          {/* Text */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="badge badge-emerald mb-3 inline-flex">Founder Note</div>
-            <h2
-              className="font-bold text-xl md:text-2xl mb-3 leading-snug"
-              style={{ color: '#f1f5f9', fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-            >
-              "AI agents are executing code, writing emails, and moving money.
-              We built the security layer that should have been there from day one."
-            </h2>
-            <p className="text-sm mb-6" style={{ color: '#94a3b8' }}>
-              Bartholomew is independently owned and operated. All engines — ECE, EV Governor, provenance tracking, attestation chain — are proprietary and unencumbered.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-              <a href="/dashboard/admin.html?tour=1" className="btn-primary" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}>
-                <ArrowRight size={15} />
-                Start the tour
-              </a>
-              <a
-                href="https://github.com/ivegotahunnitonit/bartholomew"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary"
-                style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem' }}
-              >
-                GitHub
-              </a>
+        {/* Founder Card */}
+        <div
+          className="rounded-xl p-8 md:p-10 bg-[#0a0a0a] border border-[#222222] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8"
+        >
+          {/* Avatar with fallback */}
+          <div className="shrink-0">
+            <div className="relative inline-block">
+              <img
+                src="/founder_avatar.jpg"
+                alt="Itsub Alemayehu - Founder & Lead Architect"
+                className="w-32 h-32 rounded-full object-cover border-2 border-[#10b981] shadow-[0_0_25px_rgba(16,185,129,0.25)] cursor-pointer"
+                onClick={() => window.open('/founder_avatar.jpg', '_blank')}
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement
+                  img.onerror = null
+                  img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='1.5'%3E%3Ccircle cx='12' cy='8' r='5'/%3E%3Cpath d='M20 21a8 8 0 0 0-16 0'/%3E%3C/svg%3E`
+                }}
+              />
+              <span className="absolute bottom-1 right-1 w-4 h-4 bg-[#10b981] border-2 border-black rounded-full" title="Active Core Engineer" />
             </div>
           </div>
+
+          {/* Details & Third Party Links */}
+          <div className="flex-1 text-center md:text-left space-y-4">
+            <div>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 mb-1">
+                <h3 className="text-2xl font-bold text-white font-sans">Itsub Alemayehu</h3>
+                <span className="px-2 py-0.5 bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/30 font-mono text-[11px] font-bold">
+                  FOUNDER &amp; LEAD ARCHITECT
+                </span>
+              </div>
+              <p className="text-xs font-mono text-[#f59e0b]">
+                Autonomous Systems Laboratory &bull; Bartholomew Project Lead
+              </p>
+            </div>
+
+            <p className="text-sm text-[#d4d4d8] leading-relaxed font-sans">
+              "As autonomous AI agents acquire direct shell, database, and API execution access, post-hoc prompts and string blocklists are fundamentally unviable. We designed the Bartholomew Trust Protocol (BTP v2.2) to deliver deterministic, sub-5 microsecond AST invariant gating and cryptographic non-repudiation."
+            </p>
+
+            <div className="pt-2 border-t border-[#1c1c1c] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2 text-[#a1a1aa]">
+                <Globe size={13} className="text-[#38bdf8]" />
+                <span>Domain: <a href="https://bartholomew.info" className="text-white hover:underline">bartholomew.info</a></span>
+              </div>
+              <div className="flex items-center gap-2 text-[#a1a1aa]">
+                <Mail size={13} className="text-[#f59e0b]" />
+                <span>Contact: <a href="mailto:itsub@bartholomew.info" className="text-white hover:underline">itsub@bartholomew.info</a></span>
+              </div>
+            </div>
+
+            {/* Verifiable Third-Party Public Links (Google Compliance Criteria 3) */}
+            <div className="pt-3 flex flex-wrap gap-2.5 justify-center md:justify-start">
+              <a
+                href="https://github.com/ivegotahunnitonit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-[#000000] border border-[#222222] text-xs font-mono text-[#d4d4d8] hover:text-white hover:border-[#444444] transition inline-flex items-center gap-1.5"
+              >
+                <Code2 size={13} className="text-[#10b981]" />
+                <span>GitHub Profile</span>
+                <ExternalLink size={10} className="text-[#71717a]" />
+              </a>
+
+              <a
+                href="https://doi.org/10.5281/zenodo.22076536"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-[#000000] border border-[#222222] text-xs font-mono text-[#d4d4d8] hover:text-white hover:border-[#444444] transition inline-flex items-center gap-1.5"
+              >
+                <FileText size={13} className="text-[#f59e0b]" />
+                <span>Zenodo Academic DOI</span>
+                <ExternalLink size={10} className="text-[#71717a]" />
+              </a>
+
+              <a
+                href="/dashboard/admin.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-[#f59e0b] text-black font-bold text-xs font-mono transition inline-flex items-center gap-1.5 hover:bg-[#d97706]"
+              >
+                <ShieldCheck size={13} />
+                <span>Live Admin Command Center</span>
+              </a>
+            </div>
+
+          </div>
         </div>
+
       </div>
     </section>
   )
 }
+

@@ -38,6 +38,9 @@ export default function Navbar() {
           <a href="#policy-editor" className="hover:text-[#ffffff] transition">
             [IN-BROWSER TESTER]
           </a>
+          <a href="#founder" className="hover:text-[#10b981] transition text-[#10b981]">
+            [FOUNDER &amp; TEAM]
+          </a>
           <a href="#sdk" className="hover:text-[#ffffff] transition">
             [PYTHON / JS SDK]
           </a>

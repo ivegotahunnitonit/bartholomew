@@ -31,47 +31,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install --no-cache-dir -r requirements.txt pytest pyyaml
 
-      - name: Run 18-Suite Master CI Security Gate
-        id: ci_gate
-        env:
-          PYTHONPATH: .
-        run: |
-          python ci_security_gate.py
-          echo "ci_exit_code=$?" >> $GITHUB_OUTPUT
-
-      - name: Generate Merkle-Rooted SOC 2 Evidence Record
+      - name: Generate Merkle-Rooted SOC 2 & ISO 27001 Evidence Record
         id: evidence
         env:
           PYTHONPATH: .
         run: |
           python scripts/collect_compliance_evidence.py
-          echo "evidence_generated=true" >> $GITHUB_OUTPUT
 
       - name: Display Daily Merkle Receipt
+        if: always()
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          echo "--- Daily Receipt: $DATE ---"
-          cat audit_evidence/daily_receipts/receipt_${DATE}.json
+          if [ -f "audit_evidence/daily_receipts/receipt_${DATE}.json" ]; then
+            echo "--- Daily Merkle Receipt: $DATE ---"
+            cat audit_evidence/daily_receipts/receipt_${DATE}.json
+          fi
 
       - name: Commit & Archive Evidence to Repository
+        if: success()
         run: |
           git config user.name "Bartholomew CI Bot"
           git config user.email "ci-bot@bartholomew.info"
           DATE=$(date -u +%Y-%m-%d)
-          git add audit_evidence/ || true
+          git add audit_evidence/
           git diff --staged --quiet || git commit -m "evidence(soc2): Daily compliance receipt ${DATE} [automated]"
           git pull --rebase origin main || true
-          git push origin main || true
+          git push origin main || echo "Note: Push skipped or permissions restricted (artifact saved)."
 
       - name: Upload Evidence Package as GitHub Artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: soc2-evidence-${{ github.run_number }}
           path: audit_evidence/
           retention-days: 365
-
-      - name: Gate on CI Failure - Block Release on Evidence Failure
-        if: steps.ci_gate.outputs.ci_exit_code != '0'
-        run: |
-          echo "COMPLIANCE EVIDENCE GATE FAILED: One or more CI suites did not pass."
-          exit 1

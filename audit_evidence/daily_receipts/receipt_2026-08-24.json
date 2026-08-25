@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "timestamp_utc": "2026-08-24T16:25:22.315215+00:00",
+  "framework": {
+    "soc2_tsc": [
+      "CC7.1",
+      "CC7.2",
+      "CC9.1"
+    ],
+    "iso27001_annex_a": [
+      "A.8.8",
+      "A.8.30",
+      "A.9.1"
+    ]
+  },
+  "repository": "https://github.com/ivegotahunnitonit/bartholomew",
+  "release_tag": "v2.2.0",
+  "platform": "Windows",
+  "python_version": "3.14.6",
+  "ci_gate": {
+    "all_passed": true,
+    "suite_results": [
+      {
+        "suite": "[PASSED] 1. Validate Declarative Security Policy",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 2. Test Law of Diminishing Marginal Utility (LDMU) Engine",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 3. Test Merkle Audit Tree & SOC 2 Inclusion Proofs",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 4. Test Claude Desktop & Cursor MCP Guard Server",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 5. Test Hermetic Command & File Containment Sandbox",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 6. Test 1-Line Drop-In Client Wrapper",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 7. Test Enterprise Fleet Telemetry & OpenTelemetry Exporter",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 8. Test Native Invariant Micro-Engine & Sub-5\u00b5s Latency",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 9. Test Autonomous Policy Synthesizer",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 10. Test LangChain Guardrails",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 11. Test Information Theory & Epistemic Grounding Engine",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 12. Test Epistemic & Physical Invariant Engine",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 13. Test Advanced Cosmology, PCP & Neuro-Epistemic Engine",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 14. Test Unified Classical & Physical Invariant Engine",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 15. Test Hawking Information Preservation & Deterministic Gate",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 16. Test Compliance & SOC 2 Audit Report Generator",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 17. Test Simple Drop-In Guard Interface",
+        "status": "PASSED"
+      },
+      {
+        "suite": "[PASSED] 18. Test Container Hardware Sandbox & Fallback Engine",
+        "status": "PASSED"
+      }
+    ],
+    "total_suites": 18,
+    "passed_suites": 18,
+    "elapsed_seconds": 9.96
+  },
+  "source_integrity": {
+    "src/trust_protocol.py": "5d70d94abb56bbdba52851f37d47097b95263e8c5884279fa231c8e5051ae000",
+    "src/ast_validator.py": "558ff7405b5d7ed3763194e81a6e89e076e5e809252557ac667a572236c8c43e",
+    "src/audit_merkle_tree.py": "2c7d5b9e0fd3c19af10445134033eb95af7e094278cd3a09f0f69c4a172ca7a4",
+    "src/hermetic_sandbox.py": "8f3cf058f01551cea76df5e1e065a8bad5f263bc83d430b1f37958c3465857aa",
+    "src/container_sandbox.py": "3a3679603465f7972cf693740eda2abe5a724cc64600cc8f2062ba187295c92d",
+    "src/declarative_policy_engine.py": "d8d57bca6332e36b353f00d94002696d4853e1568588a04d647cb3b81df01d3c",
+    "ci_security_gate.py": "e4ec6f8711de28182fd69b4083daffb1ba15f7996758e076223ff7144b3d8b1a",
+    "policies/default_security_policy.yaml": "473317eaceb3b7622c75ffdb71d19d9a7ec42046dcc59ad953a4b53709cc64d0",
+    "SECURITY.md": "5cf9bf704496662df5c1a640711f3f7c547aacd3ad10ea0b2073a2f88132456f"
+  },
+  "merkle_root_sha256": "9ecada71dadc898de91e9e0de18e51274129728d63c60aa9d28ba9b29b8efdf6",
+  "control_conclusion": "PASS"
+}

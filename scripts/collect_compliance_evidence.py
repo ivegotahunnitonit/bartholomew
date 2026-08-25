@@ -95,12 +95,14 @@ def run_ci_gate() -> dict:
 def collect_source_integrity_hashes() -> dict:
     """SHA-256 fingerprints of all core source modules for tamper evidence."""
     files_to_hash = [
-        "src/btp_guard.py",
+        "src/trust_protocol.py",
+        "src/ast_validator.py",
         "src/audit_merkle_tree.py",
         "src/hermetic_sandbox.py",
         "src/container_sandbox.py",
+        "src/declarative_policy_engine.py",
         "ci_security_gate.py",
-        "policy.yaml",
+        "policies/default_security_policy.yaml",
         "SECURITY.md"
     ]
     return {f: sha256_of_file(f) for f in files_to_hash}

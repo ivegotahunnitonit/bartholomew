@@ -9,6 +9,7 @@ import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
 import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
+import Founder from './components/Founder'
 import SDK from './components/SDK'
 import LiveAPI from './components/LiveAPI'
 import Footer from './components/Footer'
@@ -47,6 +48,7 @@ function HomeView() {
         <LiveAttestationInspector />
       </div>
       <ContinuousComplianceTimeline />
+      <Founder />
       <SDK />
       <LiveAPI />
     </>

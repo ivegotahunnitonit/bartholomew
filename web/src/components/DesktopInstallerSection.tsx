@@ -61,39 +61,44 @@ export default function DesktopInstallerSection() {
             <div className="w-12" />
           </div>
 
-          {/* Selector Tabs */}
-          <div className="flex border-b border-[#222222] bg-[#000000] p-2 gap-2">
+          {/* Selector Tabs — 2 col grid on mobile, 4 col on sm+ */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#222222] bg-[#000000] p-2 gap-2">
             {(['pip', 'npm', 'vscode', 'source'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2.5 px-3 text-xs font-mono font-bold transition flex items-center justify-center gap-2 border ${
+                className={`py-2.5 px-2 text-[10px] sm:text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border min-h-[44px] ${
                   activeTab === tab
                     ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                <span>{tabLabels[tab]}</span>
+                <span className="text-center leading-tight">{tabLabels[tab]}</span>
               </button>
             ))}
           </div>
 
           {/* Terminal Command Display & Action */}
-          <div className="p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#000000] border border-[#222222] p-4 font-mono text-xs sm:text-sm text-[#f59e0b]">
-              <span className="truncate flex-1">$ {commands[activeTab]}</span>
-              <div className="flex items-center gap-2 shrink-0">
+          <div className="p-4 sm:p-8">
+            {/* Command string + action buttons — stacks vertically on mobile */}
+            <div className="flex flex-col gap-3 bg-[#000000] border border-[#222222] p-3 sm:p-4 font-mono text-xs text-[#f59e0b]">
+              {/* Scrollable command line */}
+              <div className="overflow-x-auto whitespace-nowrap">
+                <span>$ {commands[activeTab]}</span>
+              </div>
+              {/* Action buttons — full-width row on mobile */}
+              <div className="flex flex-wrap items-center gap-2">
                 <a
                   href={directDownloadFiles[activeTab].href}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3.5 py-2 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center gap-1.5"
+                  className="flex-1 min-w-[120px] px-3 py-2.5 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center justify-center gap-1.5 min-h-[44px]"
                 >
                   <span>[{directDownloadFiles[activeTab].label}]</span>
                 </a>
                 <button
                   onClick={() => handleCopy(activeTab)}
-                  className={`px-3.5 py-2 text-xs font-mono font-bold transition flex items-center gap-1.5 border ${
+                  className={`flex-1 min-w-[80px] px-3 py-2.5 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border min-h-[44px] ${
                     copied === activeTab
                       ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
                       : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
@@ -133,8 +138,8 @@ export default function DesktopInstallerSection() {
               </a>
             </div>
 
-            {/* Verification Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {/* Verification Features Grid — 1 col mobile, 3 col md+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
               <div className="p-4 bg-[#000000] border border-[#222222]">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
                   <CheckCircle2 size={14} className="text-[#10b981]" />

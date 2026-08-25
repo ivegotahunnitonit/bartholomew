@@ -20,7 +20,7 @@ const TIERS = [
     features: ['Unlimited scans', 'Cloud Run managed API', 'Firestore audit sync', 'Slack / email alerts', 'Multi-environment policy', 'Standard SLA (99.5%)'],
     missing: ['SIEM integration', 'Air-gap deploy', 'FedRAMP'],
     cta: 'Start free trial',
-    href: '/dashboard/admin.html',
+    href: '#threat-simulator',
   },
   {
     tier: 'Tier 3',

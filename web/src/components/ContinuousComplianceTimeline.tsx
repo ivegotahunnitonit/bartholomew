@@ -110,7 +110,7 @@ export default function ContinuousComplianceTimeline() {
                   MERKLE RECEIPT // {selectedReceipt.date}
                 </span>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[11px] text-[#10b981]">
+              <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[#10b981]">
                 <Activity className="w-3.5 h-3.5" />
                 <span>ALL 18 GATES PASSING</span>
               </div>
@@ -169,9 +169,9 @@ export default function ContinuousComplianceTimeline() {
               </div>
               <div className="space-y-1.5 text-[11px]">
                 {selectedReceipt.source_fingerprints.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-[#a1a1aa]">
-                    <span className="text-[#ffffff] font-bold">{item.file}</span>
-                    <span className="text-[#71717a] text-[10px]">{item.sha256}...</span>
+                  <div key={idx} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-[#a1a1aa]">
+                    <span className="text-[#ffffff] font-bold shrink-0">{item.file}</span>
+                    <span className="text-[#71717a] text-[10px] truncate max-w-full sm:max-w-[240px]">{item.sha256}...</span>
                   </div>
                 ))}
               </div>

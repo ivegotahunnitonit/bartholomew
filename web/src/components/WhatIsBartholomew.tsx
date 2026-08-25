@@ -94,13 +94,11 @@ export default function WhatIsBartholomew() {
               </p>
             </div>
             <a
-              href="/dashboard/admin.html"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#threat-simulator"
               className="btn-primary mt-5 self-start"
               style={{ fontSize: '0.85rem', padding: '0.55rem 1.2rem' }}
             >
-              Open Command Center
+              Explore Threat Simulator
             </a>
           </div>
         </div>
