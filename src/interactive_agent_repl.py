@@ -136,6 +136,10 @@ def run_agent_repl():
                 print(f"{DIM}[*] Exiting Bartholomew Agent REPL.{RESET}\n")
                 break
 
+            # Support numeric shortcuts (e.g. '1', '2', '3', '4', '5')
+            if user_input.isdigit() and 1 <= int(user_input) <= len(sample_prompts):
+                user_input = sample_prompts[int(user_input) - 1]
+
             print(f"\n{DIM}[1] Ingesting operator intent: '{user_input}'{RESET}")
             actions = simulate_agent_reasoning(user_input)
 
