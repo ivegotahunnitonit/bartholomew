@@ -124,6 +124,10 @@ def main():
     audit_parser = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
     audit_parser.add_argument("--path", default=".", help="Target directory path to audit")
 
+    # demo Subcommand
+    demo_parser = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
+    demo_parser.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
+
     # version Subcommand
     subparsers.add_parser("version", help="Print version and protocol information")
 
@@ -133,6 +137,11 @@ def main():
         print("Bartholomew Autonomous Trust Protocol (BTP) CLI v2.2.0")
         print("Protocol: BTP/2.2 (RFC 8785 + FIPS 186-5 Ed25519)")
         print("Target Latency: <55 µs")
+        return
+
+    elif args.command == "demo":
+        from src.interactive_demo import run_interactive_demo
+        run_interactive_demo(speed=args.speed)
         return
 
     elif args.command == "init":

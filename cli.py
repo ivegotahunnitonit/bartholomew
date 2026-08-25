@@ -183,10 +183,17 @@ def main():
     syn_p = policy_sub.add_parser("synthesize", help="Auto-synthesize least-privilege policy from traces")
     syn_p.add_argument("--output", "-o", type=str, default="policies/synthesized_policy.yaml", help="Output YAML file path")
 
+    # demo
+    demo_p = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
+    demo_p.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
+    elif args.command == "demo":
+        from src.interactive_demo import run_interactive_demo
+        run_interactive_demo(speed=args.speed)
     elif args.command == "init":
         cmd_init(args)
     elif args.command == "daemon":

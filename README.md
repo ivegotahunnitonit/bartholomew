@@ -17,7 +17,20 @@
 ### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP?**
 
 > **Bartholomew is the open cryptographic trust and verification gateway for autonomous AI agents.**  
-> Built on the **Bartholomew Trust Protocol (BTP v2.2 Standards Track)**, it replaces probabilistic prompt filters with deterministic, hermetic pre-flight sandboxing and signed RFC 8785 Ed25519 attestations. Downstream execution environments (LangGraph, AutoGen, CrewAI, MCP, Kubernetes clusters) verify agent tool calls **100% offline in 175.5 microseconds** with zero cloud dependencies.
+> Built on the **Bartholomew Trust Protocol (BTP v2.2 Standards Track)**, it replaces probabilistic prompt filters with deterministic, hermetic pre-flight sandboxing and signed RFC 8785 Ed25519 attestations. Downstream execution environments (LangGraph, AutoGen, CrewAI, MCP, Kubernetes clusters) verify agent tool calls **100% offline in sub-50 microseconds** with zero cloud dependencies.
+
+---
+
+### **⚡ 3-Second Live Terminal Showcase**
+
+Test the in-process AST scanner, hermetic path sandbox, LDMU loop governor, and Ed25519 notary on your machine:
+
+```bash
+# Clone and run the live 5-scenario attack simulation
+git clone https://github.com/ivegotahunnitonit/bartholomew.git
+cd bartholomew
+python cli.py demo
+```
 
 ---
 
