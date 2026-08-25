@@ -127,6 +127,18 @@ export default function Footer() {
               </li>
               <li>
                 <a
+                  href="https://www.bestpractices.dev/projects/14198"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition inline-flex items-center gap-1.5"
+                >
+                  <ShieldCheck size={12} className="text-[#10b981]" />
+                  <span>[OPENSSF BEST PRACTICES]</span>
+                  <ExternalLink size={10} className="text-[#71717a]" />
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://github.com/ivegotahunnitonit/bartholomew"
                   target="_blank"
                   rel="noreferrer"
