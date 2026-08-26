@@ -1,0 +1,32 @@
+{
+  "name": "aws-cdk-bartholomew-guard",
+  "version": "2.3.0",
+  "description": "AWS CDK construct for deploying Bartholomew sub-50µs Tier-0 deterministic invariant gates for Amazon Bedrock and autonomous AI agents.",
+  "main": "bartholomew_guard.py",
+  "keywords": [
+    "aws",
+    "cdk",
+    "constructs",
+    "bedrock",
+    "generative-ai",
+    "agent-security",
+    "ai-guardrails",
+    "lambda-extension",
+    "finops"
+  ],
+  "author": {
+    "name": "Bartholomew Protocol Team",
+    "email": "security@bartholomew.info",
+    "url": "https://bartholomew.info"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew.git",
+    "directory": "aws_cdk"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": "^2.100.0",
+    "constructs": "^10.0.0"
+  }
+}

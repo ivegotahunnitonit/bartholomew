@@ -1,7 +1,7 @@
 {
-  "name": "@btp/verifier",
-  "version": "2.2.0",
-  "description": "BTP v2.2 Zero-Dependency Offline Cryptographic Verifier for Autonomous Agent Architectures",
+  "name": "@bartholomew/guard",
+  "version": "2.3.0",
+  "description": "BTP v2.3 Sub-50µs Zero-Dependency Cryptographic Invariant Guard & Offline Verifier for Autonomous AI Agents",
   "main": "index.js",
   "type": "module",
   "scripts": {
