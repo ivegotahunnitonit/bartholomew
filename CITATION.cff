@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use Bartholomew or the BTP v2.2 specification in your research or production systems, please cite it as below."
+authors:
+  - family-names: "Alemayehu"
+    given-names: "Itsub"
+    affiliation: "Autonomous Systems Laboratory"
+    website: "https://bartholomew.info"
+title: "Bartholomew Trust Protocol (BTP v2.2): Deterministic Invariant Gating and Cryptographic Verification for Autonomous AI Agents"
+version: 2.2.0
+doi: 10.5281/zenodo.22076536
+date-released: 2026-08-24
+url: "https://github.com/ivegotahunnitonit/bartholomew"
+repository-code: "https://github.com/ivegotahunnitonit/bartholomew"
+keywords:
+  - "ai-safety"
+  - "agent-guardrails"
+  - "cryptography"
+  - "ed25519"
+  - "ast-compilation"
+  - "mcp"
+license: Apache-2.0
