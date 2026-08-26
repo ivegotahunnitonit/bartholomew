@@ -17,16 +17,20 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src import Guard, wrap_client, BartholomewTrustAuthority, IndependentTrustVerifier
 from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox, HermeticFileSandbox
-from src.declarative_policy_engine import DeclarativePolicyEngine
-from src.marginal_utility_engine import MarginalUtilityTracker
+from src.polyglot_ast_validator import PolyglotASTValidator
+from src.secret_masker import SecretVaultMasker
+from src.snapshot_engine import WorkspaceSnapshotEngine
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 __all__ = [
     "Guard",
     "wrap_client",
     "BartholomewTrustAuthority",
     "IndependentTrustVerifier",
     "ASTSecurityValidator",
+    "PolyglotASTValidator",
+    "SecretVaultMasker",
+    "WorkspaceSnapshotEngine",
     "HermeticCommandSandbox",
     "HermeticFileSandbox",
     "DeclarativePolicyEngine",
