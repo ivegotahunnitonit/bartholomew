@@ -54,12 +54,15 @@ export default function Footer() {
             <div className="flex items-center">
               <Logo size={28} showText={true} />
             </div>
+            <div className="text-xs font-mono font-bold text-cyan-400">
+              Autonomous Circularity Network
+            </div>
             <p className="text-xs text-[#a1a1aa] max-w-sm leading-relaxed font-sans">
-              Sub-5 microsecond cryptographic safety infrastructure and deterministic invariant guardrails for autonomous AI agents.
+              Bartholomew is developed by Autonomous Circularity Network. Sub-50 microsecond cryptographic safety infrastructure and deterministic invariant guardrails for autonomous AI agents.
             </p>
             <div className="flex items-center gap-2 text-xs text-[#10b981] font-mono pt-1">
               <CheckCircle2 size={13} />
-              <span>[PROTOCOL ACTIVE: BTP v2.2.0 · APACHE 2.0 / BSL LICENSED]</span>
+              <span>[PROTOCOL ACTIVE: BTP v2.3.0 · APACHE 2.0 / BSL LICENSED]</span>
             </div>
           </div>
 
@@ -177,7 +180,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#71717a] font-mono">
-          <div>© 2026 BARTHOLOMEW TRUST PROTOCOL · OPEN STANDARDS</div>
+          <div>© 2026 AUTONOMOUS CIRCULARITY NETWORK · BARTHOLOMEW TRUST PROTOCOL</div>
           <div className="flex items-center gap-4">
             <a href="https://bartholomew.info" className="text-[#a1a1aa] hover:text-white transition">
               bartholomew.info

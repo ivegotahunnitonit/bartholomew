@@ -11,9 +11,9 @@ export default function Hero() {
   const [copiedCommand, setCopiedCommand] = useState(false)
 
   const installCommands = {
-    pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    pip: 'pip install btp-guard',
     git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .',
-    npm: 'npm install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    npm: 'npm install @bartholomew/guard',
     vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix'
   }
 
@@ -100,9 +100,11 @@ if result["allowed"]:
         <div className="flex items-center justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981]">[BTP v2.2.0 OPEN SOURCE]</span>
+            <span className="text-cyan-400">AUTONOMOUS CIRCULARITY NETWORK</span>
             <span className="text-[#555555]">|</span>
-            <span className="text-[#d4d4d8]">SUB-5 µS DETERMINISTIC INVARIANT GATEWAY</span>
+            <span className="text-[#10b981]">[BTP v2.3.0]</span>
+            <span className="text-[#555555]">|</span>
+            <span className="text-[#d4d4d8]">TIER-0 FAST PATH GATEWAY</span>
           </div>
         </div>
 
