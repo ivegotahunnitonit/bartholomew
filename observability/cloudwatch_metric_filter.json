@@ -1,0 +1,43 @@
+{
+  "MetricFilters": [
+    {
+      "filterName": "BTPBlockedASTAttacks",
+      "filterPattern": "{ $.verdict = \"DENY\" }",
+      "logGroupName": "/aws/lambda/bartholomew-security-gate",
+      "metricTransformations": [
+        {
+          "metricName": "BlockedASTAttacks",
+          "metricNamespace": "Bartholomew/Security",
+          "metricValue": "1",
+          "unit": "Count"
+        }
+      ]
+    },
+    {
+      "filterName": "BTPSecretRedactions",
+      "filterPattern": "{ $.redactions_count > 0 }",
+      "logGroupName": "/aws/lambda/bartholomew-security-gate",
+      "metricTransformations": [
+        {
+          "metricName": "SecretRedactions",
+          "metricNamespace": "Bartholomew/Security",
+          "metricValue": "$.redactions_count",
+          "unit": "Count"
+        }
+      ]
+    },
+    {
+      "filterName": "BTPEvaluationLatency",
+      "filterPattern": "{ $.latency_us > 0 }",
+      "logGroupName": "/aws/lambda/bartholomew-security-gate",
+      "metricTransformations": [
+        {
+          "metricName": "EvaluationLatencyMicroseconds",
+          "metricNamespace": "Bartholomew/Performance",
+          "metricValue": "$.latency_us",
+          "unit": "Microseconds"
+        }
+      ]
+    }
+  ]
+}

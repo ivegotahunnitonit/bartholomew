@@ -1,0 +1,112 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Bartholomew Tier-0 Agent Governance & Fleet Metrics (BTP v2.3)",
+      "type": "row"
+    },
+    {
+      "id": 1,
+      "title": "Total Tool Evaluations / sec",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(rate(btp_evaluations_total[1m]))",
+          "legendFormat": "Evaluations/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "reqps"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Blocked AST Invariant Attacks",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(increase(btp_vetoes_total[1h]))",
+          "legendFormat": "Attacks Blocked"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "red", "mode": "fixed" }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Secret Scrubber Redactions",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum(increase(btp_secret_redactions_total[1h]))",
+          "legendFormat": "API Keys Scrubbed"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "purple", "mode": "fixed" }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Median Evaluation Latency (µs)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 1 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(btp_latency_us_bucket[5m])) by (le))",
+          "legendFormat": "p50 Latency"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "green", "mode": "fixed" },
+          "unit": "µs"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Real-Time Interception Stream by Agent & Invariant Rule",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 7 },
+      "targets": [
+        {
+          "expr": "sum by (rule, agent_id) (rate(btp_evaluations_total{verdict='DENY'}[5m]))",
+          "legendFormat": "{{agent_id}} - {{rule}}"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["bartholomew", "ai-security", "btp", "mcp", "bedrock"],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "title": "Bartholomew Zero-Trust Agent Security Command Center",
+  "uid": "btp-agent-governance"
+}
