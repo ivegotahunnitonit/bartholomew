@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Terminal, Shield, Play, RotateCcw, CheckCircle2, AlertTriangle, Cpu, Activity, Lock, ArrowRight, Key, Eye, ShieldAlert, Sparkles, Copy, Check } from 'lucide-react'
+import { Terminal, Shield, Play, Cpu, Activity, Sparkles, Copy, Check } from 'lucide-react'
 
 interface SimulationPreset {
   id: string
