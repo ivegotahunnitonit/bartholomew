@@ -34,14 +34,16 @@ class PolyglotASTValidator:
     }
 
     FORBIDDEN_SHELL_PATTERNS = [
-        re.compile(r"rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)*(/|/\*|~|\$HOME)", re.IGNORECASE),
+        re.compile(r"rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)+(\S+)", re.IGNORECASE),
+        re.compile(r"rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)*(/|/\*|~|\$HOME|/etc|/var|/usr|[a-zA-Z]:[\\/])", re.IGNORECASE),
         re.compile(r"mkfs(\.\w+)?\s+", re.IGNORECASE),
-        re.compile(r"dd\s+if=.*?of=(/dev/|/boot)", re.IGNORECASE),
+        re.compile(r"dd\s+if=\S+\s+of=(/dev/|/boot|\S+)", re.IGNORECASE),
         re.compile(r":\(\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:", re.IGNORECASE), # Fork bomb
         re.compile(r"chmod\s+(-R\s+)?777\s+/", re.IGNORECASE),
         re.compile(r"curl\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
-        re.compile(r"base64\s+-d.*?\|\s*(bash|sh)", re.IGNORECASE)
+        re.compile(r"base64\s+-d.*?\|\s*(bash|sh)", re.IGNORECASE),
+        re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE)
     ]
 
     @classmethod
