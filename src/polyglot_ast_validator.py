@@ -43,7 +43,9 @@ class PolyglotASTValidator:
         re.compile(r"curl\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"base64\s+-d.*?\|\s*(bash|sh)", re.IGNORECASE),
-        re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE)
+        re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
+        re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
+        re.compile(r"\btruncate\s+table\b", re.IGNORECASE)
     ]
 
     @classmethod

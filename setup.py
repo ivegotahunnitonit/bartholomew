@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name="btp-guard",
-    version="2.2.0",
-    description="Sub-millisecond cryptographic invariant and safety guardrail engine for autonomous AI agents.",
+    version="2.3.0",
+    description="Sub-50µs cryptographic invariant, polyglot AST, and secret guardrail engine for autonomous AI agents.",
     author="Bartholomew Protocol Team",
     packages=["btp_guard"],
     package_dir={"btp_guard": "src"},
@@ -19,7 +19,8 @@ setup(
     entry_points={
         "console_scripts": [
             "bartholomew=btp_guard.cli:main",
-            "btp=btp_guard.cli:main"
+            "btp=btp_guard.cli:main",
+            "btp-mcp=btp_guard.mcp_gateway:main"
         ]
     },
     classifiers=[

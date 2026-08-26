@@ -119,3 +119,60 @@ class MCPProxyGateway:
             return sanitized_resp if isinstance(sanitized_resp, dict) else resp
         except Exception:
             return {}
+
+    def run_stdio_proxy(self, downstream_cmd: List[str]):
+        """
+        Launches downstream MCP server subprocess, piping stdin/stdout with real-time invariant interception.
+        """
+        import subprocess
+        import threading
+
+        proc = subprocess.Popen(
+            downstream_cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=sys.stderr,
+            text=True,
+            bufsize=1
+        )
+
+        def _forward_stdout():
+            for line in proc.stdout:
+                sanitized_resp = self.intercept_jsonrpc_response(line)
+                if sanitized_resp:
+                    sys.stdout.write(json.dumps(sanitized_resp) + "\n")
+                else:
+                    sys.stdout.write(line)
+                sys.stdout.flush()
+
+        t = threading.Thread(target=_forward_stdout, daemon=True)
+        t.start()
+
+        # Read client requests from sys.stdin
+        for line in sys.stdin:
+            forward, req, veto = self.intercept_jsonrpc_request(line)
+            if not forward and veto:
+                # Return hard veto directly to client without touching downstream server
+                sys.stdout.write(json.dumps(veto) + "\n")
+                sys.stdout.flush()
+            else:
+                # Forward approved/sanitized request to downstream server
+                if proc.stdin:
+                    proc.stdin.write(json.dumps(req) + "\n")
+                    proc.stdin.flush()
+
+        proc.wait()
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Bartholomew MCP Transparent Invariant Proxy Gateway")
+    parser.add_argument("--server-cmd", nargs="+", required=True, help="Downstream MCP server command to launch")
+    args = parser.parse_args()
+
+    gateway = MCPProxyGateway()
+    gateway.run_stdio_proxy(args.server_cmd)
+
+
+if __name__ == "__main__":
+    main()
