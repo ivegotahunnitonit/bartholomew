@@ -1,5 +1,5 @@
 ---
-title: "Bartholomew Trust Protocol (BTP v2.3): Tier-0 Deterministic Invariant Gating, Polyglot AST Compilers, and Agent-to-Agent (A2A) Cryptographic Telemetry for Autonomous Multi-Agent Swarms"
+title: "Bartholomew (BTP v2.3): An In-Memory Invariant Kernel and Cryptographic Protocol for Agentic Systems"
 authors:
   - name: "Bartholomew Research Team"
     affiliation: "Autonomous Systems Laboratory"
@@ -17,7 +17,7 @@ keywords:
   - "FinOps & Latency Optimization"
 ---
 
-# Bartholomew Trust Protocol (BTP v2.3): Tier-0 Deterministic Invariant Gating, Polyglot AST Compilers, and Agent-to-Agent (A2A) Cryptographic Telemetry for Autonomous Multi-Agent Swarms
+# Bartholomew (BTP v2.3): An In-Memory Invariant Kernel and Cryptographic Protocol for Agentic Systems
 
 ## Abstract
 As autonomous artificial intelligence agents transition from single-turn chat interfaces to long-horizon background execution swarms with access to operating system shells, databases, financial rails, and inter-agent communication channels, post-hoc natural language guardrails introduce severe financial and computational bottlenecks. Standard large language model (LLM)-as-a-judge guardrail pipelines introduce 800ms–2,500ms of latency overhead per turn, cost $0.75–$2.00 per 1M evaluated characters, and exhibit susceptibility to semantic jailbreaks and dynamic string concatenation evasions.
