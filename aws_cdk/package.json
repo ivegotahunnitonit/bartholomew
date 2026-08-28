@@ -4,6 +4,7 @@
   "description": "AWS CDK construct for deploying Bartholomew sub-50µs Tier-0 deterministic invariant gates for Amazon Bedrock and autonomous AI agents.",
   "main": "bartholomew_guard.py",
   "keywords": [
+    "aws-cdk",
     "aws",
     "cdk",
     "constructs",
