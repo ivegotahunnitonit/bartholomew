@@ -45,7 +45,7 @@ def test_guard_proxy():
     
     # 2. Malicious execution (simulate a prompt injection or credential leak)
     # The BartholomewEngine evaluates based on regex heuristics. We'll pass a known bad string.
-    result_bad = guard.execute_and_attest(my_agent_step, action="AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE")
+    result_bad = guard.execute_and_attest(my_agent_step, action="AWS_SECRET_ACCESS_KEY=AKIA_MOCK_AWS_KEY_FOR_TESTS_0000")
     assert result_bad["success"] == False
     assert result_bad["trust_artifact"]["security_status"] == "FAIL_BLOCKED"
     assert "OWASP_LLM02_CREDENTIAL_LEAK" in result_bad["trust_artifact"]["owasp_violations"]

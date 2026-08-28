@@ -8,7 +8,7 @@ import pytest
 from migrate_langmem import sanitize_text, parse_langmem_json, export_to_okf
 
 def test_sanitize_text_credentials():
-    raw = "My OpenAI key is sk-1234567890abcdef12345678 and email is dev@langchain.dev"
+    raw = "My OpenAI key is sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 and email is dev@langchain.dev"
     sanitized = sanitize_text(raw)
     assert "[REDACTED_API_KEY]" in sanitized
     assert "[REDACTED_EMAIL]" in sanitized

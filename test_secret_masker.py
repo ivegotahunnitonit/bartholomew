@@ -14,7 +14,7 @@ from src.secret_masker import SecretVaultMasker
 
 
 def test_openai_key_redaction():
-    leak_prompt = "Using key sk-proj-1234567890abcdef1234567890abcdef to query OpenAI API."
+    leak_prompt = "Using key sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 to query OpenAI API."
     sanitized, redacts, lat = SecretVaultMasker.mask_text(leak_prompt)
     assert "[REDACTED_OPENAI_KEY_BTP]" in sanitized
     assert "sk-proj-" not in sanitized
@@ -23,7 +23,7 @@ def test_openai_key_redaction():
 
 
 def test_anthropic_and_github_pat():
-    raw = "Anthropic: sk-ant-api03-abcdef1234567890abcdef1234567890 | GitHub: ghp_1234567890abcdefghijklmnopqrstuv"
+    raw = "Anthropic: sk-ant-api03-abcdef1234567890abcdef1234567890 | GitHub: ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000"
     sanitized, redacts, _ = SecretVaultMasker.mask_text(raw)
     assert "[REDACTED_ANTHROPIC_KEY_BTP]" in sanitized
     assert "[REDACTED_GITHUB_PAT_BTP]" in sanitized
@@ -31,7 +31,7 @@ def test_anthropic_and_github_pat():
 
 
 def test_aws_and_google_keys():
-    raw = "AWS=AKIAIOSFODNN7EXAMPLE and GCP=AIzaSyD-1234567890abcdef1234567890ab"
+    raw = "AWS=AKIA_MOCK_AWS_KEY_FOR_TESTS_0000 and GCP=AIzaSy_MOCK_GOOGLE_API_KEY_TEST_000000000"
     sanitized, redacts, _ = SecretVaultMasker.mask_text(raw)
     assert "[REDACTED_AWS_ACCESS_KEY_BTP]" in sanitized
     assert "[REDACTED_GOOGLE_API_KEY_BTP]" in sanitized

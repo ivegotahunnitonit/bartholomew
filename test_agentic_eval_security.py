@@ -11,12 +11,12 @@ class TestAgenticEvalSecurityEngine(unittest.TestCase):
             "steps": [
                 {
                     "type": "thought",
-                    "content": "Connecting to API with key sk-proj-99887766554433221100"
+                    "content": "Connecting to API with key sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000"
                 },
                 {
                     "type": "tool_call",
                     "tool_name": "github_fetch",
-                    "content": "Using token ghp_1234567890abcdef1234567890"
+                    "content": "Using token ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000"
                 }
             ]
         }
@@ -59,12 +59,12 @@ class TestAgenticEvalSecurityEngine(unittest.TestCase):
 
     def test_04_micro_api_trajectory_sanitizer(self):
         """Tests secret scrubbing proxy."""
-        text = "System log: OpenAI key sk-proj-1234567890abcdef1234567890 and AWS key AKIAIOSFODNN7EXAMPLE"
+        text = "System log: OpenAI key sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 and AWS key AKIA_MOCK_AWS_KEY_FOR_TESTS_0000"
         masked = micro_api_suite.mask_secrets(text)
         self.assertTrue(masked["success"])
         self.assertGreaterEqual(masked["leaks_scrubbed"], 2)
-        self.assertNotIn("sk-proj-1234567890abcdef1234567890", masked["masked_text"])
-        self.assertNotIn("AKIAIOSFODNN7EXAMPLE", masked["masked_text"])
+        self.assertNotIn("sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000", masked["masked_text"])
+        self.assertNotIn("AKIA_MOCK_AWS_KEY_FOR_TESTS_0000", masked["masked_text"])
         print("[TEST 4 PASS] Micro-API Secret Scrubbing Proxy verified!")
 
     def test_05_realtime_token_budget_guard_killswitch(self):
@@ -157,7 +157,7 @@ class TestAgenticEvalSecurityEngine(unittest.TestCase):
     def test_13_intelligent_agentic_bot_auditor(self):
         """Tests intelligent GitHub code & backend security bot."""
         from agentic_eval_bot import bot_instance
-        vulnerable_code = "def connect(): key = 'sk-proj-99887766554433221100'; return key"
+        vulnerable_code = "def connect(): key = 'sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000'; return key"
         audit_res = bot_instance.audit_code_snippet(vulnerable_code, "test_agent.py")
         self.assertTrue(audit_res["success"])
         self.assertEqual(audit_res["audit_report"]["audit_summary"]["credential_leaks"], 1)
@@ -247,10 +247,10 @@ class TestAgenticEvalSecurityEngine(unittest.TestCase):
 
         @guard(max_budget_tokens=500, secret_scrubbing=True)
         def my_agent_func(query: str):
-            return f"Processed query {query} with sk-proj-1234567890abcdef1234567890"
+            return f"Processed query {query} with sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000"
 
         res = my_agent_func("hello")
-        self.assertNotIn("sk-proj-1234567890abcdef1234567890", res)
+        self.assertNotIn("sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000", res)
         self.assertIn("[REDACTED_SECRET]", res)
         print("[TEST 21 PASS] 1-Line @guard() Python Decorator SDK verified!")
 

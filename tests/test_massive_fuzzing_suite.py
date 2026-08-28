@@ -38,7 +38,7 @@ MALICIOUS_SINKS = [
     "getattr(__import__('os'), 'system')('id')", "eval('__import__(\"os\").remove(\"file\")')",
     "exec('import shutil; shutil.rmtree(\"/\")')", "__import__('subprocess').call(['rm', '-rf', '/'])",
     "open('/etc/shadow', 'r').read()", "open('C:/Windows/System32/config/SAM', 'rb')",
-    "aws_secret_access_key = 'AKIAIOSFODNN7EXAMPLE'", "sk-live-098234098234908234908",
+    "aws_secret_access_key = 'AKIA_MOCK_AWS_KEY_FOR_TESTS_0000'", "sk-live-098234098234908234908",
 ]
 
 CLEAN_PAYLOADS = [

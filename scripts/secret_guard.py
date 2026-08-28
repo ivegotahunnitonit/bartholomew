@@ -32,9 +32,9 @@ EXCLUDE_FILES = {
 # Known false positive / example placeholders to allow in documentation and test files
 ALLOW_LIST = {
     "age_live_your_key_here",
-    "sk-proj-1234567890abcdef1234567890",
-    "ghp_1234567890abcdef1234567890",
-    "AKIAIOSFODNN7EXAMPLE",
+    "sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000",
+    "ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000",
+    "AKIA_MOCK_AWS_KEY_FOR_TESTS_0000",
     "sk_live_test_placeholder_key_value",
     "YOUR_GITHUB_TOKEN_HERE",
     "YOUR_STRIPE_SECRET_KEY_HERE",
@@ -42,7 +42,7 @@ ALLOW_LIST = {
     "sk-proj-99887766554433221",
     "sk-proj-xK9mN2pQ7rT4vY8wA",
     "sk-proj-99a8b1c7d2e3f4a5b",
-    "ghp_99887766554433221100a",
+    "ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000",
     "sk-1234567890abcdef",
     "sk-9999999999999999",
     "sk-abcdef1234567890",

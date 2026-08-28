@@ -29,9 +29,9 @@ class SecretVaultMasker:
     SECRET_PATTERNS = [
         ("ANTHROPIC_KEY", re.compile(r"sk-ant-[a-zA-Z0-9_\-]{20,}", re.IGNORECASE)),
         ("OPENAI_KEY", re.compile(r"sk-(?!ant-)(?:proj-)?[a-zA-Z0-9_\-]{20,}", re.IGNORECASE)),
-        ("GITHUB_PAT", re.compile(r"gh[pousr]_[a-zA-Z0-9]{30,}", re.IGNORECASE)),
-        ("AWS_ACCESS_KEY", re.compile(r"(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}")),
-        ("GOOGLE_API_KEY", re.compile(r"AIza[a-zA-Z0-9_\-]{30,40}")),
+        ("GITHUB_PAT", re.compile(r"gh[pousr]_[a-zA-Z0-9_\-]{20,}", re.IGNORECASE)),
+        ("AWS_ACCESS_KEY", re.compile(r"(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9_\-]{10,35}")),
+        ("GOOGLE_API_KEY", re.compile(r"AIza[a-zA-Z0-9_\-]{20,45}")),
         ("PRIVATE_KEY_BLOCK", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----.*?-----END (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----", re.DOTALL)),
         ("BEARER_TOKEN", re.compile(r"(?i)bearer\s+[a-zA-Z0-9_\-\.]{25,}")),
         ("GENERIC_SECRET_ASSIGN", re.compile(r"""(?i)(?:api_key|apikey|secret_key|private_key|token|password|auth_token)\s*[:=]\s*['"]([a-zA-Z0-9_\-\.]{12,})['"]"""))

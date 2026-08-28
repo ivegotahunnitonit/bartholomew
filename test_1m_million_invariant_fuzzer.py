@@ -60,7 +60,7 @@ ATTACK_TEMPLATES = [
     # Secret Leaks
     ("OPENAI_KEY = 'sk-proj-{rand_hex}'", "python"),
     ("GITHUB_TOKEN = 'ghp_{rand_hex}'", "python"),
-    ("AWS_KEY = 'AKIAIOSFODNN7EXAMPLE'", "python")
+    ("AWS_KEY = 'AKIA_MOCK_AWS_KEY_FOR_TESTS_0000'", "python")
 ]
 
 PATHS = ["/", "/*", "~", "$HOME", "/etc", "/var", "/usr", "C:\\Windows\\System32"]

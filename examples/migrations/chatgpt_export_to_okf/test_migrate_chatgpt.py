@@ -8,7 +8,7 @@ import pytest
 from migrate_chatgpt import sanitize_text, parse_chatgpt_export, export_to_okf
 
 def test_sanitize_text_credentials():
-    raw = "My API token is sk-999999999999999999999999 and email user@openai.com"
+    raw = "My API token is sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 and email user@openai.com"
     sanitized = sanitize_text(raw)
     assert "[REDACTED_API_KEY]" in sanitized
     assert "[REDACTED_EMAIL]" in sanitized

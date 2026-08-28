@@ -57,7 +57,7 @@ class MockBedrockRuntimeClient:
                                 "name": "execute_query",
                                 "input": {
                                     "sql": "SELECT COUNT(*) FROM transactions WHERE status = 'COMPLETED';",
-                                    "auth_key": "sk-proj-1234567890abcdef1234567890abcdef"
+                                    "auth_key": "sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000"
                                 }
                             }
                         }
@@ -147,7 +147,7 @@ def run_bedrock_test_suite():
                 "name": "third_party_api_caller",
                 "input": {
                     "url": "https://api.external.com/v1/sync",
-                    "secret": "ghp_1234567890abcdef1234567890abcdef1234"
+                    "secret": "ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000"
                 }
             },
             "expected_verdict": "ALLOW"

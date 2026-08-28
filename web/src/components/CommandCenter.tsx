@@ -40,7 +40,7 @@ const SAMPLE_LOGS: TrajectoryStep[] = [
     id: 'TRJ-9042',
     agent: 'autogen_dev_agent',
     action: 'llm_thought',
-    payload: 'Found AWS key: AKIAIOSFODNN7EXAMPLE. Masking credentials before API call.',
+    payload: 'Found AWS key: AKIA_MOCK_AWS_KEY_FOR_TESTS_0000. Masking credentials before API call.',
     risk: 0.12,
     status: 'SCRUBBED',
     latencyUs: 0.92,

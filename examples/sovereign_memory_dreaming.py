@@ -25,7 +25,7 @@ def run_sovereign_memory_dreaming_demo() -> None:
     dreamer = AsynchronousDreamingEngine(memory)
 
     # 2. In-Band Memory Gatekeeper Sanitization
-    raw_step = "User query provided secret token ghp_12345678901234567890 for API access"
+    raw_step = "User query provided secret token ghp_MOCK_TEST_TOKEN_FOR_AUDIT_VERIFICATION_ONLY_0000 for API access"
     allowed, sanitized_step, log = curator.in_band_curate_step(raw_step, step_type="thought")
 
     print(f"\n[IN-BAND SANITIZATION] Allowed: {allowed}")

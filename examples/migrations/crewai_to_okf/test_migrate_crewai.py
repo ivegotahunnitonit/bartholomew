@@ -8,7 +8,7 @@ import pytest
 from migrate_crewai import sanitize_text, parse_crewai_json, export_to_okf
 
 def test_sanitize_text_redacts_keys_and_emails():
-    raw = "My OpenAI key is sk-abcdef1234567890abcdef1234 and email is test@domain.com"
+    raw = "My OpenAI key is sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 and email is test@domain.com"
     sanitized = sanitize_text(raw)
     assert "sk-abcdef" not in sanitized
     assert "[REDACTED_API_KEY]" in sanitized

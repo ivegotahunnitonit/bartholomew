@@ -8,7 +8,7 @@ import pytest
 from migrate_autogen import sanitize_text, parse_autogen_json, export_to_okf
 
 def test_sanitize_text_redacts_credentials():
-    raw = "OpenAI key sk-1234567890abcdef12345678 and email dev@autogen.io"
+    raw = "OpenAI key sk-proj-MOCK_OPENAI_KEY_FOR_TESTING_PURPOSES_ONLY_0000 and email dev@autogen.io"
     sanitized = sanitize_text(raw)
     assert "[REDACTED_API_KEY]" in sanitized
     assert "[REDACTED_EMAIL]" in sanitized
