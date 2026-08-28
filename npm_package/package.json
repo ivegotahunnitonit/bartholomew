@@ -1,5 +1,5 @@
 {
-  "name": "@bartholomew/guard",
+  "name": "btp-guard",
   "version": "2.3.0",
   "description": "BTP v2.3 Sub-50µs Zero-Dependency Cryptographic Invariant Guard & Offline Verifier for Autonomous AI Agents",
   "main": "index.js",

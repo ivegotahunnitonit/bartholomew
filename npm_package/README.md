@@ -2,7 +2,7 @@
   <img src="https://bartholomew.info/bartholomew_logo_4k.png" width="140" alt="Bartholomew Logo" />
 </p>
 
-<h1 align="center">@bartholomew/guard</h1>
+<h1 align="center">btp-guard</h1>
 
 <p align="center">
   <strong>Sub-50 µs In-Memory Deterministic Invariant Guard & Cryptographic Attestation Protocol for Autonomous AI Agents</strong>
@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://bartholomew.info"><img src="https://img.shields.io/badge/Protocol-BTP%20v2.3-10b981?style=flat-square" alt="BTP Version" /></a>
-  <a href="https://www.npmjs.com/package/@bartholomew/guard"><img src="https://img.shields.io/npm/v/@bartholomew/guard?style=flat-square&color=38bdf8" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/btp-guard"><img src="https://img.shields.io/npm/v/btp-guard?style=flat-square&color=38bdf8" alt="npm version" /></a>
   <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License" /></a>
 </p>
 
@@ -25,7 +25,7 @@
 ## 🚀 Installation
 
 ```bash
-npm install @bartholomew/guard
+npm install btp-guard
 ```
 
 ---
