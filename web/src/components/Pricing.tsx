@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { Check, Shield, Zap, Sparkles, ArrowRight, Lock, Key, Copy } from 'lucide-react'
+import { Check, Shield, Sparkles, ArrowRight, Key } from 'lucide-react'
 
 export default function Pricing() {
   const [copiedKey, setCopiedKey] = useState(false)
-  const [selectedTier, setSelectedTier] = useState<string | null>(null)
-  const [email, setEmail] = useState('')
   const [checkoutStatus, setCheckoutStatus] = useState<string | null>(null)
 
   const handleFreeKey = () => {
@@ -15,11 +13,9 @@ export default function Pricing() {
   }
 
   const handleCheckout = (tierName: string, price: string) => {
-    setSelectedTier(tierName)
     setCheckoutStatus(`Redirecting to secure Stripe Checkout for ${tierName} (${price}/mo)...`)
     setTimeout(() => {
-      // In production with live Stripe publishable key, triggers stripe checkout session
-      window.location.href = `mailto:contact@bartholomew.info?subject=Bartholomew%20${encodeURIComponent(tierName)}%20Subscription&body=Hi%20Itsub,%0D%0A%0D%0AI%20would%20like%20to%20activate%20the%20${encodeURIComponent(tierName)}%20subscription%20(${encodeURIComponent(price)}/mo)%20for%20our%20agent%20stack.%0D%0A%0D%0AMy%20email:%20${encodeURIComponent(email || '')}`
+      window.location.href = `mailto:contact@bartholomew.info?subject=Bartholomew%20${encodeURIComponent(tierName)}%20Subscription&body=Hi%20Itsub,%0D%0A%0D%0AI%20would%20like%20to%20activate%20the%20${encodeURIComponent(tierName)}%20subscription%20(${encodeURIComponent(price)}/mo)%20for%20our%20agent%20stack.`
     }, 800)
   }
 
