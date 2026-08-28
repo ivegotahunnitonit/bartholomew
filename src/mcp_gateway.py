@@ -78,7 +78,7 @@ class MCPProxyGateway:
         # 2. Extract code or command strings from arguments
         code_candidates = []
         if isinstance(sanitized_args, dict):
-            for k in ["command", "code", "query", "script", "payload", "input"]:
+            for k in ["command", "cmd", "code", "query", "sql", "script", "payload", "input"]:
                 if k in sanitized_args and isinstance(sanitized_args[k], str):
                     code_candidates.append(sanitized_args[k])
 
