@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://bartholomew.info/bartholomew_logo_4k.png" width="140" alt="Bartholomew Logo" />
+</p>
+
 # AWS CDK Bartholomew Invariant Guard Construct
 ==================================================
 > Deploy sub-50µs Tier-0 deterministic invariant gates for Amazon Bedrock and autonomous AI agents in 5 lines of AWS CDK.
