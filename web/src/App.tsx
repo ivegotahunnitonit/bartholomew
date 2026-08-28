@@ -12,7 +12,6 @@ import ContinuousComplianceTimeline from './components/ContinuousComplianceTimel
 import Founder from './components/Founder'
 import SDK from './components/SDK'
 import LiveAPI from './components/LiveAPI'
-import Pricing from './components/Pricing'
 import Footer from './components/Footer'
 
 function ScrollToHash() {
@@ -52,7 +51,6 @@ function HomeView() {
       <Founder />
       <SDK />
       <LiveAPI />
-      <Pricing />
     </>
   )
 }

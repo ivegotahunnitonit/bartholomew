@@ -44,9 +44,6 @@ export default function Navbar() {
           <a href="#sdk" className="hover:text-[#ffffff] transition">
             [PYTHON / JS SDK]
           </a>
-          <a href="#pricing" className="hover:text-[#10b981] transition text-[#10b981] font-bold">
-            [PRICING]
-          </a>
         </nav>
 
         {/* Action Buttons */}
