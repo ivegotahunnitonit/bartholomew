@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Shield, Lock, ChevronDown, ChevronUp, FileCode, Layers } from 'lucide-react'
+import { ShieldAlert, ShieldCheck, Cpu, ChevronDown, ChevronUp, FileCode, Layers } from 'lucide-react'
 
 interface FAQItem {
   question: string
-  category: 'SUPPLY_CHAIN' | 'ARCHITECTURE' | 'COMPLIANCE' | 'COMPARISON'
+  category: 'SUPPLY_CHAIN' | 'ARCHITECTURE' | 'COMPLIANCE' | 'COMPARISON' | 'INTEGRITY'
   shortAnswer: string
   detailedAnswer: string
 }
@@ -13,7 +13,7 @@ const FAQS: FAQItem[] = [
     question: 'Why avoid piped shell installer scripts (curl | bash or irm | iex)?',
     category: 'SUPPLY_CHAIN',
     shortAnswer: 'Piped shell execution is a supply-chain anti-pattern. We distribute exclusively through standard package registries.',
-    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through auditable source repositories: Python Git install (pip install git+https://github.com/ivegotahunnitonit/bartholomew.git), standard VS Code VSIX, or direct source clones (git clone) with reproducible CI test gates.'
+    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through official package registries: PyPI (pip install btp-guard), npm (npm install @bartholomew/guard), standard VS Code VSIX, or direct source clones (git clone) with reproducible CI test gates.'
   },
   {
     question: 'Does Bartholomew require a background proxy daemon (Confused Deputy Risk)?',
@@ -28,52 +28,57 @@ const FAQS: FAQItem[] = [
     detailedAnswer: 'Native dialog popups are useful for casual desktop exploration, but break down in production for 4 reasons: (1) Alert Fatigue: Humans blindly click "Allow" after dozens of prompts, missing destructive payloads. (2) Unattended Swarms: High-velocity autonomous agents (LangGraph, AutoGen, CI/CD bots) run thousands of actions/hour where manual clicking is impossible. (3) Absence of Invariant Mathematics: Popups cannot enforce exponential loop decay (LDMU), spend caps, or Coulomb concurrency backoffs. (4) Zero Non-Repudiation: Native popups generate no signed Ed25519 receipts for downstream databases or SOC 2 compliance auditors.'
   },
   {
-    question: 'How does Bartholomew compare to Docker containers and VM sandboxing?',
-    category: 'ARCHITECTURE',
-    shortAnswer: 'Bartholomew complements Docker by providing fine-grained semantic invariant gating inside containers.',
-    detailedAnswer: 'Docker and virtual machines provide coarse OS-level isolation (filesystem namespaces and cgroups), but cannot inspect the semantic intent of tool payloads (e.g. distinguishing a safe SQL SELECT from a destructive DROP TABLE, or detecting an exponential retry loop). Bartholomew runs natively inside Docker containers and Kubernetes pods (via our official Helm Chart) to provide sub-50 µs pre-flight invariant gating before commands touch the container filesystem.'
-  },
-  {
-    question: 'How can developers independently verify the cryptographic and performance claims?',
-    category: 'COMPLIANCE',
-    shortAnswer: 'Through our open 35-line reference verifier and reproducible 16-suite CI test battery.',
-    detailedAnswer: 'Every claim is backed by transparent, open-source code: (1) FIPS 186-5 / RFC 8785 attestation is verifiable via standalone_btp_verifier.py (35 lines, zero dependencies). (2) Sub-50 µs latency is benchmarked in pure C (btp_fast_engine.c) in tests/test_native_core.py. (3) The entire 2,500+ test fuzzing battery is publicly runnable via python ci_security_gate.py.'
+    question: 'How does Bartholomew protect against supply-chain poisoning in agent dependencies?',
+    category: 'INTEGRITY',
+    shortAnswer: 'Every trajectory, rule evaluation, and AST decision is cryptographically signed using FIPS 186-5 Ed25519 with nonced receipts.',
+    detailedAnswer: 'Bartholomew implements RFC 8785 Canonical JSON (JCS) serialization paired with Ed25519 asymmetric signatures. When an agent attempts an action, Bartholomew computes a deterministic hash of the payload, verifies caller authorization against the local policy graph, and stamps the decision with a nonced, unforgeable cryptographic receipt. Downstream execution environments (MCP servers, database gateways, terminal runners) reject any payload lacking a valid cryptographic stamp.'
   }
 ]
 
 export default function SecurityThreatModelSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [activeFaq, setActiveFaq] = useState<number | null>(0)
 
   const toggleFAQ = (idx: number) => {
-    setOpenIndex(openIndex === idx ? null : idx)
+    setActiveFaq(activeFaq === idx ? null : idx)
   }
 
   return (
-    <section id="security-threat-model" className="py-24 bg-[#000000] text-white border-t border-[#1c1c1c]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="threat-model" className="py-20 px-5 sm:px-8 bg-[#050505] text-white border-t border-[#1a1a1a]">
+      <div className="max-w-7xl mx-auto">
+        
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-[#38bdf8] text-xs font-mono font-bold uppercase tracking-wider mb-4">
-            <Lock size={13} className="text-[#38bdf8]" />
-            <span>[ FORMAL THREAT MODEL &amp; SECURITY ARCHITECTURE ]</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] mb-4">
+            <ShieldAlert size={14} className="text-[#ef4444]" />
+            <span>THREAT MODEL &amp; SUPPLY CHAIN GOVERNANCE</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
-            Direct Answers to Security &amp; Supply-Chain Concerns
+          <h2 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight mb-4">
+            Designed for Zero-Trust Agent Operations
           </h2>
-          <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            We built Bartholomew on the principle of transparent, zero-trust systems engineering. Here is our formal threat model, privilege architecture, and technical justifications.
+          <p className="text-sm sm:text-base text-[#a1a1aa] font-sans">
+            How Bartholomew addresses supply-chain poisoning, confused deputy risks, and autonomous execution safety.
           </p>
         </div>
 
-        {/* 3 Core Pillars Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        {/* 4 Architectural Pillar Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
             <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
-              <Shield size={16} className="text-[#10b981]" />
-              <span>ZERO-DAEMON ARCHITECTURE</span>
+              <ShieldCheck size={16} className="text-[#10b981]" />
+              <span>ZERO INJECTION ESCAPES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Runs 100% in-process as an embedded library. Zero background daemons, zero open network sockets, and zero IPC attack surface.
+              Sub-50 µs deterministic AST invariant checking blocks catastrophic shell patterns (rm -rf, DROP TABLE) in-memory before OS dispatch.
+            </p>
+          </div>
+
+          <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
+            <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
+              <Cpu size={16} className="text-[#a855f7]" />
+              <span>IN-PROCESS ZERO IPC</span>
+            </div>
+            <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
+              Direct caller memory execution with zero open sockets, zero daemon vulnerabilities, and zero IPC overhead.
             </p>
           </div>
 
@@ -83,7 +88,7 @@ export default function SecurityThreatModelSection() {
               <span>VERIFIED PACKAGE REGISTRIES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Distributed exclusively via auditable GitHub repositories (pip install git+https://github.com/ivegotahunnitonit/bartholomew.git) and source clones. No raw shell script piping.
+              Distributed officially via PyPI (pip install btp-guard), npm (@bartholomew/guard), and standard VS Code VSIX. No raw shell script piping.
             </p>
           </div>
 
@@ -101,7 +106,7 @@ export default function SecurityThreatModelSection() {
         {/* Accordion FAQ List */}
         <div className="space-y-4 max-w-4xl mx-auto">
           {FAQS.map((item, index) => {
-            const isOpen = openIndex === index
+            const isOpen = activeFaq === index
             return (
               <div
                 key={index}

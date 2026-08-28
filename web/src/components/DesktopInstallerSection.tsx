@@ -6,23 +6,23 @@ export default function DesktopInstallerSection() {
   const [copied, setCopied] = useState<string | null>(null)
 
   const commands = {
-    pip: 'pip install git+https://github.com/ivegotahunnitonit/bartholomew.git',
-    npm: 'npm install git+https://github.com/ivegotahunnitonit/bartholomew.git',
+    pip: 'pip install btp-guard',
+    npm: 'npm install @bartholomew/guard',
     vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
     source: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
   const tabLabels = {
-    pip: '[PYTHON PIP (GIT)]',
-    npm: '[NODE.JS (GIT)]',
+    pip: '[PYTHON PIP (PYPI)]',
+    npm: '[NODE.JS (NPM)]',
     vscode: '[VS CODE / CURSOR VSIX]',
     source: '[SOURCE REPO]'
   }
 
   const directDownloadFiles = {
-    pip: { filename: 'github-repo', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW GITHUB REPO' },
-    npm: { filename: 'bartholomew-npm', href: 'https://github.com/ivegotahunnitonit/bartholomew', label: 'VIEW REPOSITORY' },
-    vscode: { filename: 'bartholomew.vsix', href: 'https://github.com/ivegotahunnitonit/bartholomew/releases', label: 'DOWNLOAD RELEASES' },
+    pip: { filename: 'pypi-btp-guard', href: 'https://pypi.org/project/btp-guard/', label: 'VIEW PYPI PACKAGE' },
+    npm: { filename: 'npm-bartholomew', href: 'https://www.npmjs.com/package/@bartholomew/guard', label: 'VIEW NPM PACKAGE' },
+    vscode: { filename: 'bartholomew.vsix', href: 'https://bartholomew.info/bartholomew.vsix', label: 'DOWNLOAD .VSIX' },
     source: { filename: 'source-main.zip', href: 'https://github.com/ivegotahunnitonit/bartholomew/archive/refs/heads/main.zip', label: 'DOWNLOAD SOURCE ZIP' }
   }
 
