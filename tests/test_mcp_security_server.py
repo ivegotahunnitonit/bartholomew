@@ -11,7 +11,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from mcp_server.server import BartholomewMCPServer
+from mcp_server import BartholomewMCPServer
 
 def test_mcp_server_protocol():
     print("=" * 80)

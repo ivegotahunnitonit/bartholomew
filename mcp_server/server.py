@@ -31,8 +31,9 @@ class BartholomewMCPServer:
     Standard JSON-RPC 2.0 stdio Model Context Protocol (MCP) Server.
     Provides mandatory in-line execution gating for Claude Desktop & Cursor.
     """
-    def __init__(self, authority_instance: Optional[BartholomewTrustAuthority] = None):
+    def __init__(self, authority_instance: Optional[BartholomewTrustAuthority] = None, workspace_root: Optional[str] = None):
         self.authority = authority_instance or BartholomewTrustAuthority(ttl_seconds=300)
+        self.workspace_root = workspace_root
         self.seen_nonces = set()
         self.gate = MandatoryToolGate(self.authority)
         self._register_default_underlying_tools()

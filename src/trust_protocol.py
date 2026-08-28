@@ -128,3 +128,7 @@ class IndependentTrustVerifier:
             seen_nonces=seen_nonces,
             eval_timestamp=current_timestamp
         )
+
+# Backward Compatibility Aliases for SOC 2 & Evaluation Test Suites
+TrustVerifier = IndependentTrustVerifier
+canonical_json_bytes = rfc8785_canonicalize
