@@ -77,12 +77,36 @@ class MockBedrockRuntimeClient:
 
 def initialize_bedrock_client(region_name: str = "us-east-1"):
     """Attempts to initialize live boto3 Bedrock client or falls back to test simulator."""
+    # Load .env manually if exists
+    if os.path.exists(".env"):
+        with open(".env", "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k, v = k.strip(), v.strip()
+                    if k in ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"]:
+                        os.environ[k] = v
+
     try:
         import boto3
-        client = boto3.client("bedrock-runtime", region_name=region_name)
-        return client, "AWS Boto3 Live Bedrock Runtime (us-east-1)"
-    except Exception:
-        return MockBedrockRuntimeClient(), "Bartholomew Bedrock In-Memory Simulator (BTP v2.3)"
+        ak = os.environ.get("AWS_ACCESS_KEY_ID")
+        sk = os.environ.get("AWS_SECRET_ACCESS_KEY")
+        reg = os.environ.get("AWS_DEFAULT_REGION", region_name)
+        
+        if ak and sk:
+            client = boto3.client(
+                "bedrock-runtime",
+                aws_access_key_id=ak,
+                aws_secret_access_key=sk,
+                region_name=reg
+            )
+            return client, f"AWS Boto3 Live Bedrock Runtime ({reg}) [Key: {ak[:8]}...]"
+        else:
+            client = boto3.client("bedrock-runtime", region_name=reg)
+            return client, f"AWS Boto3 Live Bedrock Runtime ({reg})"
+    except Exception as e:
+        return MockBedrockRuntimeClient(), f"Bartholomew Bedrock In-Memory Simulator (BTP v2.3) - {str(e)}"
 
 
 def run_bedrock_test_suite():
