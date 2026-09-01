@@ -47,11 +47,13 @@ class PolyglotASTValidator:
         re.compile(r"\btruncate\s+table\b", re.IGNORECASE),
         # Secret Leak & Exfiltration Patterns (OWASP LLM02)
         re.compile(r"AKIA[0-9A-Z]{16}"),
-        re.compile(r"ghp_[a-zA-Z0-9]{36}"),
-        re.compile(r"github_pat_[a-zA-Z0-9_]{82}"),
+        re.compile(r"gh[opusr]_[a-zA-Z0-9]{20,}", re.IGNORECASE),
+        re.compile(r"github_pat_[a-zA-Z0-9_]{20,}", re.IGNORECASE),
         re.compile(r"sk-(proj|live|test)-[a-zA-Z0-9]{20,}"),
-        re.compile(r"whsec_[a-zA-Z0-9]{32}"),
-        re.compile(r"-----BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY-----")
+        re.compile(r"whsec_[a-zA-Z0-9]{20,}"),
+        re.compile(r"-----BEGIN\s+([A-Z0-9_-]+\s+)?PRIVATE\s+KEY-----", re.IGNORECASE),
+        re.compile(r"npm_[a-zA-Z0-9]{36}"),
+        re.compile(r"pypi-[a-zA-Z0-9_-]{50,}")
     ]
 
     @classmethod
