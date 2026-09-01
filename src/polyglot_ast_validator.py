@@ -116,14 +116,45 @@ class PolyglotASTValidator:
         try:
             tree = ast.parse(code_str)
             for node in ast.walk(tree):
-                # Check direct and dynamic calls
+                # 1. Check direct function calls & dynamic reflection
                 if isinstance(node, ast.Call):
-                    if isinstance(node.func, ast.Name) and node.func.id in cls.FORBIDDEN_CALLS["python"]:
-                        return False, f"BTP-AST-002: Forbidden Python runtime call '{node.func.id}()'", {}
-                    if isinstance(node.func, ast.Attribute) and node.func.attr in cls.FORBIDDEN_CALLS["python"]:
-                        return False, f"BTP-AST-002: Forbidden Python attribute execution '.{node.func.attr}()'", {}
+                    # Direct Name calls: eval(), exec(), __import__(), getattr()
+                    if isinstance(node.func, ast.Name):
+                        if node.func.id in {"system", "popen", "exec", "eval", "spawn", "fork", "__import__", "getattr", "compile"}:
+                            return False, f"BTP-AST-002: Forbidden Python runtime call '{node.func.id}()'", {}
+                    
+                    # Attribute calls: os.system(), subprocess.Popen(), obj.exec()
+                    if isinstance(node.func, ast.Attribute):
+                        attr_name = node.func.attr
+                        # Check attribute name (e.g. .system, .popen)
+                        if attr_name in cls.FORBIDDEN_CALLS["python"] or attr_name in {"Popen", "run", "call", "check_output", "check_call"}:
+                            return False, f"BTP-AST-002: Forbidden Python execution call '.{attr_name}()'", {}
+                        # Check module name (e.g. subprocess.any_method)
+                        if isinstance(node.func.value, ast.Name) and node.func.value.id in {"os", "subprocess", "sys", "shutil"}:
+                            if attr_name in {"rmtree", "system", "popen", "spawn", "execl", "execv", "remove", "unlink"}:
+                                return False, f"BTP-AST-002: Destructive {node.func.value.id}.{attr_name}() invocation", {}
+
+                    # Inspect constant string arguments for hostile commands
+                    for arg in node.args:
+                        if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                            for pat in cls.FORBIDDEN_SHELL_PATTERNS:
+                                if pat.search(arg.value):
+                                    return False, f"BTP-AST-001: Hostile argument '{arg.value}' in call", {}
+                        elif isinstance(arg, ast.List):
+                            for elt in arg.elts:
+                                if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
+                                    for pat in cls.FORBIDDEN_SHELL_PATTERNS:
+                                        if pat.search(elt.value):
+                                            return False, f"BTP-AST-001: Hostile argument '{elt.value}' in command list", {}
+
+                # 2. Check direct Import of hostile root modules if restricted
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        if alias.name in {"pty", "posix"}:
+                            return False, f"BTP-AST-004: Restricted module import '{alias.name}'", {}
+
             return True, "Python AST verified safe", {"node_count": len(list(ast.walk(tree)))}
-        except SyntaxError as e:
+        except SyntaxError:
             # If not valid Python syntax, evaluate as text pattern
             return True, "Non-standard syntax passed AST baseline", {"note": "syntax_fallback"}
 
