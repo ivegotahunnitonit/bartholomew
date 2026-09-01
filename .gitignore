@@ -42,6 +42,26 @@ htmlcov/
 .tox/
 .nox/
 
+# Private Capital & Funding Dossiers
+GLOBAL_CAPITAL_AND_GRANTS_PIPELINE.md
+YC_APPLICATION_DOSSIER.md
+scripts/submit_capital_application.py
+
+# Private Outreach & Leads Databases
+OUTREACH_MASTER_QUEUE.md
+OUTBOUND_TECHNICAL_LEADS.md
+scripts/master_ai_startups_100.json
+scripts/autonomous_agent_builders.json
+scripts/startup_leads_50.json
+scripts/multi_channel_launch.py
+scripts/reach_out_agent_builders.py
+scripts/send_outbound_emails.py
+scripts/outbound_agent_handshake.py
+scripts/test_sesv2_send.py
+scripts/raw_local_proof.py
+scripts/live_danger_test.py
+
+
 # Database & Logs
 *.db
 *.sqlite3
