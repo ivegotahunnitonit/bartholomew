@@ -13,6 +13,14 @@ Features:
 from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
 from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.marginal_utility_engine import MarginalUtilityTracker
+from src.decorator import secure_tool, SecurityVetoException
+from src.polyglot_ast_validator import PolyglotASTValidator
+
+
+def guard(code_str: str, language: str = None):
+    """1-line global helper to check if arbitrary code is safe."""
+    return PolyglotASTValidator.validate_code(code_str, language)
+
 
 
 class Guard:
