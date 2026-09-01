@@ -58,8 +58,11 @@ scripts/reach_out_agent_builders.py
 scripts/send_outbound_emails.py
 scripts/outbound_agent_handshake.py
 scripts/test_sesv2_send.py
+scripts/million_payload_stress_test.py
+scripts/live_benchmark.py
 scripts/raw_local_proof.py
 scripts/live_danger_test.py
+
 
 
 # Database & Logs
