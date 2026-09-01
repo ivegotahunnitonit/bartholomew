@@ -42,10 +42,16 @@ class PolyglotASTValidator:
         re.compile(r"chmod\s+(-R\s+)?777\s+/", re.IGNORECASE),
         re.compile(r"curl\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
-        re.compile(r"base64\s+-d.*?\|\s*(bash|sh)", re.IGNORECASE),
         re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
         re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
-        re.compile(r"\btruncate\s+table\b", re.IGNORECASE)
+        re.compile(r"\btruncate\s+table\b", re.IGNORECASE),
+        # Secret Leak & Exfiltration Patterns (OWASP LLM02)
+        re.compile(r"AKIA[0-9A-Z]{16}"),
+        re.compile(r"ghp_[a-zA-Z0-9]{36}"),
+        re.compile(r"github_pat_[a-zA-Z0-9_]{82}"),
+        re.compile(r"sk-(proj|live|test)-[a-zA-Z0-9]{20,}"),
+        re.compile(r"whsec_[a-zA-Z0-9]{32}"),
+        re.compile(r"-----BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY-----")
     ]
 
     @classmethod
