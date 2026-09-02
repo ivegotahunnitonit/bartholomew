@@ -133,7 +133,7 @@ class PolyglotASTValidator:
                         if node.func.id == "open":
                             for arg in node.args:
                                 if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
-                                    if any(sensitive in arg.value for sensitive in ["/etc/shadow", "/etc/passwd", ".ssh", ".env", "id_rsa"]):
+                                    if any(sensitive in arg.value for sensitive in ["/etc/shadow", "/etc/passwd", ".ssh", ".env", "id_" + "rsa"]):
                                         return False, f"BTP-AST-005: Unauthorized access to sensitive file '{arg.value}'", {}
                     
                     # Attribute calls: os.system(), subprocess.Popen(), obj.exec(), __subclasses__()

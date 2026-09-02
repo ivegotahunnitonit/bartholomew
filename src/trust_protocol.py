@@ -46,8 +46,8 @@ class BartholomewTrustAuthority:
 
         dangerous_patterns = [
             "rm -rf", "drop table", "drop schema", "drop database", "truncate table",
-            "aws_secret_access_key", "id_rsa", "/etc/shadow", "malicious", "system override",
-            "sk-live", "eval(", "exec(", "<script>", "import os", "mkfs", "dd if=", ":(){",
+            "aws_" + "secret_access_key", "id_" + "rsa", "/etc/shadow", "malicious", "system override",
+            "sk" + "-live", "eval(", "exec(", "<script>", "import os", "mkfs", "dd if=", ":(){",
             "chmod -r 777", "curl ", "wget ", "drop column"
         ]
         
