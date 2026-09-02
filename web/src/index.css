@@ -84,6 +84,14 @@
   ::-webkit-scrollbar-thumb:hover { background: #333333; }
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Metallic Dimensional Hero Title with generous descender bounds */
 .hero-metallic-title {
   background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);

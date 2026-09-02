@@ -107,65 +107,65 @@ if result["allowed"]:
         {/* Hero Headline */}
         <div className="text-center max-w-5xl mx-auto mb-4 px-2">
           <h1
-            className="font-bold font-sans hero-metallic-title text-center inline-block whitespace-nowrap"
+            className="font-bold font-sans hero-metallic-title text-center inline-block break-words"
             style={{
-              fontSize: 'clamp(1.6rem, 3.1vw, 2.65rem)',
-              lineHeight: 1.25,
+              fontSize: 'clamp(1.5rem, 4.5vw, 2.75rem)',
+              lineHeight: 1.2,
               letterSpacing: '-0.02em',
               paddingBottom: '0.18em'
             }}
           >
-            Let Bartholomew Handle Agent Safety.
+            The Fastest In-Memory Safety Guard for AI Agents.
           </h1>
         </div>
 
         {/* Hero Subtitle */}
-        <p className="text-center mx-auto mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          A fast, lightweight Python &amp; Node.js drop-in guard. Blocks destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>), runaway infinite loops, and budget spikes in &lt;5 microseconds.
+        <p className="text-center mx-auto mb-8 sm:mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-xs sm:text-base font-sans px-2">
+          Zero cloud lag. Blocks destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>), runaway infinite loops, and API secret leaks in local CPU memory before OS dispatch.
         </p>
 
         {/* Standard Package Install Box (NO PIPED SCRIPTS) */}
-        <div className="bg-[#0a0a0a] border border-[#222222] max-w-3xl mx-auto mb-12 shadow-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
-            <div className="flex items-center gap-2">
+        <div className="bg-[#0a0a0a] border border-[#222222] max-w-3xl mx-auto mb-10 sm:mb-12 shadow-2xl overflow-hidden w-full">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-[#000000] border-b border-[#222222]">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <div className="w-2.5 h-2.5 bg-[#ef4444]" />
               <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
               <div className="w-2.5 h-2.5 bg-[#10b981]" />
             </div>
-            <span className="text-[11px] font-mono text-[#71717a]">verified-package-install</span>
-            <div className="flex items-center gap-2 text-[11px] font-mono text-[#10b981]">
+            <span className="text-[10px] sm:text-[11px] font-mono text-[#71717a]">verified-package-install</span>
+            <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-[11px] font-mono text-[#10b981]">
               <Shield size={12} />
-              <span>Zero-Daemon In-Process Library</span>
+              <span className="hidden xs:inline">Zero-Daemon Library</span>
             </div>
           </div>
 
-          {/* Tab Selector */}
-          <div className="flex bg-[#000000] border-b border-[#222222] p-1.5 gap-1.5">
+          {/* Tab Selector - Mobile Touch Friendly */}
+          <div className="flex bg-[#000000] border-b border-[#222222] p-1 sm:p-1.5 gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar">
             {(['pip', 'npm', 'vscode', 'git'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveInstallTab(tab)}
-                className={`flex-1 py-1.5 px-2 text-xs font-mono font-bold transition border ${
+                className={`flex-1 min-w-[75px] sm:min-w-0 py-1.5 px-1.5 sm:px-2 text-[11px] sm:text-xs font-mono font-bold transition border whitespace-nowrap text-center ${
                   activeInstallTab === tab
                     ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                {tab === 'pip' && '[PYPI (RELEASE)]'}
-                {tab === 'npm' && '[NPM (RELEASE)]'}
-                {tab === 'vscode' && '[VS CODE VSIX]'}
-                {tab === 'git' && '[SOURCE CLONE]'}
+                {tab === 'pip' && '[PYPI]'}
+                {tab === 'npm' && '[NPM]'}
+                {tab === 'vscode' && '[VS CODE]'}
+                {tab === 'git' && '[SOURCE]'}
               </button>
             ))}
           </div>
 
           {/* Command Row */}
-          <div className="p-4 sm:p-5 flex items-center justify-between gap-3 bg-[#000000] font-mono text-xs sm:text-sm text-[#f59e0b]">
-            <span className="truncate">$ {installCommands[activeInstallTab]}</span>
-            <div className="flex items-center gap-2 shrink-0">
+          <div className="p-3 sm:p-5 flex items-center justify-between gap-2 sm:gap-3 bg-[#000000] font-mono text-xs sm:text-sm text-[#f59e0b]">
+            <span className="truncate flex-1">$ {installCommands[activeInstallTab]}</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 onClick={handleCopyCommand}
-                className={`px-3 py-1.5 text-xs font-mono font-bold transition flex items-center gap-1.5 border ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono font-bold transition flex items-center gap-1 sm:gap-1.5 border shrink-0 ${
                   copiedCommand
                     ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
                     : 'bg-[#0a0a0a] text-[#ffffff] border-[#333333] hover:border-[#555555]'
@@ -177,12 +177,12 @@ if result["allowed"]:
             </div>
           </div>
 
-          <div className="px-5 py-2.5 bg-[#0a0a0a] border-t border-[#1c1c1c] flex items-center justify-between text-xs font-mono text-[#a1a1aa]">
+          <div className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#0a0a0a] border-t border-[#1c1c1c] flex flex-col xs:flex-row items-center justify-between text-[11px] sm:text-xs font-mono text-[#a1a1aa] gap-1">
             <span className="text-[#10b981] flex items-center gap-1.5">
               <CheckCircle2 size={13} />
-              <span>In-Memory Evaluation (&lt;5.0 µs Latency)</span>
+              <span>Fastest In-Memory Execution</span>
             </span>
-            <span className="text-[#71717a]">Zero Open Sockets · Zero Telemetry</span>
+            <span className="text-[#71717a] text-[10px] sm:text-[11px]">Zero Network Lag · Zero Telemetry</span>
           </div>
         </div>
 
