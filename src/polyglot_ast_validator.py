@@ -126,14 +126,22 @@ class PolyglotASTValidator:
             for node in ast.walk(tree):
                 # 1. Check direct function calls & dynamic reflection
                 if isinstance(node, ast.Call):
-                    # Direct Name calls: eval(), exec(), __import__(), getattr()
+                    # Direct Name calls: eval(), exec(), __import__(), getattr(), open()
                     if isinstance(node.func, ast.Name):
                         if node.func.id in {"system", "popen", "exec", "eval", "spawn", "fork", "__import__", "getattr", "compile"}:
                             return False, f"BTP-AST-002: Forbidden Python runtime call '{node.func.id}()'", {}
+                        if node.func.id == "open":
+                            for arg in node.args:
+                                if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                                    if any(sensitive in arg.value for sensitive in ["/etc/shadow", "/etc/passwd", ".ssh", ".env", "id_rsa"]):
+                                        return False, f"BTP-AST-005: Unauthorized access to sensitive file '{arg.value}'", {}
                     
-                    # Attribute calls: os.system(), subprocess.Popen(), obj.exec()
+                    # Attribute calls: os.system(), subprocess.Popen(), obj.exec(), __subclasses__()
                     if isinstance(node.func, ast.Attribute):
                         attr_name = node.func.attr
+                        # Block introspection escapes
+                        if attr_name in {"__subclasses__", "__bases__", "__globals__", "__builtins__"}:
+                            return False, f"BTP-AST-003: Dangerous runtime introspection '{attr_name}'", {}
                         # Check attribute name (e.g. .system, .popen)
                         if attr_name in cls.FORBIDDEN_CALLS["python"] or attr_name in {"Popen", "run", "call", "check_output", "check_call"}:
                             return False, f"BTP-AST-002: Forbidden Python execution call '.{attr_name}()'", {}
@@ -155,7 +163,12 @@ class PolyglotASTValidator:
                                         if pat.search(elt.value):
                                             return False, f"BTP-AST-001: Hostile argument '{elt.value}' in command list", {}
 
-                # 2. Check direct Import of hostile root modules if restricted
+                # 2. Check direct Attribute lookups for sandbox escape primitives (__class__, __base__)
+                if isinstance(node, ast.Attribute):
+                    if node.attr in {"__subclasses__", "__bases__", "__globals__", "__builtins__"}:
+                        return False, f"BTP-AST-003: Dangerous runtime introspection '{node.attr}'", {}
+
+                # 3. Check direct Import of hostile root modules if restricted
                 if isinstance(node, ast.Import):
                     for alias in node.names:
                         if alias.name in {"pty", "posix"}:

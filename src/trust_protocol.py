@@ -47,16 +47,26 @@ class BartholomewTrustAuthority:
         dangerous_patterns = [
             "rm -rf", "drop table", "drop schema", "drop database", "truncate table",
             "aws_secret_access_key", "id_rsa", "/etc/shadow", "malicious", "system override",
-            "sk-live", "eval(", "exec(", "<script>", "import os"
+            "sk-live", "eval(", "exec(", "<script>", "import os", "mkfs", "dd if=", ":(){",
+            "chmod -r 777", "curl ", "wget ", "drop column"
         ]
         
         raw_payload_str = json.dumps(payload).lower()
         blocked_reason = None
         
-        for pattern in dangerous_patterns:
-            if pattern in raw_payload_str:
-                blocked_reason = f"Policy Violation: Trajectory contained forbidden pattern '{pattern}'"
-                break
+        # 1. Polyglot AST and shell invariant evaluation
+        cmd_candidate = payload.get("command") or payload.get("query") or payload.get("code") or ""
+        if cmd_candidate and isinstance(cmd_candidate, str):
+            from src.polyglot_ast_validator import PolyglotASTValidator
+            is_ast_safe, ast_msg, _ = PolyglotASTValidator.validate_code(cmd_candidate)
+            if not is_ast_safe:
+                blocked_reason = f"Polyglot Invariant Violation: {ast_msg}"
+
+        if not blocked_reason:
+            for pattern in dangerous_patterns:
+                if pattern in raw_payload_str:
+                    blocked_reason = f"Policy Violation: Trajectory contained forbidden pattern '{pattern}'"
+                    break
                 
         # 2. Hermetic Pre-Flight Sandbox Execution
         sandbox_result = {"status": "SKIPPED", "tests_passed": 0, "tests_total": 0}
