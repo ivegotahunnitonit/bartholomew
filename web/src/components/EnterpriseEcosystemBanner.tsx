@@ -67,7 +67,7 @@ export default function EnterpriseEcosystemBanner() {
       name: 'OpenAI',
       label: 'GPT-4o & Swarm Tools',
       category: 'FUNCTION CALLING',
-      badge: '<50µs Tool Gating',
+      badge: 'Zero-Lag Safety Gate',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.28 10.37a5.53 5.53 0 0 0-.47-4.48 5.64 5.64 0 0 0-4.06-2.73 5.58 5.58 0 0 0-4.43.68 5.53 5.53 0 0 0-3.95-1.74 5.62 5.62 0 0 0-5.32 3.86 5.57 5.57 0 0 0-2.4 3.65 5.63 5.63 0 0 0 .97 5.25 5.53 5.53 0 0 0 .47 4.48 5.64 5.64 0 0 0 4.06 2.73 5.58 5.58 0 0 0 4.43-.68 5.53 5.53 0 0 0 3.95 1.74 5.62 5.62 0 0 0 5.32-3.86 5.57 5.57 0 0 0 2.4-3.65 5.63 5.63 0 0 0-.97-5.25z" fill="#10B981"/>
@@ -87,8 +87,8 @@ export default function EnterpriseEcosystemBanner() {
             <Sparkles size={12} className="text-[#f59e0b] animate-pulse" />
             <span>[ ENTERPRISE CLOUD COMPATIBILITY &amp; MODEL ECOSYSTEM ]</span>
           </div>
-          <p className="text-xs text-[#71717a] font-sans">
-            Engineered for deterministic sub-50µs execution across the world's leading autonomous AI orchestrators.
+          <p className="text-xs text-[#a1a1aa] font-sans max-w-xl mx-auto">
+            Certified drop-in protection for autonomous agents across the industry's premier cloud and AI platforms.
           </p>
         </div>
 
@@ -122,16 +122,16 @@ export default function EnterpriseEcosystemBanner() {
           </div>
         </div>
 
-        {/* Bottom Micro Latency SLA Notice */}
+        {/* Bottom Trust & Compliance SLA Notice */}
         <div className="mt-5 flex flex-wrap items-center justify-center gap-6 text-[11px] font-mono text-[#52525b]">
           <span className="inline-flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
-            <span className="text-[#a1a1aa]">Zero Cloud Overhead:</span> &lt;38.2 µs
+            <span className="text-[#a1a1aa]">Instant Local Verification:</span> Zero Cloud Delay
           </span>
           <span>•</span>
-          <span className="text-[#a1a1aa]">Protocol:</span> RFC 8785 Canonical Ed25519
+          <span className="text-[#a1a1aa]">Security Standard:</span> Tamper-Proof Digital Audit Logs
           <span>•</span>
-          <span className="text-[#a1a1aa]">FIPS 186-5:</span> Verified In-Memory
+          <span className="text-[#a1a1aa]">Compliance:</span> SOC 2 &amp; ISO Ready
         </div>
       </div>
     </section>
