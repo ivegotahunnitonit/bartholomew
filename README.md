@@ -3,12 +3,13 @@
 
 <div align="center">
 
+[![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
+[![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
+[![npm downloads](https://img.shields.io/npm/dw/btp-guard.svg?style=for-the-badge&logo=npm&color=orange)](https://www.npmjs.com/package/btp-guard)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
-[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.2_FROZEN-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
-[![CI Security Gate](https://img.shields.io/badge/CI_Gate-18%2F18_Suites_Passing-00e676?style=for-the-badge&logo=githubactions&logoColor=040813)](ci_security_gate.py)
+[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.3_LIVE-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
-[![MCP Server](https://img.shields.io/badge/Anthropic_MCP-Security_Server-a855f7?style=for-the-badge&logo=anthropic&logoColor=ffffff)](mcp_server/)
 
 </div>
 
@@ -56,9 +57,9 @@ print(result["allowed"]) # False
 print(result["reason"])  # "Policy Violation: Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
-#### **2. TypeScript / Node.js (`npm install @bartholomew/btp-guard`)**
+#### **2. TypeScript / Node.js (`npm install btp-guard`)**
 ```typescript
-import { BTPGuard } from '@bartholomew/btp-guard';
+import { BTPGuard } from 'btp-guard';
 
 const guard = new BTPGuard();
 const receipt = guard.evaluateAction({
