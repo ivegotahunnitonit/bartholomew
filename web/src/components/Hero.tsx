@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Check, Copy, Cpu, CheckCircle2, Shield } from 'lucide-react'
 
 type AgentTarget = 'simple' | 'claude' | 'openai' | 'langchain'
-type InstallTarget = 'pip' | 'npm' | 'vscode' | 'git'
+type InstallTarget = 'pip' | 'npm' | 'action' | 'git'
 
 export default function Hero() {
   const [selectedAgent, setSelectedAgent] = useState<AgentTarget>('simple')
@@ -13,7 +13,7 @@ export default function Hero() {
   const installCommands = {
     pip: 'pip install btp-guard',
     npm: 'npm install btp-guard',
-    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
+    action: 'uses: ivegotahunnitonit/bartholomew@v2.3.0',
     git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
@@ -141,7 +141,7 @@ if result["allowed"]:
 
           {/* Tab Selector - Mobile Touch Friendly */}
           <div className="flex bg-[#000000] border-b border-[#222222] p-1 sm:p-1.5 gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar">
-            {(['pip', 'npm', 'vscode', 'git'] as const).map((tab) => (
+            {(['pip', 'npm', 'action', 'git'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveInstallTab(tab)}
@@ -153,7 +153,7 @@ if result["allowed"]:
               >
                 {tab === 'pip' && '[PYPI]'}
                 {tab === 'npm' && '[NPM]'}
-                {tab === 'vscode' && '[VS CODE]'}
+                {tab === 'action' && '[GH ACTION]'}
                 {tab === 'git' && '[SOURCE]'}
               </button>
             ))}
