@@ -1,0 +1,29 @@
+{
+  "$schema": "https://smithery.ai/docs/config/schema.json",
+  "name": "btp-mcp",
+  "displayName": "Bartholomew MCP Security Gate",
+  "version": "2.3.0",
+  "description": "Sub-50µs in-memory AST security gate and credential leak protection for Claude Desktop, Cursor, and Anthropic MCP clients.",
+  "author": "Bartholomew Autonomous Systems <itsub@bartholomew.info>",
+  "homepage": "https://bartholomew.info",
+  "repository": "https://github.com/ivegotahunnitonit/bartholomew",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mcp",
+    "security",
+    "claude-desktop",
+    "cursor",
+    "guardrails",
+    "ast-validator",
+    "ai-safety"
+  ],
+  "command": {
+    "type": "stdio",
+    "executable": "python",
+    "args": [
+      "-m",
+      "btp_guard.mcp_gateway"
+    ]
+  },
+  "installInstructions": "Run with Claude Desktop by adding to your claude_desktop_config.json, or install via npx: npx -y @smithery/cli install btp-mcp --client claude"
+}
