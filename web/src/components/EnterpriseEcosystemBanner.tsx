@@ -15,7 +15,7 @@ export default function EnterpriseEcosystemBanner() {
       name: 'Google Cloud',
       label: 'Vertex AI & Gemini',
       category: 'ENTERPRISE AI',
-      badge: 'Gemini 2.5 Ready',
+      badge: 'Gemini 3.7 / 4.0 Ready',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -54,7 +54,7 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'Anthropic',
-      label: 'Claude 3.5 & MCP Protocol',
+      label: 'Claude 4 & Opus 5',
       category: 'MODEL CONTEXT PROTOCOL',
       badge: 'Official MCP Registry',
       svg: (
@@ -71,6 +71,19 @@ export default function EnterpriseEcosystemBanner() {
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.28 10.37a5.53 5.53 0 0 0-.47-4.48 5.64 5.64 0 0 0-4.06-2.73 5.58 5.58 0 0 0-4.43.68 5.53 5.53 0 0 0-3.95-1.74 5.62 5.62 0 0 0-5.32 3.86 5.57 5.57 0 0 0-2.4 3.65 5.63 5.63 0 0 0 .97 5.25 5.53 5.53 0 0 0 .47 4.48 5.64 5.64 0 0 0 4.06 2.73 5.58 5.58 0 0 0 4.43-.68 5.53 5.53 0 0 0 3.95 1.74 5.62 5.62 0 0 0 5.32-3.86 5.57 5.57 0 0 0 2.4-3.65 5.63 5.63 0 0 0-.97-5.25z" fill="#10B981"/>
+        </svg>
+      )
+    },
+    {
+      name: 'MongoDB',
+      label: 'Atlas Vector Search & DB',
+      category: 'ENTERPRISE DATA',
+      badge: 'Startup Grant Partner',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M11.996 0c-.394 0-.745.195-.959.508C8.89 3.665 4.6 10.74 4.6 15.65c0 4.627 3.328 8.35 7.4 8.35.394 0 .744-.196.958-.508 2.148-3.157 6.442-10.232 6.442-15.142 0-4.627-3.328-8.35-7.404-8.35z" fill="#00ED64"/>
+          <path d="M12.035 23.492c-.013.003-.026.008-.039.008v-23c.013 0 .026.005.039.008 3.87.272 6.965 3.81 6.965 8.142 0 4.654-4.07 11.36-6.965 14.842z" fill="#00684A"/>
+          <path d="M12 24c-.035 0-.07-.003-.105-.008C7.94 23.475 4.6 19.82 4.6 15.65c0-4.654 4.07-11.36 6.965-14.842.13-.157.327-.27.535-.295v23.487z" fill="#023430"/>
         </svg>
       )
     }
