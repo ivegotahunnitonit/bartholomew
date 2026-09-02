@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import EnterpriseEcosystemBanner from './components/EnterpriseEcosystemBanner'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
 import SecurityThreatModelSection from './components/SecurityThreatModelSection'
 import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
@@ -37,6 +38,7 @@ function HomeView() {
   return (
     <>
       <Hero />
+      <EnterpriseEcosystemBanner />
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <InteractiveAgentSandbox />
