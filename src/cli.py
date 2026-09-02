@@ -122,7 +122,7 @@ def main():
 
     # audit Subcommand
     audit_parser = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
-    audit_parser.add_argument("--path", default=".", help="Target directory path to audit")
+    audit_parser.add_argument("path", nargs="?", default=".", help="Target directory path to audit (default: .)")
 
     # demo Subcommand
     demo_parser = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
@@ -185,23 +185,9 @@ def main():
                 sys.exit(1)
 
     elif args.command == "audit":
-        scanned = 0
-        violations = 0
-        for root, _, files in os.walk(args.path):
-            for f in files:
-                if f.endswith(".py"):
-                    scanned += 1
-                    try:
-                        with open(os.path.join(root, f), "r", encoding="utf-8") as fp:
-                            code = fp.read()
-                        safe, reason, _ = ASTSecurityValidator.validate_code_ast(code)
-                        if not safe:
-                            violations += 1
-                            print(f"[VIOLATION] {f}: {reason}")
-                    except Exception:
-                        pass
-        status = "PASSED" if violations == 0 else f"{violations} VIOLATIONS DETECTED"
-        print(f"AST Security Audit completed: {scanned} Python files scanned. Status: {status}")
+        from src.cli_linter import audit_directory, print_audit_report
+        results = audit_directory(args.path)
+        print_audit_report(results)
 
     else:
         parser.print_help()

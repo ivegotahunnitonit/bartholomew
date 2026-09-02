@@ -43,4 +43,4 @@ runs:
     - name: "Execute Bartholomew Codebase & Agent Tool Audit"
       shell: bash
       run: |
-        python -m btp_guard.cli_linter ${{ inputs.audit-path }}
+        btp audit ${{ inputs.audit-path }}

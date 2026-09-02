@@ -14,7 +14,17 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src import Guard, wrap_client, BartholomewTrustAuthority, IndependentTrustVerifier
+from src import (
+    Guard,
+    wrap_client,
+    BartholomewTrustAuthority,
+    IndependentTrustVerifier,
+    DeclarativePolicyEngine,
+    MarginalUtilityTracker,
+    secure_tool,
+    SecurityVetoException,
+    guard
+)
 from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox, HermeticFileSandbox
 from src.polyglot_ast_validator import PolyglotASTValidator
@@ -28,6 +38,9 @@ __version__ = "2.3.0"
 __all__ = [
     "Guard",
     "wrap_client",
+    "secure_tool",
+    "SecurityVetoException",
+    "guard",
     "BartholomewTrustAuthority",
     "IndependentTrustVerifier",
     "ASTSecurityValidator",
