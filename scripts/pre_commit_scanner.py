@@ -10,8 +10,8 @@ import subprocess
 import re
 
 SECRET_PATTERNS = [
-    (re.compile(r"gh[opusr]_[a-zA-Z0-9]{20,}", re.IGNORECASE), "GitHub Access Token (ghp_/gho_/ghs_)"),
-    (re.compile(r"github_pat_[a-zA-Z0-9_]{20,}", re.IGNORECASE), "GitHub Fine-Grained Token (github_pat_)"),
+    (re.compile(r"\bgh[opusr]_[a-zA-Z0-9]{20,}\b", re.IGNORECASE), "GitHub Access Token (ghp_/gho_/ghs_)"),
+    (re.compile(r"\bgithub_pat_[a-zA-Z0-9]{22,}\b"), "GitHub Fine-Grained Token (github_pat_)"),
     (re.compile(r"AKIA[0-9A-Z]{16}"), "AWS Access Key ID (AKIA)"),
     (re.compile(r"sk-(proj|live|test)-[a-zA-Z0-9]{20,}"), "OpenAI / Stripe Secret Key (sk-)"),
     (re.compile(r"whsec_[a-zA-Z0-9]{20,}"), "Stripe Webhook Secret (whsec_)"),
