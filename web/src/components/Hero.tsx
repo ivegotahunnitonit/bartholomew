@@ -12,9 +12,9 @@ export default function Hero() {
 
   const installCommands = {
     pip: 'pip install btp-guard',
-    git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .',
-    npm: 'npm install @bartholomew/guard',
-    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix'
+    npm: 'npm install btp-guard',
+    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
+    git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
   const agentPairingSnippets: Record<AgentTarget, { title: string; filename: string; code: string; desc: string }> = {
@@ -151,8 +151,8 @@ if result["allowed"]:
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
-                {tab === 'pip' && '[PIP (GITHUB)]'}
-                {tab === 'npm' && '[NODE (GITHUB)]'}
+                {tab === 'pip' && '[PYPI (RELEASE)]'}
+                {tab === 'npm' && '[NPM (RELEASE)]'}
                 {tab === 'vscode' && '[VS CODE VSIX]'}
                 {tab === 'git' && '[SOURCE CLONE]'}
               </button>
