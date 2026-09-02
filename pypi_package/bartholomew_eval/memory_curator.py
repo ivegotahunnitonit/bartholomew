@@ -21,14 +21,14 @@ from .sovereign_memory import SovereignLocalMemory
 _SECRET_REDACTION_PATTERNS: List[Tuple[str, re.Pattern[str]]] = [
     ("OPENAI_PROJECT_KEY",   re.compile(r"sk-proj-[a-zA-Z0-9_\-]{20,}")),
     ("GENERIC_API_SECRET",   re.compile(r"\bsk-[a-zA-Z0-9]{20,}")),
-    ("GITHUB_PAT",           re.compile(r"ghp_[a-zA-Z0-9]{20,}")),
+    ("GITHUB_PAT",           re.compile(r"ghp_[a-zA-Z0-9_]{20,}")),
     ("GITHUB_FINE_PAT",      re.compile(r"github_pat_[a-zA-Z0-9_\-]{20,}")),
     ("AWS_ACCESS_KEY",       re.compile(r"AKIA[0-9A-Z]{16}")),
     ("STRIPE_LIVE_KEY",      re.compile(r"sk_live_[0-9a-zA-Z]{24,}")),
     ("BARTHOLOMEW_ENT_KEY",  re.compile(r"age_live_[a-zA-Z0-9_\-]{16,}")),
     ("OPERATOR_SEC_KEY",     re.compile(r"acn_op_sec_[a-zA-Z0-9_\-]{16,}")),
     ("JWT_BEARER",           re.compile(r"eyJ[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+")),
-    ("BEARER_TOKEN",         re.compile(r"(?i)bearer\s+[a-zA-Z0-9_\-\.\+/=]{12,}")),
+    ("BEARER_TOKEN",         re.compile(r"(?i)bearer\s+(?!ghp_|github_pat_|sk-|sk-proj-|AKIA|age_live_|acn_op_sec_)[a-zA-Z0-9_\-\.\+/=]{12,}")),
 ]
 
 # Injection marker phrases to block from memory ingestion

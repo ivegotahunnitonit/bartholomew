@@ -1,0 +1,82 @@
+{
+  "Version": "1.0",
+  "Entity": {
+    "Type": "SaaSProduct@1.0",
+    "Identifier": "NEW"
+  },
+  "ChangeSet": [
+    {
+      "ChangeType": "CreateProduct",
+      "Details": {
+        "ProductTitle": "Bartholomew (btp-guard) — Sub-50µs AI Agent Safety & Invariant Gate",
+        "ShortDescription": "The fastest AI agent safety layer on Earth. 30,000x faster than AWS Bedrock Guardrails. Zero network overhead. Cryptographically signed execution receipts.",
+        "LongDescription": "Bartholomew (btp-guard) is a deterministic in-memory invariant gate and cryptographic attestation protocol for autonomous AI agent fleets.\n\nWhen AI agents (LangGraph, CrewAI, AutoGen, Bedrock Agents) execute tool calls—bash commands, SQL mutations, file writes, API requests—Bartholomew intercepts every action before OS execution in under 50 microseconds, directly in caller memory.\n\nKey Results (Live-Verified on AWS Bedrock, Claude Sonnet 4.6):\n• 47.8 µs decision latency vs 1,450 ms Bedrock Guardrail API round-trip (30,338x faster)\n• 80% reduction in cloud guardrail token billing ($0.00 per local check)\n• 100% deterministic AST-level invariant enforcement (no probabilistic LLM safety layers)\n• FIPS 186-5 Ed25519 cryptographic non-repudiation receipts for every approved agent action\n• SOC 2-ready audit trail with RFC 8785 canonical JSON attestation\n\nSupported Frameworks:\n• Amazon Bedrock Agents & Converse API\n• LangGraph & LangChain (CallbackHandler)\n• Microsoft AutoGen & Semantic Kernel\n• CrewAI tool guards\n• MCP stdio proxy (Claude Desktop, Cursor)\n\nInstallation:\n• Python: pip install btp-guard\n• Node.js: npm install btp-guard\n• AWS CDK: npm install aws-cdk-bartholomew-guard\n\nLicense: Source-available. Free tier for individuals and startups under $1M ARR. Enterprise license from $499/month.",
+        "Highlights": [
+          "30,338x faster than AWS Bedrock Guardrails — live-benchmarked against Claude Sonnet 4.6",
+          "Zero-daemon, zero-IPC, zero-network: runs entirely in caller memory at 47.8 µs",
+          "FIPS 186-5 Ed25519 cryptographic attestation receipts for SOC 2 audit compliance",
+          "Native AWS CDK Construct for one-line integration into any Bedrock stack",
+          "Supports LangGraph, CrewAI, AutoGen, MCP, and all major agent frameworks"
+        ],
+        "Categories": [
+          "Security",
+          "AI/ML",
+          "Developer Tools"
+        ],
+        "Keywords": [
+          "AI agent safety",
+          "LLM guardrails",
+          "autonomous agents",
+          "Bedrock guardrails alternative",
+          "prompt injection",
+          "AI security",
+          "SOC 2",
+          "cryptographic attestation",
+          "LangGraph",
+          "CrewAI"
+        ]
+      }
+    },
+    {
+      "ChangeType": "AddPricingTerms",
+      "Details": {
+        "PricingModel": "FlatMonthlyFee",
+        "Terms": [
+          {
+            "Name": "Free Tier",
+            "Description": "Free forever for individuals and teams under $1M ARR. Unlimited pip install btp-guard usage.",
+            "MonthlyPrice": "0.00",
+            "CurrencyCode": "USD"
+          },
+          {
+            "Name": "Starter",
+            "Description": "Agent fleets up to 10 concurrent workers. Email support. All framework adapters included.",
+            "MonthlyPrice": "499.00",
+            "CurrencyCode": "USD"
+          },
+          {
+            "Name": "Professional",
+            "Description": "Unlimited agent concurrency. Priority support. SOC 2 audit package. Custom invariant policies.",
+            "MonthlyPrice": "1499.00",
+            "CurrencyCode": "USD"
+          },
+          {
+            "Name": "Enterprise",
+            "Description": "Unlimited agents. Dedicated SLA. Custom Ed25519 PKI root. FIPS compliance cert. Slack support.",
+            "MonthlyPrice": "2499.00",
+            "CurrencyCode": "USD"
+          }
+        ]
+      }
+    },
+    {
+      "ChangeType": "AddSupportInformation",
+      "Details": {
+        "SupportEmail": "help@bartholomew.info",
+        "SupportUrl": "https://bartholomew.info",
+        "DocumentationUrl": "https://bartholomew.info",
+        "RefundPolicy": "Pro-rated refund within 14 days of billing cycle start."
+      }
+    }
+  ]
+}

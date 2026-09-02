@@ -80,7 +80,7 @@ class SovereignSwarmFederation:
             # Security boundary evaluation via regex (avoids false positives like 'task-', 'ask-')
             security_penalty = 0.0
             has_secret = bool(re.search(
-                r"(?i)\b(sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{20,}|api[_\-]key\s*=|password\s*=)",
+                r"(?i)\b(sk-proj-[a-zA-Z0-9_\-]{20,}|sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{20,}|api[_\-]key\s*=|password\s*=)",
                 proposed_path
             ))
             has_injection = bool(re.search(
