@@ -101,7 +101,7 @@ if result["allowed"]:
         <div className="flex items-center justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981]">[THE TRANSACTIONAL EXECUTION HARNESS FOR AI AGENTS]</span>
+            <span className="text-[#10b981]">[BTP v2.4.0 OPEN SOURCE]</span>
           </div>
         </div>
 
@@ -116,13 +116,13 @@ if result["allowed"]:
               paddingBottom: '0.18em'
             }}
           >
-            The Execution Harness Proxy for Autonomous AI Agents.
+            The Fastest In-Memory Safety Guard for AI Agents.
           </h1>
         </div>
 
         {/* Hero Subtitle */}
         <p className="text-center mx-auto mb-8 sm:mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-xs sm:text-base font-sans px-2">
-          Models bypass prompt guardrails. Bartholomew hard-gates actions directly in the execution harness—intercepting destructive commands, leaking credentials, and state corruption in &lt;5µs with atomic micro-rollbacks.
+          Zero cloud lag. Zero external telemetry. Intercepts destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>), redacts leaked API keys, and restores pristine files in 2.3µs—stopping runaway agent mutations in local CPU memory before OS dispatch.
         </p>
 
         {/* Standard Package Install Box (NO PIPED SCRIPTS) */}
