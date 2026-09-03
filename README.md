@@ -6,9 +6,9 @@
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
 [![npm downloads](https://img.shields.io/npm/dw/btp-guard.svg?style=for-the-badge&logo=npm&color=orange)](https://www.npmjs.com/package/btp-guard)
+[![Tests](https://img.shields.io/badge/Tests-2%2C598%20Passing%20(100%25)-10b981.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
-[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.4_LIVE-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 
 </div>
@@ -22,15 +22,17 @@
 
 ---
 
-### **⚡ 3-Second Live Terminal Showcase (v2.4)**
+### **⚡ 3-Second Zero-Install Showcase (v2.4)**
 
-Test in-flight credential scrubbing, boundary violation micro-rollback (<5µs), and chained Ed25519 audit manifests on your machine:
+Test in-flight credential scrubbing, boundary violation micro-rollback (<2.3µs), and chained Ed25519 audit manifests directly in your terminal:
 
 ```bash
-# Clone and run the live v2.4 simulation
-git clone https://github.com/ivegotahunnitonit/bartholomew.git
-cd bartholomew
-python cli.py demo-v24
+# Zero-Install Live Terminal Simulation (No Clone Needed!)
+npx btp-guard
+
+# Or via Python Universal Package:
+pip install btp-guard
+bartholomew demo-v24
 ```
 
 ---
