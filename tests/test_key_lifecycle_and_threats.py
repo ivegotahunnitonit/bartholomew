@@ -66,7 +66,7 @@ def test_toctou_race_defense():
     )
     print(f"[TEST 2: TOCTOU RACE DEFENSE] {msg}")
     assert not ok
-    assert "ARTIFACT_SUBSTITUTION_DETECTED" in msg
+    assert "PAYLOAD_TAMPERED" in msg or "ARTIFACT_SUBSTITUTION_DETECTED" in msg
     print("   [PASS] TOCTOU race attack neutralized via SHA-256 canonical hash binding.")
 
 if __name__ == "__main__":

@@ -9,9 +9,12 @@ import json
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from mcp_server import BartholomewMCPServer
+import importlib.util
+server_py_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "mcp_server", "server.py"))
+spec = importlib.util.spec_from_file_location("mcp_server_module", server_py_path)
+mcp_mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mcp_mod)
+BartholomewMCPServer = mcp_mod.BartholomewMCPServer
 
 def test_mcp_server_protocol():
     print("=" * 80)

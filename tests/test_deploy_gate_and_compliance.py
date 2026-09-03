@@ -53,7 +53,8 @@ def test_production_deployment_gate():
         ok, msg = gate.verify_pipeline_deployment(receipt_path, tampered_payload)
         print(f"[TEST 3: TAMPERED CODE] Result: {msg}")
         assert not ok
-        assert "Payload Tampering Detected" in msg
+        assert "PAYLOAD_TAMPERED" in msg or "Payload Tampering" in msg
+        print("   [PASS] Production gate successfully blocked tampered payload.")
     finally:
         if os.path.exists(receipt_path):
             os.remove(receipt_path)

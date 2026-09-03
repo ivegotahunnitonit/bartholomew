@@ -139,6 +139,20 @@ class IndependentTrustVerifier:
             eval_timestamp=current_timestamp
         )
 
+    @classmethod
+    def verify_and_authorize(cls, attestation_packet: Dict[str, Any],
+                             expected_payload: Dict[str, Any],
+                             trusted_authority_pubkey: str,
+                             current_timestamp: Optional[float] = None,
+                             seen_nonces: Optional[set] = None) -> Tuple[bool, str]:
+        return cls.verify_attestation(
+            attestation_packet=attestation_packet,
+            expected_payload=expected_payload,
+            trusted_root_pubkey=trusted_authority_pubkey,
+            current_timestamp=current_timestamp,
+            seen_nonces=seen_nonces
+        )
+
 # Backward Compatibility Aliases for SOC 2 & Evaluation Test Suites
 TrustVerifier = IndependentTrustVerifier
 canonical_json_bytes = rfc8785_canonicalize

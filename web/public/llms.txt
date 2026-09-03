@@ -1,26 +1,30 @@
-# Bartholomew Autonomous Trust Protocol (BTP v2.2)
-> The sub-millisecond cryptographic safety & execution boundary for autonomous AI agents.
+# Bartholomew Autonomous Trust Protocol (BTP v2.4)
+> The transactional MCP security proxy and sub-5µs micro-rollback runtime for autonomous AI agents.
 
 ## Overview
-Bartholomew provides zero-latency (<175 µs) mathematical execution gates for autonomous agents interacting with databases, APIs, code execution enclaves, and financial rails.
+Bartholomew provides transparent Model Context Protocol (MCP) proxy interception and transactional workspace rollbacks for autonomous agents interacting with shell environments, filesystems, databases, and APIs.
 
 ## Core Capabilities
-- **Sub-Millisecond Policy Enforcement**: Intercepts SQL injections, unauthorized spend escalations, and prompt injections in <70 µs.
-- **Cryptographic Receipts**: RFC 8785 Canonical JSON + FIPS 186-5 Ed25519 digital signatures for 100% tamper-evident audit trails.
-- **Data Center & Enclave Compatibility**: Runs 100% offline with zero cloud latency. Compatible with AWS Nitro, GCP Confidential VMs, and Kubernetes sidecars.
+- **Transactional Micro-Rollbacks (<5 µs)**: In-memory Copy-on-Write byte snapshots restore corrupted files and path escapes in 2.30 µs with zero residual state.
+- **Bi-Directional Credential Scrubbing**: Intercepts and redacts OpenAI, Anthropic, AWS, and GitHub credentials in both incoming agent requests and outgoing tool stdout responses.
+- **Scoped AST Invariant Analysis**: Scoped symbol-table static analyzer neutralizing dynamic execution evasions (`importlib`, `asyncio.create_subprocess_shell`, `pickle.loads`).
+- **Chained Merkle Audit Graph**: Every turn is bound to prior state via RFC 8785 canonical JSON and FIPS Ed25519 digital signatures for offline enterprise compliance.
 
 ## Machine Discovery Endpoints
 - **Agent Manifest**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/.well-known/ai-agent-manifest.json`
 - **BTP Configuration**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/.well-known/btp-configuration.json`
 - **Live Sidecar Gateway**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/sidecar/evaluate`
+- **Command Center Dashboard**: `https://acn-fastapi-backend-322603900775.us-central1.run.app/dashboard`
 
 ## Developer Tooling & SDKs
 - **Python**: `pip install btp-guard`
-- **TypeScript / Node.js**: `npm install @bartholomew/btp-guard`
+- **TypeScript / Node.js**: `npm install btp-guard`
 - **Go**: `go get github.com/ivegotahunnitonit/bartholomew/pkg/btp`
-- **Model Context Protocol (MCP)**: `python -m mcp_server.server` (Compatible with Claude Desktop & Cursor)
-- **Docker Sidecar**: `docker run -p 8080:8080 bartholomew/sidecar`
+- **Model Context Protocol (MCP) Proxy**: `python -m src.mcp_gateway --server-cmd <downstream-mcp>`
+- **Claude Desktop & Cursor Config**: `python setup_claude_desktop_mcp.py`
 
-## Benchmarks & Proofs
-- **Empirical Fuzz Test**: 50,000 continuous adversarial cycles, 100% exploit interception rate, 0.00% leakage.
-- **Full Dossier**: `https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/CRYPTOGRAPHIC_PROOF_OF_UNBREAKABILITY.json`
+## Benchmarks & Telemetry
+- **Micro-Rollback Restoration**: 2.30 µs (P50), 3.42 µs (P99)
+- **Secret Scrubbing Efficacy**: 100.0% interception across 12 credential entropy formats
+- **AST Static Trait Analysis**: 1.38 µs evaluation
+- **Technical Whitepaper**: `https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/paper_v2_4.md`

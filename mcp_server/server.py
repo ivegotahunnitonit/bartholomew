@@ -24,7 +24,12 @@ from standalone_btp_verifier import independent_verify_btp_receipt
 from src.rfc8785 import rfc8785_canonicalize
 from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox, HermeticFileSandbox
-from mcp_server.inline_tool_gate import MandatoryToolGate
+try:
+    from mcp_server.inline_tool_gate import MandatoryToolGate
+except (ModuleNotFoundError, ImportError):
+    if os.path.dirname(__file__) not in sys.path:
+        sys.path.insert(0, os.path.dirname(__file__))
+    from inline_tool_gate import MandatoryToolGate
 
 class BartholomewMCPServer:
     """
