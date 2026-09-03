@@ -6,9 +6,10 @@ Security updates are provided for the following versions of the Bartholomew Trus
 
 | Version | Supported |
 | :--- | :--- |
-| 2.2.x | Supported (Active) |
-| 2.1.x | Supported (Security Patches Only) |
-| < 2.0 | Unsupported |
+| 2.4.x | Supported (Active Production) |
+| 2.3.x | Supported (Active) |
+| 2.2.x | Supported (Security Patches Only) |
+| < 2.1 | Unsupported |
 
 ---
 
