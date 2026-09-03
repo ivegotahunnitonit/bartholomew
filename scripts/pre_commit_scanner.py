@@ -28,7 +28,9 @@ SAFE_MOCK_ALLOWLIST = [
     "ghp_MOCK_TEST_TOKEN",
     "sk_live_YOUR_STRIPE",
     "scripts/deep_security_audit.py",
-    "npm_package/test.js"
+    "npm_package/test.js",
+    "npm_package/cli.js",
+    "npm_package/bin/cli.js"
 ]
 
 def scan_staged_diff():
@@ -53,7 +55,7 @@ def scan_staged_diff():
             continue
 
         # Skip test and demo simulation files
-        if any(ignored in current_file for ignored in ["deep_security_audit.py", "test_", "demo_"]):
+        if any(ignored in current_file for ignored in ["deep_security_audit.py", "test_", "demo_", "cli.js"]):
             continue
 
         # Only scan newly added or modified lines

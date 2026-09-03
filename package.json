@@ -13,7 +13,7 @@
     "@cosmjs/proto-signing": "^0.39.0",
     "@cosmjs/stargate": "^0.39.0",
     "bitcoinjs-lib": "^7.0.1",
-    "btp-guard": "^2.4.0",
+    "btp-guard": "^2.4.3",
     "dotenv": "^17.4.2",
     "ecpair": "^3.0.1",
     "ethers": "^6.17.0",
