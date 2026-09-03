@@ -227,7 +227,7 @@ export default function InteractiveAgentSandbox() {
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#10b981] text-xs font-mono font-bold uppercase tracking-wider mb-3">
             <Sparkles size={13} />
-            <span>[ LIVE INTERACTIVE PLAYGROUND · BTP v2.3 ]</span>
+            <span>[ LIVE INTERACTIVE PLAYGROUND · BTP v2.4 ]</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             Try to Break the Agent.
@@ -330,7 +330,7 @@ export default function InteractiveAgentSandbox() {
               <div className="flex items-center gap-2">
                 <Activity size={15} className="text-[#f59e0b]" />
                 <span className="font-mono text-xs font-bold text-white uppercase">
-                  BTP v2.3 TELEMETRY &amp; PROOF STREAM
+                  BTP v2.4 TELEMETRY &amp; PROOF STREAM
                 </span>
               </div>
               {executionResult && (

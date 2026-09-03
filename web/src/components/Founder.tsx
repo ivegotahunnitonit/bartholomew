@@ -56,7 +56,7 @@ export default function Founder() {
             </div>
 
             <p className="text-sm text-[#d4d4d8] leading-relaxed font-sans">
-              "As autonomous AI agents shift from passive conversational chatbots into active corporate workers with direct shell, database, and financial API authority, prompt guidelines and post-hoc filters are no longer enough. We architected the Bartholomew Trust Protocol (BTP v2.3) as an uncompromising, in-memory safety kernel—giving enterprise teams the confidence to deploy fully autonomous systems with zero execution delay, strict mathematical invariants, and tamper-proof digital accountability."
+              "As autonomous AI agents shift from passive conversational chatbots into active corporate workers with direct shell, database, and financial API authority, prompt guidelines and post-hoc filters are no longer enough. We architected the Bartholomew Trust Protocol (BTP v2.4) as an uncompromising, transactional in-memory safety proxy—giving enterprise teams the confidence to deploy fully autonomous systems with sub-5µs rollbacks, strict mathematical invariants, and tamper-proof digital accountability."
             </p>
 
             <div className="pt-2 border-t border-[#1c1c1c] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
