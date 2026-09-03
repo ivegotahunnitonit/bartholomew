@@ -100,6 +100,8 @@ python -m src.cli policy eval -f policies/default_security_policy.yaml -p '{"que
 
 ### **[FRAMEWORK_ADAPTERS] 1-Line Drop-in Middleware**
 
+> **Looking for ready-to-copy code examples?** See our complete **[Framework Integration Hub](docs/FRAMEWORK_GUIDE.md)** for AutoGen, LangGraph, CrewAI, and Cursor/Claude Desktop MCP.
+
 | Framework | Integration File | 1-Line Guard | Description |
 | :--- | :--- | :--- | :--- |
 | **LangGraph / LangChain** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@guard.wrap_tool` | Protects database & tool calls with offline Ed25519 receipts |
