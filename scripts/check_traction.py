@@ -66,7 +66,7 @@ def get_pypi_metrics():
 
 def get_cloud_run_health():
     try:
-        r = requests.get('https://acn-fastapi-backend-322603900775.us-central1.run.app/', timeout=5)
+        r = requests.get('https://acn-fastapi-backend-322603900775.us-central1.run.app/', timeout=10)
         return {
             'status_code': r.status_code,
             'ok': r.status_code == 200
