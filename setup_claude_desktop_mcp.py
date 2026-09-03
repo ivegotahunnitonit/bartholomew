@@ -1,19 +1,31 @@
 """
-Setup Claude Desktop MCP Configuration for Bartholomew Guard
-============================================================
-Writes claude_desktop_config.json to %APPDATA%/Claude so Claude Desktop
-instantly loads Bartholomew BTP Guard as an active tool.
+Setup Claude Desktop & Cursor MCP Configuration for Bartholomew v2.4
+======================================================================
+Writes claude_desktop_config.json so Claude Desktop and Cursor instantly
+load Bartholomew as:
+  1. An active MCP Guard tool server (`bartholomew-guard`).
+  2. A resilient transparent security proxy (`bartholomew-proxy`) with
+     in-flight secret redaction and transactional workspace rollbacks.
 """
 
 import os
+import sys
 import json
 
-def configure_claude_desktop():
-    claude_dir = os.path.expandvars(r"%APPDATA%\Claude")
+def configure_mcp_environments():
+    workspace_dir = os.path.abspath(".")
+    python_exe = sys.executable
+
+    # Detect Claude Desktop config path across OS
+    if sys.platform == "win32":
+        claude_dir = os.path.expandvars(r"%APPDATA%\Claude")
+    elif sys.platform == "darwin":
+        claude_dir = os.path.expanduser("~/Library/Application Support/Claude")
+    else:
+        claude_dir = os.path.expanduser("~/.config/Claude")
+
     os.makedirs(claude_dir, exist_ok=True)
     config_path = os.path.join(claude_dir, "claude_desktop_config.json")
-
-    workspace_dir = os.path.abspath(".")
 
     config_data = {}
     if os.path.exists(config_path):
@@ -26,9 +38,21 @@ def configure_claude_desktop():
     if "mcpServers" not in config_data:
         config_data["mcpServers"] = {}
 
+    # 1. Native Guard Server
     config_data["mcpServers"]["bartholomew-guard"] = {
-        "command": "python",
+        "command": python_exe,
         "args": ["-m", "mcp_server.server"],
+        "cwd": workspace_dir
+    }
+
+    # 2. Resilient Transactional Proxy
+    config_data["mcpServers"]["bartholomew-proxy"] = {
+        "command": python_exe,
+        "args": [
+            "-m", "src.mcp_gateway",
+            "--workspace", workspace_dir,
+            "--server-cmd", python_exe, "-m", "mcp_server.server"
+        ],
         "cwd": workspace_dir
     }
 
@@ -36,8 +60,8 @@ def configure_claude_desktop():
         json.dump(config_data, f, indent=2)
 
     print(f"[SUCCESS] Configured Claude Desktop MCP at: {config_path}")
-    print("Configuration payload:")
     print(json.dumps(config_data, indent=2))
 
+
 if __name__ == "__main__":
-    configure_claude_desktop()
+    configure_mcp_environments()

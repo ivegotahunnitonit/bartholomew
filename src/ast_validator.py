@@ -1,32 +1,157 @@
 """
-Bartholomew Compiler-Grade AST Security & Invariant Engine
-=========================================================
-Deep structural Python Abstract Syntax Tree (AST) static analysis.
-Handles:
-  1. Direct, aliased, and imported execution calls (eval, exec, os.system, subprocess).
-  2. Single & tuple assignment alias propagation (s = os; a, s = 1, os; s.system(...)).
+Bartholomew Compiler-Grade AST Security & Invariant Engine (v2.4)
+=================================================================
+Deep structural Python Abstract Syntax Tree (AST) static analysis with scoped visitor traversal:
+  1. Direct, aliased, and imported execution calls (eval, exec, os.system, subprocess, importlib).
+  2. Scoped single & tuple assignment alias propagation.
   3. Dunder and reflection attacks (__builtins__, __subclasses__, __import__, globals()).
   4. Dynamic getattr with constant-folded string concatenation.
   5. Destructive filesystem operations (open(..., 'w'), shutil.rmtree).
   6. Network socket & exfiltration module containment.
+  7. Process spawn & pickle deserialization guards.
 """
 
 import ast
 import time
 from typing import Dict, Any, Tuple, List, Set, Optional
 
+
+class ScopedASTVisitor(ast.NodeVisitor):
+    """
+    Scope-aware AST Node Visitor that maintains lexical scopes for aliases.
+    """
+    def __init__(self, forbidden_calls: Set[str], forbidden_modules: Set[str], dangerous_attrs: Set[str]):
+        self.forbidden_calls = forbidden_calls
+        self.forbidden_modules = forbidden_modules
+        self.dangerous_attrs = dangerous_attrs
+        self.scopes: List[Dict[str, str]] = [{}]
+        self.violations: List[str] = []
+        self.total_nodes = 0
+
+    @property
+    def current_scope(self) -> Dict[str, str]:
+        return self.scopes[-1]
+
+    def resolve_name(self, name: str) -> str:
+        for scope in reversed(self.scopes):
+            if name in scope:
+                return scope[name]
+        return name
+
+    def resolve_call_name(self, func_node: ast.AST) -> str:
+        if isinstance(func_node, ast.Name):
+            return self.resolve_name(func_node.id)
+        elif isinstance(func_node, ast.Attribute):
+            val_name = self.resolve_call_name(func_node.value)
+            if val_name:
+                resolved = f"{val_name}.{func_node.attr}"
+                return self.resolve_name(resolved)
+            return func_node.attr
+        return ""
+
+    def generic_visit(self, node):
+        self.total_nodes += 1
+        super().generic_visit(node)
+
+    def visit_FunctionDef(self, node):
+        self.scopes.append(dict(self.current_scope))
+        self.generic_visit(node)
+        self.scopes.pop()
+
+    def visit_AsyncFunctionDef(self, node):
+        self.scopes.append(dict(self.current_scope))
+        self.generic_visit(node)
+        self.scopes.pop()
+
+    def visit_Import(self, node):
+        self.total_nodes += 1
+        for alias in node.names:
+            original = alias.name
+            asname = alias.asname or alias.name
+            self.current_scope[asname] = original
+            if original in self.forbidden_modules:
+                self.violations.append(f"Forbidden Module Import: '{original}'")
+
+    def visit_ImportFrom(self, node):
+        self.total_nodes += 1
+        mod = node.module or ""
+        if mod in self.forbidden_modules:
+            self.violations.append(f"Forbidden Module Import: '{mod}'")
+        for alias in node.names:
+            canonical = f"{mod}.{alias.name}" if mod else alias.name
+            asname = alias.asname or alias.name
+            self.current_scope[asname] = canonical
+
+    def visit_Assign(self, node):
+        self.total_nodes += 1
+        # Extract aliases
+        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            target_name = node.targets[0].id
+            rhs_resolved = self.resolve_call_name(node.value)
+            if rhs_resolved:
+                self.current_scope[target_name] = rhs_resolved
+        elif len(node.targets) == 1 and isinstance(node.targets[0], ast.Tuple) and isinstance(node.value, ast.Tuple):
+            target_elts = node.targets[0].elts
+            value_elts = node.value.elts
+            if len(target_elts) == len(value_elts):
+                for t_elt, v_elt in zip(target_elts, value_elts):
+                    if isinstance(t_elt, ast.Name):
+                        rhs_res = self.resolve_call_name(v_elt)
+                        if rhs_res:
+                            self.current_scope[t_elt.id] = rhs_res
+        self.generic_visit(node)
+
+    def visit_Attribute(self, node):
+        self.total_nodes += 1
+        if node.attr in self.dangerous_attrs:
+            self.violations.append(f"Forbidden Dunder Attribute Access: '{node.attr}'")
+        self.generic_visit(node)
+
+    def visit_Call(self, node):
+        self.total_nodes += 1
+        call_name = self.resolve_call_name(node.func)
+
+        if call_name in self.forbidden_calls:
+            self.violations.append(f"Forbidden AST Execution Call: '{call_name}'")
+
+        # Detect dynamic getattr: getattr(os, "system") or getattr(os, "sys" + "tem")
+        if isinstance(node.func, ast.Name) and node.func.id == "getattr":
+            if len(node.args) >= 2:
+                target_obj = self.resolve_call_name(node.args[0])
+                attr_val = ASTSecurityValidator._evaluate_string_expr(node.args[1])
+                if attr_val:
+                    full_dyn_call = f"{target_obj}.{attr_val}"
+                    if full_dyn_call in self.forbidden_calls or attr_val in {"system", "popen", "rmtree", "unlink", "loads", "import_module"}:
+                        self.violations.append(f"Forbidden Dynamic getattr Call: '{full_dyn_call}'")
+
+        # Detect dangerous file write modes in open("...", "w")
+        if isinstance(node.func, ast.Name) and node.func.id == "open":
+            if len(node.args) >= 2:
+                mode_val = ASTSecurityValidator._evaluate_string_expr(node.args[1])
+                if mode_val and any(m in mode_val for m in ["w", "a", "x", "+"]):
+                    if isinstance(node.args[0], ast.Constant):
+                        path_str = str(node.args[0].value)
+                        if path_str.startswith("/") or ".." in path_str or "etc" in path_str:
+                            self.violations.append(f"Forbidden Arbitrary File Write Path: '{path_str}'")
+
+        self.generic_visit(node)
+
+
 class ASTSecurityValidator:
     FORBIDDEN_CALL_TARGETS: Set[str] = {
         "eval", "exec", "compile", "__import__",
-        "os.system", "os.popen", "os.spawn", "os.spawnl", "os.spawnv",
+        "os.system", "os.popen", "os.spawn", "os.spawnl", "os.spawnv", "os.posix_spawn",
         "os.remove", "os.unlink", "os.rmdir", "os.kill", "os.execv", "os.execve",
         "subprocess.Popen", "subprocess.call", "subprocess.run", "subprocess.check_output", "subprocess.check_call",
         "shutil.rmtree", "shutil.move", "shutil.copyfile",
-        "pathlib.Path.unlink", "pathlib.Path.rmdir"
+        "pathlib.Path.unlink", "pathlib.Path.rmdir",
+        "importlib.import_module",
+        "asyncio.create_subprocess_shell", "asyncio.create_subprocess_exec",
+        "pickle.loads", "marshal.loads"
     }
 
     FORBIDDEN_MODULES: Set[str] = {
-        "pty", "socket", "ctypes", "code", "pdb", "posix", "nt"
+        "pty", "socket", "ctypes", "code", "pdb", "posix", "nt", "importlib", "pickle", "marshal"
     }
 
     DANGEROUS_ATTRIBUTES: Set[str] = {
@@ -43,116 +168,24 @@ class ASTSecurityValidator:
             dt_us = (time.perf_counter() - start_us) * 1_000_000
             return False, f"AST Parse Error: Invalid Python syntax ({str(e)})", {"error": "SYNTAX_ERROR"}
 
-        total_nodes = 0
-        violations: List[str] = []
-        aliases: Dict[str, str] = {}
-
-        for node in ast.walk(tree):
-            total_nodes += 1
-
-            # 1. Track Imports & Import-Aliases (import os as o, from os import system as s)
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    original = alias.name
-                    asname = alias.asname or alias.name
-                    aliases[asname] = original
-                    if original in cls.FORBIDDEN_MODULES:
-                        violations.append(f"Forbidden Module Import: '{original}'")
-
-            elif isinstance(node, ast.ImportFrom):
-                mod = node.module or ""
-                if mod in cls.FORBIDDEN_MODULES:
-                    violations.append(f"Forbidden Module Import: '{mod}'")
-                for alias in node.names:
-                    canonical = f"{mod}.{alias.name}" if mod else alias.name
-                    asname = alias.asname or alias.name
-                    aliases[asname] = canonical
-
-            # 2. Track Single & Tuple Unpacking Assignments (s = os; a, s = 1, os)
-            elif isinstance(node, ast.Assign):
-                cls._extract_assignment_aliases(node, aliases)
-
-            # 3. Inspect Dunder / Reflection Attributes (__builtins__, __subclasses__)
-            elif isinstance(node, ast.Attribute):
-                if node.attr in cls.DANGEROUS_ATTRIBUTES:
-                    violations.append(f"Forbidden Dunder Attribute Access: '{node.attr}'")
-
-            # 4. Inspect Function & Method Calls (ast.Call)
-            elif isinstance(node, ast.Call):
-                call_name = cls._resolve_call_name(node.func, aliases)
-                
-                if call_name in cls.FORBIDDEN_CALL_TARGETS:
-                    violations.append(f"Forbidden AST Execution Call: '{call_name}'")
-
-                # Detect dynamic getattr: getattr(os, "system") or getattr(os, "sys" + "tem")
-                if isinstance(node.func, ast.Name) and node.func.id == "getattr":
-                    if len(node.args) >= 2:
-                        target_obj = cls._resolve_call_name(node.args[0], aliases)
-                        attr_val = cls._evaluate_string_expr(node.args[1])
-                        if attr_val:
-                            full_dyn_call = f"{target_obj}.{attr_val}"
-                            if full_dyn_call in cls.FORBIDDEN_CALL_TARGETS or attr_val in {"system", "popen", "rmtree", "unlink"}:
-                                violations.append(f"Forbidden Dynamic getattr Call: '{full_dyn_call}'")
-
-                # Detect dangerous file write modes in open("...", "w")
-                if isinstance(node.func, ast.Name) and node.func.id == "open":
-                    if len(node.args) >= 2:
-                        mode_val = cls._evaluate_string_expr(node.args[1])
-                        if mode_val and any(m in mode_val for m in ["w", "a", "x", "+"]):
-                            if isinstance(node.args[0], ast.Constant):
-                                path_str = str(node.args[0].value)
-                                if path_str.startswith("/") or ".." in path_str or "etc" in path_str:
-                                    violations.append(f"Forbidden Arbitrary File Write Path: '{path_str}'")
+        visitor = ScopedASTVisitor(cls.FORBIDDEN_CALL_TARGETS, cls.FORBIDDEN_MODULES, cls.DANGEROUS_ATTRIBUTES)
+        visitor.visit(tree)
 
         dt_us = (time.perf_counter() - start_us) * 1_000_000
 
-        if total_nodes > max_ast_nodes:
-            violations.append(f"AST Node Limit Exceeded: {total_nodes} nodes > {max_ast_nodes}")
+        if visitor.total_nodes > max_ast_nodes:
+            visitor.violations.append(f"AST Node Limit Exceeded: {visitor.total_nodes} nodes > {max_ast_nodes}")
 
-        is_safe = len(violations) == 0
-        reason = "AST static analysis verified clean." if is_safe else "; ".join(violations)
+        is_safe = len(visitor.violations) == 0
+        reason = "AST static analysis verified clean." if is_safe else "; ".join(visitor.violations)
 
         metadata = {
-            "total_ast_nodes": total_nodes,
-            "violations_found": violations,
+            "total_ast_nodes": visitor.total_nodes,
+            "violations_found": visitor.violations,
             "analysis_latency_us": round(dt_us, 2)
         }
 
         return is_safe, reason, metadata
-
-    @classmethod
-    def _extract_assignment_aliases(cls, node: ast.Assign, aliases: Dict[str, str]) -> None:
-        """Extracts aliases from simple assignments (s = os) and tuple unpacking (a, s = 1, os)."""
-        # Case A: Simple single assignment (s = os)
-        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
-            target_name = node.targets[0].id
-            rhs_resolved = cls._resolve_call_name(node.value, aliases)
-            if rhs_resolved:
-                aliases[target_name] = rhs_resolved
-
-        # Case B: Tuple unpacking (a, s = 1, os)
-        elif len(node.targets) == 1 and isinstance(node.targets[0], ast.Tuple) and isinstance(node.value, ast.Tuple):
-            target_elts = node.targets[0].elts
-            value_elts = node.value.elts
-            if len(target_elts) == len(value_elts):
-                for t_elt, v_elt in zip(target_elts, value_elts):
-                    if isinstance(t_elt, ast.Name):
-                        rhs_res = cls._resolve_call_name(v_elt, aliases)
-                        if rhs_res:
-                            aliases[t_elt.id] = rhs_res
-
-    @classmethod
-    def _resolve_call_name(cls, func_node: ast.AST, aliases: Dict[str, str]) -> str:
-        """Recursively resolves function call expressions through symbol table aliases."""
-        if isinstance(func_node, ast.Name):
-            return aliases.get(func_node.id, func_node.id)
-        elif isinstance(func_node, ast.Attribute):
-            val_name = cls._resolve_call_name(func_node.value, aliases)
-            if val_name:
-                resolved = f"{val_name}.{func_node.attr}"
-                return aliases.get(resolved, resolved)
-            return func_node.attr
-        return ""
 
     @classmethod
     def _evaluate_string_expr(cls, node: ast.AST) -> Optional[str]:

@@ -23,9 +23,9 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP) v2.2.0")
-    print("Engine: Sovereign AST Invariant Scanner & FIPS 186-5 Ed25519 Notary")
-    print("Latency: Sub-50 microseconds (in-process / localhost)")
+    print("Bartholomew Protocol (BTP) v2.4.0")
+    print("Engine: Resilient MCP Proxy, In-Flight Secret Scrubber & Transactional Rollback Engine")
+    print("Latency: Sub-50 microseconds (in-process) | Rollback: <5ms")
 
 
 def cmd_init(args):
@@ -187,6 +187,14 @@ def main():
     demo_p = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
     demo_p.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
 
+    # demo-v24
+    demo24_p = subparsers.add_parser("demo-v24", help="Run Bartholomew v2.4 Resilient MCP & Rollback Engine showcase")
+
+    # proxy (MCP stdio proxy)
+    proxy_p = subparsers.add_parser("proxy", help="Run Bartholomew as an inline MCP security proxy")
+    proxy_p.add_argument("--server-cmd", nargs="+", required=True, help="Downstream MCP server command to launch")
+    proxy_p.add_argument("--workspace", default=None, help="Root workspace directory to bound tool mutations")
+
     # agent (Interactive REPL)
     agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
     agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
@@ -198,6 +206,13 @@ def main():
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)
+    elif args.command == "demo-v24":
+        from src.demo_v24 import run_demo_v24
+        run_demo_v24()
+    elif args.command == "proxy":
+        from src.mcp_gateway import MCPProxyGateway
+        gateway = MCPProxyGateway(workspace_root=args.workspace)
+        gateway.run_stdio_proxy(args.server_cmd)
     elif args.command == "agent":
         from src.interactive_agent_repl import run_agent_repl
         run_agent_repl()

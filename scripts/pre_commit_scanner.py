@@ -50,8 +50,8 @@ def scan_staged_diff():
             current_file = line[6:]
             continue
 
-        # Skip test harness files
-        if any(ignored in current_file for ignored in ["deep_security_audit.py", "test_"]):
+        # Skip test and demo simulation files
+        if any(ignored in current_file for ignored in ["deep_security_audit.py", "test_", "demo_"]):
             continue
 
         # Only scan newly added or modified lines

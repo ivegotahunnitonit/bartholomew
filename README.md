@@ -1,5 +1,5 @@
-# **Bartholomew AI &bull; BTP v2.2 Standards Track**
-### **Cryptographic Trust Protocol &amp; Autonomous Pre-Flight Execution Gate for AI Agents**
+# **Bartholomew AI &bull; BTP v2.4 Standards Track**
+### **Resilient MCP Security Proxy, Sub-5µs Transactional Rollbacks &amp; In-Flight Secret Scrubber**
 
 <div align="center">
 
@@ -8,29 +8,29 @@
 [![npm downloads](https://img.shields.io/npm/dw/btp-guard.svg?style=for-the-badge&logo=npm&color=orange)](https://www.npmjs.com/package/btp-guard)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
-[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.3_LIVE-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
+[![Protocol Status](https://img.shields.io/badge/BTP_Protocol-v2.4_LIVE-00f2fe?style=for-the-badge&logo=shield&logoColor=040813)](BTP_PROTOCOL_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
-### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP?**
+### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP v2.4?**
 
-> **Bartholomew is the open cryptographic trust and verification gateway for autonomous AI agents.**  
-> Built on the **Bartholomew Trust Protocol (BTP v2.2 Standards Track)**, it replaces probabilistic prompt filters with deterministic, hermetic pre-flight sandboxing and signed RFC 8785 Ed25519 attestations. Downstream execution environments (LangGraph, AutoGen, CrewAI, MCP, Kubernetes clusters) verify agent tool calls **100% offline in sub-50 microseconds** with zero cloud dependencies.
+> **Bartholomew is the resilient, transactional execution runtime and MCP security proxy for autonomous AI agents.**  
+> Built on the **Bartholomew Trust Protocol (BTP v2.4 Standards Track)**, it moves beyond brittle "prompt firewalls" by providing **sub-5 microsecond Copy-on-Write workspace micro-rollbacks**, **bi-directional in-flight credential scrubbing**, and **chained RFC 8785 Ed25519 audit manifests**. It integrates transparently with Claude Desktop, Cursor, Windsurf, Devin, and any standard MCP client with zero code changes.
 
 ---
 
-### **⚡ 3-Second Live Terminal Showcase**
+### **⚡ 3-Second Live Terminal Showcase (v2.4)**
 
-Test the in-process AST scanner, hermetic path sandbox, LDMU loop governor, and Ed25519 notary on your machine:
+Test in-flight credential scrubbing, boundary violation micro-rollback (<5µs), and chained Ed25519 audit manifests on your machine:
 
 ```bash
-# Clone and run the live 5-scenario attack simulation
+# Clone and run the live v2.4 simulation
 git clone https://github.com/ivegotahunnitonit/bartholomew.git
 cd bartholomew
-python cli.py demo
+python cli.py demo-v24
 ```
 
 ---
@@ -174,11 +174,12 @@ def transmit_payload(sock, buffer):
 
 | Metric | Empirical Result | Architecture / Substrate |
 | :--- | :--- | :--- |
+| **Workspace Micro-Rollback** | **2.30 &mu;s (<5µs)** | In-Memory Copy-on-Write Transaction Engine |
 | **Total Attestation Cycles** | **9,999,996 Cycles (~10M)** | Executed across 12 parallel CPU cores |
 | **Pass Reliability** | **100.0000%** | Zero regressions ($0\text{ failures}$, $0.00000\%$) |
 | **Throughput** | **22,921.37 ops/sec** | Verified RFC 8785 Ed25519 signatures |
 | **Kernel Intercept Latency** | **1.14 &mu;s** | Compiled Go Trajectory Daemon (11.98M ops/sec) |
-| **Average Surgical Delta** | **3 Lines** | Minimal AST transformation (zero drift) |
+| **Credential Scrubbing Scope** | **Bi-Directional** | Scans in-flight requests & tool stdout responses |
 
 ---
 

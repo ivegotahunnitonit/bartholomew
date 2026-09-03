@@ -1,42 +1,59 @@
 """
-Bartholomew Model Context Protocol (MCP) Transparent Proxy Gateway (v2.3)
+Bartholomew Model Context Protocol (MCP) Resilient Proxy Gateway (v2.4)
 ========================================================================
 Acts as an inline intercepting proxy between any MCP Client (Claude Desktop,
-Cursor, AWS Bedrock) and any downstream MCP Server (Postgres, Filesystem, GitHub).
+Cursor, AWS Bedrock, Windsurf) and any downstream MCP Server (Filesystem, Shell, GitHub).
 
 Architecture:
   [MCP Client] <--(stdio/HTTP)--> [Bartholomew MCP Gateway] <--(stdio)--> [Downstream MCP Server]
                                              │
-                                   [In-Memory AST + Secret Gate]
-                                   [Ed25519 Attestation Receipt]
+                                   [In-Flight Secret Redaction]
+                                   [Transactional Workspace CoW]
+                                   [Chained Ed25519 Receipts]
 
-Intercepts JSON-RPC 2.0 requests:
-  - tools/call: Evaluates arguments against AST invariants and Secret Masker before forwarding.
-  - tools/list: Decorates tool schemas with BTP invariant safety badges.
+Features:
+  1. tools/call: Evaluates arguments against AST invariants, redacting secrets and bounding paths.
+  2. Transactional Rollback: Pre-snapshots files before mutating tools; rolls back cleanly if checks fail.
+  3. Chained Session Receipts: Every approved turn is mathematically linked to the parent turn hash.
+  4. tools/list: Decorates tool schemas with BTP invariant safety badges.
+  5. Response Scrubbing: Strips sensitive credentials leaking out from server stdout.
 """
 
 import sys
 import os
 import json
 import time
-from typing import Dict, Any, Tuple, Optional, Callable
+import hashlib
+from typing import Dict, Any, Tuple, Optional, Callable, List
 
 sys.path.insert(0, os.path.abspath("."))
 from src.polyglot_ast_validator import PolyglotASTValidator
 from src.secret_masker import SecretVaultMasker
 from src.trust_protocol import BartholomewTrustAuthority
+from src.workspace_transaction import WorkspaceTransaction
+from src.rfc8785 import rfc8785_canonicalize
 
 
 class MCPProxyGateway:
     """
-    Transparent JSON-RPC 2.0 Invariant Interception Gateway for MCP tool calling.
+    Transparent JSON-RPC 2.0 Invariant Interception & Transactional Gateway for MCP tool calling.
     """
 
-    def __init__(self, trust_authority: Optional[BartholomewTrustAuthority] = None):
+    MUTATING_TOOL_NAMES = {
+        "write_file", "edit_file", "create_file", "delete_file", "create_directory",
+        "execute_command", "bash", "shell", "run_terminal_command", "apply_patch"
+    }
+
+    def __init__(self, trust_authority: Optional[BartholomewTrustAuthority] = None, workspace_root: Optional[str] = None):
         self.authority = trust_authority or BartholomewTrustAuthority()
+        self.workspace_root = os.path.abspath(workspace_root or os.getcwd())
         self.total_intercepted = 0
         self.total_vetoed = 0
         self.total_redacted = 0
+        self.total_rollbacks = 0
+        self.active_transactions: Dict[Any, WorkspaceTransaction] = {}
+        self.session_receipt_chain: List[Dict[str, Any]] = []
+        self.latest_receipt_hash: str = "GENESIS_ROOT_HASH_0000000000000000"
 
     def intercept_jsonrpc_request(self, raw_json_str: str) -> Tuple[bool, Dict[str, Any], Optional[Dict[str, Any]]]:
         """
@@ -75,21 +92,55 @@ class MCPProxyGateway:
             params["arguments"] = sanitized_args
             req["params"] = params
 
-        # 2. Extract code or command strings from arguments
+        # 2. Transactional Workspace Pre-Snapshot for Mutating Tools
+        if tool_name in self.MUTATING_TOOL_NAMES or any(m in tool_name.lower() for m in ["write", "delete", "edit"]):
+            tx = WorkspaceTransaction(workspace_root=self.workspace_root)
+            # Pre-snapshot target file if specified
+            target_path = sanitized_args.get("path") or sanitized_args.get("file_path") or sanitized_args.get("target_file")
+            if target_path and isinstance(target_path, str):
+                try:
+                    tx.snapshot_file(target_path)
+                except PermissionError as pe:
+                    self.total_rollbacks += 1
+                    rollback_res = tx.rollback(reason=str(pe))
+                    veto_response = {
+                        "jsonrpc": "2.0",
+                        "id": req_id,
+                        "error": {
+                            "code": -32000,
+                            "message": f"BTP-ROLLBACK: Boundary Violation on tool '{tool_name}'",
+                            "data": {
+                                "verdict": "ROLLED_BACK",
+                                "diagnostic_hint": str(pe),
+                                "rollback_details": rollback_res
+                            }
+                        }
+                    }
+                    return False, req, veto_response
+            self.active_transactions[req_id] = tx
+
+        # 3. Extract code or command strings from arguments
         code_candidates = []
         if isinstance(sanitized_args, dict):
             for k in ["command", "cmd", "code", "query", "sql", "script", "payload", "input"]:
                 if k in sanitized_args and isinstance(sanitized_args[k], str):
                     code_candidates.append(sanitized_args[k])
 
-        # 3. Polyglot AST Invariant Evaluation
+        # 4. Polyglot AST Invariant Evaluation
         for candidate in code_candidates:
             is_safe, msg, meta = PolyglotASTValidator.validate_code(candidate)
             if not is_safe:
                 self.total_vetoed += 1
                 latency_us = (time.perf_counter() - t0) * 1_000_000
+
+                # If a transaction was opened for this request, roll it back
+                rollback_info = None
+                if req_id in self.active_transactions:
+                    tx = self.active_transactions.pop(req_id)
+                    rollback_info = tx.rollback(reason=msg)
+                    self.total_rollbacks += 1
                 
-                # Construct JSON-RPC Hard Veto Error
+                # Construct JSON-RPC Hard Veto Error with actionable diagnostics
                 veto_response = {
                     "jsonrpc": "2.0",
                     "id": req_id,
@@ -100,25 +151,98 @@ class MCPProxyGateway:
                             "verdict": "DENY",
                             "rule": msg,
                             "latency_us": round(latency_us, 2),
-                            "authority_pubkey": self.authority.public_key_hex
+                            "authority_pubkey": self.authority.public_key_hex,
+                            "rollback_status": rollback_info["status"] if rollback_info else "NO_MUTATION",
+                            "diagnostic_hint": "Please adjust arguments to avoid forbidden calls or out-of-scope modifications."
                         }
                     }
                 }
                 return False, req, veto_response
 
-        # 4. Action Approved: Forward sanitized request to downstream MCP server
+        # 5. Action Approved: Generate chained receipt
+        receipt = self._issue_chained_receipt(tool_name, sanitized_args)
+        req["_btp_receipt_hash"] = receipt["receipt_hash"]
+
         return True, req, None
 
     def intercept_jsonrpc_response(self, raw_resp_str: str) -> Dict[str, Any]:
         """
         Intercepts outgoing response from downstream MCP Server, scrubbing any secrets before returning to client.
+        Commits any pending workspace transaction on success.
         """
         try:
             resp = json.loads(raw_resp_str)
-            sanitized_resp, _, _ = SecretVaultMasker.sanitize_payload(resp)
-            return sanitized_resp if isinstance(sanitized_resp, dict) else resp
         except Exception:
             return {}
+
+        req_id = resp.get("id")
+        if req_id in self.active_transactions:
+            tx = self.active_transactions.pop(req_id)
+            if "error" in resp:
+                tx.rollback(reason=f"Downstream tool reported error: {resp['error'].get('message', '')}")
+                self.total_rollbacks += 1
+            else:
+                tx.commit()
+
+        # Scrub outgoing payload secrets
+        sanitized_resp, redactions_count, _ = SecretVaultMasker.sanitize_payload(resp)
+        if redactions_count > 0:
+            self.total_redacted += redactions_count
+        return sanitized_resp if isinstance(sanitized_resp, dict) else resp
+
+    def _issue_chained_receipt(self, tool_name: str, sanitized_args: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Creates a chained Ed25519-signed receipt binding this step to the previous turn hash.
+        """
+        now = time.time()
+        payload_bytes = rfc8785_canonicalize(sanitized_args)
+        payload_hash = hashlib.sha256(payload_bytes).hexdigest()
+
+        receipt_body = {
+            "version": "BTP/2.4",
+            "timestamp": now,
+            "tool_name": tool_name,
+            "parent_receipt_hash": self.latest_receipt_hash,
+            "payload_hash": payload_hash,
+            "authority": self.authority.public_key_hex
+        }
+
+        body_canonical = rfc8785_canonicalize(receipt_body)
+        signature = self.authority.private_key.sign(body_canonical).hex()
+        current_hash = hashlib.sha256(body_canonical).hexdigest()
+
+        entry = {
+            "receipt": receipt_body,
+            "signature": signature,
+            "receipt_hash": current_hash
+        }
+
+        self.latest_receipt_hash = current_hash
+        self.session_receipt_chain.append(entry)
+        return entry
+
+    def export_session_audit_manifest(self) -> Dict[str, Any]:
+        """
+        Exports the entire session audit trail as a signed cryptographic manifest.
+        """
+        manifest_body = {
+            "protocol": "BTP/2.4-MANIFEST",
+            "authority": self.authority.public_key_hex,
+            "total_steps": len(self.session_receipt_chain),
+            "final_root_hash": self.latest_receipt_hash,
+            "total_intercepted": self.total_intercepted,
+            "total_vetoed": self.total_vetoed,
+            "total_redacted": self.total_redacted,
+            "total_rollbacks": self.total_rollbacks
+        }
+        canonical_bytes = rfc8785_canonicalize(manifest_body)
+        sig = self.authority.private_key.sign(canonical_bytes).hex()
+
+        return {
+            "manifest": manifest_body,
+            "signature": sig,
+            "chain": self.session_receipt_chain
+        }
 
     def run_stdio_proxy(self, downstream_cmd: List[str]):
         """
@@ -148,15 +272,12 @@ class MCPProxyGateway:
         t = threading.Thread(target=_forward_stdout, daemon=True)
         t.start()
 
-        # Read client requests from sys.stdin
         for line in sys.stdin:
             forward, req, veto = self.intercept_jsonrpc_request(line)
             if not forward and veto:
-                # Return hard veto directly to client without touching downstream server
                 sys.stdout.write(json.dumps(veto) + "\n")
                 sys.stdout.flush()
             else:
-                # Forward approved/sanitized request to downstream server
                 if proc.stdin:
                     proc.stdin.write(json.dumps(req) + "\n")
                     proc.stdin.flush()
@@ -166,11 +287,12 @@ class MCPProxyGateway:
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="Bartholomew MCP Transparent Invariant Proxy Gateway")
+    parser = argparse.ArgumentParser(description="Bartholomew MCP Resilient Invariant Proxy Gateway (v2.4)")
     parser.add_argument("--server-cmd", nargs="+", required=True, help="Downstream MCP server command to launch")
+    parser.add_argument("--workspace", default=None, help="Root workspace directory to bound tool mutations")
     args = parser.parse_args()
 
-    gateway = MCPProxyGateway()
+    gateway = MCPProxyGateway(workspace_root=args.workspace)
     gateway.run_stdio_proxy(args.server_cmd)
 
 
