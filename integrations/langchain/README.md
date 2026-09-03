@@ -2,13 +2,13 @@
 
 > Sub-50 µs in-memory AST invariant gate and cryptographic attestation handler for LangChain and LangGraph agent swarms.
 
-## 🚀 Installation
+##  Installation
 
 ```bash
 pip install btp-guard
 ```
 
-## 🛠️ Usage
+##  Usage
 
 ### 1. LangGraph Node Integration (2 Lines)
 ```python

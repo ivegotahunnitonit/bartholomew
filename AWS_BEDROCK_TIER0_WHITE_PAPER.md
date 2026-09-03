@@ -35,7 +35,7 @@ Every single tool proposal—including repetitive retry loops, invalid commands,
                                   │ (ECS / Lambda / EKS)   │
                                   └──────────┬─────────────┘
                                              │ (Proposed Tool Action)
-                                             ▼
+                                             
                         ┌─────────────────────────────────────────┐
                         │   Bartholomew Tier-0 In-Memory Gate     │
                         │   - Polyglot AST Compiler Check         │
@@ -45,9 +45,9 @@ Every single tool proposal—including repetitive retry loops, invalid commands,
                                      │               │
                               [Passed (<50 µs)]   [Blocked (<50 µs)]
                                      │               │
-                                     ▼               ▼
+                                                    
                         ┌────────────────────────┐ ┌─────────────────────────┐
-                        │ Amazon Bedrock Runtime │ │ 🛑 Intercepted Locally  │
+                        │ Amazon Bedrock Runtime │ │  Intercepted Locally  │
                         │ (Cloud Execution)      │ │ Latency: 38 µs          │
                         │ Cost: Normal Cloud Fee │ │ Cloud Cost: $0.00       │
                         └────────────────────────┘ └─────────────────────────┘

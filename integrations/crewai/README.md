@@ -2,13 +2,13 @@
 
 > Zero-escape AST invariant checking, recursive loop dampening (LDMU), and secret vault scrubbing for CrewAI multi-agent swarms.
 
-## 🚀 Installation
+##  Installation
 
 ```bash
 pip install btp-guard
 ```
 
-## 🛠️ Usage
+##  Usage
 
 ```python
 from crewai import Agent, Task, Crew

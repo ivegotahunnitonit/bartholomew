@@ -47,23 +47,23 @@ BTP v2.4 resolves these failure modes by providing a **resilient transactional e
 ```
 [Agent (Claude / Cursor / Devin)] 
              │
-             ▼ JSON-RPC (tools/call)
+              JSON-RPC (tools/call)
 ┌──────────────────────────────────────────────────────────┐
 │  BARTHOLOMEW v2.4 RESILIENT MCP GATEWAY                  │
 │                                                          │
-│  [1. In-Flight Secret Scrubber] ──► Keys Redacted        │
-│  [2. Scoped AST & Path Bounds]  ──► Root Enforced        │
-│  [3. CoW Workspace Snapshot]    ──► Micro-Rollback Ready │
+│  [1. In-Flight Secret Scrubber] ── Keys Redacted        │
+│  [2. Scoped AST & Path Bounds]  ── Root Enforced        │
+│  [3. CoW Workspace Snapshot]    ── Micro-Rollback Ready │
 └──────────────────────────────────────────────────────────┘
              │
-             ▼ Forwarded Approved & Sanitized
+              Forwarded Approved & Sanitized
    [Downstream MCP Server (Filesystem / Shell / DB)]
              │
-             ▼ Response Output
+              Response Output
 ┌──────────────────────────────────────────────────────────┐
-│  [4. Outgoing Response Scrubber] ──► Stdout Cleaned      │
-│  [5. Transaction Commit]        ──► State Finalized      │
-│  [6. Chained Ed25519 Receipt]   ──► Chained to Root Hash │
+│  [4. Outgoing Response Scrubber] ── Stdout Cleaned      │
+│  [5. Transaction Commit]        ── State Finalized      │
+│  [6. Chained Ed25519 Receipt]   ── Chained to Root Hash │
 └──────────────────────────────────────────────────────────┘
 ```
 

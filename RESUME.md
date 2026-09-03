@@ -1,6 +1,6 @@
 # ITUSB ALEMAYEHU
 **Senior Full-Stack & Distributed Systems Engineer**  
-📧 itsub@bartholomew.info | 🌐 [bartholomew.info](https://bartholomew.info) | 💻 [github.com/ivegotahunnitonit](https://github.com/ivegotahunnitonit) | 📍 United States
+ itsub@bartholomew.info |  [bartholomew.info](https://bartholomew.info) |  [github.com/ivegotahunnitonit](https://github.com/ivegotahunnitonit) |  United States
 
 ---
 

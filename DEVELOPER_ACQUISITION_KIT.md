@@ -42,14 +42,14 @@ Autonomous AI agents shouldn’t have root access to your machine without a cryp
 We built Bartholomew: a sub-5 microsecond in-process execution gate that stops AI agents from wiping files, leaking tokens, or draining budgets.
 
 Try the 3-second live demo:
-python cli.py demo 🧵👇
+python cli.py demo 
 ```
 * **Tweet 2 (Engine Breakdown)**:
 ```text
 Instead of asking another LLM "is this safe?" (which takes 2 seconds and can be jailbroken), Bartholomew:
-⚡ Statically compiles the AST in <40 µs
-🛑 Enforces hard spending caps and hermetic file sandboxing
-🔐 Mints an Ed25519 digital signature per approved action
+ Statically compiles the AST in <40 µs
+ Enforces hard spending caps and hermetic file sandboxing
+ Mints an Ed25519 digital signature per approved action
 
 Zero cloud. 100% offline.
 ```
@@ -58,8 +58,8 @@ Zero cloud. 100% offline.
 If you use Claude Desktop or Cursor, protect your IDE in 1 command:
 python cli.py mcp install
 
-⭐️ Open-source on GitHub: https://github.com/ivegotahunnitonit/bartholomew
-🌐 https://bartholomew.info
+ Open-source on GitHub: https://github.com/ivegotahunnitonit/bartholomew
+ https://bartholomew.info
 ```
 
 ---

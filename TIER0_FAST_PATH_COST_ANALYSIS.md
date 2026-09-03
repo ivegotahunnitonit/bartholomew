@@ -18,7 +18,7 @@ Enterprise teams adopting Amazon Bedrock Guardrails or LLM-as-a-Judge security p
 │ Autonomous Agent Engine │
 └───────────┬─────────────┘
             │ (Proposed Tool Call / Code)
-            ▼
+            
 ┌───────────────────────────────────────────────────────────┐
 │   Bartholomew Tier-0 In-Memory Fast Path (<50 µs)         │
 │   - Polyglot AST Compiler Check                           │
@@ -30,9 +30,9 @@ Enterprise teams adopting Amazon Bedrock Guardrails or LLM-as-a-Judge security p
       │                                      │
 [Passed Tier-0]                        [Vetoed / Scoped]
       │                                      │
-      ▼                                      ▼
+                                            
 ┌─────────────────────────┐            ┌─────────────────────────┐
-│ Cloud Control Plane     │            │ 🛑 Intercepted Locally  │
+│ Cloud Control Plane     │            │  Intercepted Locally  │
 │ (Amazon Bedrock/Claude) │            │ Cost: $0.00             │
 │ Cost: Standard Token    │            │ Latency: <50 µs         │
 └─────────────────────────┘            └─────────────────────────┘

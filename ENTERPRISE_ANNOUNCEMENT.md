@@ -1,4 +1,4 @@
-# 🏛️ Bartholomew Enterprise Hyperscaler Suite (v2.3)
+#  Bartholomew Enterprise Hyperscaler Suite (v2.3)
 ======================================================
 Official Executive & Cloud Architect Announcement Dossier.
 

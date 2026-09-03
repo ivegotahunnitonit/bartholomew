@@ -1,10 +1,10 @@
-# 🛡️ Bartholomew 1,000,000 Invariant Stress Test Certificate
+#  Bartholomew 1,000,000 Invariant Stress Test Certificate
 
 > **Official Benchmark Attestation**: Certified execution of 1,000,000 high-entropy adversarial and enterprise tool-calling payloads evaluated through Bartholomew's in-memory AST invariant gate.
 
 ---
 
-## 📊 Executive Benchmark Metrics
+##  Executive Benchmark Metrics
 
 | Metric | Certified Result | Industry Benchmark (Cloud API) |
 | :--- | :--- | :--- |
@@ -17,7 +17,7 @@
 
 ---
 
-## 📜 Cryptographic Attestation Seal
+##  Cryptographic Attestation Seal
 
 * **Authority**: Bartholomew Trust Protocol (BTP v2.3)
 * **Signing Algorithm**: FIPS 186-5 Ed25519 asymmetric signature

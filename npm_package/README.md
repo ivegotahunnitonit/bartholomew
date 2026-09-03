@@ -16,13 +16,13 @@
 
 ---
 
-## ⚡ What is Bartholomew?
+##  What is Bartholomew?
 
 **Bartholomew** is a sub-50 microsecond in-memory deterministic invariant gate and cryptographic attestation protocol (BTP v2.3). It evaluates proposed AI agent tool actions (Bash commands, SQL queries, HTTP calls) in caller memory before execution, preventing catastrophic commands (`rm -rf`, `DROP TABLE`) and high-entropy secret leaks with FIPS 186-5 Ed25519 verifiable receipts.
 
 ---
 
-## 🚀 Installation
+##  Installation
 
 ```bash
 npm install btp-guard
@@ -30,7 +30,7 @@ npm install btp-guard
 
 ---
 
-## 🛠️ Quickstart
+##  Quickstart
 
 ```typescript
 import { evaluateIntent, verifyReceipt } from '@bartholomew/guard';
@@ -52,14 +52,14 @@ console.log(`Cryptographically Valid: ${isValid}`);
 
 ---
 
-## 🛡️ Enterprise Security Invariants
+##  Enterprise Security Invariants
 * **Zero-Escape Polyglot AST Engine**: Mathematical pre-flight inspection for Python, TypeScript, SQL, and POSIX shell.
 * **Secret Vault Masking**: In-flight redaction of OpenAI, Anthropic, GitHub, and AWS credentials.
 * **RFC 8785 Canonical JCS**: Deterministic JSON hashing paired with Ed25519 nonced receipts.
 
 ---
 
-## 🌐 Resources
+##  Resources
 * **Website & Interactive Sandbox**: [https://bartholomew.info](https://bartholomew.info)
 * **GitHub Repository**: [https://github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
 * **AWS Bedrock White Paper**: [AWS_BEDROCK_TIER0_WHITE_PAPER.md](https://github.com/ivegotahunnitonit/bartholomew/blob/main/AWS_BEDROCK_TIER0_WHITE_PAPER.md)

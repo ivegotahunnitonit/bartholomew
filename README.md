@@ -1,3 +1,5 @@
+<div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; line-height: 1.6;">
+
 # **Bartholomew AI &bull; BTP v2.4 Standards Track**
 ### **Resilient MCP Security Proxy, Sub-5µs Transactional Rollbacks &amp; In-Flight Secret Scrubber**
 
@@ -22,7 +24,7 @@
 
 ---
 
-### **⚡ 3-Second Zero-Install Showcase (v2.4)**
+### **[QUICKSTART] 3-Second Zero-Install Showcase (v2.4)**
 
 Test in-flight credential scrubbing, boundary violation micro-rollback (<2.3µs), and chained Ed25519 audit manifests directly in your terminal:
 
@@ -222,3 +224,6 @@ For commercial enterprise licensing, contact: **`help@bartholomew.info`** *(rout
 
 ---
 © 2026 Bartholomew AI & Contributors. All Rights Reserved.
+
+
+</div>
