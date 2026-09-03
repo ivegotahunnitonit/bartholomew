@@ -85,6 +85,27 @@ class SecretVaultMasker:
                     "mask_tag": mask_tag
                 })
 
+        # Deep Inspection: Check for base64 encoded payloads concealing secrets
+        import base64
+        b64_pattern = re.compile(r"[A-Za-z0-9+/]{24,}={0,2}")
+        for b64_match in b64_pattern.finditer(text):
+            raw_b64 = b64_match.group(0)
+            try:
+                decoded = base64.b64decode(raw_b64).decode("utf-8", errors="ignore")
+                for label, pattern in cls.SECRET_PATTERNS:
+                    if pattern.search(decoded):
+                        mask_tag = f"[REDACTED_CONCEALED_{label}_BTP]"
+                        sanitized = sanitized.replace(raw_b64, mask_tag)
+                        redactions.append({
+                            "type": f"CONCEALED_{label}",
+                            "length": len(raw_b64),
+                            "entropy": cls.calculate_shannon_entropy(raw_b64),
+                            "mask_tag": mask_tag
+                        })
+                        break
+            except Exception:
+                pass
+
         latency_us = (time.perf_counter() - t0) * 1_000_000
         return sanitized, redactions, round(latency_us, 2)
 

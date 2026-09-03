@@ -45,6 +45,11 @@ class PolyglotASTValidator:
         re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
         re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
         re.compile(r"\btruncate\s+table\b", re.IGNORECASE),
+        # Advanced Obfuscation & Encoded Execution Patterns
+        re.compile(r"\|\s*(base64\s+-d|openssl\s+enc|xxd\s+-r)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),
+        re.compile(r"base64\s+(-d|--decode)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),
+        re.compile(r"\$\(\s*(printf|echo)\s+.*?(\\x[0-9a-fA-F]{2}|\\0[0-7]{2,3}).*?\)", re.IGNORECASE),
+        re.compile(r"(\/bin\/|\/usr\/bin\/)?(r\?|rm)\s+-[rfRF\?]+", re.IGNORECASE),
         # Secret Leak & Exfiltration Patterns (OWASP LLM02)
         re.compile(r"AKIA[0-9A-Z]{16}"),
         re.compile(r"gh[opusr]_[a-zA-Z0-9]{20,}", re.IGNORECASE),
@@ -135,6 +140,9 @@ class PolyglotASTValidator:
                                 if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
                                     if any(sensitive in arg.value for sensitive in ["/etc/shadow", "/etc/passwd", ".ssh", ".env", "id_" + "rsa"]):
                                         return False, f"BTP-AST-005: Unauthorized access to sensitive file '{arg.value}'", {}
+                                elif not isinstance(arg, ast.Constant):
+                                    # Flag dynamic or constructed arguments in file access (like chr() joins or indirect variables)
+                                    return False, "BTP-AST-005: Dynamic, non-literal file path expression in open() call", {}
                     
                     # Attribute calls: os.system(), subprocess.Popen(), obj.exec(), __subclasses__()
                     if isinstance(node.func, ast.Attribute):
@@ -163,15 +171,20 @@ class PolyglotASTValidator:
                                         if pat.search(elt.value):
                                             return False, f"BTP-AST-001: Hostile argument '{elt.value}' in command list", {}
 
-                # 2. Check direct Attribute lookups for sandbox escape primitives (__class__, __base__)
+                # 2. Check direct Attribute lookups for sandbox escape primitives (__class__, __base__, __dict__, __builtins__)
                 if isinstance(node, ast.Attribute):
-                    if node.attr in {"__subclasses__", "__bases__", "__globals__", "__builtins__"}:
+                    if node.attr in {"__subclasses__", "__bases__", "__globals__", "__builtins__", "__dict__", "__class__"}:
                         return False, f"BTP-AST-003: Dangerous runtime introspection '{node.attr}'", {}
 
-                # 3. Check direct Import of hostile root modules if restricted
+                # 3. Check direct Name access for builtins or dynamic code reconstruction
+                if isinstance(node, ast.Name):
+                    if node.id in {"__builtins__", "__import__"}:
+                        return False, f"BTP-AST-003: Direct access to protected runtime identifier '{node.id}'", {}
+
+                # 4. Check direct Import of hostile root modules if restricted
                 if isinstance(node, ast.Import):
                     for alias in node.names:
-                        if alias.name in {"pty", "posix"}:
+                        if alias.name in {"pty", "posix", "ctypes"}:
                             return False, f"BTP-AST-004: Restricted module import '{alias.name}'", {}
 
             return True, "Python AST verified safe", {"node_count": len(list(ast.walk(tree)))}
