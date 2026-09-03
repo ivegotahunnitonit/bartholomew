@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { Check, Copy, Cpu, CheckCircle2, Shield } from 'lucide-react'
 
 type AgentTarget = 'simple' | 'claude' | 'openai' | 'langchain'
-type InstallTarget = 'pip' | 'npm' | 'action' | 'git'
+type InstallTarget = 'npx' | 'pip' | 'npm' | 'action' | 'git'
 
 export default function Hero() {
   const [selectedAgent, setSelectedAgent] = useState<AgentTarget>('simple')
-  const [activeInstallTab, setActiveInstallTab] = useState<InstallTarget>('pip')
+  const [activeInstallTab, setActiveInstallTab] = useState<InstallTarget>('npx')
   const [copiedCode, setCopiedCode] = useState(false)
   const [copiedCommand, setCopiedCommand] = useState(false)
 
   const installCommands = {
+    npx: 'npx btp-guard',
     pip: 'pip install btp-guard',
     npm: 'npm install btp-guard',
     action: 'uses: ivegotahunnitonit/bartholomew@v2.4.0',
@@ -100,7 +101,7 @@ if result["allowed"]:
         <div className="flex items-center justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981]">[BTP v2.4.0 OPEN SOURCE · TRANSACTIONAL MCP PROXY]</span>
+            <span className="text-[#10b981]">[THE TRANSACTIONAL EXECUTION HARNESS FOR AI AGENTS]</span>
           </div>
         </div>
 
@@ -115,13 +116,13 @@ if result["allowed"]:
               paddingBottom: '0.18em'
             }}
           >
-            The Fastest In-Memory Safety Guard for AI Agents.
+            The Execution Harness Proxy for Autonomous AI Agents.
           </h1>
         </div>
 
         {/* Hero Subtitle */}
         <p className="text-center mx-auto mb-8 sm:mb-10 text-[#d4d4d8] leading-relaxed max-w-2xl text-xs sm:text-base font-sans px-2">
-          Zero cloud lag. Blocks destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>), runaway infinite loops, and API secret leaks in local CPU memory before OS dispatch.
+          Models bypass prompt guardrails. Bartholomew hard-gates actions directly in the execution harness—intercepting destructive commands, leaking credentials, and state corruption in &lt;5µs with atomic micro-rollbacks.
         </p>
 
         {/* Standard Package Install Box (NO PIPED SCRIPTS) */}
@@ -141,7 +142,7 @@ if result["allowed"]:
 
           {/* Tab Selector - Mobile Touch Friendly */}
           <div className="flex bg-[#000000] border-b border-[#222222] p-1 sm:p-1.5 gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar">
-            {(['pip', 'npm', 'action', 'git'] as const).map((tab) => (
+            {(['npx', 'pip', 'npm', 'action', 'git'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveInstallTab(tab)}
@@ -151,6 +152,7 @@ if result["allowed"]:
                     : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
                 }`}
               >
+                {tab === 'npx' && '[NPX (0-INSTALL)]'}
                 {tab === 'pip' && '[PYPI]'}
                 {tab === 'npm' && '[NPM]'}
                 {tab === 'action' && '[GH ACTION]'}
