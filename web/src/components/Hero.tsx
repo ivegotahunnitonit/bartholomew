@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Check, Copy, Cpu, CheckCircle2, Shield } from 'lucide-react'
 
 type AgentTarget = 'simple' | 'claude' | 'openai' | 'langchain'
-type InstallTarget = 'npx' | 'pip' | 'npm' | 'action' | 'git'
+type InstallTarget = 'npx' | 'mcp' | 'pip' | 'npm' | 'action' | 'git'
 
 export default function Hero() {
   const [selectedAgent, setSelectedAgent] = useState<AgentTarget>('simple')
@@ -12,6 +12,7 @@ export default function Hero() {
 
   const installCommands = {
     npx: 'npx btp-guard',
+    mcp: 'npx -y btp-guard mcp',
     pip: 'pip install btp-guard',
     npm: 'npm install btp-guard',
     action: 'uses: ivegotahunnitonit/bartholomew@v2.4.0',
@@ -34,15 +35,15 @@ def execute_tool(command_or_sql: str):
     return run_on_system(command_or_sql)`
     },
     claude: {
-      title: 'Claude Desktop / MCP Server',
+      title: 'Claude Desktop & Cursor (MCP)',
       filename: 'claude_desktop_config.json',
-      desc: 'In-process MCP Guard for Claude Desktop. Intercepts tool calls and bash commands before OS execution.',
-      code: `// In %APPDATA%/Claude/claude_desktop_config.json:
+      desc: 'In-process Model Context Protocol security server for Claude Desktop & Cursor. Intercepts tool calls and redacts secrets in-flight.',
+      code: `// Paste into claude_desktop_config.json:
 {
   "mcpServers": {
-    "bartholomew-guard": {
-      "command": "python",
-      "args": ["-m", "mcp_server"]
+    "bartholomew": {
+      "command": "npx",
+      "args": ["-y", "btp-guard", "mcp"]
     }
   }
 }`
@@ -142,7 +143,7 @@ if result["allowed"]:
 
           {/* Tab Selector - Mobile Touch Friendly */}
           <div className="flex bg-[#000000] border-b border-[#222222] p-1 sm:p-1.5 gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar">
-            {(['npx', 'pip', 'npm', 'action', 'git'] as const).map((tab) => (
+            {(['npx', 'mcp', 'pip', 'npm', 'action', 'git'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveInstallTab(tab)}
@@ -153,6 +154,7 @@ if result["allowed"]:
                 }`}
               >
                 {tab === 'npx' && '[NPX (0-INSTALL)]'}
+                {tab === 'mcp' && '[MCP (CLAUDE & CURSOR)]'}
                 {tab === 'pip' && '[PYPI]'}
                 {tab === 'npm' && '[NPM]'}
                 {tab === 'action' && '[GH ACTION]'}
