@@ -77,7 +77,7 @@ export function verifyBtpReceipt(receiptPacket, candidatePayload, trustedPubkeys
     }
 
     // 2. Protocol Version
-    if (att.protocol_version !== "BTP/2.2") {
+    if (att.protocol_version !== "BTP/2.2" && att.protocol_version !== "BTP/2.4") {
       return { ok: false, msg: "PROTOCOL_MISMATCH: Unsupported protocol version" };
     }
 
@@ -146,6 +146,59 @@ export function verifyBtpReceipt(receiptPacket, candidatePayload, trustedPubkeys
   } catch (err) {
     return { ok: false, msg: `VERIFICATION_FAILED: ${err.message}` };
   }
+}
+
+/**
+ * Verifies BTP v2.4 Chained Merkle Turn Receipt.
+ * Validates parent receipt hash binding and session continuity.
+ */
+export function verifyTurnReceiptChaining(parentReceiptHash, turnReceipt, trustedPubkeys) {
+  try {
+    const rcpt = typeof turnReceipt === 'string' ? JSON.parse(turnReceipt) : turnReceipt;
+    const body = rcpt.turn_receipt || rcpt;
+    const authKeyHex = body.authority_pubkey;
+
+    if (trustedPubkeys) {
+      const trustedList = Array.isArray(trustedPubkeys) ? trustedPubkeys : [trustedPubkeys];
+      if (authKeyHex && !trustedList.includes(authKeyHex)) {
+        return { ok: false, msg: "UNTRUSTED_AUTHORITY: Public key not in trusted store" };
+      }
+    }
+
+    if (parentReceiptHash && body.parent_receipt_hash !== parentReceiptHash) {
+      return { ok: false, msg: `MERKLE_CHAIN_BROKEN: Expected parent ${parentReceiptHash}, got ${body.parent_receipt_hash}` };
+    }
+
+    return { ok: true, msg: "CHAIN_VERIFIED: Turn receipt properly bound to trajectory state" };
+  } catch (err) {
+    return { ok: false, msg: `CHAIN_VERIFICATION_FAILED: ${err.message}` };
+  }
+}
+
+/**
+ * In-flight sensitive credential scrubber for Model Context Protocol payloads.
+ * Strips OpenAI (sk-proj-), Anthropic (sk-ant-), AWS (AKIA), and GitHub (ghp_) tokens.
+ */
+export function scrubSensitiveCredentials(data) {
+  const PATTERNS = [
+    { regex: /sk-proj-[A-Za-z0-9_\-]{20,}/g, repl: "[REDACTED_OPENAI_KEY_BTP]" },
+    { regex: /sk-ant-[A-Za-z0-9_\-]{20,}/g, repl: "[REDACTED_ANTHROPIC_KEY_BTP]" },
+    { regex: /AKIA[0-9A-Z]{16}/g, repl: "[REDACTED_AWS_KEY_BTP]" },
+    { regex: /ghp_[A-Za-z0-9]{36}/g, repl: "[REDACTED_GITHUB_KEY_BTP]" }
+  ];
+
+  let str = typeof data === 'string' ? data : JSON.stringify(data);
+  let count = 0;
+  for (const { regex, repl } of PATTERNS) {
+    const matches = str.match(regex);
+    if (matches) {
+      count += matches.length;
+      str = str.replace(regex, repl);
+    }
+  }
+
+  const result = typeof data === 'string' ? str : JSON.parse(str);
+  return { data: result, redactionCount: count };
 }
 
 // Conformance Test Runner

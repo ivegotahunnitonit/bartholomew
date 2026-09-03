@@ -3,6 +3,7 @@
   "version": "2.4.0",
   "description": "BTP v2.4 Resilient MCP Security Proxy, Sub-5µs Transactional Rollbacks & In-Flight Secret Scrubber for Autonomous AI Agents",
   "main": "index.js",
+  "types": "index.d.ts",
   "type": "module",
   "scripts": {
     "test": "node test.js"

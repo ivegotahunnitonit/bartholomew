@@ -23,10 +23,12 @@ SECRET_PATTERNS = [
 # Allow mock test samples explicitly
 SAFE_MOCK_ALLOWLIST = [
     "AKIA_MOCK_TEST",
+    "AKIAIOSFODNN7EXAMPLE",
     "sk-proj-00000000",
     "ghp_MOCK_TEST_TOKEN",
     "sk_live_YOUR_STRIPE",
-    "scripts/deep_security_audit.py"
+    "scripts/deep_security_audit.py",
+    "npm_package/test.js"
 ]
 
 def scan_staged_diff():

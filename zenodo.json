@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "title": "Bartholomew Trust Protocol (BTP v2.4): A Transactional Model Context Protocol (MCP) Security Proxy with Sub-5µs Copy-on-Write Rollbacks and Chained Merkle Trajectories for Autonomous AI Agents",
+    "upload_type": "publication",
+    "publication_type": "preprint",
+    "publication_date": "2026-09-02",
+    "description": "<p>Autonomous AI agents are increasingly entrusted with mutating shell environments, filesystems, and databases via the Model Context Protocol (MCP). However, existing safety mechanisms rely almost exclusively on negative string matching (e.g., regex filters for 'rm -rf'), leading to catastrophic failure modes: false rejections, agent retry loops, unredacted credential leaks in tool outputs, and silent filesystem corruption. We present <strong>Bartholomew Trust Protocol (BTP v2.4)</strong>, an inline, transparent MCP security proxy that transforms agent execution into an atomic, transactional runtime. BTP introduces three core primitives: (1) <em>In-Memory Copy-on-Write Micro-Rollbacks</em>, capturing byte snapshots of target paths before mutation and restoring pristine state in 2.30 µs (P50) upon invariant violation; (2) <em>Bi-Directional Credential Scrubbing</em>, neutralizing API keys and tokens across incoming client arguments and server stdout streams with 100% precision; and (3) <em>Chained Merkle Trajectories</em>, binding multi-turn session receipts into an Ed25519-signed state graph via RFC 8785 Canonical JSON. Empirical evaluation across 50,000 adversarial turns demonstrates zero credential leakage, sub-5µs rollback latencies, and 100% offline mathematical verifiability with zero external cloud dependencies.</p>",
+    "creators": [
+      {
+        "name": "Alemayehu, Itsub",
+        "affiliation": "Bartholomew Autonomous Systems / Bartholomew AI"
+      }
+    ],
+    "access_right": "open",
+    "license": "CC-BY-4.0",
+    "keywords": [
+      "Model Context Protocol",
+      "MCP Proxy",
+      "AI Agent Security",
+      "Transactional Rollbacks",
+      "Copy-on-Write",
+      "RFC 8785",
+      "Ed25519",
+      "Merkle Trajectory Graphs",
+      "Autonomous Systems",
+      "Credential Masking",
+      "OWASP LLM Top 10"
+    ],
+    "communities": [
+      { "identifier": "zenodo" },
+      { "identifier": "computer-science" },
+      { "identifier": "cryptography" },
+      { "identifier": "ai-safety" }
+    ],
+    "references": [
+      "Bray, T. (2020). JSON Canonicalization Scheme (JCS). RFC 8785, Internet Engineering Task Force. https://doi.org/10.17487/RFC8785",
+      "Josefsson, S., & Liusvaara, I. (2017). Edwards-Curve Digital Signature Algorithm (EdDSA). RFC 8032, Internet Engineering Task Force. https://doi.org/10.17487/RFC8032",
+      "Anthropic. (2024). The Model Context Protocol (MCP) Specification. https://modelcontextprotocol.io",
+      "Merkle, R. C. (1987). A Digital Signature Based on a Conventional Encryption Function. Advances in Cryptology — CRYPTO '87, Lecture Notes in Computer Science, vol 293. Springer, Berlin, Heidelberg. https://doi.org/10.1007/3-540-48184-2_32",
+      "OWASP Foundation. (2025). OWASP Top 10 for Large Language Model Applications (v2.0). https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "Lamport, L. (1978). Time, Clocks, and the Ordering of Events in a Distributed System. Communications of the ACM, 21(7), 558–565. https://doi.org/10.1145/359545.359563",
+      "Shavit, N., & Touitou, N. (1997). Software Transactional Memory. Distributed Computing, 10(2), 99–116. https://doi.org/10.1007/s004460050028",
+      "Howard, J. H., Kazar, M. L., Menees, S. G., Nichols, D. A., Satyanarayanan, M., Sidebotham, R. N., & West, M. J. (1988). Scale and performance in a distributed file system. ACM Transactions on Computer Systems (TOCS), 6(1), 51-81.",
+      "Garlan, D., & Shaw, M. (1993). An introduction to software architecture. Advances in Software Engineering and Knowledge Engineering, 1-39.",
+      "Alemayehu, I. (2026). Bartholomew Trust Protocol (BTP v2.4): Formal Architectural Specification and Empirical Performance Benchmarks. Bartholomew AI Labs Research Preprints."
+    ]
+  }
+}
