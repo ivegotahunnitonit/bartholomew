@@ -1,5 +1,5 @@
-name: "Bartholomew Autonomous AI Security Gate (BTP v2.3)"
-description: "Sub-50µs cryptographic attestation, polyglot AST pre-flight invariant gating, and secret leakage prevention for autonomous AI agent pull requests."
+name: "Bartholomew Autonomous AI Security Gate (BTP v2.4)"
+description: "Sub-5µs transactional micro-rollbacks, in-flight secret scrubbing, and RFC 8785 Ed25519 attestations for autonomous AI agent pull requests."
 author: "Bartholomew AI Contributors"
 
 branding:
