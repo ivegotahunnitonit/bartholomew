@@ -17,6 +17,11 @@ import hashlib
 from typing import Dict, Any, List, Optional, Set
 from dataclasses import dataclass, field
 
+try:
+    from .dynamic_memory_governor import DynamicMemoryGovernor
+except ImportError:
+    from dynamic_memory_governor import DynamicMemoryGovernor
+
 @dataclass
 class KernelSyscallEvent:
     pid: int
@@ -77,8 +82,13 @@ class EBPFKernelGuard:
     Manages kernel-level sandboxing. Automatically detects Linux eBPF capabilities,
     with a graceful emulated fallback for Windows, macOS, or unprivileged container nodes.
     """
-    def __init__(self, policy: Optional[KernelSecurityPolicy] = None):
+    def __init__(
+        self,
+        policy: Optional[KernelSecurityPolicy] = None,
+        memory_governor: Optional[DynamicMemoryGovernor] = None
+    ):
         self.policy = policy or KernelSecurityPolicy()
+        self.memory_governor = memory_governor or DynamicMemoryGovernor()
         self.monitored_pids: Set[int] = set()
         self.event_log: List[KernelSyscallEvent] = []
         self.is_native_linux: bool = (
@@ -155,8 +165,30 @@ class EBPFKernelGuard:
         self.event_log.append(event)
         return event
 
+    def intercept_memory_allocation(self, pid: int, rss_bytes: int, comm: str = "agent-worker") -> tuple[bool, str, Optional[str]]:
+        """
+        Intercepts and gates memory expansion for an agent worker process.
+        Returns: (allowed: bool, status: str, reason: Optional[str])
+        """
+        session_id = f"pid-{pid}"
+        allowed, status, reason = self.memory_governor.record_allocation(session_id, rss_bytes)
+        if not allowed or status == "THROTTLED":
+            action = "BLOCK" if not allowed else "AUDIT"
+            event = KernelSyscallEvent(
+                pid=pid,
+                uid=os.getuid() if hasattr(os, "getuid") else 1000,
+                syscall_nr=12,  # sys_enter_brk / mmap allocation proxy
+                action=action,
+                comm=comm,
+                target=f"heap:{rss_bytes // (1024 * 1024)}MB",
+                timestamp_ns=time.time_ns(),
+                reason=reason
+            )
+            self.event_log.append(event)
+        return allowed, status, reason
+
     def generate_kernel_audit_manifest(self) -> Dict[str, Any]:
-        """Generates a cryptographic summary of all kernel-intercepted events."""
+        """Generates a cryptographic summary of all kernel-intercepted events and memory metrics."""
         raw_payload = []
         for e in self.event_log:
             raw_payload.append({
@@ -168,6 +200,7 @@ class EBPFKernelGuard:
             })
         canonical_bytes = str(sorted(raw_payload, key=lambda x: x["timestamp_ns"])).encode("utf-8")
         manifest_hash = hashlib.sha256(canonical_bytes).hexdigest()
+        mem_summary = self.memory_governor.get_audit_summary()
 
         return {
             "mode": self.mode,
@@ -175,5 +208,6 @@ class EBPFKernelGuard:
             "events_intercepted": len(self.event_log),
             "blocked_count": sum(1 for e in self.event_log if e.action == "BLOCK"),
             "manifest_sha256": manifest_hash,
+            "memory_audit": mem_summary,
             "status": "HEALTHY"
         }

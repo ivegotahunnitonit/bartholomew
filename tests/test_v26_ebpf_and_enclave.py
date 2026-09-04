@@ -112,9 +112,22 @@ class TestV26KernelAndEnclave(unittest.TestCase):
         event = self.guard.intercept_execve(self.agent_pid, "python3 worker.py")
         self.assertEqual(event.action, "ALLOW")
 
-        # 4. Generate audit trail
+        # 4. Enforce memory governance
+        allowed, status, _ = self.guard.intercept_memory_allocation(self.agent_pid, 100 * 1024 * 1024)
+        self.assertTrue(allowed)
+        self.assertEqual(status, "NORMAL")
+
+        # 5. Block catastrophic runaway allocation (> 512 MB hard ceiling)
+        dom_allowed, dom_status, dom_reason = self.guard.intercept_memory_allocation(self.agent_pid, 600 * 1024 * 1024)
+        self.assertFalse(dom_allowed)
+        self.assertEqual(dom_status, "TERMINATED")
+        self.assertIn("BTP-DOM-001", dom_reason)
+
+        # 6. Generate audit trail
         manifest = self.guard.generate_kernel_audit_manifest()
-        self.assertGreaterEqual(manifest["events_intercepted"], 1)
+        self.assertGreaterEqual(manifest["events_intercepted"], 2)
+        self.assertIn("memory_audit", manifest)
+        self.assertEqual(manifest["memory_audit"]["status"], "HEALTHY")
 
 if __name__ == "__main__":
     unittest.main()
