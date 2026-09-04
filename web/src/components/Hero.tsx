@@ -15,7 +15,7 @@ export default function Hero() {
     mcp: 'npx -y btp-guard mcp',
     pip: 'pip install btp-guard',
     npm: 'npm install btp-guard',
-    action: 'uses: ivegotahunnitonit/bartholomew@v2.4.0',
+    action: 'uses: ivegotahunnitonit/bartholomew@v2.5.0',
     git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
