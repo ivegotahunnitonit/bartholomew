@@ -115,13 +115,16 @@ export default function Founder() {
 
             <div className="space-y-3.5 text-sm text-[#d4d4d8] leading-relaxed font-sans text-left">
               <p>
-                "Most agent safety today relies on prompt engineering—asking a model to behave, or calling a second model to review its actions. That approach might work for chat interfaces, but it breaks down the moment an agent begins executing terminal commands, modifying databases, or moving capital. It adds seconds of latency and remains vulnerable to the exact prompt confusion it tries to prevent."
+                "Most agent safety today relies on prompt engineering—asking a model to behave, or asking a second model to review its work. That works fine for conversational chat, but it breaks down the moment an agent begins executing terminal commands, modifying production databases, or moving capital. It introduces seconds of latency and remains vulnerable to the exact prompt confusion it tries to prevent."
               </p>
               <p>
-                "We built Bartholomew because mission-critical systems require deterministic guardrails. In every other domain of software engineering, safety is enforced by compilers, operating systems, and memory boundaries. AI agents should be no different. Bartholomew runs directly in local CPU memory, inspecting every tool call, parsing command structures, and redacting leaked credentials in under 100 microseconds—stopping destructive actions before they ever dispatch."
+                "We built Bartholomew because mission-critical systems require deterministic guardrails. In every other domain of software engineering, safety is enforced by compilers, operating systems, and memory boundaries—not polite requests. Bartholomew runs directly in local CPU memory, inspecting every tool call, parsing command structures, and redacting sensitive credentials in under 100 microseconds. Destructive actions are stopped before they ever dispatch, and accidental mutations are rolled back in milliseconds."
               </p>
               <p>
-                "With <strong>BTP v2.5</strong>, safety is a drop-in primitive. You don't have to retrain your models or rebuild your orchestration pipeline. You wrap your agent's tools in a few lines of code, and you get immediate invariant enforcement, sub-millisecond state rollbacks, and cryptographic audit trails ready for production compliance."
+                "With <strong>BTP v2.5</strong>, safety is a drop-in primitive. You don't have to retrain your models or redesign your orchestration pipeline. Wrap your agent's tools in a few lines of code, and you gain immediate invariant enforcement, crash resilience, and cryptographic audit trails ready for enterprise compliance."
+              </p>
+              <p className="text-xs text-[#a1a1aa] font-mono pt-1 border-t border-[#1a1a1a]">
+                "Our promise is simple: total local control, zero required cloud delays, and mathematical certainty. When your agents build the future, Bartholomew makes sure they don't break the present."
               </p>
             </div>
 
