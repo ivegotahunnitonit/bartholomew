@@ -176,3 +176,34 @@ class BartholomewLlamaIndexTool:
             raise BTPViolationError(self.name, receipt["attestation"].get("reason", "Denied"), receipt["signature"])
 
         return self.fn(*args, **kwargs)
+
+def wrap_crewai_tool(tool_fn: Callable[..., Any], tool_name: Optional[str] = None, agent_id: str = "crewai-agent", authority: Optional[BartholomewTrustAuthority] = None) -> Callable[..., Any]:
+    """Wraps a CrewAI tool callable with BTP deterministic AST and SQL safety gating."""
+    auth = authority or BartholomewTrustAuthority()
+    t_name = tool_name or getattr(tool_fn, "__name__", "crewai_tool")
+
+    @functools.wraps(tool_fn)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        query_str = " ".join([str(a) for a in args]) + " " + " ".join([f"{k}={v}" for k, v in kwargs.items()])
+        receipt = auth.evaluate_intent(
+            agent_id=agent_id,
+            action_type=t_name,
+            payload={"sql": query_str, "command": query_str, "content": query_str}
+        )
+        if receipt.get("attestation", {}).get("verdict") == "DENY":
+            reason = receipt.get("attestation", {}).get("reason", "Prohibited destructive operation")
+            return f"[BTP-VETO]: Action blocked by Bartholomew invariant engine: {reason}"
+        return tool_fn(*args, **kwargs)
+    return wrapped
+
+def wrap_langchain_tool(tool_fn: Callable[..., Any], tool_name: Optional[str] = None, agent_id: str = "langchain-agent", authority: Optional[BartholomewTrustAuthority] = None) -> Callable[..., Any]:
+    """Wraps a LangChain tool callable with BTP deterministic safety checks."""
+    return wrap_crewai_tool(tool_fn, tool_name=tool_name, agent_id=agent_id, authority=authority)
+
+def wrap_autogen_execution(agent: Any, authority: Optional[BartholomewTrustAuthority] = None) -> BartholomewAutoGenHook:
+    """Attaches Bartholomew safety hook to an AutoGen agent instance."""
+    hook = BartholomewAutoGenHook(authority=authority)
+    if hasattr(agent, "register_reply"):
+        agent.register_reply([agent], hook.filter_message)
+    return hook
+

@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "2.4.0"
-description = "Bartholomew Autonomous Trust Protocol (BTP v2.4) — Resilient MCP Security Proxy, Sub-5µs Transactional Rollbacks, and RFC 8785 Ed25519 attestations for AI agents."
+version = "2.5.0"
+description = "Bartholomew Autonomous Trust Protocol (BTP v2.5) — Deterministic Invariant Runtime, Stateful Multi-Turn Guardrails, and Cryptographic Attestations for AI Agents."
 readme = "README.md"
 authors = [
     { name = "Bartholomew Team", email = "security@bartholomew.info" }
 ]
 license = { text = "MIT" }
-keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "ed25519", "rfc8785", "mcp", "claude-desktop", "cursor"]
+keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "ed25519", "rfc8785", "mcp", "claude-desktop", "cursor", "frost", "zk-proofs"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

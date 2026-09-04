@@ -61,6 +61,17 @@ class KernelSecurityPolicy:
                 return False, f"BTP-KERNEL-002: Deletion of protected path '{target_path}' blocked by kernel policy."
         return True, None
 
+    def evaluate_connect(self, destination: str, port: int) -> tuple[bool, Optional[str]]:
+        blocked_ports = {4444, 6667, 1337, 31337, 23, 21}
+        if port in blocked_ports:
+            return False, f"BTP-KERNEL-003: Network connection to blocked port {port} denied."
+        if self.network_egress_restricted:
+            allowed_hosts = {"localhost", "127.0.0.1", "bartholomew.info", "api.anthropic.com", "api.openai.com"}
+            if destination not in allowed_hosts:
+                return False, f"BTP-KERNEL-004: Restricted egress violated: '{destination}' not in whitelist."
+        return True, None
+
+
 class EBPFKernelGuard:
     """
     Manages kernel-level sandboxing. Automatically detects Linux eBPF capabilities,
@@ -118,6 +129,26 @@ class EBPFKernelGuard:
             action=action,
             comm=comm,
             target=target_path,
+            timestamp_ns=time.time_ns(),
+            reason=reason
+        )
+        self.event_log.append(event)
+        return event
+
+    def intercept_connect(self, pid: int, destination: str, port: int, comm: str = "agent-worker") -> KernelSyscallEvent:
+        """
+        Intercepts a socket connect syscall (sys_enter_connect, syscall nr 42).
+        Returns a KernelSyscallEvent record.
+        """
+        allowed, reason = self.policy.evaluate_connect(destination, port)
+        action = "ALLOW" if allowed else "BLOCK"
+        event = KernelSyscallEvent(
+            pid=pid,
+            uid=os.getuid() if hasattr(os, "getuid") else 1000,
+            syscall_nr=42,  # sys_enter_connect
+            action=action,
+            comm=comm,
+            target=f"{destination}:{port}",
             timestamp_ns=time.time_ns(),
             reason=reason
         )

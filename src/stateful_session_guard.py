@@ -159,3 +159,6 @@ class StatefulSessionSecurityManager:
 
         dt_us = (time.perf_counter() - t0) * 1_000_000
         return True, "Stateful multi-turn invariants verified clean", dt_us
+
+StatefulSessionGuard = StatefulSessionSecurityManager
+

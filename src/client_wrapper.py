@@ -169,3 +169,28 @@ def wrap_client(client: Any, authority: Optional[BartholomewTrustAuthority] = No
     """
     BTPClientWrapper(client, authority=authority, auto_raise=auto_raise)
     return client
+
+BartholomewClient = BTPClientWrapper
+
+def protect_tool_call(tool_name: str, payload: Dict[str, Any], agent_id: str = "agent-worker", authority: Optional[BartholomewTrustAuthority] = None) -> Dict[str, Any]:
+    """
+    Direct tool call gate. Evaluates AST, secret leakage, and destructive commands.
+    Returns evaluation receipt with 'APPROVED' or 'VETOED' status.
+    """
+    auth = authority or BartholomewTrustAuthority()
+    t0 = time.perf_counter()
+    receipt = auth.evaluate_intent(agent_id=agent_id, action_type=tool_name, payload=payload)
+    latency_us = (time.perf_counter() - t0) * 1_000_000
+
+    verdict = receipt.get("attestation", {}).get("verdict", "DENY")
+    status = "APPROVED" if verdict == "ALLOW" else "VETOED"
+    reason = receipt.get("attestation", {}).get("reason", "Invariant violation")
+    
+    return {
+        "status": status,
+        "blocked": verdict != "ALLOW",
+        "reason": reason if verdict != "ALLOW" else None,
+        "latency_us": latency_us,
+        "receipt": receipt
+    }
+
