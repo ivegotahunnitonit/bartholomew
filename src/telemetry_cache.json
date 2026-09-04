@@ -1,0 +1,13 @@
+{
+  "pypi": {
+    "last_day": 90,
+    "last_week": 226,
+    "last_month": 226
+  },
+  "npm": {
+    "downloads": 132,
+    "start": "2026-08-23",
+    "end": "2026-08-29",
+    "package": "btp-guard"
+  }
+}
