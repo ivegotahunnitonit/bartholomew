@@ -14,34 +14,34 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
     version: 'BTP v2.5.0',
     timeline: 'CURRENT RELEASE',
     status: 'LIVE',
-    title: 'Framework Interoperability & Stateful Guard',
+    title: 'Universal Agent Compatibility & Stateful Guard',
     highlights: [
-      'Native adapters for LangChain, CrewAI, AutoGen, and LlamaIndex.',
-      'Stateful multi-turn session guard tracking fragmented prompt injection across turns.',
-      'Non-Human Identity (NHI) Ed25519 governance with automated revocation certificates.',
-      'Asynchronous batch SIEM export (Datadog v2, Splunk HEC, AWS CloudWatch).'
+      'Drop-in safety wrappers for leading agent orchestrators, swarms, and custom tool runtimes.',
+      'Stateful multi-turn session guard catching split attacks hidden across multiple conversation steps.',
+      'Digital cryptographic identity badges for non-human agent workers with automated revocation upon breach.',
+      'Real-time background audit streaming to enterprise security systems and encrypted local disks.'
     ]
   },
   {
     version: 'BTP v2.6.0',
     timeline: 'Q4 2026',
     status: 'IN DEVELOPMENT',
-    title: 'Kernel eBPF Sandboxing & Confidential Enclaves',
+    title: 'Deep Kernel Sandboxing & Secure Hardware Enclaves',
     highlights: [
-      'Linux eBPF kernel probes trapping agent file/network mutations with zero userspace context-switch overhead.',
-      'Hardware-attested confidential computing deployment for AWS Nitro and GCP Confidential VMs.',
-      'Dynamic memory bounds preventing Denial-of-Memory agent heap exhaustion attacks.'
+      'Operating system kernel-level traps that intercept file and network mutations with zero perceptible delay.',
+      'Hardware-isolated secure enclave deployment protecting sensitive workflows from memory tampering.',
+      'Automatic memory governors preventing runaway agent loops and computer crashes.'
     ]
   },
   {
     version: 'BTP v2.7.0',
     timeline: 'Q1 2027',
     status: 'PLANNED',
-    title: 'Cross-Cloud Swarm Byzantine Quorum',
+    title: 'Cross-Cloud Swarm Consensus & Collective Safety',
     highlights: [
-      'Byzantine Fault Tolerant (BFT) consensus protocol for autonomous multi-agent swarm fleets.',
-      'Cross-organization capability negotiation and multi-signature authorization thresholds.',
-      'Global privacy-preserving threat intelligence federation via k-anonymity hash synchronization.'
+      'Byzantine consensus protocol enabling multi-agent swarms to verify and co-sign high-stakes actions.',
+      'Cross-organization authorization thresholds for large-scale enterprise deployments.',
+      'Federated threat immunity that shares emerging defense patterns without exposing private customer prompts.'
     ]
   },
   {
@@ -50,9 +50,9 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
     status: 'PLANNED',
     title: 'Zero-Knowledge Compliance Proofs (zk-SNARK)',
     highlights: [
-      'Generate succinct zk-SNARK cryptographic proofs of policy adherence without exposing proprietary prompt context.',
-      'Auditors and regulators verify complete regulatory compliance without viewing confidential enterprise data.',
-      'Autonomous on-chain and off-chain execution receipt verification with sub-millisecond check times.'
+      'Mathematical zero-knowledge receipts proving an agent obeyed all rules without revealing confidential text.',
+      'Corporate auditors and compliance officers verify complete regulatory adherence without seeing private data.',
+      'Sub-millisecond mathematical proofs running entirely offline with zero data exposure.'
     ]
   }
 ]
@@ -74,7 +74,7 @@ export default function Founder() {
             Founder Perspective &amp; Architectural Roadmap
           </h2>
           <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base font-sans">
-            Bartholomew is engineered from first principles as an independent, deterministic execution substrate. Here is our thesis for BTP v2.5.0 and our roadmap for future agent runtimes.
+            Why we built Bartholomew, how our v2.5 engine changes autonomous agent safety, and where we are heading next.
           </p>
         </div>
 
@@ -113,15 +113,18 @@ export default function Founder() {
               </p>
             </div>
 
-            <div className="space-y-3 text-sm text-[#d4d4d8] leading-relaxed font-sans text-left">
+            <div className="space-y-3.5 text-sm text-[#d4d4d8] leading-relaxed font-sans text-left">
               <p>
-                "When autonomous AI agents transition from passive assistants into active enterprise participants with direct authority over production databases, cloud infrastructure, and financial transfers, probabilistic safety models fundamentally fail. An LLM judge that evaluates actions after the fact introduces seconds of latency and remains vulnerable to the exact same prompt confusion it seeks to prevent."
+                "Giving an autonomous AI agent the power to run computer code, modify enterprise databases, or trigger financial workflows is like handing someone the keys to your company car. Simply instructing an agent in plain English 'please don't break anything' is not security—it is wishful thinking. And asking a second AI to judge whether the first AI behaved is slow, adds seconds of delay, and can still be tricked by clever wording."
               </p>
               <p>
-                "With <strong>BTP v2.5.0</strong>, we have proven that enterprise security does not require sacrificing performance. By executing deterministic Abstract Syntax Tree (AST) validation and constant folding in CPU memory, Bartholomew gates destructive commands in under 100 microseconds—over 10,000 times faster than secondary LLM guardrails. With our native framework adapters for LangChain, CrewAI, AutoGen, and LlamaIndex, developers can enforce hard mathematical guarantees and emit auditor-certified SOC 2 receipts with zero changes to their underlying model."
+                "We built Bartholomew as the physical seatbelt and emergency brake for autonomous AI. Instead of guessing or waiting on distant cloud servers, Bartholomew lives right inside the local machine. The microsecond an agent attempts to delete a vital directory, run an obfuscated script, or accidentally leak an API key, Bartholomew inspects the command structure in less than the blink of an eye—blocking the hazard before it ever reaches the operating system. If an unexpected error ever occurs, it can undo accidental changes and roll back state in milliseconds."
+              </p>
+              <p>
+                "With our <strong>v2.5 release</strong>, we have made this protection effortless. You don't have to retrain your models or rebuild your software. You simply wrap your agent's tools in Bartholomew, and they immediately gain strict physical safety boundaries, tamper-proof digital receipts for compliance auditors, and complete crash resilience."
               </p>
               <p className="text-xs text-[#a1a1aa] font-mono">
-                "Our commitment is uncompromising: local execution, zero mandatory cloud telemetry, sub-5 microsecond rollbacks, and complete mathematical reproducibility."
+                "Our promise is simple: total local control, zero required cloud delays, and mathematical certainty. When your agents build the future, Bartholomew makes sure they don't break the present."
               </p>
             </div>
 
@@ -187,7 +190,7 @@ export default function Founder() {
               </h3>
             </div>
             <span className="text-xs font-mono text-[#71717a]">
-              Formal Verification &bull; Kernel Hardening &bull; Zero-Knowledge
+              Formal Verification &bull; Kernel Hardening &bull; Zero-Knowledge Proofs
             </span>
           </div>
 
@@ -252,19 +255,19 @@ export default function Founder() {
             <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
               <div className="font-mono font-bold text-[#10b981] mb-1">[10k ADVERSARIAL FUZZING]</div>
               <p className="text-[#a1a1aa]">
-                Every git commit triggers automated AST fuzzing across 10,000 permutations of obfuscated shell and SQL attacks to eliminate false negatives.
+                Every code release runs automated stress tests across 10,000 permutations of disguised attacks and shell tricks to ensure zero security gaps.
               </p>
             </div>
             <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
               <div className="font-mono font-bold text-[#f59e0b] mb-1">[SUB-5µS LATENCY BUDGET]</div>
               <p className="text-[#a1a1aa]">
-                Strict memory and execution limits: zero cloud calls on the critical path and micro-rollbacks executed in under 3 milliseconds.
+                Strict speed limits: zero cloud calls on the critical decision path and immediate state restoration executed in under 3 milliseconds.
               </p>
             </div>
             <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
-              <div className="font-mono font-bold text-[#38bdf8] mb-1">[PRIVACY-FIRST INTEL]</div>
+              <div className="font-mono font-bold text-[#38bdf8] mb-1">[PRIVACY-FIRST THREAT INTEL]</div>
               <p className="text-[#a1a1aa]">
-                Emerging injection signatures are federated using 24-bit k-anonymity prefixes, protecting enterprise prompt privacy while immunizing the ecosystem.
+                New security patterns are shared using mathematical privacy hashes, protecting user confidentiality while keeping the entire network protected.
               </p>
             </div>
           </div>
