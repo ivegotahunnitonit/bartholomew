@@ -63,7 +63,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToHash />
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
+      <div className="min-h-screen bg-[#040406] text-[#e4e4e7] flex flex-col font-sans selection:bg-[#10b981]/30 selection:text-white">
         <Navbar />
         <main className="flex-grow">
           <Routes>

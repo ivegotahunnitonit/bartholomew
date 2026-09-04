@@ -89,9 +89,9 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-xs font-mono font-semibold px-2.5 py-1 bg-[#141414] hover:bg-[#222222] border border-[#333333] text-[#d4d4d8] hover:text-white transition flex items-center gap-1"
+      className="text-xs font-mono font-semibold px-3 py-1.5 bg-[#14141a] hover:bg-[#202028] border border-[#2e2e38] text-[#d4d4d8] hover:text-white rounded-lg transition flex items-center gap-1.5 cursor-pointer"
     >
-      {copied ? <Check size={11} className="text-[#10b981]" /> : <Copy size={11} />}
+      {copied ? <Check size={12} className="text-[#10b981]" /> : <Copy size={12} />}
       <span>{copied ? '[COPIED]' : '[COPY]'}</span>
     </button>
   )
@@ -102,31 +102,37 @@ export default function SDK() {
   const current = TABS.find((t) => t.id === activeTab) || TABS[0]
 
   return (
-    <section id="sdk" className="py-24 bg-black border-t border-[#1c1c1c] text-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="sdk" className="py-24 bg-[#040406] border-t border-[#27272a]/70 text-white relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/70 to-transparent pointer-events-none" />
+
+      {/* Background glow accents */}
+      <div className="absolute top-1/3 right-1/4 w-[600px] h-[300px] bg-gradient-to-b from-[#f59e0b]/10 to-transparent blur-[140px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#f59e0b]/10 border border-[#f59e0b]/30 text-[#f59e0b] rounded-full text-xs font-mono font-bold tracking-wider mb-4 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
             <Shield size={13} className="text-[#f59e0b]" />
             <span>[ IN-PROCESS TOOL EXECUTION GATING ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             Protect Agent Tool Execution in 3 Lines
           </h2>
-          <p className="mt-4 text-base text-[#a1a1aa] font-sans">
+          <p className="mt-4 text-base text-[#a1a1aa] font-sans leading-relaxed">
             Bartholomew gates tool execution directly in application memory. Intercepts bash, SQL, and API payloads before they execute on your host or database.
           </p>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2.5 mb-5">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 text-xs font-mono font-bold transition border ${
+              className={`px-4 py-2.5 text-xs font-mono font-bold rounded-xl transition-all duration-200 border cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
-                  : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
+                  ? 'bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-black border-[#f59e0b] shadow-[0_0_20px_rgba(245,158,11,0.25)]'
+                  : 'bg-[#08080c] text-[#a1a1aa] border-[#27272a] hover:text-white hover:border-[#444455]'
               }`}
             >
               {tab.label}
@@ -135,15 +141,24 @@ export default function SDK() {
         </div>
 
         {/* Code Box */}
-        <div className="bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
-            <span className="text-xs font-mono text-[#a1a1aa] flex items-center gap-2">
-              <Code2 size={13} className="text-[#f59e0b]" />
-              {current.filename}
-            </span>
+        <div className="bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl shadow-2xl overflow-hidden relative backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/50 to-transparent pointer-events-none" />
+
+          <div className="flex items-center justify-between px-5 py-3.5 bg-[#111118]/80 border-b border-[#27272a]/70">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 mr-1">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              </div>
+              <span className="text-xs font-mono text-[#d4d4d8] flex items-center gap-2">
+                <Code2 size={14} className="text-[#f59e0b]" />
+                {current.filename}
+              </span>
+            </div>
             <CopyButton text={current.code} />
           </div>
-          <pre className="p-6 font-mono text-xs sm:text-sm text-[#d4d4d8] leading-relaxed overflow-x-auto bg-[#000000]">
+          <pre className="p-6 sm:p-7 font-mono text-xs sm:text-sm text-[#d4d4d8] leading-relaxed overflow-x-auto bg-[#030305]">
             <code>{current.code}</code>
           </pre>
         </div>

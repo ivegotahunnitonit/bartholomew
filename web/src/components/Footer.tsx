@@ -3,14 +3,22 @@ import Logo from './Logo'
 
 export default function Footer() {
   return (
-    <footer className="py-14 px-5 sm:px-8 bg-black text-[#a1a1aa] border-t border-[#1c1c1c]">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <footer className="py-16 px-5 sm:px-8 bg-[#020204] text-[#a1a1aa] border-t border-[#27272a]/70 relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/70 to-transparent pointer-events-none" />
+
+      {/* Subtle background glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[250px] bg-gradient-to-t from-[#10b981]/5 to-transparent blur-[140px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto space-y-12 relative z-10">
         {/* Visual Certification Seals Banner */}
-        <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-2xl">
+        <div className="p-6 sm:p-7 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl shadow-2xl relative backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
+
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-1 text-center md:text-left">
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] flex items-center justify-center md:justify-start gap-2">
-                <ShieldCheck size={14} className="text-[#10b981]" />
+                <ShieldCheck size={16} className="text-[#10b981]" />
                 <span>[ VERIFIED COMPLIANCE &amp; SECURITY SEALS ]</span>
               </div>
               <p className="text-xs text-[#a1a1aa] font-sans">
@@ -20,27 +28,27 @@ export default function Footer() {
 
             {/* Seals Badges Grid */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {/* 18/18 CI Gate Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
-                <Cpu size={12} className="text-[#10b981]" />
-                <span className="text-[#10b981] font-bold">18/18 CI GATES</span>
+              {/* 31/31 CI Gate Seal */}
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#050508] border border-[#10b981]/40 text-[11px] font-mono text-[#d4d4d8] rounded-xl shadow-sm">
+                <Cpu size={13} className="text-[#10b981]" />
+                <span className="text-[#10b981] font-bold">31/31 CI GATES</span>
               </div>
 
               {/* FIPS 186-5 Cryptographic Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
-                <Lock size={12} className="text-[#f59e0b]" />
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#050508] border border-[#f59e0b]/40 text-[11px] font-mono text-[#d4d4d8] rounded-xl shadow-sm">
+                <Lock size={13} className="text-[#f59e0b]" />
                 <span>FIPS 186-5 ED25519</span>
               </div>
 
               {/* RFC 8785 Canonical Seal */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
-                <FileCheck2 size={12} className="text-[#38bdf8]" />
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#050508] border border-[#38bdf8]/40 text-[11px] font-mono text-[#d4d4d8] rounded-xl shadow-sm">
+                <FileCheck2 size={13} className="text-[#38bdf8]" />
                 <span>RFC 8785 CANONICAL</span>
               </div>
 
               {/* Apache 2.0 Open Source */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#000000] border border-[#222222] text-[11px] font-mono text-[#d4d4d8]">
-                <Code2 size={12} className="text-[#a1a1aa]" />
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#050508] border border-[#27272a] text-[11px] font-mono text-[#d4d4d8] rounded-xl shadow-sm">
+                <Code2 size={13} className="text-[#a1a1aa]" />
                 <span>APACHE-2.0</span>
               </div>
             </div>
@@ -48,9 +56,9 @@ export default function Footer() {
         </div>
 
         {/* Main Footer Links */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-[#222222]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-[#27272a]/70">
           {/* Brand Info */}
-          <div className="md:col-span-6 space-y-3">
+          <div className="md:col-span-6 space-y-3.5">
             <div className="flex items-center">
               <Logo size={28} showText={true} />
             </div>
@@ -58,7 +66,7 @@ export default function Footer() {
               Sub-50 microsecond cryptographic safety infrastructure and deterministic invariant guardrails for autonomous AI agents.
             </p>
             <div className="flex items-center gap-2 text-xs text-[#10b981] font-mono pt-1">
-              <CheckCircle2 size={13} />
+              <CheckCircle2 size={14} />
               <span>[PROTOCOL ACTIVE: BTP v2.5.0 · APACHE 2.0 / BSL LICENSED]</span>
             </div>
           </div>
@@ -68,7 +76,7 @@ export default function Footer() {
             <div className="text-xs font-bold uppercase tracking-wider text-white font-mono">
               [NAVIGATION]
             </div>
-            <ul className="space-y-2 text-xs font-mono">
+            <ul className="space-y-2.5 text-xs font-mono">
               <li>
                 <a href="#how-it-works" className="hover:text-white transition">
                   [HOW IT WORKS]
@@ -102,7 +110,7 @@ export default function Footer() {
             <div className="text-xs font-bold uppercase tracking-wider text-white font-mono">
               [SPECIFICATIONS]
             </div>
-            <ul className="space-y-2 text-xs font-mono">
+            <ul className="space-y-2.5 text-xs font-mono">
               <li>
                 <a
                   href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html"

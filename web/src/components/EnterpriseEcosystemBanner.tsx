@@ -90,13 +90,13 @@ export default function EnterpriseEcosystemBanner() {
   ]
 
   return (
-    <section className="py-10 bg-black border-y border-[#1c1c1c] overflow-hidden relative">
+    <section className="py-12 bg-gradient-to-b from-[#060608] via-[#09090c] to-[#060608] border-y border-[#1f1f23] overflow-hidden relative">
       {/* Background Subtle Gradient Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#10b981]/5 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#10b981]/10 via-transparent to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#a1a1aa] text-[11px] font-mono font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/30 text-[#10b981] text-[11px] font-mono font-bold uppercase tracking-wider mb-2 rounded-full">
             <Sparkles size={12} className="text-[#f59e0b] animate-pulse" />
             <span>[ ENTERPRISE CLOUD COMPATIBILITY &amp; MODEL ECOSYSTEM ]</span>
           </div>
@@ -112,9 +112,9 @@ export default function EnterpriseEcosystemBanner() {
             {[...partners, ...partners].map((p, idx) => (
               <div
                 key={`${p.name}-${idx}`}
-                className="flex items-center gap-3.5 px-4 py-3 bg-[#0a0a0a] hover:bg-[#111111] border border-[#222222] hover:border-[#383838] transition-all duration-300 rounded-sm group shrink-0 cursor-default"
+                className="flex items-center gap-3.5 px-4 py-3 bg-gradient-to-b from-[#0e0e12]/90 to-[#08080a]/90 backdrop-blur-md border border-[#27272a]/70 hover:border-[#10b981]/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.12)] transition-all duration-300 rounded-xl group shrink-0 cursor-default"
               >
-                <div className="p-2 bg-[#000000] border border-[#1f1f1f] group-hover:border-[#333333] transition-colors">
+                <div className="p-2 bg-[#050507] border border-[#1f1f23] rounded-lg group-hover:border-[#10b981]/40 transition-colors">
                   {p.svg}
                 </div>
                 <div className="text-left">
@@ -122,7 +122,7 @@ export default function EnterpriseEcosystemBanner() {
                     <span className="font-mono text-xs font-bold text-white group-hover:text-[#10b981] transition-colors">
                       {p.name}
                     </span>
-                    <span className="text-[9px] font-mono px-1.5 py-0.2 bg-[#000000] border border-[#222222] text-[#a1a1aa]">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#111115] border border-[#27272a] text-[#a1a1aa]">
                       {p.badge}
                     </span>
                   </div>
@@ -136,15 +136,15 @@ export default function EnterpriseEcosystemBanner() {
         </div>
 
         {/* Bottom Trust & Compliance SLA Notice */}
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-6 text-[11px] font-mono text-[#52525b]">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-[11px] font-mono text-[#71717a]">
           <span className="inline-flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
-            <span className="text-[#a1a1aa]">Instant Local Verification:</span> Zero Cloud Delay
+            <span className="text-[#d4d4d8]">Instant Local Verification:</span> Zero Cloud Delay
           </span>
           <span>•</span>
-          <span className="text-[#a1a1aa]">Security Standard:</span> Tamper-Proof Digital Audit Logs
+          <span className="text-[#d4d4d8]">Security Standard:</span> Tamper-Proof Digital Audit Logs
           <span>•</span>
-          <span className="text-[#a1a1aa]">Compliance:</span> SOC 2 &amp; ISO Ready
+          <span className="text-[#d4d4d8]">Compliance:</span> SOC 2 &amp; ISO Ready
         </div>
       </div>
     </section>

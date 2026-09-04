@@ -99,86 +99,94 @@ export default function RuntimeThesisProof() {
   const [selectedThreat, setSelectedThreat] = useState<ThreatExample>(THREAT_EXAMPLES[0])
 
   return (
-    <section id="threat-simulator" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
-      <div className="max-w-6xl mx-auto">
+    <section id="threat-simulator" className="py-24 px-5 sm:px-8 bg-[#040406] text-white border-t border-[#27272a]/70 relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/70 to-transparent pointer-events-none" />
+
+      {/* Background glow accents */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-gradient-to-b from-[#f59e0b]/10 via-[#10b981]/5 to-transparent blur-[140px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#f59e0b]/10 border border-[#f59e0b]/30 text-[#f59e0b] rounded-full text-xs font-mono font-bold tracking-wider mb-4 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
             <Layers size={13} />
             <span>[ DETERMINISTIC DEFENSE MODEL ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             3 Simple Steps to Complete AI Safety
           </h2>
-          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base leading-relaxed font-sans">
+          <p className="mt-4 text-[#a1a1aa] text-sm sm:text-base leading-relaxed font-sans">
             Instead of hoping an AI behaves, Bartholomew provides a mathematical three-stage defense that guarantees safety on every single tool call.
           </p>
         </div>
 
         {/* 3 Step Box Cards */}
         <div id="how-it-works" className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] flex flex-col justify-between">
+          <div className="p-7 bg-gradient-to-b from-[#0e0e14]/90 via-[#09090d]/90 to-[#040406] border border-[#27272a]/75 hover:border-[#f59e0b]/50 rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-xl hover:shadow-[0_15px_35px_-10px_rgba(245,158,11,0.15)] group backdrop-blur-md">
             <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#f59e0b] uppercase tracking-wider">[STEP 1]</span>
-                <span className="text-[11px] font-mono px-2 py-0.5 bg-[#000000] text-[#f59e0b] border border-[#f59e0b]/40">&lt;35 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/40">&lt;35 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
-                <Search size={17} className="text-[#f59e0b]" />
+              <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#f59e0b] transition-colors">
+                <Search size={18} className="text-[#f59e0b]" />
                 The Pre-Flight Scanner
               </h3>
-              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-4 font-sans">
+              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-5 font-sans">
                 Before any code runs, the scanner inspects the syntax tree. If the AI is trying to hide a destructive command, drop a database, or exceed spend caps, it is blocked immediately.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-[#f59e0b] bg-[#000000] p-2.5 border border-[#1a1a1a]">
+            <div className="text-[11px] font-mono text-[#f59e0b] bg-[#050508] p-3 rounded-xl border border-[#27272a]/70">
               [BLOCKS: DANGEROUS CODE · SQL DROPS · SPEND BREACHES]
             </div>
           </div>
 
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] flex flex-col justify-between">
+          <div className="p-7 bg-gradient-to-b from-[#0e0e14]/90 via-[#09090d]/90 to-[#040406] border border-[#27272a]/75 hover:border-[#10b981]/50 rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-xl hover:shadow-[0_15px_35px_-10px_rgba(16,185,129,0.15)] group backdrop-blur-md">
             <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#10b981] uppercase tracking-wider">[STEP 2]</span>
-                <span className="text-[11px] font-mono px-2 py-0.5 bg-[#000000] text-[#10b981] border border-[#10b981]/40">&lt;150 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">&lt;150 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
-                <Box size={17} className="text-[#10b981]" />
+              <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#10b981] transition-colors">
+                <Box size={18} className="text-[#10b981]" />
                 The Locked Sandbox
               </h3>
-              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-4 font-sans">
+              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-5 font-sans">
                 The AI is confined inside a strict workspace boundary. It is physically impossible for the AI to touch system files, steal sensitive environment secrets, or run unauthorized shell scripts.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-[#10b981] bg-[#000000] p-2.5 border border-[#1a1a1a]">
+            <div className="text-[11px] font-mono text-[#10b981] bg-[#050508] p-3 rounded-xl border border-[#27272a]/70">
               [BLOCKS: DIRECTORY ESCAPES · CREDENTIAL LEAKS · OS DAMAGE]
             </div>
           </div>
 
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] flex flex-col justify-between">
+          <div className="p-7 bg-gradient-to-b from-[#0e0e14]/90 via-[#09090d]/90 to-[#040406] border border-[#27272a]/75 hover:border-emerald-400/50 rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-xl hover:shadow-[0_15px_35px_-10px_rgba(16,185,129,0.15)] group backdrop-blur-md">
             <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#ffffff] uppercase tracking-wider">[STEP 3]</span>
-                <span className="text-[11px] font-mono px-2 py-0.5 bg-[#000000] text-[#ffffff] border border-[#ffffff]/40">&lt;40 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">&lt;40 µs</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2 font-sans">
-                <Award size={17} className="text-[#10b981]" />
+              <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#10b981] transition-colors">
+                <Award size={18} className="text-[#10b981]" />
                 The Digital Notary
               </h3>
-              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-4 font-sans">
+              <p className="text-xs text-[#a1a1aa] leading-relaxed mb-5 font-sans">
                 Once safe, the action is stamped with a tamper-proof cryptographic signature. Enterprise auditors can verify the digital receipt offline in seconds without trusting third parties.
               </p>
             </div>
-            <div className="text-[11px] font-mono text-[#10b981] bg-[#000000] p-2.5 border border-[#1a1a1a]">
+            <div className="text-[11px] font-mono text-[#10b981] bg-[#050508] p-3 rounded-xl border border-[#27272a]/70">
               [GUARANTEES: 100% NON-REPUDIATION · COMPLIANCE PROOF]
             </div>
           </div>
         </div>
 
         {/* Interactive Threat Simulator Split-Pane IDE Preview */}
-        <div className="bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
+        <div className="bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl shadow-2xl overflow-hidden relative backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/60 to-transparent pointer-events-none" />
+
           {/* Header Bar */}
-          <div className="px-6 py-4 bg-[#000000] border-b border-[#222222] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="px-6 py-4 bg-[#111118]/80 border-b border-[#27272a]/70 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="text-xs font-mono text-[#f59e0b] uppercase tracking-wider font-bold flex items-center gap-2">
                 <Cpu size={14} />
@@ -191,15 +199,15 @@ export default function RuntimeThesisProof() {
           </div>
 
           {/* Scenario Tabs with Box Borders */}
-          <div className="p-3 bg-[#000000] border-b border-[#222222] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          <div className="p-3 bg-[#08080c] border-b border-[#27272a]/70 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
             {THREAT_EXAMPLES.map(threat => (
               <button
                 key={threat.id}
                 onClick={() => setSelectedThreat(threat)}
-                className={`p-3 text-left transition font-mono border ${
+                className={`p-3.5 text-left transition-all duration-200 font-mono rounded-xl border cursor-pointer ${
                   selectedThreat.id === threat.id
-                    ? 'bg-[#141414] border-[#f59e0b] text-white shadow-sm'
-                    : 'bg-[#0a0a0a] border-[#222222] text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#383838]'
+                    ? 'bg-gradient-to-b from-[#1c1c24] to-[#121218] border-[#f59e0b] text-white shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-[#f59e0b]/50'
+                    : 'bg-[#0a0a0f]/80 border-[#27272a]/60 text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#444455]'
                 }`}
               >
                 <div className="text-[10px] text-[#f59e0b] uppercase mb-1 font-bold">[{threat.id}]</div>
@@ -209,14 +217,14 @@ export default function RuntimeThesisProof() {
           </div>
 
           {/* Split-Pane Layout */}
-          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#0a0a0a]">
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#060609]">
             {/* Left Pane: Incoming Agent Payload */}
-            <div className="lg:col-span-6 bg-[#000000] border border-[#222222] overflow-hidden flex flex-col">
-              <div className="flex items-center justify-between px-4 py-2 bg-[#0a0a0a] border-b border-[#222222]">
+            <div className="lg:col-span-6 bg-[#020204] border border-[#27272a]/80 rounded-xl overflow-hidden flex flex-col shadow-lg">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-[#0a0a10] border-b border-[#27272a]/70">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 bg-[#ef4444]" />
-                  <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
-                  <div className="w-2.5 h-2.5 bg-[#10b981]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
                 </div>
                 <span className="text-[11px] font-mono text-[#a1a1aa]">incoming_agent_payload.json</span>
                 <span className="text-[10px] font-mono text-[#71717a]">[RAW PAYLOAD]</span>
@@ -226,20 +234,20 @@ export default function RuntimeThesisProof() {
                   {selectedThreat.rawPayload}
                 </pre>
               </div>
-              <div className="p-3 bg-[#0a0a0a] border-t border-[#222222] text-[11px] text-[#a1a1aa] font-sans">
+              <div className="p-3 bg-[#0a0a10] border-t border-[#27272a]/70 text-[11px] text-[#a1a1aa] font-sans">
                 {selectedThreat.plainEnglishDescription}
               </div>
             </div>
 
             {/* Right Pane: BTP Interception Terminal Output */}
-            <div className="lg:col-span-6 bg-[#000000] border border-[#222222] overflow-hidden flex flex-col">
-              <div className="flex items-center justify-between px-4 py-2 bg-[#0a0a0a] border-b border-[#222222]">
+            <div className="lg:col-span-6 bg-[#020204] border border-[#27272a]/80 rounded-xl overflow-hidden flex flex-col shadow-lg">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-[#0a0a10] border-b border-[#27272a]/70">
                 <div className="flex items-center gap-2">
                   <Terminal size={13} className="text-[#f59e0b]" />
                   <span className="text-[11px] font-mono text-[#d4d4d8]">btp-engine-interception.log</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                     selectedThreat.verdict === 'BLOCKED'
                       ? 'bg-[#ef4444]/20 text-[#ef4444] border-[#ef4444]/40'
                       : 'bg-[#10b981]/20 text-[#10b981] border-[#10b981]/40'
@@ -257,7 +265,7 @@ export default function RuntimeThesisProof() {
                   {selectedThreat.terminalLog}
                 </pre>
               </div>
-              <div className="p-3 bg-[#0a0a0a] border-t border-[#222222] text-[11px] font-mono flex items-center justify-between text-[#a1a1aa]">
+              <div className="p-3 bg-[#0a0a10] border-t border-[#27272a]/70 text-[11px] font-mono flex items-center justify-between text-[#a1a1aa]">
                 <span>GUARD: <strong className="text-[#ffffff]">{selectedThreat.interceptedBy}</strong></span>
                 <span className="text-[#10b981]">[100% IN-PROCESS]</span>
               </div>

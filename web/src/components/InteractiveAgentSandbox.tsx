@@ -276,7 +276,10 @@ export default function InteractiveAgentSandbox() {
   }
 
   return (
-    <section id="sandbox" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c] relative overflow-hidden">
+    <section id="sandbox" className="py-24 px-5 sm:px-8 bg-[#040406] text-white border-t border-[#27272a]/70 relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/70 to-transparent pointer-events-none" />
+
       {/* Background glow accents */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-[#10b981]/10 via-[#f59e0b]/5 to-transparent blur-[140px] pointer-events-none" />
 
@@ -284,51 +287,51 @@ export default function InteractiveAgentSandbox() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#10b981] text-xs font-mono font-bold uppercase tracking-wider mb-3">
-            <Sparkles size={13} />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#10b981]/10 border border-[#10b981]/30 text-[#10b981] rounded-full text-xs font-mono font-bold tracking-wider mb-4 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+            <Sparkles size={13} className="animate-pulse" />
             <span>[ LIVE INTERACTIVE PLAYGROUND · BTP v2.5 ]</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             Try to Break the Agent.
           </h2>
-          <p className="mt-4 text-[#a1a1aa] text-sm sm:text-base font-sans">
+          <p className="mt-4 text-[#a1a1aa] text-sm sm:text-base font-sans leading-relaxed">
             Select an adversarial attack preset below or edit the code directly. Experience sub-5 microsecond deterministic AST gating, secret masking, and instant auto-rollback in real time.
           </p>
         </div>
 
         {/* Attack Preset Selector Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 mb-8">
           {PRESETS.map((p) => {
             const isSelected = selectedPreset.id === p.id
             return (
               <button
                 key={p.id}
                 onClick={() => handleSelectPreset(p)}
-                className={`p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between cursor-pointer group ${
+                className={`p-4 rounded-xl border text-left transition-all duration-300 flex flex-col justify-between cursor-pointer group relative overflow-hidden backdrop-blur-md ${
                   isSelected
-                    ? 'bg-[#141414] border-[#10b981] shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-[#10b981]'
-                    : 'bg-[#0a0a0a] border-[#222222] hover:border-[#444444] hover:bg-[#111111]'
+                    ? 'bg-gradient-to-b from-[#10b981]/15 via-[#08080c] to-[#040406] border-[#10b981] shadow-[0_10px_30px_-10px_rgba(16,185,129,0.35)] ring-1 ring-[#10b981]'
+                    : 'bg-gradient-to-b from-[#0e0e12]/80 via-[#08080a]/90 to-[#040405] border-[#27272a]/70 hover:border-[#10b981]/50 hover:shadow-[0_10px_25px_-10px_rgba(16,185,129,0.15)]'
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2.5">
                     <span className="font-mono text-xs font-bold text-[#71717a]">[{p.num}]</span>
-                    <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border ${p.badgeColor}`}>
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${p.badgeColor}`}>
                       {p.badge}
                     </span>
                   </div>
-                  <div className="font-sans font-bold text-xs text-white leading-tight group-hover:text-[#10b981] transition-colors">
+                  <div className="font-sans font-bold text-xs text-white leading-snug group-hover:text-[#10b981] transition-colors">
                     {p.name}
                   </div>
                 </div>
-                <div className="mt-3 text-[11px] font-mono flex items-center justify-between">
+                <div className="mt-4 text-[11px] font-mono flex items-center justify-between">
                   {isSelected ? (
-                    <span className="text-[#10b981] font-bold flex items-center gap-1">
+                    <span className="text-[#10b981] font-bold flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
                       [ACTIVE]
                     </span>
                   ) : (
-                    <span className="text-[#71717a] group-hover:text-white transition-colors">
+                    <span className="text-[#71717a] group-hover:text-emerald-400 transition-colors">
                       [LOAD PRESET &rarr;]
                     </span>
                   )}
@@ -340,9 +343,11 @@ export default function InteractiveAgentSandbox() {
 
         {/* Preset-Specific Interactive Control Bar */}
         {selectedPreset.category === 'LDMU_LOOP' && (
-          <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#10b981]/30 rounded-xl flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-6 p-4 bg-gradient-to-r from-[#0c0c12]/90 via-[#08080c]/90 to-[#040406] border border-[#10b981]/40 rounded-xl flex flex-wrap items-center justify-between gap-4 backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(16,185,129,0.15)]">
             <div className="flex items-center gap-3">
-              <RefreshCw size={16} className="text-[#10b981]" />
+              <div className="w-8 h-8 rounded-lg bg-[#10b981]/10 border border-[#10b981]/30 flex items-center justify-center">
+                <RefreshCw size={16} className="text-[#10b981]" />
+              </div>
               <div>
                 <span className="text-xs font-mono font-bold text-white uppercase block">
                   Interactive LDMU Retry Simulator:
@@ -361,7 +366,7 @@ export default function InteractiveAgentSandbox() {
                     setCodeContent(`{\n  "agent_id": "crewai-scraper-04",\n  "action": "FETCH_SERP_RETRY",\n  "attempt_index": ${next},\n  "lambda_decay_rate": 0.22,\n  "initial_utility_u0": 1.0\n}`)
                     setExecutionResult(null)
                   }}
-                  className="px-2.5 py-1 bg-[#1c1c1c] hover:bg-[#2a2a2a] text-white font-mono text-xs rounded border border-[#333333]"
+                  className="px-2.5 py-1 bg-[#141418] hover:bg-[#1f1f26] text-white font-mono text-xs rounded border border-[#33333e] transition"
                 >
                   -
                 </button>
@@ -375,12 +380,12 @@ export default function InteractiveAgentSandbox() {
                     setCodeContent(`{\n  "agent_id": "crewai-scraper-04",\n  "action": "FETCH_SERP_RETRY",\n  "attempt_index": ${next},\n  "lambda_decay_rate": 0.22,\n  "initial_utility_u0": 1.0\n}`)
                     setExecutionResult(null)
                   }}
-                  className="px-2.5 py-1 bg-[#1c1c1c] hover:bg-[#2a2a2a] text-white font-mono text-xs rounded border border-[#333333]"
+                  className="px-2.5 py-1 bg-[#141418] hover:bg-[#1f1f26] text-white font-mono text-xs rounded border border-[#33333e] transition"
                 >
                   +
                 </button>
               </div>
-              <div className="font-mono text-xs px-3 py-1 rounded border bg-[#050505] border-[#222222]">
+              <div className="font-mono text-xs px-3 py-1 rounded-lg border bg-[#050508] border-[#27272a]">
                 Utility: <span className={currentLdmuUtility < 0.15 ? 'text-[#ef4444] font-bold' : 'text-[#10b981] font-bold'}>
                   {currentLdmuUtility.toFixed(3)}
                 </span> {currentLdmuUtility < 0.15 ? '(VETO)' : '(ALLOW)'}
@@ -390,9 +395,11 @@ export default function InteractiveAgentSandbox() {
         )}
 
         {selectedPreset.category === 'SECRET_LEAK' && (
-          <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#a855f7]/30 rounded-xl flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-6 p-4 bg-gradient-to-r from-[#0c0c12]/90 via-[#08080c]/90 to-[#040406] border border-[#a855f7]/40 rounded-xl flex flex-wrap items-center justify-between gap-4 backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(168,85,247,0.15)]">
             <div className="flex items-center gap-3">
-              <Key size={16} className="text-[#a855f7]" />
+              <div className="w-8 h-8 rounded-lg bg-[#a855f7]/10 border border-[#a855f7]/30 flex items-center justify-center">
+                <Key size={16} className="text-[#a855f7]" />
+              </div>
               <div>
                 <span className="text-xs font-mono font-bold text-white uppercase block">
                   Real-Time Credential Masking Engine:
@@ -408,7 +415,7 @@ export default function InteractiveAgentSandbox() {
                   setCodeContent(`{\n  "leak_test": "Exfiltrating: ghp_LIVE_DEV_TOKEN_998124 and sk-proj-LIVE_SECRET_KEY_12415"\n}`)
                   setExecutionResult(null)
                 }}
-                className="px-3 py-1 bg-[#a855f7]/20 hover:bg-[#a855f7]/30 text-[#c084fc] font-mono text-xs rounded border border-[#a855f7]/40 cursor-pointer"
+                className="px-3 py-1.5 bg-[#a855f7]/20 hover:bg-[#a855f7]/30 text-[#c084fc] font-mono text-xs rounded-lg border border-[#a855f7]/40 transition cursor-pointer"
               >
                 [LOAD RAW SECRETS]
               </button>
@@ -417,9 +424,11 @@ export default function InteractiveAgentSandbox() {
         )}
 
         {selectedPreset.category === 'DESTRUCTIVE' && (
-          <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#ef4444]/30 rounded-xl flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-6 p-4 bg-gradient-to-r from-[#0c0c12]/90 via-[#08080c]/90 to-[#040406] border border-[#ef4444]/40 rounded-xl flex flex-wrap items-center justify-between gap-4 backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(239,68,68,0.15)]">
             <div className="flex items-center gap-3">
-              <Database size={16} className="text-[#ef4444]" />
+              <div className="w-8 h-8 rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/30 flex items-center justify-center">
+                <Database size={16} className="text-[#ef4444]" />
+              </div>
               <div>
                 <span className="text-xs font-mono font-bold text-white uppercase block">
                   Deterministic Invariant Gate:
@@ -435,7 +444,7 @@ export default function InteractiveAgentSandbox() {
                   setCodeContent(`DROP TABLE customer_billing_records CASCADE;\nTRUNCATE audit_logs;`)
                   setExecutionResult(null)
                 }}
-                className="px-3 py-1 bg-[#ef4444]/20 hover:bg-[#ef4444]/30 text-[#f87171] font-mono text-xs rounded border border-[#ef4444]/40 cursor-pointer"
+                className="px-3 py-1.5 bg-[#ef4444]/20 hover:bg-[#ef4444]/30 text-[#f87171] font-mono text-xs rounded-lg border border-[#ef4444]/40 transition cursor-pointer"
               >
                 [DROP TABLE (MALICIOUS)]
               </button>
@@ -444,7 +453,7 @@ export default function InteractiveAgentSandbox() {
                   setCodeContent(`SELECT id, name, balance_usd FROM customer_billing_records WHERE tenant_id = 'acme-corp' LIMIT 10;`)
                   setExecutionResult(null)
                 }}
-                className="px-3 py-1 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#10b981] font-mono text-xs rounded border border-[#10b981]/40 cursor-pointer"
+                className="px-3 py-1.5 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#10b981] font-mono text-xs rounded-lg border border-[#10b981]/40 transition cursor-pointer"
               >
                 [SELECT (SAFE)]
               </button>
@@ -453,9 +462,11 @@ export default function InteractiveAgentSandbox() {
         )}
 
         {selectedPreset.category === 'ROLLBACK' && (
-          <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#06b6d4]/30 rounded-xl flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-6 p-4 bg-gradient-to-r from-[#0c0c12]/90 via-[#08080c]/90 to-[#040406] border border-[#06b6d4]/40 rounded-xl flex flex-wrap items-center justify-between gap-4 backdrop-blur-xl shadow-[0_10px_30px_-10px_rgba(6,182,212,0.15)]">
             <div className="flex items-center gap-3">
-              <RotateCcw size={16} className="text-[#06b6d4]" />
+              <div className="w-8 h-8 rounded-lg bg-[#06b6d4]/10 border border-[#06b6d4]/30 flex items-center justify-center">
+                <RotateCcw size={16} className="text-[#06b6d4]" />
+              </div>
               <div>
                 <span className="text-xs font-mono font-bold text-white uppercase block">
                   Time Machine &amp; Micro-Rollback Simulation:
@@ -471,7 +482,7 @@ export default function InteractiveAgentSandbox() {
                   setCodeContent(`// Corrupted mutation breaking runtime\nexport const databasePool = null;\nthrow new Error("Critical dependency failed");`)
                   setExecutionResult(null)
                 }}
-                className="px-3 py-1 bg-[#06b6d4]/20 hover:bg-[#06b6d4]/30 text-[#22d3ee] font-mono text-xs rounded border border-[#06b6d4]/40 cursor-pointer"
+                className="px-3 py-1.5 bg-[#06b6d4]/20 hover:bg-[#06b6d4]/30 text-[#22d3ee] font-mono text-xs rounded-lg border border-[#06b6d4]/40 transition cursor-pointer"
               >
                 [FAILING MUTATION]
               </button>
@@ -480,7 +491,7 @@ export default function InteractiveAgentSandbox() {
                   setCodeContent(`// Valid safe mutation\nexport const databasePool = createPool({ host: '127.0.0.1', max: 20 });\nconsole.log("Database initialized cleanly");`)
                   setExecutionResult(null)
                 }}
-                className="px-3 py-1 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#10b981] font-mono text-xs rounded border border-[#10b981]/40 cursor-pointer"
+                className="px-3 py-1.5 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#10b981] font-mono text-xs rounded-lg border border-[#10b981]/40 transition cursor-pointer"
               >
                 [SAFE MUTATION]
               </button>
@@ -492,20 +503,26 @@ export default function InteractiveAgentSandbox() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* Left Column: Code / Intent Editor */}
-          <div className="lg:col-span-6 bg-[#0a0a0a] border border-[#222222] rounded-xl overflow-hidden shadow-2xl flex flex-col">
-            <div className="px-4 py-3 bg-[#111111] border-b border-[#222222] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Terminal size={15} className="text-[#10b981]" />
-                <span className="font-mono text-xs font-bold text-white uppercase">
+          <div className="lg:col-span-6 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col relative">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
+            <div className="px-5 py-3.5 bg-[#111118]/80 border-b border-[#27272a]/70 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1.5 mr-1">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <Terminal size={14} className="text-[#10b981]" />
+                <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
                   PROPOSED AGENT INTENT &amp; PAYLOAD
                 </span>
               </div>
-              <span className="font-mono text-[11px] text-[#71717a]">
-                LANG: {selectedPreset.language.toUpperCase()}
+              <span className="font-mono text-[11px] text-[#a1a1aa] bg-[#050508] px-2 py-0.5 rounded border border-[#27272a]">
+                {selectedPreset.language.toUpperCase()}
               </span>
             </div>
 
-            <div className="p-4 bg-[#050505] flex-1">
+            <div className="p-5 bg-[#050508] flex-1">
               <textarea
                 value={codeContent}
                 onChange={(e) => {
@@ -518,14 +535,14 @@ export default function InteractiveAgentSandbox() {
               />
             </div>
 
-            <div className="p-4 bg-[#0a0a0a] border-t border-[#1c1c1c] flex items-center justify-between gap-4">
+            <div className="p-4 bg-[#0a0a0f]/90 border-t border-[#27272a]/70 flex items-center justify-between gap-4">
               <span className="text-[11px] text-[#a1a1aa] font-sans">
                 {selectedPreset.description}
               </span>
               <button
                 onClick={runSimulation}
                 disabled={isExecuting}
-                className="px-5 py-2.5 bg-[#10b981] hover:bg-[#059669] active:scale-95 text-black font-mono text-xs font-bold rounded-lg transition-all flex items-center gap-2 shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.3)] disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] active:scale-95 text-black font-mono text-xs font-bold rounded-lg transition-all flex items-center gap-2 shrink-0 shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 cursor-pointer"
               >
                 {isExecuting ? (
                   <>
@@ -543,51 +560,57 @@ export default function InteractiveAgentSandbox() {
           </div>
 
           {/* Right Column: Live Telemetry & Verification Stream */}
-          <div className="lg:col-span-6 bg-[#0a0a0a] border border-[#222222] rounded-xl overflow-hidden shadow-2xl flex flex-col">
-            <div className="px-4 py-3 bg-[#111111] border-b border-[#222222] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Activity size={15} className="text-[#f59e0b]" />
-                <span className="font-mono text-xs font-bold text-white uppercase">
+          <div className="lg:col-span-6 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col relative">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/50 to-transparent pointer-events-none" />
+            <div className="px-5 py-3.5 bg-[#111118]/80 border-b border-[#27272a]/70 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1.5 mr-1">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <Activity size={14} className="text-[#f59e0b]" />
+                <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">
                   BTP v2.5 TELEMETRY &amp; PROOF STREAM
                 </span>
               </div>
               {executionResult && (
-                <span className="font-mono text-[11px] text-[#10b981]">
+                <span className="font-mono text-[11px] text-[#10b981] bg-[#10b981]/10 px-2 py-0.5 rounded border border-[#10b981]/30">
                   LATENCY: {executionResult.latencyUs} µs
                 </span>
               )}
             </div>
 
-            <div className="p-5 bg-[#050505] min-h-[300px] flex flex-col justify-center">
+            <div className="p-5 bg-[#050508] min-h-[300px] flex flex-col justify-center">
               {!executionResult && !isExecuting && (
                 <div className="text-center py-12 text-[#71717a] font-mono text-xs space-y-2">
-                  <Shield size={32} className="mx-auto text-[#333333] mb-3" />
-                  <p>Click &quot;[ RUN SCAN ]&quot; to test the deterministic invariant gate.</p>
-                  <p className="text-[11px] text-[#52525b]">Evaluates ASTs, scrubs secrets, and stamps Ed25519 receipts in &lt;5 µs.</p>
+                  <Shield size={32} className="mx-auto text-[#3f3f46] mb-3" />
+                  <p className="text-white font-medium">Click &quot;[ RUN SCAN ]&quot; to test the deterministic invariant gate.</p>
+                  <p className="text-[11px] text-[#71717a]">Evaluates ASTs, scrubs secrets, and stamps Ed25519 receipts in &lt;5 µs.</p>
                 </div>
               )}
 
               {isExecuting && (
                 <div className="text-center py-12 text-[#10b981] font-mono text-xs space-y-3">
                   <Cpu size={32} className="mx-auto animate-pulse text-[#10b981]" />
-                  <p className="tracking-wider">COMPILING AST &amp; EVALUATING INVARIANTS...</p>
+                  <p className="tracking-wider font-bold">COMPILING AST &amp; EVALUATING INVARIANTS...</p>
                 </div>
               )}
 
               {executionResult && !isExecuting && (
                 <div className="space-y-4 font-mono text-xs">
                   {/* Verdict Badge */}
-                  <div className="flex items-center justify-between pb-3 border-b border-[#1c1c1c]">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#27272a]/70">
                     <span className="text-[#71717a]">EXECUTION VERDICT:</span>
                     <span
-                      className={`px-3 py-1 font-bold rounded text-xs border ${
+                      className={`px-3 py-1 font-bold rounded-lg text-xs border ${
                         executionResult.verdict === 'ALLOW'
-                          ? 'bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30'
+                          ? 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/40'
                           : executionResult.verdict === 'AUTO_REDACT'
-                          ? 'bg-[#a855f7]/10 text-[#a855f7] border-[#a855f7]/30'
+                          ? 'bg-[#a855f7]/15 text-[#a855f7] border-[#a855f7]/40'
                           : executionResult.verdict === 'ROLLBACK'
-                          ? 'bg-[#06b6d4]/10 text-[#06b6d4] border-[#06b6d4]/30'
-                          : 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/30'
+                          ? 'bg-[#06b6d4]/15 text-[#06b6d4] border-[#06b6d4]/40'
+                          : 'bg-[#ef4444]/15 text-[#ef4444] border-[#ef4444]/40'
                       }`}
                     >
                       [{executionResult.verdict}]
@@ -595,7 +618,7 @@ export default function InteractiveAgentSandbox() {
                   </div>
 
                   {/* Clean 3-Line Terminal Format */}
-                  <div className="space-y-2 bg-[#000000] p-3.5 rounded-lg border border-[#1a1a1a]">
+                  <div className="space-y-2 bg-[#020204] p-4 rounded-xl border border-[#27272a]/70">
                     <div className="text-[#a1a1aa] leading-relaxed break-all">
                       {executionResult.planLine}
                     </div>
@@ -619,7 +642,7 @@ export default function InteractiveAgentSandbox() {
 
                   {/* Sanitized Code Preview if Redacted */}
                   {executionResult.sanitizedCode && (
-                    <div className="p-3 bg-[#0a0a0a] rounded border border-[#a855f7]/30 space-y-1">
+                    <div className="p-3.5 bg-[#0a0a10] rounded-xl border border-[#a855f7]/30 space-y-1.5">
                       <div className="text-[10px] text-[#a855f7] font-bold uppercase flex items-center gap-1.5">
                         <Key size={12} />
                         <span>[IN-FLIGHT SANITIZED PAYLOAD &bull; {executionResult.redactionsCount} SECRET(S) REDACTED]</span>
@@ -637,7 +660,7 @@ export default function InteractiveAgentSandbox() {
                     </div>
                     <button
                       onClick={handleCopyProof}
-                      className="inline-flex items-center gap-1 text-[#10b981] hover:underline cursor-pointer ml-2 shrink-0"
+                      className="inline-flex items-center gap-1.5 text-[#10b981] hover:underline cursor-pointer ml-2 shrink-0 bg-[#10b981]/10 px-2.5 py-1 rounded border border-[#10b981]/30"
                     >
                       {copied ? <Check size={12} /> : <Copy size={12} />}
                       <span>{copied ? 'COPIED' : 'COPY PROOF'}</span>

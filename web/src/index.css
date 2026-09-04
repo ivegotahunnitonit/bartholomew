@@ -1,14 +1,14 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #000000;
-  --color-bg-card: #0a0a0a;
-  --color-bg-subtle: #121212;
-  --color-border-subtle: #222222;
-  --color-border-hover: #383838;
+  --color-bg-primary: #040406;
+  --color-bg-card: #0a0a0d;
+  --color-bg-subtle: #111115;
+  --color-border-subtle: #27272a;
+  --color-border-hover: #3f3f46;
   --color-text-primary: #ffffff;
-  --color-text-secondary: #a1a1aa;
+  --color-text-secondary: #d4d4d8;
   --color-text-muted: #71717a;
   --color-accent-amber: #f59e0b;
   --color-accent-emerald: #10b981;
@@ -144,3 +144,40 @@
 .hover\:pause-animation:hover {
   animation-play-state: paused !important;
 }
+
+/* Frontier Glassmorphic System */
+.frontier-glass-panel {
+  background: linear-gradient(180deg, rgba(14, 14, 18, 0.88) 0%, rgba(9, 9, 12, 0.94) 50%, rgba(4, 4, 6, 0.98) 100%);
+  border: 1px solid rgba(39, 39, 42, 0.75);
+  backdrop-filter: blur(16px);
+  position: relative;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.7), 0 0 30px -15px rgba(16, 185, 129, 0.08);
+}
+
+.frontier-glass-glow {
+  position: relative;
+}
+.frontier-glass-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.7) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.frontier-glass-card {
+  background: linear-gradient(180deg, rgba(15, 15, 19, 0.85) 0%, rgba(10, 10, 13, 0.9) 100%);
+  border: 1px solid rgba(39, 39, 42, 0.7);
+  backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.frontier-glass-card:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.12);
+  transform: translateY(-2px);
+}
+

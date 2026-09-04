@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu, Lock } from 'lucide-react'
+import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu } from 'lucide-react'
 
 export default function DesktopInstallerSection() {
   const [activeTab, setActiveTab] = useState<'pip' | 'npm' | 'vscode' | 'source'>('pip')
@@ -33,44 +33,55 @@ export default function DesktopInstallerSection() {
   }
 
   return (
-    <section id="download" className="py-24 bg-black border-t border-[#1c1c1c] text-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="download" className="py-24 bg-gradient-to-b from-[#040406] via-[#08080c] to-[#040406] border-t border-[#1f1f23] text-white relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#10b981]/5 blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
-            <Lock size={13} className="text-[#f59e0b]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/30 text-[#10b981] text-xs font-mono font-bold uppercase tracking-wider mb-4 rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
             <span>[ VERIFIED SOURCE INSTALLATION &amp; OFFLINE INSPECTION ]</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
-            Install Directly from GitHub Repositories
+            Install Directly from Verified Registries
           </h2>
           <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            Bartholomew is 100% open source. Install directly via pip (git), VS Code VSIX, or clone the repository to run the 17-suite CI security gate on your own machine with zero remote script execution.
+            Bartholomew is 100% open source. Install directly via npm, pip (git), VS Code VSIX, or clone the repository to run the 31-suite security gate on your own machine with zero remote script execution.
           </p>
         </div>
 
-        {/* OS Selector & Terminal Card */}
-        <div className="max-w-4xl mx-auto bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
+        {/* OS Selector & Terminal Card - Frontier Glassmorphism */}
+        <div className="max-w-4xl mx-auto rounded-2xl border border-[#27272a] bg-gradient-to-b from-[#0e0e11] via-[#09090b] to-[#040405] shadow-[0_20px_50px_-20px_rgba(16,185,129,0.15)] relative overflow-hidden">
+          {/* Top Glowing Ambient Highlight */}
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/70 to-transparent pointer-events-none" />
+
           {/* Terminal Window Header */}
-          <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#08080a] border-b border-[#1f1f23]">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 bg-[#ef4444]" />
-              <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
-              <div className="w-2.5 h-2.5 bg-[#10b981]" />
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block shadow-[0_0_8px_rgba(239,68,68,0.4)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+              </div>
+              <div className="h-3.5 w-[1px] bg-[#27272a] mx-1" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#10b981]/10 border border-[#10b981]/30 text-[10px] font-mono text-[#10b981] font-bold uppercase">
+                verified-install-channel
+              </div>
             </div>
-            <span className="text-[11px] font-mono text-[#71717a]">terminal — verified-install-channel</span>
-            <div className="w-12" />
+            <div className="text-[11px] font-mono text-[#71717a] hidden sm:block">FIPS 186-5 &bull; RFC 8785</div>
           </div>
 
           {/* Selector Tabs — 2 col grid on mobile, 4 col on sm+ */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#222222] bg-[#000000] p-2 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#1f1f23] bg-[#060608] p-2 gap-2">
             {(['pip', 'npm', 'vscode', 'source'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`py-2.5 px-2 text-[10px] sm:text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border min-h-[44px] ${
+                className={`py-2 px-3 text-[11px] sm:text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border rounded-lg min-h-[42px] ${
                   activeTab === tab
-                    ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
-                    : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
+                    ? 'bg-[#10b981]/15 text-white border-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                    : 'bg-[#0b0b0e] text-[#a1a1aa] border-[#222226] hover:text-white hover:border-[#38383f]'
                 }`}
               >
                 <span className="text-center leading-tight">{tabLabels[tab]}</span>
@@ -80,39 +91,40 @@ export default function DesktopInstallerSection() {
 
           {/* Terminal Command Display & Action */}
           <div className="p-4 sm:p-8">
-            {/* Command string + action buttons — stacks vertically on mobile */}
-            <div className="flex flex-col gap-3 bg-[#000000] border border-[#222222] p-3 sm:p-4 font-mono text-xs text-[#f59e0b]">
+            {/* Command string + action buttons */}
+            <div className="flex flex-col gap-3 bg-[#030304] border border-[#1f1f23] rounded-xl p-4 font-mono text-xs shadow-inner">
               {/* Scrollable command line */}
-              <div className="overflow-x-auto whitespace-nowrap">
-                <span>$ {commands[activeTab]}</span>
+              <div className="overflow-x-auto whitespace-nowrap flex items-center gap-2">
+                <span className="text-[#10b981] font-bold text-sm">❯</span>
+                <span className="text-[#f59e0b]">$ {commands[activeTab]}</span>
               </div>
-              {/* Action buttons — full-width row on mobile */}
-              <div className="flex flex-wrap items-center gap-2">
+              {/* Action buttons */}
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#1a1a1e]">
                 <a
                   href={directDownloadFiles[activeTab].href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 min-w-[120px] px-3 py-2.5 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] transition flex items-center justify-center gap-1.5 min-h-[44px]"
+                  className="flex-1 min-w-[120px] px-3.5 py-2 text-xs font-mono font-bold bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#10b981] border border-[#10b981]/40 transition flex items-center justify-center gap-1.5 rounded-lg shadow-sm"
                 >
                   <span>[{directDownloadFiles[activeTab].label}]</span>
                 </a>
                 <button
                   onClick={() => handleCopy(activeTab)}
-                  className={`flex-1 min-w-[80px] px-3 py-2.5 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border min-h-[44px] ${
+                  className={`flex-1 min-w-[80px] px-3.5 py-2 text-xs font-mono font-bold transition flex items-center justify-center gap-1.5 border rounded-lg ${
                     copied === activeTab
-                      ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                      : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#333333]'
+                      ? 'bg-[#10b981] text-black border-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                      : 'bg-[#111115] hover:bg-[#18181c] text-white border-[#27272a]'
                   }`}
                 >
                   {copied === activeTab ? (
                     <>
-                      <Check size={12} />
-                      <span>COPIED</span>
+                      <Check size={12} className="stroke-[3]" />
+                      <span>COPIED!</span>
                     </>
                   ) : (
                     <>
                       <Copy size={12} />
-                      <span>COPY</span>
+                      <span>COPY COMMAND</span>
                     </>
                   )}
                 </button>
@@ -120,53 +132,53 @@ export default function DesktopInstallerSection() {
             </div>
 
             {/* In-Process Library Highlight Banner */}
-            <div className="mt-6 p-4 bg-[#050505] border border-[#222222] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs text-[#a1a1aa]">
+            <div className="mt-6 p-4.5 bg-gradient-to-r from-[#10b981]/10 via-[#0a0a0d] to-[#0a0a0d] border border-[#10b981]/30 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
               <div className="space-y-1">
                 <div className="text-white font-bold flex items-center gap-2">
-                  <Shield size={14} className="text-[#10b981]" />
-                  <span>EMBEDDED IN-PROCESS MODE (ZERO DAEMON REQUIRED)</span>
+                  <Shield size={15} className="text-[#10b981]" />
+                  <span>EMBEDDED IN-PROCESS MODE (ZERO DAEMONS REQUIRED)</span>
                 </div>
-                <p className="text-[#71717a] font-sans">
-                  Run directly in your Python or Node.js script. Evaluates AST invariants in &lt;5.0 microseconds with zero IPC, zero background daemons, and zero network sockets.
+                <p className="text-[#a1a1aa] font-sans text-xs">
+                  Runs directly in your Python or Node.js process memory. Evaluates AST invariants in &lt;2.3 microseconds with zero IPC, zero background daemons, and zero network telemetry.
                 </p>
               </div>
               <a
                 href="#sdk"
-                className="px-3 py-1.5 bg-[#141414] hover:bg-[#222222] text-[#f59e0b] border border-[#333333] transition shrink-0 font-bold"
+                className="px-3.5 py-1.5 bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#10b981] border border-[#10b981]/40 rounded-lg transition shrink-0 font-bold"
               >
                 [VIEW 1-LINE CODE]
               </a>
             </div>
 
             {/* Verification Features Grid — 1 col mobile, 3 col md+ */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-              <div className="p-4 bg-[#000000] border border-[#222222]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-6">
+              <div className="p-4 bg-gradient-to-b from-[#0e0e12]/80 to-[#070709]/90 border border-[#27272a]/70 rounded-xl hover:border-[#10b981]/40 transition">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
                   <CheckCircle2 size={14} className="text-[#10b981]" />
                   <span>AUDITABLE CODEBASE</span>
                 </div>
-                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
-                  Every parser, invariant checker, and cryptographic signing routine is readable in 35-line reference files.
+                <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
+                  Every parser, invariant checker, and cryptographic signing routine is readable in clean, audited reference files.
                 </p>
               </div>
 
-              <div className="p-4 bg-[#000000] border border-[#222222]">
+              <div className="p-4 bg-gradient-to-b from-[#0e0e12]/80 to-[#070709]/90 border border-[#27272a]/70 rounded-xl hover:border-[#10b981]/40 transition">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
                   <FileCode size={14} className="text-[#f59e0b]" />
                   <span>RFC 8785 DETERMINISM</span>
                 </div>
-                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
+                <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
                   JSON Canonicalization Scheme ensures identical byte-level hash determinism across Python, Go, and C.
                 </p>
               </div>
 
-              <div className="p-4 bg-[#000000] border border-[#222222]">
+              <div className="p-4 bg-gradient-to-b from-[#0e0e12]/80 to-[#070709]/90 border border-[#27272a]/70 rounded-xl hover:border-[#10b981]/40 transition">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-white mb-2">
-                  <Cpu size={14} className="text-[#38bdf8]" />
+                  <Cpu size={14} className="text-[#10b981]" />
                   <span>NO PROXY BOTTLENECK</span>
                 </div>
-                <p className="text-xs text-[#71717a] font-sans leading-relaxed">
-                  Compiled pure-C FFI executes in &lt;5 µs, avoiding the latency and failure modes of remote webhooks.
+                <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
+                  Compiled pure-C FFI executes in &lt;2.3 µs, avoiding the latency and network failure modes of remote webhooks.
                 </p>
               </div>
             </div>

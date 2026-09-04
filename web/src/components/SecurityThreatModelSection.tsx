@@ -45,16 +45,19 @@ export default function SecurityThreatModelSection() {
   }
 
   return (
-    <section id="threat-model" className="py-20 px-5 sm:px-8 bg-[#050505] text-white border-t border-[#1a1a1a]">
-      <div className="max-w-7xl mx-auto">
+    <section id="threat-model" className="py-24 px-5 sm:px-8 bg-gradient-to-b from-[#040406] via-[#08080c] to-[#040406] text-white border-t border-[#1f1f23] relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#10b981]/5 blur-[150px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] mb-4">
-            <ShieldAlert size={14} className="text-[#ef4444]" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#10b981]/10 border border-[#10b981]/30 text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] mb-4 rounded-full">
+            <ShieldAlert size={14} className="text-[#10b981]" />
             <span>THREAT MODEL &amp; SUPPLY CHAIN GOVERNANCE</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-4xl font-bold font-sans tracking-tight mb-4 text-white">
             Designed for Zero-Trust Agent Operations
           </h2>
           <p className="text-sm sm:text-base text-[#a1a1aa] font-sans">
@@ -62,19 +65,21 @@ export default function SecurityThreatModelSection() {
           </p>
         </div>
 
-        {/* 4 Architectural Pillar Cards */}
+        {/* 4 Architectural Pillar Cards - Frontier Glassmorphism */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0e0e12]/90 via-[#08080a]/90 to-[#040405] border border-[#27272a]/70 hover:border-[#10b981]/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.15)] transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
               <ShieldCheck size={16} className="text-[#10b981]" />
               <span>ZERO INJECTION ESCAPES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Sub-5 µs deterministic AST invariant checking blocks catastrophic shell patterns (rm -rf, DROP TABLE) in-memory before OS dispatch.
+              Sub-2.3 µs deterministic AST invariant checking blocks catastrophic shell patterns (rm -rf, DROP TABLE) in-memory before OS dispatch.
             </p>
           </div>
 
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0e0e12]/90 via-[#08080a]/90 to-[#040405] border border-[#27272a]/70 hover:border-[#a855f7]/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.15)] transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#a855f7]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
               <Cpu size={16} className="text-[#a855f7]" />
               <span>IN-PROCESS ZERO IPC</span>
@@ -84,17 +89,19 @@ export default function SecurityThreatModelSection() {
             </p>
           </div>
 
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0e0e12]/90 via-[#08080a]/90 to-[#040405] border border-[#27272a]/70 hover:border-[#f59e0b]/50 hover:shadow-[0_0_25px_rgba(245,158,11,0.15)] transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
               <FileCode size={16} className="text-[#f59e0b]" />
               <span>VERIFIED PACKAGE REGISTRIES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Distributed officially via PyPI (pip install btp-guard), npm (npm install btp-guard), and standard VS Code VSIX. No raw shell script piping.
+              Distributed officially via npm (npm install btp-guard), PyPI, and standard VS Code VSIX. No raw shell script piping.
             </p>
           </div>
 
-          <div className="p-6 bg-[#0a0a0a] border border-[#222222] shadow-xl">
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0e0e12]/90 via-[#08080a]/90 to-[#040405] border border-[#27272a]/70 hover:border-[#38bdf8]/50 hover:shadow-[0_0_25px_rgba(56,189,248,0.15)] transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#38bdf8]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex items-center gap-2.5 text-sm font-mono font-bold text-white mb-2">
               <Layers size={16} className="text-[#38bdf8]" />
               <span>CONTAINER &amp; K8S NATIVE</span>
@@ -112,14 +119,18 @@ export default function SecurityThreatModelSection() {
             return (
               <div
                 key={index}
-                className="bg-[#0a0a0a] border border-[#222222] overflow-hidden transition"
+                className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                  isOpen
+                    ? 'bg-gradient-to-b from-[#0e0e13] to-[#08080b] border-[#10b981]/50 shadow-[0_0_20px_rgba(16,185,129,0.12)]'
+                    : 'bg-[#09090c]/80 border-[#27272a]/70 hover:border-[#3f3f46]'
+                }`}
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-[#111111] transition cursor-pointer"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 transition cursor-pointer"
                 >
                   <div className="flex items-start sm:items-center gap-3">
-                    <span className="text-xs font-mono font-bold text-[#f59e0b] px-2 py-0.5 bg-black border border-[#222222] shrink-0">
+                    <span className="text-xs font-mono font-bold text-[#10b981] px-2.5 py-0.5 rounded bg-[#10b981]/10 border border-[#10b981]/30 shrink-0">
                       [{item.category}]
                     </span>
                     <span className="text-sm sm:text-base font-bold text-white font-sans">
@@ -127,13 +138,13 @@ export default function SecurityThreatModelSection() {
                     </span>
                   </div>
                   <div className="text-[#a1a1aa] shrink-0">
-                    {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    {isOpen ? <ChevronUp size={18} className="text-[#10b981]" /> : <ChevronDown size={18} />}
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 pt-2 border-t border-[#1c1c1c] bg-[#050505] space-y-3">
-                    <div className="p-3 bg-[#0a0a0a] border border-[#222222] font-mono text-xs text-[#10b981]">
+                  <div className="px-5 pb-6 pt-2 border-t border-[#1f1f23] bg-[#040406] space-y-3">
+                    <div className="p-3 bg-[#0a0a0d] border border-[#10b981]/30 rounded-lg font-mono text-xs text-[#10b981]">
                       SUMMARY: {item.shortAnswer}
                     </div>
                     <p className="text-xs sm:text-sm text-[#d4d4d8] font-sans leading-relaxed">

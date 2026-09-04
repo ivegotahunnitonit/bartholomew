@@ -138,45 +138,55 @@ rules:
   }
 
   return (
-    <section className="py-20 bg-black text-white border-t border-[#1c1c1c]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#f59e0b] text-xs font-mono font-bold uppercase tracking-wider mb-4">
+    <section className="py-24 bg-[#040406] text-white border-t border-[#27272a]/70 relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/70 to-transparent pointer-events-none" />
+
+      {/* Background glow accents */}
+      <div className="absolute top-1/4 right-1/4 w-[600px] h-[300px] bg-gradient-to-b from-[#f59e0b]/10 to-transparent blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#f59e0b]/10 border border-[#f59e0b]/30 text-[#f59e0b] rounded-full text-xs font-mono font-bold tracking-wider mb-4 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
             <Sliders size={13} className="text-[#f59e0b]" />
             <span>[ IN-BROWSER RULE SIMULATOR &amp; YAML GENERATOR ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             Customize AI Safety &amp; Marginal Utility Rules
           </h2>
-          <p className="mt-4 text-base text-[#a1a1aa] font-sans">
+          <p className="mt-4 text-base text-[#a1a1aa] font-sans leading-relaxed">
             Simulate safety thresholds and loop dampening in your browser, then export the generated YAML directly into your local agent environment.
           </p>
         </div>
 
         {/* 2-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Column */}
-          <div className="lg:col-span-5 bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden">
+          <div className="lg:col-span-5 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl shadow-2xl overflow-hidden relative backdrop-blur-xl">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#f59e0b]/50 to-transparent pointer-events-none" />
+
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 bg-[#ef4444]" />
-                <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
-                <div className="w-2.5 h-2.5 bg-[#10b981]" />
+            <div className="flex items-center justify-between px-5 py-3.5 bg-[#111118]/80 border-b border-[#27272a]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1.5 mr-1">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <span className="text-[11px] font-mono text-[#a1a1aa]">rules-controller.yaml</span>
               </div>
-              <span className="text-[11px] font-mono text-[#71717a]">rules-controller.yaml</span>
-              <div className="w-12" />
+              <div className="w-8" />
             </div>
 
             <div className="p-6 space-y-5">
               {/* Diminishing Marginal Utility Decay Slider */}
-              <div>
-                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
+              <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-2 font-semibold">
                   <span className="flex items-center gap-1.5 text-[#f59e0b]">
                     <Activity size={13} />
                     <span>LDMU UTILITY DECAY RATE (λ):</span>
                   </span>
-                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
+                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 rounded border border-[#27272a] font-bold">
                     {decayRate}
                   </span>
                 </div>
@@ -187,9 +197,9 @@ rules:
                   step="0.05"
                   value={decayRate}
                   onChange={(e) => setDecayRate(Number(e.target.value))}
-                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#f59e0b]"
+                  className="w-full h-1.5 bg-[#22222a] appearance-none cursor-pointer accent-[#f59e0b]"
                 />
-                <div className="flex justify-between text-[10px] text-[#71717a] mt-1 font-mono">
+                <div className="flex justify-between text-[10px] text-[#71717a] mt-1.5 font-mono">
                   <span>0.10 (Lenient)</span>
                   <span>0.35 (Standard)</span>
                   <span>0.80 (Aggressive)</span>
@@ -197,10 +207,10 @@ rules:
               </div>
 
               {/* Action Repeat Count Simulator */}
-              <div>
-                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
+              <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-2 font-semibold">
                   <span>SIMULATED REPETITION COUNT:</span>
-                  <span className="text-[#10b981] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
+                  <span className="text-[#10b981] bg-[#000000] px-2 py-0.5 rounded border border-[#27272a] font-bold">
                     Attempt #{repeatAttempts}
                   </span>
                 </div>
@@ -211,9 +221,9 @@ rules:
                   step="1"
                   value={repeatAttempts}
                   onChange={(e) => setRepeatAttempts(Number(e.target.value))}
-                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#10b981]"
+                  className="w-full h-1.5 bg-[#22222a] appearance-none cursor-pointer accent-[#10b981]"
                 />
-                <div className="flex justify-between text-[10px] text-[#71717a] mt-1 font-mono">
+                <div className="flex justify-between text-[10px] text-[#71717a] mt-1.5 font-mono">
                   <span>1 (Fresh action)</span>
                   <span>5 (Fatigued)</span>
                   <span>10 (Runaway loop)</span>
@@ -221,10 +231,10 @@ rules:
               </div>
 
               {/* Spend Limit Slider */}
-              <div>
-                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-1.5 font-semibold">
+              <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+                <div className="flex justify-between items-center text-xs font-mono text-[#d4d4d8] mb-2 font-semibold">
                   <span>MAXIMUM SPEND CAP:</span>
-                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 border border-[#222222] font-bold">
+                  <span className="text-[#f59e0b] bg-[#000000] px-2 py-0.5 rounded border border-[#27272a] font-bold">
                     ${spendLimit}.00
                   </span>
                 </div>
@@ -235,12 +245,12 @@ rules:
                   step="50"
                   value={spendLimit}
                   onChange={(e) => setSpendLimit(Number(e.target.value))}
-                  className="w-full h-1.5 bg-[#222222] appearance-none cursor-pointer accent-[#f59e0b]"
+                  className="w-full h-1.5 bg-[#22222a] appearance-none cursor-pointer accent-[#f59e0b]"
                 />
               </div>
 
               {/* Toggle 1 */}
-              <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
+              <div className="flex items-center justify-between p-3.5 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
                 <div>
                   <div className="text-xs font-mono font-bold text-[#ffffff]">BLOCK DESTRUCTIVE SQL</div>
                   <div className="text-[11px] text-[#71717a] font-sans">Rejects DROP and TRUNCATE queries</div>
@@ -254,7 +264,7 @@ rules:
               </div>
 
               {/* Toggle 2 */}
-              <div className="flex items-center justify-between p-3 bg-[#000000] border border-[#222222]">
+              <div className="flex items-center justify-between p-3.5 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
                 <div>
                   <div className="text-xs font-mono font-bold text-[#ffffff]">DISALLOW UNTRUSTED WALLETS</div>
                   <div className="text-[11px] text-[#71717a] font-sans">Blocks unverified recipient addresses</div>
@@ -269,16 +279,16 @@ rules:
 
               {/* Test Payload Box */}
               <div className="pt-1">
-                <div className="text-xs font-mono text-[#a1a1aa] mb-1.5 font-bold">[SIMULATE AGENT TOOL CALL]</div>
+                <div className="text-xs font-mono text-[#a1a1aa] mb-2 font-bold">[SIMULATE AGENT TOOL CALL]</div>
                 <textarea
                   value={testPayload}
                   onChange={(e) => setTestPayload(e.target.value)}
                   rows={4}
-                  className="w-full p-3 bg-[#000000] border border-[#222222] font-mono text-xs text-[#f59e0b] focus:outline-none focus:border-[#f59e0b] leading-relaxed resize-none"
+                  className="w-full p-3.5 bg-[#030305] border border-[#27272a]/80 rounded-xl font-mono text-xs text-[#f59e0b] focus:outline-none focus:border-[#f59e0b] leading-relaxed resize-none"
                 />
                 <button
                   onClick={evaluateCustomPolicy}
-                  className="mt-3 w-full py-2.5 px-4 bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] font-mono font-bold text-xs transition flex items-center justify-center gap-2 border border-[#f59e0b]"
+                  className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-black font-mono font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(245,158,11,0.25)] cursor-pointer active:scale-95"
                 >
                   <Play size={13} className="fill-current" />
                   <span>[EVALUATE MARGINAL UTILITY INVARIANT (&lt;50 µs)]</span>
@@ -287,14 +297,14 @@ rules:
 
               {/* Verdict Box */}
               {testResult && (
-                <div className={`p-3.5 border font-mono text-xs ${
+                <div className={`p-4 rounded-xl border font-mono text-xs ${
                   testResult.verdict === 'ALLOW'
-                    ? 'bg-[#10b981]/10 border-[#10b981]/40 text-[#10b981]'
+                    ? 'bg-[#10b981]/15 border-[#10b981]/40 text-[#10b981]'
                     : testResult.verdict === 'THROTTLE'
-                    ? 'bg-[#f59e0b]/10 border-[#f59e0b]/40 text-[#f59e0b]'
-                    : 'bg-[#ef4444]/10 border-[#ef4444]/40 text-[#ef4444]'
+                    ? 'bg-[#f59e0b]/15 border-[#f59e0b]/40 text-[#f59e0b]'
+                    : 'bg-[#ef4444]/15 border-[#ef4444]/40 text-[#ef4444]'
                 }`}>
-                  <div className="flex items-center justify-between font-bold mb-1">
+                  <div className="flex items-center justify-between font-bold mb-1.5">
                     <span className="flex items-center gap-1.5">
                       {testResult.verdict === 'ALLOW' ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
                       {testResult.verdict === 'ALLOW' ? '[VERDICT: ALLOW]' : testResult.verdict === 'THROTTLE' ? '[VERDICT: THROTTLED]' : '[VERDICT: DENY - BLOCKED]'}
@@ -308,21 +318,25 @@ rules:
           </div>
 
           {/* Generated YAML Code Column */}
-          <div className="lg:col-span-7 bg-[#0a0a0a] border border-[#222222] shadow-2xl overflow-hidden flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-between relative backdrop-blur-xl">
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
+
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#000000] border-b border-[#222222]">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 bg-[#ef4444]" />
-                <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
-                <div className="w-2.5 h-2.5 bg-[#10b981]" />
+            <div className="flex items-center justify-between px-5 py-3.5 bg-[#111118]/80 border-b border-[#27272a]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-1.5 mr-1">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <span className="text-[11px] font-mono text-[#a1a1aa]">policies/default_security_policy.yaml</span>
               </div>
-              <span className="text-[11px] font-mono text-[#71717a]">policies/default_security_policy.yaml</span>
               <button
                 onClick={handleCopyYaml}
-                className={`px-2.5 py-1 text-xs font-mono font-semibold transition flex items-center gap-1 border ${
+                className={`px-3 py-1.5 text-xs font-mono font-semibold rounded-lg transition flex items-center gap-1.5 border cursor-pointer ${
                   copied
-                    ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                    : 'bg-[#0a0a0a] hover:bg-[#141414] text-[#ffffff] border-[#2a2a2a]'
+                    ? 'bg-[#10b981] text-black border-[#10b981]'
+                    : 'bg-[#14141a] hover:bg-[#202028] text-white border-[#2e2e38]'
                 }`}
               >
                 {copied ? (
@@ -340,14 +354,17 @@ rules:
             </div>
 
             <div className="p-6 flex-grow">
-              <pre className="p-4 bg-[#000000] border border-[#1a1a1a] font-mono text-xs text-[#d4d4d8] overflow-x-auto leading-relaxed">
+              <pre className="p-5 bg-[#030305] border border-[#27272a]/70 rounded-xl font-mono text-xs text-[#d4d4d8] overflow-x-auto leading-relaxed">
                 {generatedYaml}
               </pre>
             </div>
 
-            <div className="px-6 py-3.5 bg-[#000000] border-t border-[#222222] flex items-center justify-between text-xs text-[#a1a1aa] font-mono">
-              <span className="text-[#10b981] font-semibold">[STATUS: 100% LOCALHOST READY]</span>
-              <span>DROP INTO <code className="text-[#f59e0b]">.btp/policy.yaml</code></span>
+            <div className="px-6 py-4 bg-[#0a0a10]/80 border-t border-[#27272a]/70 flex items-center justify-between text-xs text-[#a1a1aa] font-mono">
+              <span className="text-[#10b981] font-semibold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
+                [STATUS: 100% LOCALHOST READY]
+              </span>
+              <span>DROP INTO <code className="text-[#f59e0b] bg-[#f59e0b]/10 px-1 py-0.5 rounded">.btp/policy.yaml</code></span>
             </div>
           </div>
         </div>

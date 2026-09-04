@@ -422,10 +422,12 @@ if result["allowed"]:
           )}
         </div>
 
-        {/* Integration Selector */}
-        <div className="border border-[#222222] max-w-3xl mx-auto bg-[#0a0a0a] p-6 shadow-2xl">
-          <div className="text-xs font-mono text-[#f59e0b] uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
-            <Cpu size={14} />
+        {/* Integration Selector - Frontier Glassmorphism */}
+        <div className="rounded-xl border border-[#27272a] max-w-3xl mx-auto bg-gradient-to-b from-[#0e0e11] via-[#09090b] to-[#040405] p-6 shadow-[0_20px_50px_-20px_rgba(16,185,129,0.12)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#10b981]/40 to-transparent pointer-events-none" />
+
+          <div className="text-xs font-mono text-[#10b981] uppercase tracking-wider font-bold mb-4 flex items-center gap-2">
+            <Cpu size={14} className="text-[#10b981]" />
             <span>[ SELECT YOUR INTEGRATION OR RUNTIME ]</span>
           </div>
 
@@ -435,34 +437,39 @@ if result["allowed"]:
               <button
                 key={agent}
                 onClick={() => setSelectedAgent(agent)}
-                className={`p-3 text-left transition font-mono border ${
+                className={`p-3 text-left transition font-mono border rounded-lg ${
                   selectedAgent === agent
-                    ? 'bg-[#141414] border-[#f59e0b] text-white shadow-sm'
-                    : 'bg-[#000000] border-[#222222] text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#383838]'
+                    ? 'bg-[#10b981]/15 border-[#10b981] text-white shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                    : 'bg-[#0b0b0e] border-[#222226] text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#38383f]'
                 }`}
               >
-                <div className="text-[10px] text-[#f59e0b] uppercase mb-1 font-bold">[{agent.toUpperCase()}]</div>
-                <div className="text-xs font-semibold truncate">{agentPairingSnippets[agent].title.split(' ')[0]}</div>
+                <div className={`text-[10px] uppercase mb-1 font-bold ${selectedAgent === agent ? 'text-[#10b981]' : 'text-[#71717a]'}`}>
+                  [{agent.toUpperCase()}]
+                </div>
+                <div className="text-xs font-semibold truncate text-white">{agentPairingSnippets[agent].title.split(' ')[0]}</div>
               </button>
             ))}
           </div>
 
           {/* Code Preview */}
-          <div className="bg-[#000000] border border-[#222222] overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2 bg-[#0a0a0a] border-b border-[#222222] text-xs font-mono">
-              <span className="text-[#a1a1aa]">{currentSnippet.filename}</span>
+          <div className="bg-[#030304] border border-[#1f1f23] rounded-lg overflow-hidden shadow-inner">
+            <div className="flex items-center justify-between px-4 py-2 bg-[#09090c] border-b border-[#1f1f23] text-xs font-mono">
+              <span className="text-[#a1a1aa] flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                <span>{currentSnippet.filename}</span>
+              </span>
               <button
                 onClick={handleCopySnippet}
-                className="text-[#f59e0b] hover:text-white font-bold flex items-center gap-1"
+                className="text-[#10b981] hover:text-white font-bold flex items-center gap-1 transition"
               >
-                {copiedCode ? <Check size={11} /> : <Copy size={11} />}
+                {copiedCode ? <Check size={11} className="stroke-[3]" /> : <Copy size={11} />}
                 <span>{copiedCode ? '[COPIED]' : '[COPY SNIPPET]'}</span>
               </button>
             </div>
-            <pre className="p-4 font-mono text-xs text-[#d4d4d8] leading-relaxed overflow-x-auto">
+            <pre className="p-4 font-mono text-xs text-[#d4d4d8] leading-relaxed overflow-x-auto selection:bg-[#10b981]/30">
               {currentSnippet.code}
             </pre>
-            <div className="p-3 bg-[#0a0a0a] border-t border-[#222222] text-xs text-[#a1a1aa] font-sans">
+            <div className="p-3 bg-[#070709] border-t border-[#1a1a1e] text-xs text-[#a1a1aa] font-sans">
               {currentSnippet.desc}
             </div>
           </div>

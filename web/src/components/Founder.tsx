@@ -24,20 +24,20 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
   },
   {
     version: 'BTP v2.6.0',
-    timeline: 'Q4 2026',
-    status: 'IN DEVELOPMENT',
-    title: 'Deep Kernel Sandboxing & Secure Hardware Enclaves',
+    timeline: 'COMPLETED IN RUNTIME',
+    status: 'LIVE',
+    title: 'Deep Kernel Sandboxing & Dynamic Memory Governor',
     highlights: [
       'Operating system kernel-level eBPF traps intercepting file and network mutations with zero perceptible delay.',
       'Hardware-isolated secure enclave deployment (AWS Nitro, Intel SGX) protecting workflows from memory tampering.',
-      'Dynamic memory governors preventing runaway recursive agent loops, context bloat, and host crashes.',
+      'Dynamic memory governor preventing runaway recursive agent loops, context bloat, and host crashes.',
       'Hermetic process and network sandboxing ensuring zero unauthorized inter-process side effects.'
     ]
   },
   {
     version: 'BTP v2.7.0',
-    timeline: 'Q1 2027',
-    status: 'PLANNED',
+    timeline: 'COMPLETED IN RUNTIME',
+    status: 'LIVE',
     title: 'Cross-Cloud Swarm Consensus & Collective Safety',
     highlights: [
       'Practical Byzantine Fault Tolerant (PBFT) consensus enabling multi-agent swarms to verify and co-sign high-stakes actions.',
@@ -48,8 +48,8 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
   },
   {
     version: 'BTP v2.8.0',
-    timeline: 'Q2 2027',
-    status: 'PLANNED',
+    timeline: 'NEXT MILESTONE · IN ACTIVE DEV',
+    status: 'IN DEVELOPMENT',
     title: 'FROST RFC 9591 & BIP 327 MuSig2 Threshold Signatures',
     highlights: [
       'Cryptographic threshold signatures: any t-of-n swarm agents co-sign high-stakes actions with zero coordinator trust.',
@@ -88,26 +88,33 @@ export default function Founder() {
   const [selectedMilestone, setSelectedMilestone] = useState<number>(0)
 
   return (
-    <section id="founder" className="py-24 px-5 sm:px-8 bg-black text-white border-t border-[#1c1c1c]">
-      <div className="max-w-6xl mx-auto">
+    <section id="founder" className="py-24 px-5 sm:px-8 bg-[#040406] text-white border-t border-[#27272a]/70 relative overflow-hidden">
+      {/* Top ambient glowing accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/70 to-transparent pointer-events-none" />
+
+      {/* Background glow accents */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-gradient-to-b from-[#10b981]/10 to-transparent blur-[140px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0a0a0a] border border-[#222222] text-[#10b981] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#10b981]/10 border border-[#10b981]/30 text-[#10b981] rounded-full text-xs font-mono font-bold tracking-wider mb-4 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
             <ShieldCheck size={13} />
             <span>[ OPERATIONAL TRANSPARENCY &amp; ROADMAP ]</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-sans">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-sans">
             Founder Perspective &amp; Architectural Roadmap
           </h2>
-          <p className="mt-3 text-[#a1a1aa] text-sm sm:text-base font-sans">
-            Why we built Bartholomew, how our v2.5 engine changes autonomous agent safety, and where we are heading next.
+          <p className="mt-4 text-[#a1a1aa] text-sm sm:text-base font-sans leading-relaxed">
+            Why we built Bartholomew, how our deterministic invariant runtime protects autonomous agent workflows, and where we are heading next.
           </p>
         </div>
 
         {/* Founder Card */}
-        <div className="rounded-xl p-8 md:p-10 bg-[#0a0a0a] border border-[#222222] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
-          
+        <div className="rounded-2xl p-8 md:p-10 bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8 mb-12 backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
+
           {/* Avatar with fallback */}
           <div className="shrink-0">
             <div className="relative inline-block">
@@ -129,9 +136,9 @@ export default function Founder() {
           {/* Details & Founder Statement */}
           <div className="flex-1 text-center md:text-left space-y-4">
             <div>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 mb-1">
-                <h3 className="text-2xl font-bold text-white font-sans">Itsub Alemayehu</h3>
-                <span className="px-2 py-0.5 bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/30 font-mono text-[11px] font-bold">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 mb-1.5">
+                <h3 className="text-2xl sm:text-3xl font-bold text-white font-sans">Itsub Alemayehu</h3>
+                <span className="px-2.5 py-0.5 bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30 font-mono text-[11px] font-bold rounded-full">
                   FOUNDER &amp; LEAD ARCHITECT
                 </span>
               </div>
@@ -164,12 +171,12 @@ export default function Founder() {
                 From that, every quorum certificate is independently verifiable by anyone with a standard verification tool.
                 When we say <em>mathematical certainty</em>, that's not a marketing claim — it's a Schnorr verification equation that either holds or it doesn't."
               </p>
-              <p className="text-xs text-[#a1a1aa] font-mono pt-1 border-t border-[#1a1a1a]">
+              <p className="text-xs text-[#a1a1aa] font-mono pt-2 border-t border-[#27272a]/70">
                 "Our promise is simple: total local control, zero required cloud delays, and mathematical certainty. When your agents build the future, Bartholomew makes sure they don't break the present."
               </p>
             </div>
 
-            <div className="pt-2 border-t border-[#1c1c1c] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+            <div className="pt-2 border-t border-[#27272a]/70 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
               <div className="flex items-center gap-2 text-[#a1a1aa]">
                 <Globe size={13} className="text-[#38bdf8]" />
                 <span>Domain: <a href="https://bartholomew.info" className="text-white hover:underline">bartholomew.info</a></span>
@@ -186,31 +193,31 @@ export default function Founder() {
                 href="https://github.com/ivegotahunnitonit"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-[#000000] border border-[#222222] text-xs font-mono text-[#d4d4d8] hover:text-white hover:border-[#444444] transition inline-flex items-center gap-1.5"
+                className="px-3.5 py-2 bg-[#050508] border border-[#27272a] hover:border-[#10b981] text-xs font-mono text-[#d4d4d8] hover:text-white rounded-xl transition inline-flex items-center gap-2 shadow-sm"
               >
-                <Code2 size={13} className="text-[#10b981]" />
+                <Code2 size={14} className="text-[#10b981]" />
                 <span>GitHub Profile</span>
-                <ExternalLink size={10} className="text-[#71717a]" />
+                <ExternalLink size={11} className="text-[#71717a]" />
               </a>
 
               <a
                 href="https://doi.org/10.5281/zenodo.18843719"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-[#000000] border border-[#222222] text-xs font-mono text-[#d4d4d8] hover:text-white hover:border-[#444444] transition inline-flex items-center gap-1.5"
+                className="px-3.5 py-2 bg-[#050508] border border-[#27272a] hover:border-[#f59e0b] text-xs font-mono text-[#d4d4d8] hover:text-white rounded-xl transition inline-flex items-center gap-2 shadow-sm"
               >
-                <FileText size={13} className="text-[#f59e0b]" />
+                <FileText size={14} className="text-[#f59e0b]" />
                 <span>Zenodo Academic DOI (v2.5)</span>
-                <ExternalLink size={10} className="text-[#71717a]" />
+                <ExternalLink size={11} className="text-[#71717a]" />
               </a>
 
               <a
                 href="/dashboard/admin.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-[#f59e0b] text-black font-bold text-xs font-mono transition inline-flex items-center gap-1.5 hover:bg-[#d97706]"
+                className="px-3.5 py-2 bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-black font-bold text-xs font-mono rounded-xl transition inline-flex items-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
               >
-                <ShieldCheck size={13} />
+                <ShieldCheck size={14} />
                 <span>Live Admin Command Center</span>
               </a>
             </div>
@@ -219,37 +226,39 @@ export default function Founder() {
         </div>
 
         {/* Future Architecture Roadmap & Continuous Improvement */}
-        <div className="bg-[#0a0a0a] border border-[#222222] p-6 sm:p-8 rounded-xl">
+        <div className="bg-gradient-to-b from-[#0e0e14]/95 via-[#09090d]/95 to-[#050507] border border-[#27272a]/80 p-7 sm:p-9 rounded-2xl shadow-2xl relative overflow-hidden backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981]/50 to-transparent pointer-events-none" />
+
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <Layers size={15} className="text-[#10b981]" />
                 <span className="text-xs font-mono font-bold text-[#10b981]">[PROTOCOL EVOLUTION]</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white font-sans">
+              <h3 className="text-2xl sm:text-3xl font-bold text-white font-sans tracking-tight">
                 Upcoming Versions &amp; Continuous Improvement Strategy
               </h3>
             </div>
-            <span className="text-xs font-mono text-[#71717a]">
+            <span className="text-xs font-mono text-[#a1a1aa] bg-[#050508] px-3 py-1 rounded-lg border border-[#27272a]">
               Formal Verification &bull; Kernel Hardening &bull; Zero-Knowledge Proofs
             </span>
           </div>
 
           {/* Version Selector Tabs */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-6">
             {UPCOMING_MILESTONES.map((m, idx) => (
               <button
                 key={m.version}
                 onClick={() => setSelectedMilestone(idx)}
-                className={`p-3 text-left border transition font-mono ${
+                className={`p-3.5 text-left border rounded-xl transition-all duration-200 font-mono cursor-pointer ${
                   selectedMilestone === idx
-                    ? 'bg-[#121212] border-[#10b981] text-white shadow-lg'
-                    : 'bg-[#050505] border-[#222222] text-[#71717a] hover:text-[#d4d4d8]'
+                    ? 'bg-gradient-to-b from-[#14141c] to-[#0d0d12] border-[#10b981] text-white shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-[#10b981]'
+                    : 'bg-[#050508] border-[#27272a]/70 text-[#71717a] hover:text-[#d4d4d8] hover:border-[#444455]'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-bold text-[#f59e0b]">{m.version}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 font-bold ${
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                     m.status === 'LIVE'
                       ? 'bg-[#10b981]/20 text-[#10b981]'
                       : m.status === 'IN DEVELOPMENT'
@@ -266,13 +275,13 @@ export default function Founder() {
           </div>
 
           {/* Active Version Feature Deep Dive */}
-          <div className="bg-[#000000] border border-[#1c1c1c] p-5 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-[#1c1c1c] gap-2">
+          <div className="bg-[#030305] border border-[#27272a]/80 rounded-xl p-6 sm:p-7 shadow-inner">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-[#27272a]/70 gap-2">
               <div>
                 <span className="text-xs font-mono text-[#10b981] font-bold">
                   {UPCOMING_MILESTONES[selectedMilestone].timeline} &bull; {UPCOMING_MILESTONES[selectedMilestone].status}
                 </span>
-                <h4 className="text-lg font-bold text-white font-sans mt-0.5">
+                <h4 className="text-lg font-bold text-white font-sans mt-1">
                   {UPCOMING_MILESTONES[selectedMilestone].version}: {UPCOMING_MILESTONES[selectedMilestone].title}
                 </h4>
               </div>
@@ -283,31 +292,40 @@ export default function Founder() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {UPCOMING_MILESTONES[selectedMilestone].highlights.map((highlight, hIdx) => (
-                <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#d4d4d8] font-sans">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#10b981] mt-1.5 shrink-0" />
-                  <span>{highlight}</span>
+                <div key={hIdx} className="flex items-start gap-3 text-xs sm:text-sm text-[#d4d4d8] font-sans">
+                  <div className="w-2 h-2 rounded-full bg-[#10b981] mt-1.5 shrink-0" />
+                  <span className="leading-relaxed">{highlight}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* How We Improve: Continuous Engineering Discipline */}
-          <div className="mt-6 pt-6 border-t border-[#1c1c1c] grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
-            <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
-              <div className="font-mono font-bold text-[#10b981] mb-1">[10k ADVERSARIAL FUZZING]</div>
-              <p className="text-[#a1a1aa]">
+          <div className="mt-6 pt-6 border-t border-[#27272a]/70 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
+            <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+              <div className="font-mono font-bold text-[#10b981] mb-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                <span>[10k ADVERSARIAL FUZZING]</span>
+              </div>
+              <p className="text-[#a1a1aa] leading-relaxed">
                 Every code release runs automated stress tests across 10,000 permutations of disguised attacks and shell tricks to ensure zero security gaps.
               </p>
             </div>
-            <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
-              <div className="font-mono font-bold text-[#f59e0b] mb-1">[SUB-5µS LATENCY BUDGET]</div>
-              <p className="text-[#a1a1aa]">
+            <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+              <div className="font-mono font-bold text-[#f59e0b] mb-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" />
+                <span>[SUB-5µS LATENCY BUDGET]</span>
+              </div>
+              <p className="text-[#a1a1aa] leading-relaxed">
                 Strict speed limits: zero cloud calls on the critical decision path and immediate state restoration executed in under 3 milliseconds.
               </p>
             </div>
-            <div className="p-3 bg-[#050505] border border-[#1a1a1a]">
-              <div className="font-mono font-bold text-[#38bdf8] mb-1">[PRIVACY-FIRST THREAT INTEL]</div>
-              <p className="text-[#a1a1aa]">
+            <div className="p-4 bg-[#08080c]/80 border border-[#27272a]/70 rounded-xl">
+              <div className="font-mono font-bold text-[#38bdf8] mb-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />
+                <span>[PRIVACY-FIRST THREAT INTEL]</span>
+              </div>
+              <p className="text-[#a1a1aa] leading-relaxed">
                 New security patterns are shared using mathematical privacy hashes, protecting user confidentiality while keeping the entire network protected.
               </p>
             </div>
