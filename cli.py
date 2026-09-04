@@ -11,6 +11,7 @@ import argparse
 import subprocess
 import json
 import urllib.request
+import hashlib
 
 # Ensure parent directory in path
 parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -140,6 +141,252 @@ def cmd_policy_synthesize(args):
     print(f"[OK] Synthesized policy written to {out_file}")
 
 
+def cmd_keygen(args):
+    """Generate and display a fresh Ed25519 sovereign keypair."""
+    authority = BartholomewTrustAuthority()
+    print("=" * 70)
+    print("BARTHOLOMEW ED25519 SOVEREIGN KEYPAIR GENERATION")
+    print("=" * 70)
+    print(f"[*] Public Key (Hex) : {authority.public_key_hex}")
+    print(f"[*] TTL Policy Bound : {authority.ttl_seconds} seconds")
+    print(f"[*] Algorithm        : Pure Ed25519 (RFC 8032 / FIPS 186-5)")
+    print("=" * 70)
+
+
+def cmd_threshold_keygen(args):
+    """Generate (t, n) FROST threshold secret shares & group public key (RFC 9591)."""
+    from src.frost_threshold_engine import frost_keygen
+    t = args.threshold
+    n = args.participants
+    if t < 1:
+        print(f"[ERROR] Threshold t must be >= 1, got {t}")
+        sys.exit(1)
+    if n < t + 1:
+        print(f"[ERROR] Participants n ({n}) must be at least t+1 ({t+1})")
+        sys.exit(1)
+
+    print("=" * 70)
+    print(f"BARTHOLOMEW FROST RFC 9591 THRESHOLD KEY GENERATION ({t+1}-of-{n})")
+    print("=" * 70)
+    results = frost_keygen(n=n, t=t)
+    group_pubkey = results[0].group_pubkey
+    group_pubkey_hex = hex(group_pubkey)
+
+    print(f"[*] Group Public Key : {group_pubkey_hex[:32]}...{group_pubkey_hex[-16:]}")
+    print(f"[*] Quorum Threshold : Any {t+1} of {n} agents required to sign")
+    print(f"[*] Security Scheme  : Schnorr Threshold over 1024-bit MODP (RFC 9591 / RFC 3526)")
+
+    out_dir = args.out
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+        pub_path = os.path.join(out_dir, "group_pubkey.json")
+        with open(pub_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "group_pubkey_hex": group_pubkey_hex,
+                "threshold": t,
+                "required_signers": t + 1,
+                "n_participants": n,
+                "standard": "RFC 9591 FROST",
+            }, f, indent=2)
+        print(f"[+] Saved group public key: {pub_path}")
+
+        for r in results:
+            share_file = os.path.join(out_dir, f"share_{r.index}.json")
+            with open(share_file, "w", encoding="utf-8") as f:
+                json.dump({
+                    "index": r.index,
+                    "threshold": r.threshold,
+                    "n_participants": r.n_participants,
+                    "secret_share_hex": hex(r.secret_share),
+                    "verification_share_hex": hex(r.verification_share),
+                    "group_pubkey_hex": group_pubkey_hex,
+                }, f, indent=2)
+            print(f"[+] Saved Agent {r.index} Share: {share_file}")
+    else:
+        print("[!] Note: Specify --out <directory> to persist individual agent key shares.")
+    print("=" * 70)
+
+
+def cmd_threshold_sign(args):
+    """Execute 2-round FROST threshold signature across provided agent shares."""
+    from src.frost_threshold_engine import (
+        FrostKeygenResult,
+        FrostSigner,
+        FrostCoordinator,
+    )
+    share_files = args.shares
+    if not share_files or len(share_files) == 0:
+        print("[ERROR] No share files provided. Specify --shares share_1.json share_2.json ...")
+        sys.exit(1)
+
+    loaded_shares = []
+    for sf in share_files:
+        if not os.path.exists(sf):
+            print(f"[ERROR] Share file not found: {sf}")
+            sys.exit(1)
+        with open(sf, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            loaded_shares.append(FrostKeygenResult(
+                secret_share=int(data["secret_share_hex"], 16),
+                verification_share=int(data["verification_share_hex"], 16),
+                group_pubkey=int(data["group_pubkey_hex"], 16),
+                index=data["index"],
+                threshold=data["threshold"],
+                n_participants=data["n_participants"],
+            ))
+
+    t = loaded_shares[0].threshold
+    group_pubkey = loaded_shares[0].group_pubkey
+    if len(loaded_shares) < t + 1:
+        print(f"[ERROR] Insufficient signers: Got {len(loaded_shares)} shares, but threshold requires at least {t+1} signers.")
+        sys.exit(2)
+
+    # Read payload
+    if os.path.exists(args.payload):
+        with open(args.payload, "rb") as f:
+            raw_payload = f.read()
+    else:
+        raw_payload = args.payload.encode("utf-8")
+
+    print("=" * 70)
+    print("EXECUTING FROST RFC 9591 THRESHOLD SIGNING CEREMONY")
+    print("=" * 70)
+    print(f"[*] Signer Count     : {len(loaded_shares)} agents (indices: {[s.index for s in loaded_shares]})")
+    print(f"[*] Group Public Key : {hex(group_pubkey)[:32]}...")
+    print(f"[*] Payload Digest   : {hashlib.sha256(raw_payload).hexdigest()}")
+
+    signers = [FrostSigner(share) for share in loaded_shares]
+    coordinator = FrostCoordinator(group_pubkey=group_pubkey, threshold=t)
+
+    # Round 1: Commitments
+    commitments = [s.round1_commit() for s in signers]
+    print(f"[+] Round 1: {len(commitments)} nonce commitments broadcasted.")
+
+    # Round 2: Partial signatures
+    partial_sigs = [s.round2_sign(raw_payload, commitments) for s in signers]
+    print(f"[+] Round 2: {len(partial_sigs)} partial Schnorr signatures generated.")
+
+    # Aggregation
+    sig = coordinator.aggregate_signature(raw_payload, commitments, partial_sigs)
+    is_valid = sig.verify()
+    print("[+] Aggregation: Group Schnorr signature sigma=(R, z) produced.")
+    print(f"[*] Invariant Status : {'VALID' if is_valid else 'INVALID'}")
+
+    out_data = sig.to_dict()
+    out_data["algorithm"] = "FROST-RFC9591-MODP1024"
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(out_data, f, indent=2)
+        print(f"[+] Output written to: {args.out}")
+    else:
+        print(json.dumps(out_data, indent=2))
+    print("=" * 70)
+    if not is_valid:
+        sys.exit(3)
+
+
+def cmd_threshold_verify(args):
+    """Verify an aggregate FROST threshold signature against payload and group pubkey."""
+    from src.frost_threshold_engine import FrostThresholdSignature
+    sig_file = args.sig
+    if not os.path.exists(sig_file):
+        print(f"[ERROR] Signature file not found: {sig_file}")
+        sys.exit(1)
+
+    with open(sig_file, "r", encoding="utf-8") as f:
+        sig_data = json.load(f)
+
+    if args.pubkey:
+        group_pubkey = int(args.pubkey, 16)
+    else:
+        group_pubkey = int(sig_data["group_pubkey_hex"], 16)
+
+    sig = FrostThresholdSignature(
+        R=int(sig_data["R_hex"], 16),
+        z=int(sig_data["z_hex"], 16),
+        group_pubkey=group_pubkey,
+        message_hash=bytes.fromhex(sig_data["message_hash_hex"]),
+        signing_indices=sig_data["signing_indices"],
+        threshold=sig_data["threshold"],
+    )
+
+    if args.payload:
+        if os.path.exists(args.payload):
+            with open(args.payload, "rb") as f:
+                content = f.read()
+        else:
+            content = args.payload.encode("utf-8")
+        expected_hash = hashlib.sha256(content).digest()
+        if expected_hash != sig.message_hash:
+            print("[FAIL] Payload hash mismatch!")
+            print(f"  Expected: {expected_hash.hex()}")
+            print(f"  In Sig  : {sig.message_hash.hex()}")
+            sys.exit(2)
+
+    is_valid = sig.verify()
+    print("=" * 70)
+    print("BARTHOLOMEW FROST THRESHOLD SIGNATURE VERIFICATION")
+    print("=" * 70)
+    print(f"[*] Signers Participated : {sig.signing_indices}")
+    print(f"[*] Quorum Threshold     : {sig.threshold + 1}")
+    print(f"[*] Group Public Key     : {hex(sig.group_pubkey)[:32]}...")
+    print(f"[*] Message Hash         : {sig.message_hash.hex()}")
+    print(f"[*] Verification Verdict : {'PASS (AUTHENTIC & INTACT)' if is_valid else 'FAIL (FORGERY / CORRUPTED)'}")
+    print("=" * 70)
+    if not is_valid:
+        sys.exit(1)
+
+
+def cmd_audit(args):
+    from src.cli_linter import audit_directory, print_audit_report
+    results = audit_directory(args.path)
+    print_audit_report(results)
+
+
+def cmd_check(args):
+    from src.dynamic_policy_sync import load_and_validate_policy, verify_policy_integrity
+    import yaml
+    try:
+        with open(args.file, "r", encoding="utf-8") as f:
+            raw_data = yaml.safe_load(f) or {}
+        is_valid, issues = verify_policy_integrity(raw_data)
+        policy = load_and_validate_policy(args.file)
+        print("=" * 70)
+        print("BARTHOLOMEW FORMAL POLICY VERIFICATION")
+        print("=" * 70)
+        print(f"[*] Policy Path   : {policy['_source_path']}")
+        print(f"[*] Active Rules  : {policy['_rule_count']}")
+        print(f"[*] Fingerprint   : {policy['_hash']}")
+        print(f"[*] Status        : {'PASS' if is_valid else 'FAIL'}")
+        if issues:
+            print("[*] Diagnostics   :")
+            for issue in issues:
+                print(f"    - {issue}")
+        print("=" * 70)
+        if not is_valid:
+            sys.exit(1)
+    except Exception as e:
+        print(f"[ERROR] Policy check failed: {str(e)}")
+        sys.exit(1)
+
+
+def cmd_sync(args):
+    from src.dynamic_policy_sync import sync_policy
+    success, msg, data = sync_policy(args.target, args.config, dry_run=args.dry_run)
+    print(msg)
+    if not success:
+        sys.exit(1)
+
+
+def cmd_verify_offline(args):
+    from src.offline_airgap_verifier import verify_btp_receipt_file
+    success, report, _ = verify_btp_receipt_file(args.receipt, args.pubkey)
+    print(report)
+    if not success:
+        sys.exit(1)
+
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bartholomew AI Agent Guardrail CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -199,6 +446,65 @@ def main():
     agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
     agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
 
+    # keygen (Ed25519)
+    subparsers.add_parser("keygen", help="Generate a fresh sovereign Ed25519 keypair")
+
+    # threshold-keygen (FROST RFC 9591)
+    tk_p = subparsers.add_parser("threshold-keygen", help="Generate (t, n) FROST threshold shares and group public key (RFC 9591)")
+    tk_p.add_argument("--threshold", "-t", type=int, default=3, help="Signing threshold: any t+1 agents can sign (default: 3)")
+    tk_p.add_argument("--participants", "-n", type=int, default=5, help="Total swarm participants (default: 5)")
+    tk_p.add_argument("--out", "-o", type=str, default=None, help="Directory to save group key and participant shares")
+
+    # threshold-sign (FROST RFC 9591)
+    ts_p = subparsers.add_parser("threshold-sign", help="Execute 2-round FROST threshold signing across agent shares")
+    ts_p.add_argument("--shares", "-s", nargs="+", required=True, help="Paths to participant share JSON files")
+    ts_p.add_argument("--payload", "-p", required=True, help="Payload string or path to JSON/binary file")
+    ts_p.add_argument("--out", "-o", type=str, default=None, help="Output file to write signature JSON")
+
+    # threshold-verify (FROST RFC 9591)
+    tv_p = subparsers.add_parser("threshold-verify", help="Verify aggregate FROST threshold signature against group key")
+    tv_p.add_argument("--sig", "-s", required=True, help="Path to signature JSON file")
+    tv_p.add_argument("--payload", "-p", default=None, help="Payload string or file path to verify digest against")
+    tv_p.add_argument("--pubkey", default=None, help="Group public key hex override (optional)")
+
+    # threshold namespace subparser
+    t_ns_p = subparsers.add_parser("threshold", help="FROST RFC 9591 & BIP 327 threshold signature engine")
+    t_sub = t_ns_p.add_subparsers(dest="threshold_cmd")
+    
+    t_ns_k = t_sub.add_parser("keygen", help="Generate (t, n) FROST shares and group public key")
+    t_ns_k.add_argument("--threshold", "-t", type=int, default=3, help="Signing threshold t (default: 3)")
+    t_ns_k.add_argument("--participants", "-n", type=int, default=5, help="Total swarm participants n (default: 5)")
+    t_ns_k.add_argument("--out", "-o", type=str, default=None, help="Directory to save group key and participant shares")
+
+    t_ns_s = t_sub.add_parser("sign", help="Execute 2-round FROST threshold signing")
+    t_ns_s.add_argument("--shares", "-s", nargs="+", required=True, help="Paths to participant share JSON files")
+    t_ns_s.add_argument("--payload", "-p", required=True, help="Payload string or path to file")
+    t_ns_s.add_argument("--out", "-o", type=str, default=None, help="Output signature file")
+
+    t_ns_v = t_sub.add_parser("verify", help="Verify aggregate FROST threshold signature")
+    t_ns_v.add_argument("--sig", "-s", required=True, help="Path to signature JSON file")
+    t_ns_v.add_argument("--payload", "-p", default=None, help="Payload string or file path")
+    t_ns_v.add_argument("--pubkey", default=None, help="Group public key hex override")
+
+    # audit
+    aud_p = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
+    aud_p.add_argument("path", nargs="?", default=".", help="Target directory to audit (default: .)")
+
+    # check
+    chk_p = subparsers.add_parser("check", help="Statically verify policy for contradictions and invariant coverage")
+    chk_p.add_argument("--file", "-f", default=".btp/policy.yaml", help="Path to policy YAML file")
+
+    # sync
+    sync_p = subparsers.add_parser("sync", help="Push verified policy to live agent workers via hot reload")
+    sync_p.add_argument("--config", "-c", default=".btp/policy.yaml", help="Path to policy YAML file")
+    sync_p.add_argument("--target", "-t", default="http://127.0.0.1:8000", help="Target daemon URL")
+    sync_p.add_argument("--dry-run", action="store_true", help="Validate and fingerprint without dispatching")
+
+    # verify-offline
+    v_off_p = subparsers.add_parser("verify-offline", help="Independently verify an offline BTP receipt")
+    v_off_p.add_argument("--receipt", "-r", required=True, help="Path to receipt JSON file")
+    v_off_p.add_argument("--pubkey", "-p", help="Trusted authority public key hex (optional)")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -216,6 +522,31 @@ def main():
     elif args.command == "agent":
         from src.interactive_agent_repl import run_agent_repl
         run_agent_repl()
+    elif args.command == "keygen":
+        cmd_keygen(args)
+    elif args.command == "threshold-keygen":
+        cmd_threshold_keygen(args)
+    elif args.command == "threshold-sign":
+        cmd_threshold_sign(args)
+    elif args.command == "threshold-verify":
+        cmd_threshold_verify(args)
+    elif args.command == "threshold":
+        if args.threshold_cmd == "keygen":
+            cmd_threshold_keygen(args)
+        elif args.threshold_cmd == "sign":
+            cmd_threshold_sign(args)
+        elif args.threshold_cmd == "verify":
+            cmd_threshold_verify(args)
+        else:
+            t_ns_p.print_help()
+    elif args.command == "audit":
+        cmd_audit(args)
+    elif args.command == "check":
+        cmd_check(args)
+    elif args.command == "sync":
+        cmd_sync(args)
+    elif args.command == "verify-offline":
+        cmd_verify_offline(args)
     elif args.command == "init":
         cmd_init(args)
     elif args.command == "daemon":

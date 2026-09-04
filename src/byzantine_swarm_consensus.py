@@ -45,6 +45,7 @@ class SwarmQuorumCertificate:
     participating_agents: List[str]
     certificate_sha256: str
     timestamp: float
+    frost_signature: Optional[Dict[str, Any]] = None
 
 class ByzantineSwarmEngine:
     """
@@ -167,3 +168,62 @@ class ByzantineSwarmEngine:
             return False, None, f"BFT_QUORUM_VETOED: Proposal rejected by {len(rejections)} validator agents."
 
         return False, None, f"PENDING_QUORUM: {len(approvals)}/{self.required_quorum} approvals received."
+
+    def attach_frost_signature(
+        self,
+        proposal_id: str,
+        signers: Dict[str, Any],
+        coordinator: Any,
+    ) -> Tuple[bool, Optional[Dict[str, Any]], str]:
+        """
+        Drives 2-round FROST threshold signing across approving agents for proposal_id,
+        and binds the resulting Schnorr threshold signature into the SwarmQuorumCertificate.
+
+        Args:
+            proposal_id: ID of the proposal with achieved consensus
+            signers: mapping of agent_id -> FrostSigner
+            coordinator: FrostCoordinator configured with the swarm group public key
+
+        Returns:
+            (success, frost_dict, message)
+        """
+        if proposal_id not in self.certificates:
+            return False, None, f"BTP-FROST-001: No certificate exists for proposal '{proposal_id}'."
+
+        cert = self.certificates[proposal_id]
+        if not cert.consensus_reached:
+            return False, None, "BTP-FROST-002: Consensus not reached."
+
+        proposal = self.proposals[proposal_id]
+        approving_ids = cert.participating_agents
+
+        available_signers = [signers[aid] for aid in approving_ids if aid in signers]
+        if len(available_signers) < coordinator.threshold + 1:
+            return False, None, (
+                f"BTP-FROST-003: Insufficient FROST signers. "
+                f"Required: {coordinator.threshold + 1}, available: {len(available_signers)}"
+            )
+
+        # Canonical message representing proposal
+        canonical_msg = (
+            proposal_id.encode("utf-8")
+            + b":"
+            + proposal.action_type.encode("utf-8")
+            + b":"
+            + hashlib.sha256(json.dumps(proposal.action_payload, sort_keys=True).encode("utf-8")).digest()
+        )
+
+        # Round 1: Commitments
+        commitments = [s.round1_commit() for s in available_signers]
+        # Round 2: Partial signatures
+        partial_sigs = [s.round2_sign(canonical_msg, commitments) for s in available_signers]
+        # Aggregate
+        frost_sig = coordinator.aggregate_signature(canonical_msg, commitments, partial_sigs)
+
+        if not frost_sig.verify():
+            return False, None, "BTP-FROST-004: Aggregated FROST signature verification failed."
+
+        sig_dict = frost_sig.to_dict()
+        cert.frost_signature = sig_dict
+        return True, sig_dict, "BTP_FROST_ATTACHED: Valid RFC 9591 threshold signature bound to certificate."
+

@@ -24,6 +24,30 @@ def execute_shell_command(command: str):
     lang: 'python',
   },
   {
+    id: 'frost',
+    label: '[SWARM FROST QUORUM (RFC 9591)]',
+    filename: 'swarm_frost_cosigning.py',
+    code: `from btp_guard.frost import frost_keygen, FrostSigner, FrostCoordinator
+
+# 1. Initialize (3-of-5) FROST threshold swarm
+keygens = frost_keygen(n=5, t=2)
+signers = [FrostSigner(kg) for kg in keygens]
+coordinator = FrostCoordinator(group_pubkey=keygens[0].group_pubkey, threshold=2)
+
+# 2. Round 1: Any 3 agents broadcast nonce commitments
+active_signers = signers[:3]
+commitments = [s.round1_commit() for s in active_signers]
+
+# 3. Round 2: Generate partial Schnorr signatures on tool action
+payload = b'{"action":"DROP_TABLE","authorized":false}'
+partial_sigs = [s.round2_sign(payload, commitments) for s in active_signers]
+
+# 4. Aggregation: Produce unified Schnorr signature sigma=(R, z)
+frost_sig = coordinator.aggregate_signature(payload, commitments, partial_sigs)
+assert frost_sig.verify() is True  # Valid against swarm group pubkey!`,
+    lang: 'python',
+  },
+  {
     id: 'langchain',
     label: '[LANGCHAIN & CREWAI PLUGIN]',
     filename: 'langchain_guard_handler.py',
