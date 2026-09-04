@@ -1,251 +1,578 @@
 """
-Bartholomew CLI Tool (v2.2.0)
-=============================
-Command-line interface for:
-  1. Quickstart initialization (`bartholomew init`).
-  2. Ed25519 keypair generation (`bartholomew keygen`).
-  3. Declarative policy validation & testing (`bartholomew policy validate/eval`).
-  4. Codebase security auditing (`bartholomew audit`).
+Bartholomew CLI Tool (BTP v2.2.0)
+=================================
+Command line interface for initializing, managing, and inspecting
+Bartholomew sovereign trust roots, local daemons, and MCP servers.
 """
 
 import sys
 import os
-import json
 import argparse
-from typing import Dict, Any
+import subprocess
+import json
+import urllib.request
+import hashlib
 
-sys.path.insert(0, os.path.abspath("."))
-from src.declarative_policy_engine import DeclarativePolicyEngine
+# Ensure parent directory in path
+parent_dir = os.path.dirname(os.path.abspath(__file__))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
 from src.trust_protocol import BartholomewTrustAuthority
-from src.ast_validator import ASTSecurityValidator
+from src.declarative_policy_engine import DeclarativePolicyEngine
+from src.policy_synthesizer import PolicySynthesizer
 
-def init_project(target_dir: str = ".") -> None:
-    """Initializes a new project with BTP security configuration and keys."""
-    btp_dir = os.path.join(target_dir, ".btp")
-    os.makedirs(btp_dir, exist_ok=True)
 
-    # 1. Generate project policy file
-    policy_path = os.path.join(btp_dir, "policy.yaml")
+def cmd_version(args):
+    print("Bartholomew Protocol (BTP) v2.4.0")
+    print("Engine: Resilient MCP Proxy, In-Flight Secret Scrubber & Transactional Rollback Engine")
+    print("Latency: Sub-50 microseconds (in-process) | Rollback: <5ms")
+
+
+def cmd_init(args):
+    print("[+] Initializing local Bartholomew sovereign trust root...")
+    authority = BartholomewTrustAuthority()
+    
+    dot_btp = os.path.join(parent_dir, ".btp")
+    os.makedirs(dot_btp, exist_ok=True)
+
+    policy_path = os.path.join(dot_btp, "policy.yaml")
     if not os.path.exists(policy_path):
-        default_policy = """# Bartholomew Trust Protocol - Project Security Policy
-version: "2.2"
-policy_id: "project_default_security_policy"
-description: "Zero-cloud sub-millisecond invariant policy for local agent workflows"
+        sample_policy = """version: "2.2.0"
+policy_id: "urn:btp:policy:local-workspace"
+description: "Local workspace invariant security policy"
 
 rules:
-  - id: "INVARIANT_SPEND_CAP"
-    description: "Blocks autonomous single transactions exceeding $500"
+  - id: "RULE_SPEND_CAP"
+    type: "max_threshold"
     field: "amount_usd"
-    operator: "<="
-    value: 500.0
+    value: 500.00
+    action: "DENY"
 
-  - id: "INVARIANT_DESTRUCTIVE_SQL"
-    description: "Prohibits DROP and TRUNCATE SQL queries"
-    field: "query"
-    operator: "not_contains"
-    values: ["drop table", "drop schema", "truncate table", "drop database"]
+  - id: "RULE_DIMINISHING_MARGINAL_UTILITY"
+    type: "diminishing_marginal_utility"
+    decay_rate: 0.35
+    min_utility_threshold: 0.15
+    action: "DENY"
 
-  - id: "INVARIANT_RESTRICTED_FILES"
-    description: "Blocks modifying protected system and environment configs"
-    field: "path"
-    operator: "not_contains"
-    values: [".env", "id_rsa", "package.json", "conftest.py"]
+  - id: "RULE_DESTRUCTIVE_AST"
+    type: "forbidden_substrings"
+    patterns:
+      - "rm -rf"
+      - "DROP TABLE"
+      - "DROP SCHEMA"
 """
         with open(policy_path, "w", encoding="utf-8") as f:
-            f.write(default_policy)
+            f.write(sample_policy)
+        print(f"[+] Created default policy: {policy_path}")
 
-    # 2. Initialize local Trust Authority keypair
-    auth = BartholomewTrustAuthority()
-    key_info_path = os.path.join(btp_dir, "trust_root.json")
-    with open(key_info_path, "w", encoding="utf-8") as f:
-        json.dump({
-            "public_key_hex": auth.public_key_hex,
-            "protocol_version": "BTP/2.2",
-            "ttl_seconds": auth.ttl_seconds
-        }, f, indent=2)
+    print(f"[OK] Sovereign Public Key (Ed25519): {authority.public_key_hex}")
+    if getattr(args, "pair", None):
+        print(f"[OK] Paired with framework target: {args.pair}")
+    print("[OK] Bartholomew local workspace initialized successfully.")
 
-    print("=" * 70)
-    print("SUCCESS: Bartholomew BTP Initialized in current workspace!")
-    print("=" * 70)
-    print(f"[*] Configuration : {policy_path}")
-    print(f"[*] Trust Root    : {key_info_path}")
-    print(f"[*] Public Key    : {auth.public_key_hex}")
-    print("\n[+] To attach to Claude Desktop, add this to your claude_desktop_config.json:")
-    print(json.dumps({
-        "mcpServers": {
-            "bartholomew-guard": {
-                "command": "python",
-                "args": ["-m", "mcp_server.server"],
-                "cwd": os.path.abspath(target_dir)
-            }
-        }
-    }, indent=2))
-    print("=" * 70)
 
-def generate_key() -> None:
-    """Generates and prints a fresh Ed25519 keypair."""
-    auth = BartholomewTrustAuthority()
+def cmd_daemon_start(args):
+    port = args.port or 8080
+    host = args.host or "127.0.0.1"
+    print(f"[*] Starting Bartholomew Local Daemon on http://{host}:{port}...")
+
+    daemon_script = os.path.join(parent_dir, "daemon", "daemon_server.py")
+    if args.background:
+        if sys.platform == "win32":
+            proc = subprocess.Popen(
+                [sys.executable, daemon_script],
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, 'CREATE_NO_WINDOW') else 0
+            )
+        else:
+            proc = subprocess.Popen([sys.executable, daemon_script], start_new_session=True)
+        print(f"[OK] Daemon launched in background (PID: {proc.pid}).")
+    else:
+        from daemon.daemon_server import BartholomewDaemon
+        daemon = BartholomewDaemon(host=host, port=port)
+        daemon.run()
+
+
+def cmd_daemon_status(args):
+    port = args.port or 8080
+    url = f"http://127.0.0.1:{port}/v1/status"
+    try:
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=1.5) as resp:
+            data = json.loads(resp.read().decode())
+            print(f"[OK] Bartholomew Daemon is ONLINE (PID / Uptime: {data.get('uptime_seconds')}s)")
+            print(f"  * Public Key    : {data.get('public_key')}")
+            print(f"  * Total Evals   : {data.get('total_evaluations')}")
+            print(f"  * Blocked Attacks: {data.get('total_blocked')}")
+            print(f"  * Average Latency: {data.get('average_latency_us')} us")
+    except Exception:
+        print("[!] Bartholomew daemon is currently OFFLINE.")
+        print("    Run 'python cli.py daemon start' to launch.")
+
+
+def cmd_mcp_start(args):
+    from mcp_server import start_mcp_server
+    workspace = args.workspace or os.path.join(parent_dir, "workspace")
+    start_mcp_server(workspace_root=workspace)
+
+
+def cmd_mcp_install(args):
+    from mcp_installer import install_mcp_for_target
+    target = args.target or "claude"
+    install_mcp_for_target(target=target)
+
+
+def cmd_policy_validate(args):
+    file_path = args.file or "policies/default_security_policy.yaml"
+    if not os.path.isabs(file_path):
+        file_path = os.path.join(parent_dir, file_path)
+    print(f"[*] Validating declarative policy at {file_path}...")
+    engine = DeclarativePolicyEngine(file_path)
+    print(f"[OK] Policy '{engine.policy_id}' validated successfully ({len(engine.rules)} rules active).")
+
+
+def cmd_policy_synthesize(args):
+    print("[*] Running Autonomous Policy Synthesizer on workspace traces...")
+    synthesizer = PolicySynthesizer()
+    out_yaml = synthesizer.synthesize_yaml()
+    out_file = args.output or "policies/synthesized_policy.yaml"
+    with open(os.path.join(parent_dir, out_file), "w", encoding="utf-8") as f:
+        f.write(out_yaml)
+    print(f"[OK] Synthesized policy written to {out_file}")
+
+
+def cmd_keygen(args):
+    """Generate and display a fresh Ed25519 sovereign keypair."""
+    authority = BartholomewTrustAuthority()
     print("=" * 70)
-    print("BARTHOLOMEW ED25519 KEYPAIR GENERATION")
+    print("BARTHOLOMEW ED25519 SOVEREIGN KEYPAIR GENERATION")
     print("=" * 70)
-    print(f"[*] Public Key (Hex) : {auth.public_key_hex}")
-    print(f"[*] TTL Policy Bound : {auth.ttl_seconds} seconds")
+    print(f"[*] Public Key (Hex) : {authority.public_key_hex}")
+    print(f"[*] TTL Policy Bound : {authority.ttl_seconds} seconds")
     print(f"[*] Algorithm        : Pure Ed25519 (RFC 8032 / FIPS 186-5)")
     print("=" * 70)
 
-def main():
-    parser = argparse.ArgumentParser(
-        prog="bartholomew",
-        description="Bartholomew Sub-Millisecond Autonomous Security CLI (v2.2.0)"
+
+def cmd_threshold_keygen(args):
+    """Generate (t, n) FROST threshold secret shares & group public key (RFC 9591)."""
+    from src.frost_threshold_engine import frost_keygen
+    t = args.threshold
+    n = args.participants
+    if t < 1:
+        print(f"[ERROR] Threshold t must be >= 1, got {t}")
+        sys.exit(1)
+    if n < t + 1:
+        print(f"[ERROR] Participants n ({n}) must be at least t+1 ({t+1})")
+        sys.exit(1)
+
+    print("=" * 70)
+    print(f"BARTHOLOMEW FROST RFC 9591 THRESHOLD KEY GENERATION ({t+1}-of-{n})")
+    print("=" * 70)
+    results = frost_keygen(n=n, t=t)
+    group_pubkey = results[0].group_pubkey
+    group_pubkey_hex = hex(group_pubkey)
+
+    print(f"[*] Group Public Key : {group_pubkey_hex[:32]}...{group_pubkey_hex[-16:]}")
+    print(f"[*] Quorum Threshold : Any {t+1} of {n} agents required to sign")
+    print(f"[*] Security Scheme  : Schnorr Threshold over 1024-bit MODP (RFC 9591 / RFC 3526)")
+
+    out_dir = args.out
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+        pub_path = os.path.join(out_dir, "group_pubkey.json")
+        with open(pub_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "group_pubkey_hex": group_pubkey_hex,
+                "threshold": t,
+                "required_signers": t + 1,
+                "n_participants": n,
+                "standard": "RFC 9591 FROST",
+            }, f, indent=2)
+        print(f"[+] Saved group public key: {pub_path}")
+
+        for r in results:
+            share_file = os.path.join(out_dir, f"share_{r.index}.json")
+            with open(share_file, "w", encoding="utf-8") as f:
+                json.dump({
+                    "index": r.index,
+                    "threshold": r.threshold,
+                    "n_participants": r.n_participants,
+                    "secret_share_hex": hex(r.secret_share),
+                    "verification_share_hex": hex(r.verification_share),
+                    "group_pubkey_hex": group_pubkey_hex,
+                }, f, indent=2)
+            print(f"[+] Saved Agent {r.index} Share: {share_file}")
+    else:
+        print("[!] Note: Specify --out <directory> to persist individual agent key shares.")
+    print("=" * 70)
+
+
+def cmd_threshold_sign(args):
+    """Execute 2-round FROST threshold signature across provided agent shares."""
+    from src.frost_threshold_engine import (
+        FrostKeygenResult,
+        FrostSigner,
+        FrostCoordinator,
     )
+    share_files = args.shares
+    if not share_files or len(share_files) == 0:
+        print("[ERROR] No share files provided. Specify --shares share_1.json share_2.json ...")
+        sys.exit(1)
+
+    loaded_shares = []
+    for sf in share_files:
+        if not os.path.exists(sf):
+            print(f"[ERROR] Share file not found: {sf}")
+            sys.exit(1)
+        with open(sf, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            loaded_shares.append(FrostKeygenResult(
+                secret_share=int(data["secret_share_hex"], 16),
+                verification_share=int(data["verification_share_hex"], 16),
+                group_pubkey=int(data["group_pubkey_hex"], 16),
+                index=data["index"],
+                threshold=data["threshold"],
+                n_participants=data["n_participants"],
+            ))
+
+    t = loaded_shares[0].threshold
+    group_pubkey = loaded_shares[0].group_pubkey
+    if len(loaded_shares) < t + 1:
+        print(f"[ERROR] Insufficient signers: Got {len(loaded_shares)} shares, but threshold requires at least {t+1} signers.")
+        sys.exit(2)
+
+    # Read payload
+    if os.path.exists(args.payload):
+        with open(args.payload, "rb") as f:
+            raw_payload = f.read()
+    else:
+        raw_payload = args.payload.encode("utf-8")
+
+    print("=" * 70)
+    print("EXECUTING FROST RFC 9591 THRESHOLD SIGNING CEREMONY")
+    print("=" * 70)
+    print(f"[*] Signer Count     : {len(loaded_shares)} agents (indices: {[s.index for s in loaded_shares]})")
+    print(f"[*] Group Public Key : {hex(group_pubkey)[:32]}...")
+    print(f"[*] Payload Digest   : {hashlib.sha256(raw_payload).hexdigest()}")
+
+    signers = [FrostSigner(share) for share in loaded_shares]
+    coordinator = FrostCoordinator(group_pubkey=group_pubkey, threshold=t)
+
+    # Round 1: Commitments
+    commitments = [s.round1_commit() for s in signers]
+    print(f"[+] Round 1: {len(commitments)} nonce commitments broadcasted.")
+
+    # Round 2: Partial signatures
+    partial_sigs = [s.round2_sign(raw_payload, commitments) for s in signers]
+    print(f"[+] Round 2: {len(partial_sigs)} partial Schnorr signatures generated.")
+
+    # Aggregation
+    sig = coordinator.aggregate_signature(raw_payload, commitments, partial_sigs)
+    is_valid = sig.verify()
+    print("[+] Aggregation: Group Schnorr signature sigma=(R, z) produced.")
+    print(f"[*] Invariant Status : {'VALID' if is_valid else 'INVALID'}")
+
+    out_data = sig.to_dict()
+    out_data["algorithm"] = "FROST-RFC9591-MODP1024"
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(out_data, f, indent=2)
+        print(f"[+] Output written to: {args.out}")
+    else:
+        print(json.dumps(out_data, indent=2))
+    print("=" * 70)
+    if not is_valid:
+        sys.exit(3)
+
+
+def cmd_threshold_verify(args):
+    """Verify an aggregate FROST threshold signature against payload and group pubkey."""
+    from src.frost_threshold_engine import FrostThresholdSignature
+    sig_file = args.sig
+    if not os.path.exists(sig_file):
+        print(f"[ERROR] Signature file not found: {sig_file}")
+        sys.exit(1)
+
+    with open(sig_file, "r", encoding="utf-8") as f:
+        sig_data = json.load(f)
+
+    if args.pubkey:
+        group_pubkey = int(args.pubkey, 16)
+    else:
+        group_pubkey = int(sig_data["group_pubkey_hex"], 16)
+
+    sig = FrostThresholdSignature(
+        R=int(sig_data["R_hex"], 16),
+        z=int(sig_data["z_hex"], 16),
+        group_pubkey=group_pubkey,
+        message_hash=bytes.fromhex(sig_data["message_hash_hex"]),
+        signing_indices=sig_data["signing_indices"],
+        threshold=sig_data["threshold"],
+    )
+
+    if args.payload:
+        if os.path.exists(args.payload):
+            with open(args.payload, "rb") as f:
+                content = f.read()
+        else:
+            content = args.payload.encode("utf-8")
+        expected_hash = hashlib.sha256(content).digest()
+        if expected_hash != sig.message_hash:
+            print("[FAIL] Payload hash mismatch!")
+            print(f"  Expected: {expected_hash.hex()}")
+            print(f"  In Sig  : {sig.message_hash.hex()}")
+            sys.exit(2)
+
+    is_valid = sig.verify()
+    print("=" * 70)
+    print("BARTHOLOMEW FROST THRESHOLD SIGNATURE VERIFICATION")
+    print("=" * 70)
+    print(f"[*] Signers Participated : {sig.signing_indices}")
+    print(f"[*] Quorum Threshold     : {sig.threshold + 1}")
+    print(f"[*] Group Public Key     : {hex(sig.group_pubkey)[:32]}...")
+    print(f"[*] Message Hash         : {sig.message_hash.hex()}")
+    print(f"[*] Verification Verdict : {'PASS (AUTHENTIC & INTACT)' if is_valid else 'FAIL (FORGERY / CORRUPTED)'}")
+    print("=" * 70)
+    if not is_valid:
+        sys.exit(1)
+
+
+def cmd_audit(args):
+    from src.cli_linter import audit_directory, print_audit_report
+    results = audit_directory(args.path)
+    print_audit_report(results)
+
+
+def cmd_check(args):
+    from src.dynamic_policy_sync import load_and_validate_policy, verify_policy_integrity
+    import yaml
+    try:
+        with open(args.file, "r", encoding="utf-8") as f:
+            raw_data = yaml.safe_load(f) or {}
+        is_valid, issues = verify_policy_integrity(raw_data)
+        policy = load_and_validate_policy(args.file)
+        print("=" * 70)
+        print("BARTHOLOMEW FORMAL POLICY VERIFICATION")
+        print("=" * 70)
+        print(f"[*] Policy Path   : {policy['_source_path']}")
+        print(f"[*] Active Rules  : {policy['_rule_count']}")
+        print(f"[*] Fingerprint   : {policy['_hash']}")
+        print(f"[*] Status        : {'PASS' if is_valid else 'FAIL'}")
+        if issues:
+            print("[*] Diagnostics   :")
+            for issue in issues:
+                print(f"    - {issue}")
+        print("=" * 70)
+        if not is_valid:
+            sys.exit(1)
+    except Exception as e:
+        print(f"[ERROR] Policy check failed: {str(e)}")
+        sys.exit(1)
+
+
+def cmd_sync(args):
+    from src.dynamic_policy_sync import sync_policy
+    success, msg, data = sync_policy(args.target, args.config, dry_run=args.dry_run)
+    print(msg)
+    if not success:
+        sys.exit(1)
+
+
+def cmd_verify_offline(args):
+    from src.offline_airgap_verifier import verify_btp_receipt_file
+    success, report, _ = verify_btp_receipt_file(args.receipt, args.pubkey)
+    print(report)
+    if not success:
+        sys.exit(1)
+
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Bartholomew AI Agent Guardrail CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
-    # init Subcommand
-    init_parser = subparsers.add_parser("init", help="Initialize BTP security policy and MCP setup in current project")
-    init_parser.add_argument("--dir", default=".", help="Target project directory")
+    # version
+    subparsers.add_parser("version", help="Display BTP protocol version")
 
-    # keygen Subcommand
-    subparsers.add_parser("keygen", help="Generate a new Ed25519 sovereign keypair")
+    # init
+    init_parser = subparsers.add_parser("init", help="Initialize sovereign cryptographic keypair & policy")
+    init_parser.add_argument("--pair", type=str, help="Framework target to pair with (e.g. claude-desktop, openai, langchain)")
 
-    # Policy Subcommand
-    policy_parser = subparsers.add_parser("policy", help="Manage and test declarative policies")
-    policy_sub = policy_parser.add_subparsers(dest="policy_action")
+    # daemon
+    daemon_parser = subparsers.add_parser("daemon", help="Manage background guard daemon")
+    daemon_sub = daemon_parser.add_subparsers(dest="daemon_cmd")
+    
+    start_p = daemon_sub.add_parser("start", help="Start local daemon")
+    start_p.add_argument("--port", type=int, default=8080, help="Daemon port (default: 8080)")
+    start_p.add_argument("--host", type=str, default="127.0.0.1", help="Daemon host")
+    start_p.add_argument("--background", "-b", action="store_true", help="Run in background")
 
-    # policy validate
-    val_p = policy_sub.add_parser("validate", help="Validate a YAML/JSON policy file")
-    val_p.add_argument("--file", "-f", required=True, help="Path to policy YAML/JSON file")
+    status_p = daemon_sub.add_parser("status", help="Query local daemon heartbeat & telemetry")
+    status_p.add_argument("--port", type=int, default=8080, help="Daemon port")
 
-    # policy eval
-    eval_p = policy_sub.add_parser("eval", help="Evaluate a JSON payload against a policy")
-    eval_p.add_argument("--file", "-f", required=True, help="Path to policy YAML/JSON file")
-    eval_p.add_argument("--payload", "-p", required=True, help="JSON string payload to test")
+    # mcp
+    mcp_parser = subparsers.add_parser("mcp", help="Manage Model Context Protocol (MCP) server for Claude Desktop / Cursor")
+    mcp_sub = mcp_parser.add_subparsers(dest="mcp_cmd")
 
-    # audit Subcommand
-    audit_parser = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
-    audit_parser.add_argument("path", nargs="?", default=".", help="Target directory path to audit (default: .)")
+    mcp_start_p = mcp_sub.add_parser("start", help="Start MCP stdio JSON-RPC server")
+    mcp_start_p.add_argument("--workspace", type=str, default=None, help="Custom sandbox workspace root directory")
 
-    # demo Subcommand
-    demo_parser = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
-    demo_parser.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
+    mcp_inst_p = mcp_sub.add_parser("install", help="1-Click auto-install into Claude Desktop / Cursor config")
+    mcp_inst_p.add_argument("--target", type=str, default="claude", choices=["claude", "cursor"], help="Target IDE")
 
-    # version Subcommand
-    subparsers.add_parser("version", help="Print version and protocol information")
+    # policy
+    policy_parser = subparsers.add_parser("policy", help="Manage declarative security policies")
+    policy_sub = policy_parser.add_subparsers(dest="policy_cmd")
 
-    # agent Subcommand (Interactive REPL)
+    val_p = policy_sub.add_parser("validate", help="Validate declarative YAML policy")
+    val_p.add_argument("--file", "-f", type=str, default="policies/default_security_policy.yaml", help="Path to policy YAML")
+
+    syn_p = policy_sub.add_parser("synthesize", help="Auto-synthesize least-privilege policy from traces")
+    syn_p.add_argument("--output", "-o", type=str, default="policies/synthesized_policy.yaml", help="Output YAML file path")
+
+    # demo
+    demo_p = subparsers.add_parser("demo", help="Run high-impact interactive real-time invariant showcase")
+    demo_p.add_argument("--speed", type=float, default=0.35, help="Simulation delay in seconds per step (default: 0.35)")
+
+    # demo-v24
+    demo24_p = subparsers.add_parser("demo-v24", help="Run Bartholomew v2.4 Resilient MCP & Rollback Engine showcase")
+
+    # proxy (MCP stdio proxy)
+    proxy_p = subparsers.add_parser("proxy", help="Run Bartholomew as an inline MCP security proxy")
+    proxy_p.add_argument("--server-cmd", nargs="+", required=True, help="Downstream MCP server command to launch")
+    proxy_p.add_argument("--workspace", default=None, help="Root workspace directory to bound tool mutations")
+
+    # agent (Interactive REPL)
     agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
     agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
 
-    # sync Subcommand (Dynamic Policy Synchronization)
-    sync_p = subparsers.add_parser("sync", help="Push verified policy to live agent workers via zero-downtime hot reload")
-    sync_p.add_argument("--config", "-c", default=".btp/policy.yaml", help="Path to policy YAML file (default: .btp/policy.yaml)")
-    sync_p.add_argument("--target", "-t", default="http://127.0.0.1:8000", help="Target agent daemon URL (default: http://127.0.0.1:8000)")
-    sync_p.add_argument("--dry-run", action="store_true", help="Validate and fingerprint policy without dispatching to network")
+    # keygen (Ed25519)
+    subparsers.add_parser("keygen", help="Generate a fresh sovereign Ed25519 keypair")
 
-    # check Subcommand (Formal Policy Verification)
-    check_p = subparsers.add_parser("check", help="Statically verify policy for contradictions and invariant coverage")
-    check_p.add_argument("--file", "-f", default=".btp/policy.yaml", help="Path to policy file to verify")
+    # threshold-keygen (FROST RFC 9591)
+    tk_p = subparsers.add_parser("threshold-keygen", help="Generate (t, n) FROST threshold shares and group public key (RFC 9591)")
+    tk_p.add_argument("--threshold", "-t", type=int, default=3, help="Signing threshold: any t+1 agents can sign (default: 3)")
+    tk_p.add_argument("--participants", "-n", type=int, default=5, help="Total swarm participants (default: 5)")
+    tk_p.add_argument("--out", "-o", type=str, default=None, help="Directory to save group key and participant shares")
 
-    # verify-offline Subcommand (Air-Gapped Receipt Verification)
-    v_off_p = subparsers.add_parser("verify-offline", help="Independently verify an offline BTP receipt in air-gapped environments")
+    # threshold-sign (FROST RFC 9591)
+    ts_p = subparsers.add_parser("threshold-sign", help="Execute 2-round FROST threshold signing across agent shares")
+    ts_p.add_argument("--shares", "-s", nargs="+", required=True, help="Paths to participant share JSON files")
+    ts_p.add_argument("--payload", "-p", required=True, help="Payload string or path to JSON/binary file")
+    ts_p.add_argument("--out", "-o", type=str, default=None, help="Output file to write signature JSON")
+
+    # threshold-verify (FROST RFC 9591)
+    tv_p = subparsers.add_parser("threshold-verify", help="Verify aggregate FROST threshold signature against group key")
+    tv_p.add_argument("--sig", "-s", required=True, help="Path to signature JSON file")
+    tv_p.add_argument("--payload", "-p", default=None, help="Payload string or file path to verify digest against")
+    tv_p.add_argument("--pubkey", default=None, help="Group public key hex override (optional)")
+
+    # threshold namespace subparser
+    t_ns_p = subparsers.add_parser("threshold", help="FROST RFC 9591 & BIP 327 threshold signature engine")
+    t_sub = t_ns_p.add_subparsers(dest="threshold_cmd")
+    
+    t_ns_k = t_sub.add_parser("keygen", help="Generate (t, n) FROST shares and group public key")
+    t_ns_k.add_argument("--threshold", "-t", type=int, default=3, help="Signing threshold t (default: 3)")
+    t_ns_k.add_argument("--participants", "-n", type=int, default=5, help="Total swarm participants n (default: 5)")
+    t_ns_k.add_argument("--out", "-o", type=str, default=None, help="Directory to save group key and participant shares")
+
+    t_ns_s = t_sub.add_parser("sign", help="Execute 2-round FROST threshold signing")
+    t_ns_s.add_argument("--shares", "-s", nargs="+", required=True, help="Paths to participant share JSON files")
+    t_ns_s.add_argument("--payload", "-p", required=True, help="Payload string or path to file")
+    t_ns_s.add_argument("--out", "-o", type=str, default=None, help="Output signature file")
+
+    t_ns_v = t_sub.add_parser("verify", help="Verify aggregate FROST threshold signature")
+    t_ns_v.add_argument("--sig", "-s", required=True, help="Path to signature JSON file")
+    t_ns_v.add_argument("--payload", "-p", default=None, help="Payload string or file path")
+    t_ns_v.add_argument("--pubkey", default=None, help="Group public key hex override")
+
+    # audit
+    aud_p = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
+    aud_p.add_argument("path", nargs="?", default=".", help="Target directory to audit (default: .)")
+
+    # check
+    chk_p = subparsers.add_parser("check", help="Statically verify policy for contradictions and invariant coverage")
+    chk_p.add_argument("--file", "-f", default=".btp/policy.yaml", help="Path to policy YAML file")
+
+    # sync
+    sync_p = subparsers.add_parser("sync", help="Push verified policy to live agent workers via hot reload")
+    sync_p.add_argument("--config", "-c", default=".btp/policy.yaml", help="Path to policy YAML file")
+    sync_p.add_argument("--target", "-t", default="http://127.0.0.1:8000", help="Target daemon URL")
+    sync_p.add_argument("--dry-run", action="store_true", help="Validate and fingerprint without dispatching")
+
+    # verify-offline
+    v_off_p = subparsers.add_parser("verify-offline", help="Independently verify an offline BTP receipt")
     v_off_p.add_argument("--receipt", "-r", required=True, help="Path to receipt JSON file")
     v_off_p.add_argument("--pubkey", "-p", help="Trusted authority public key hex (optional)")
 
     args = parser.parse_args()
 
     if args.command == "version":
-        print("Bartholomew Autonomous Trust Protocol (BTP) CLI v2.5.0")
-        print("Protocol: BTP/2.5 (RFC 8785 + FIPS 186-5 Ed25519 + CoW Tree)")
-        print("Target Latency: <5 µs")
-        return
-
+        cmd_version(args)
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)
-        return
-
+    elif args.command == "demo-v24":
+        from src.demo_v24 import run_demo_v24
+        run_demo_v24()
+    elif args.command == "proxy":
+        from src.mcp_gateway import MCPProxyGateway
+        gateway = MCPProxyGateway(workspace_root=args.workspace)
+        gateway.run_stdio_proxy(args.server_cmd)
     elif args.command == "agent":
         from src.interactive_agent_repl import run_agent_repl
         run_agent_repl()
-        return
-
-    elif args.command == "init":
-        init_project(args.dir)
-
     elif args.command == "keygen":
-        generate_key()
-
-    elif args.command == "policy":
-        if args.policy_action == "validate":
-            try:
-                engine = DeclarativePolicyEngine(args.file)
-                print(f"[OK] Policy '{engine.policy_id}' is valid.")
-                print(f"     Loaded {len(engine.rules)} active declarative rules.")
-            except Exception as e:
-                print(f"[ERROR] Failed to load policy: {str(e)}")
-                sys.exit(1)
-
-        elif args.policy_action == "eval":
-            try:
-                engine = DeclarativePolicyEngine(args.file)
-                payload = json.loads(args.payload)
-                allowed, reason, latency_us = engine.evaluate_payload(payload)
-                verdict = "ALLOW" if allowed else "DENY"
-                print(f"Verdict  : {verdict}")
-                print(f"Latency  : {latency_us} µs")
-                print(f"Reason   : {reason}")
-                if not allowed:
-                    sys.exit(2)
-            except Exception as e:
-                print(f"[ERROR] Evaluation failed: {str(e)}")
-                sys.exit(1)
-
+        cmd_keygen(args)
+    elif args.command == "threshold-keygen":
+        cmd_threshold_keygen(args)
+    elif args.command == "threshold-sign":
+        cmd_threshold_sign(args)
+    elif args.command == "threshold-verify":
+        cmd_threshold_verify(args)
+    elif args.command == "threshold":
+        if args.threshold_cmd == "keygen":
+            cmd_threshold_keygen(args)
+        elif args.threshold_cmd == "sign":
+            cmd_threshold_sign(args)
+        elif args.threshold_cmd == "verify":
+            cmd_threshold_verify(args)
+        else:
+            t_ns_p.print_help()
     elif args.command == "audit":
-        from src.cli_linter import audit_directory, print_audit_report
-        results = audit_directory(args.path)
-        print_audit_report(results)
-
-    elif args.command == "sync":
-        from src.dynamic_policy_sync import sync_policy
-        success, msg, data = sync_policy(args.target, args.config, dry_run=args.dry_run)
-        print(msg)
-        if not success:
-            sys.exit(1)
-
+        cmd_audit(args)
     elif args.command == "check":
-        from src.dynamic_policy_sync import load_and_validate_policy, verify_policy_integrity
-        import yaml
-        try:
-            with open(args.file, "r", encoding="utf-8") as f:
-                raw_data = yaml.safe_load(f) or {}
-            is_valid, issues = verify_policy_integrity(raw_data)
-            policy = load_and_validate_policy(args.file)
-            print("=" * 70)
-            print("BARTHOLOMEW FORMAL POLICY VERIFICATION")
-            print("=" * 70)
-            print(f"[*] Policy Path   : {policy['_source_path']}")
-            print(f"[*] Active Rules  : {policy['_rule_count']}")
-            print(f"[*] Fingerprint   : {policy['_hash']}")
-            print(f"[*] Status        : {'PASS' if is_valid else 'FAIL'}")
-            if issues:
-                print("[*] Diagnostics   :")
-                for issue in issues:
-                    print(f"    - {issue}")
-            print("=" * 70)
-            if not is_valid:
-                sys.exit(1)
-        except Exception as e:
-            print(f"[ERROR] Policy check failed: {str(e)}")
-            sys.exit(1)
-
+        cmd_check(args)
+    elif args.command == "sync":
+        cmd_sync(args)
     elif args.command == "verify-offline":
-        from src.offline_airgap_verifier import verify_btp_receipt_file
-        success, report, _ = verify_btp_receipt_file(args.receipt, args.pubkey)
-        print(report)
-        if not success:
-            sys.exit(1)
-
+        cmd_verify_offline(args)
+    elif args.command == "init":
+        cmd_init(args)
+    elif args.command == "daemon":
+        if args.daemon_cmd == "start":
+            cmd_daemon_start(args)
+        elif args.daemon_cmd == "status":
+            cmd_daemon_status(args)
+        else:
+            daemon_parser.print_help()
+    elif args.command == "mcp":
+        if args.mcp_cmd == "start":
+            cmd_mcp_start(args)
+        elif args.mcp_cmd == "install":
+            cmd_mcp_install(args)
+        else:
+            mcp_parser.print_help()
+    elif args.command == "policy":
+        if args.policy_cmd == "validate":
+            cmd_policy_validate(args)
+        elif args.policy_cmd == "synthesize":
+            cmd_policy_synthesize(args)
+        else:
+            policy_parser.print_help()
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()

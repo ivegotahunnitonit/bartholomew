@@ -42,8 +42,8 @@ Repository = "https://github.com/ivegotahunnitonit/bartholomew"
 Tracker = "https://github.com/ivegotahunnitonit/bartholomew/issues"
 
 [project.scripts]
-bartholomew = "cli:main"
-btp-guard = "cli:main"
+bartholomew = "src.cli:main"
+btp-guard = "src.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
