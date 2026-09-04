@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Code2, Download, ExternalLink, Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
+import { BTP_ENGINE_LABEL } from '../constants/version'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -97,7 +98,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono mb-2">
             <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981] font-bold">[STATUS: ACTIVE]</span>
-            <span className="text-[#a1a1aa]">BTP v2.2 ENGINE</span>
+            <span className="text-[#a1a1aa]">{BTP_ENGINE_LABEL}</span>
           </div>
           <a
             href="#how-it-works"

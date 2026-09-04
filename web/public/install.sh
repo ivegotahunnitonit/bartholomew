@@ -5,7 +5,7 @@
 set -e
 
 echo "================================================================="
-echo "  Installing Bartholomew Autonomous Trust Protocol (BTP v2.2.0)  "
+echo "  Installing Bartholomew Autonomous Trust Protocol (BTP v2.8.0)  "
 echo "================================================================="
 
 INSTALL_DIR="$HOME/.bartholomew"

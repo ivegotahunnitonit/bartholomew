@@ -203,6 +203,37 @@ class ZKComplianceProof:
         """Serialize the receipt to a JSON string."""
         return json.dumps(self.to_receipt(), indent=indent)
 
+    @classmethod
+    def from_receipt(cls, data: dict[str, Any]) -> "ZKComplianceProof":
+        """Deserialize a receipt dictionary into a ZKComplianceProof."""
+        r = data.get("btp_proof_receipt", data)
+        step_proofs = []
+        for sp in r.get("step_proofs", []):
+            step_proofs.append(
+                ZKStepProof(
+                    step_index=sp["step_index"],
+                    commitment=int(sp["commitment_hex"], 16),
+                    witness_commit=int(sp["witness_commit_hex"], 16),
+                    challenge=int(sp["challenge_hex"], 16),
+                    response=int(sp["response_hex"], 16),
+                    constraint_id=sp["constraint_id"],
+                )
+            )
+        return cls(
+            proof_id=r["proof_id"],
+            session_id=r["session_id"],
+            policy_id=r["policy_id"],
+            protocol_version=r.get("protocol", "BTP/3.0.0-ZK"),
+            generated_at=r.get("generated_at_unix", 0.0),
+            num_tool_calls=r.get("num_tool_calls_covered", len(step_proofs)),
+            step_proofs=step_proofs,
+            aggregate_commitment=int(r["aggregate_commitment_hex"], 16),
+            aggregate_witness_commit=int(r["aggregate_witness_commit_hex"], 16),
+            aggregate_challenge=int(r["aggregate_challenge_hex"], 16),
+            aggregate_response=int(r["aggregate_response_hex"], 16),
+            proof_valid=r.get("proof_valid", False),
+        )
+
 
 # ---------------------------------------------------------------------------
 # Policy Circuit
@@ -291,6 +322,10 @@ class ZKComplianceEngine:
 
     def __init__(self, policy_id: str = "BTP-STANDARD-3.0.0"):
         self.circuit = PolicyCircuit(policy_id=policy_id)
+
+    def verify_proof(self, proof: ZKComplianceProof) -> bool:
+        """Verify that a ZK compliance proof satisfies the verification equation."""
+        return proof.verify()
 
     def _generate_blinding(self) -> int:
         """Generate a cryptographically secure ephemeral blinding factor r ∈ Z_q."""

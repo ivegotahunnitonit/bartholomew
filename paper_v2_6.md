@@ -3,7 +3,6 @@ title: "Bartholomew (BTP v2.6): Ring-0 eBPF Kernel Trajectory Interception, Hard
 authors:
   - name: "Itsub Alemayehu"
     affiliation: "Founder & Principal Architect, Autonomous Systems Laboratory"
-    email: "itsub@bartholomew.info"
     website: "https://bartholomew.info"
 version: "2.6.0"
 date: "2026-09-04"
@@ -25,7 +24,7 @@ keywords:
 
 **Itsub Alemayehu**  
 *Founder & Principal Architect, Autonomous Systems Laboratory*  
-`itsub@bartholomew.info` | [bartholomew.info](https://bartholomew.info)
+[bartholomew.info](https://bartholomew.info)
 
 ## Abstract
 

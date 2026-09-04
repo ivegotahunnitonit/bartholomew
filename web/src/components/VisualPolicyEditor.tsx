@@ -100,7 +100,7 @@ export default function VisualPolicyEditor() {
     }
   }
 
-  const generatedYaml = `version: "2.2.0"
+  const generatedYaml = `version: "2.8.0"
 policy_id: "urn:btp:policy:custom-declarative"
 
 rules:

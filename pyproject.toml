@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "2.5.0"
-description = "Bartholomew Autonomous Trust Protocol (BTP v2.5) — Deterministic Invariant Runtime, Stateful Multi-Turn Guardrails, and Cryptographic Attestations for AI Agents."
+version = "2.8.0"
+description = "Bartholomew Autonomous Trust Protocol (BTP v2.8) — FROST RFC 9591 & BIP 327 Threshold Signatures, Ring-0 eBPF Syscall Traps, Post-Quantum Hybrids, and ZK Invariant Proofs for AI Agents."
 readme = "README.md"
 authors = [
-    { name = "Bartholomew Team", email = "security@bartholomew.info" }
+    { name = "Itsub Alemayehu", email = "security@bartholomew.info" }
 ]
 license = { text = "MIT" }
 keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "ed25519", "rfc8785", "mcp", "claude-desktop", "cursor", "frost", "zk-proofs"]

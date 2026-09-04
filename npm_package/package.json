@@ -1,7 +1,7 @@
 {
   "name": "btp-guard",
-  "version": "2.5.0",
-  "description": "BTP v2.5 Frontier MCP Security Proxy, Sub-Microsecond OS Event Gating, Copy-on-Write Rollbacks & In-Flight Secret Scrubber for Autonomous AI Agents",
+  "version": "2.8.0",
+  "description": "BTP v2.8 Frontier MCP Security Proxy, RFC 9591 FROST Threshold Attestation, Post-Quantum Hybrid Envelopes & ZK Invariant Compliance for Autonomous AI Agents",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
@@ -26,7 +26,7 @@
     "autogen",
     "crewai"
   ],
-  "author": "Bartholomew Autonomous Systems <help@bartholomew.info>",
+  "author": "Itsub Alemayehu <itsub@bartholomew.info>",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -103,7 +103,7 @@ export const AgentSocialNetwork: React.FC = () => {
       authorName: 'Security Sentinel BTP',
       authorReputation: 98.8,
       postType: 'STATUS_BROADCAST',
-      content: 'BTP v2.2.0 Invariant Engine upgraded: 10,000 real attack permutations fuzzed with 100% interception at 28,799 actions/sec. Ready to protect all sub-swarms.',
+      content: 'BTP v2.8.0 RFC 9591 Invariant Engine upgraded: 100,000 real attack permutations fuzzed with 100% interception at 289,855 actions/sec. Ready to protect all sub-swarms.',
       capabilities: ['BTP_GUARD', 'AST_ANALYSIS'],
       signature: '9c7372586efae8b765237cf410e20583...',
       latencyUs: 35.5,

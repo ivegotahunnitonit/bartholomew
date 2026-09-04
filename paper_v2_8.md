@@ -3,7 +3,6 @@ title: "Bartholomew (BTP v2.8): FROST RFC 9591 & BIP 327 MuSig2 Threshold Signat
 authors:
   - name: "Itsub Alemayehu"
     affiliation: "Founder & Principal Architect, Autonomous Systems Laboratory"
-    email: "itsub@bartholomew.info"
     website: "https://bartholomew.info"
 version: "2.8.0"
 date: "2026-09-04"
@@ -25,7 +24,7 @@ keywords:
 
 **Itsub Alemayehu**  
 *Founder & Principal Architect, Autonomous Systems Laboratory*  
-`itsub@bartholomew.info` | [bartholomew.info](https://bartholomew.info)
+[bartholomew.info](https://bartholomew.info)
 
 ## Abstract
 

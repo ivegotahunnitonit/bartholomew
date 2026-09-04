@@ -166,7 +166,7 @@ def build_v28_pdf():
     elements.append(Paragraph(
         "<b>Itsub Alemayehu</b><br/>"
         "Founder &amp; Principal Architect &bull; Autonomous Systems Laboratory<br/>"
-        "<i>Bartholomew Research Team</i> &bull; itsub@bartholomew.info &bull; https://bartholomew.info<br/>"
+        "<i>Bartholomew Research Team</i> &bull; https://bartholomew.info<br/>"
         "Version 2.8.0 &bull; September 4, 2026 &bull; Digital Object Identifier (DOI): <b>10.5281/zenodo.22076539</b>",
         author_style
     ))

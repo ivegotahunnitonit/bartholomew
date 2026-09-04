@@ -3,7 +3,6 @@ title: "Bartholomew (BTP v2.7): Practical Byzantine Fault Tolerant (PBFT) Consen
 authors:
   - name: "Itsub Alemayehu"
     affiliation: "Founder & Principal Architect, Autonomous Systems Laboratory"
-    email: "itsub@bartholomew.info"
     website: "https://bartholomew.info"
 version: "2.7.0"
 date: "2026-09-04"
@@ -25,7 +24,7 @@ keywords:
 
 **Itsub Alemayehu**  
 *Founder & Principal Architect, Autonomous Systems Laboratory*  
-`itsub@bartholomew.info` | [bartholomew.info](https://bartholomew.info)
+[bartholomew.info](https://bartholomew.info)
 
 ## Abstract
 

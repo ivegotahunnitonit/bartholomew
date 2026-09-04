@@ -144,3 +144,67 @@ def test_mcp_path_traversal_blocked(mcp_server):
     read_res = json.loads(mcp_server.process_message(read_req))
     assert read_res["result"]["isError"] is True
     assert "BARTHOLOMEW INTERCEPTION" in read_res["result"]["content"][0]["text"]
+
+
+def test_mcp_request_threshold_signature(mcp_server):
+    req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 8,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_request_threshold_signature",
+            "arguments": {
+                "action_intent": "Execute database migration v2.8"
+            }
+        }
+    })
+    res = json.loads(mcp_server.process_message(req))
+    assert res["result"]["isError"] is False
+    data = json.loads(res["result"]["content"][0]["text"])
+    assert data["status"] == "ATTESTED_AND_CO_SIGNED"
+    assert data["quorum"] == "2-of-3 Swarm Consensus"
+    assert "signature" in data
+
+
+def test_mcp_verify_safety_proof(mcp_server):
+    from src.zk_compliance_proof_engine import ZKComplianceEngine
+    engine = ZKComplianceEngine()
+    proof = engine.prove_session("mcp-test-session", ["read_config()", "verify_sandbox()"])
+    receipt = proof.to_receipt()
+
+    req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 9,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_verify_safety_proof",
+            "arguments": {
+                "receipt": receipt
+            }
+        }
+    })
+    res = json.loads(mcp_server.process_message(req))
+    assert res["result"]["isError"] is False
+    data = json.loads(res["result"]["content"][0]["text"])
+    assert data["verified"] is True
+    assert data["plaintext_leaked_bytes"] == 0
+    assert data["status"] == "PASS (COMPLIANCE VERIFIED)"
+
+
+def test_mcp_get_security_status(mcp_server):
+    req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 10,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_get_security_status",
+            "arguments": {}
+        }
+    })
+    res = json.loads(mcp_server.process_message(req))
+    assert res["result"]["isError"] is False
+    data = json.loads(res["result"]["content"][0]["text"])
+    assert data["status"] == "ACTIVE"
+    assert data["protocol"] == "BTP v2.8.0"
+    assert "RFC 9591" in data["threshold_quorum"]
+
