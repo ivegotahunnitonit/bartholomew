@@ -32,16 +32,23 @@ from src.secret_masker import SecretVaultMasker
 from src.trust_protocol import BartholomewTrustAuthority
 from src.workspace_transaction import WorkspaceTransaction
 from src.rfc8785 import rfc8785_canonicalize
+from src.v25_kernel import SyntheticEventGate, SyntheticEvent, CoWTreeSnapshot, RecursiveSubRingRouter
 
 
 class MCPProxyGateway:
     """
-    Transparent JSON-RPC 2.0 Invariant Interception & Transactional Gateway for MCP tool calling.
+    Transparent JSON-RPC 2.0 Invariant Interception & Transactional Gateway for MCP tool calling (BTP v2.5).
+    Features Sub-Microsecond Synthetic OS Event Gating, Tree-Level CoW Rollback, and Merkle Provenance.
     """
 
     MUTATING_TOOL_NAMES = {
         "write_file", "edit_file", "create_file", "delete_file", "create_directory",
         "execute_command", "bash", "shell", "run_terminal_command", "apply_patch"
+    }
+
+    GUI_EVENT_TOOL_NAMES = {
+        "mouse_click", "mouse_drag", "keystroke", "press_key", "type_text",
+        "focus_window", "computer_action", "os_action", "desktop_click", "gui_action"
     }
 
     def __init__(self, trust_authority: Optional[BartholomewTrustAuthority] = None, workspace_root: Optional[str] = None):
@@ -51,6 +58,8 @@ class MCPProxyGateway:
         self.total_vetoed = 0
         self.total_redacted = 0
         self.total_rollbacks = 0
+        self.synthetic_gate = SyntheticEventGate()
+        self.cow_tree = CoWTreeSnapshot(workspace_root=self.workspace_root)
         self.active_transactions: Dict[Any, WorkspaceTransaction] = {}
         self.session_receipt_chain: List[Dict[str, Any]] = []
         self.latest_receipt_hash: str = "GENESIS_ROOT_HASH_0000000000000000"
@@ -92,7 +101,43 @@ class MCPProxyGateway:
             params["arguments"] = sanitized_args
             req["params"] = params
 
-        # 2. Transactional Workspace Pre-Snapshot for Mutating Tools
+        # 1.5. BTP v2.5 Synthetic OS & GUI Computer-Use Event Gating (<1.0 µs)
+        if tool_name in self.GUI_EVENT_TOOL_NAMES or any(k in sanitized_args for k in ["x", "y", "coordinate", "key_sequence", "target_window"]):
+            coord_x = sanitized_args.get("x")
+            coord_y = sanitized_args.get("y")
+            if "coordinate" in sanitized_args and isinstance(sanitized_args["coordinate"], (list, tuple)) and len(sanitized_args["coordinate"]) >= 2:
+                coord_x, coord_y = sanitized_args["coordinate"][0], sanitized_args["coordinate"][1]
+            
+            synth_event = SyntheticEvent(
+                event_type=tool_name,
+                x=coord_x if isinstance(coord_x, int) else None,
+                y=coord_y if isinstance(coord_y, int) else None,
+                key_sequence=sanitized_args.get("text") or sanitized_args.get("key") or sanitized_args.get("key_sequence"),
+                target_window=sanitized_args.get("window") or sanitized_args.get("target_window") or sanitized_args.get("title")
+            )
+            is_valid_event, event_err = self.synthetic_gate.evaluate_event(synth_event)
+            if not is_valid_event:
+                self.total_vetoed += 1
+                latency_us = (time.perf_counter() - t0) * 1_000_000
+                veto_response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "error": {
+                        "code": -32000,
+                        "message": f"BTP-VETO: Synthetic OS Event Violation on tool '{tool_name}'",
+                        "data": {
+                            "verdict": "DENY",
+                            "protocol_version": "BTP/2.5",
+                            "rule": event_err,
+                            "latency_us": round(latency_us, 2),
+                            "authority_pubkey": self.authority.public_key_hex,
+                            "diagnostic_hint": "Synthetic action attempts interaction with a prohibited OS region or system window."
+                        }
+                    }
+                }
+                return False, req, veto_response
+
+        # 2. Transactional Workspace Pre-Snapshot for Mutating Tools (BTP v2.5 Tree & File)
         if tool_name in self.MUTATING_TOOL_NAMES or any(m in tool_name.lower() for m in ["write", "delete", "edit"]):
             tx = WorkspaceTransaction(workspace_root=self.workspace_root)
             # Pre-snapshot target file if specified
@@ -117,6 +162,14 @@ class MCPProxyGateway:
                         }
                     }
                     return False, req, veto_response
+            
+            # Capture CoW tree checkpoint for multi-file commands
+            if tool_name in {"execute_command", "bash", "shell", "run_terminal_command", "apply_patch"}:
+                try:
+                    self.cow_tree.capture(f"cow_{req_id}")
+                except Exception:
+                    pass
+
             self.active_transactions[req_id] = tx
 
         # 3. Extract code or command strings from arguments

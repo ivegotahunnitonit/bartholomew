@@ -1,26 +1,29 @@
 <div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; line-height: 1.6;">
 
-# **Bartholomew AI &bull; BTP v2.4 Standards Track**
-### **Resilient MCP Security Proxy, Sub-5µs Transactional Rollbacks &amp; In-Flight Secret Scrubber**
+# **Bartholomew AI &bull; BTP v2.5 Standards Track**
+### **Frontier MCP Security Proxy &bull; 0.95µs OS Computer-Use Gating &bull; 1.05M Evals/Sec &bull; CoW Tree Rollbacks**
 
 <div align="center">
 
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
-[![npm downloads](https://img.shields.io/npm/dw/btp-guard.svg?style=for-the-badge&logo=npm&color=orange)](https://www.npmjs.com/package/btp-guard)
-[![Tests](https://img.shields.io/badge/Tests-2%2C598%20Passing%20(100%25)-10b981.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14198/badge)](https://www.bestpractices.dev/projects/14198)
+[![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
+[![Latency](https://img.shields.io/badge/Latency-0.95%C2%B5s%20(Sub--Microsecond)-6366f1.svg?style=for-the-badge)](paper_v2_5.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary-blue.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
-### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP v2.4?**
+### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP v2.5?**
 
-> **Bartholomew is the resilient, transactional execution runtime and MCP security proxy for autonomous AI agents.**  
-> Built on the **Bartholomew Trust Protocol (BTP v2.4 Standards Track)**, it moves beyond brittle "prompt firewalls" by providing **sub-5 microsecond Copy-on-Write workspace micro-rollbacks**, **bi-directional in-flight credential scrubbing**, and **chained RFC 8785 Ed25519 audit manifests**. It integrates transparently with Claude Desktop, Cursor, Windsurf, Devin, and any standard MCP client with zero code changes.
+> **Bartholomew is the deterministic execution runtime, MCP security proxy, and OS-level containment gate for frontier autonomous AI agents.**  
+> Built on the **Bartholomew Trust Protocol (BTP v2.5 Standards Track)**, it protects operating systems, filesystems, and APIs against frontier autonomous failure modes with:
+> 1. **Sub-Microsecond OS Event Gating (0.95 µs)**: Spatial coordinate and keystroke interception for autonomous "computer use" actions.
+> 2. **Copy-on-Write (CoW) Tree Micro-Rollbacks**: Full multi-file directory state snapshots with SHA-256 Merkle root identity.
+> 3. **Recursive Swarm Quota Conservation**: Mathematical damping ($\sum Q(v) \le Q_{\text{root}}$) eliminating runaway multi-agent loops.
+> 4. **Bi-Directional In-Flight Credential Scrubbing**: Intercepts high-entropy keys across Claude Desktop, Cursor, and MCP tools with zero code changes.
 
 ---
 

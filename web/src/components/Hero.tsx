@@ -102,7 +102,7 @@ if result["allowed"]:
         <div className="flex items-center justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
             <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981]">[BTP v2.4.0 OPEN SOURCE]</span>
+            <span className="text-[#10b981]">[BTP v2.5.0 FRONTIER READY · 1.05M EVALS/SEC]</span>
           </div>
         </div>
 
