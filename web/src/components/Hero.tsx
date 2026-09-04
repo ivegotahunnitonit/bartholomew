@@ -98,11 +98,20 @@ if result["allowed"]:
     <section className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-20 px-5 sm:px-8 bg-black text-white overflow-x-hidden">
       <div className="max-w-5xl mx-auto w-full relative z-10">
         
-        {/* Status Pill */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
-            <span className="w-2 h-2 bg-[#10b981] animate-pulse" />
-            <span className="text-[#10b981]">[BTP v2.5.0 FRONTIER READY · 1.05M EVALS/SEC]</span>
+        {/* Launch Day Announcements & Telemetry */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+          <a
+            href="https://www.producthunt.com/products/bartholomew-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#ff6154]/10 border border-[#ff6154]/40 hover:border-[#ff6154] text-xs font-mono font-bold uppercase tracking-wider text-[#ff6154] transition shadow-sm group"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#ff6154] animate-pulse" />
+            <span>[FEATURED ON PRODUCT HUNT &middot; JOIN LAUNCH DISCUSSION &rarr;]</span>
+          </a>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0a0a0a] border border-[#222222] text-xs font-mono font-bold uppercase tracking-wider text-[#a1a1aa] shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+            <span className="text-[#10b981]">[220+ PYPI &middot; 130+ NPM &middot; 1.05M EVALS/SEC]</span>
           </div>
         </div>
 

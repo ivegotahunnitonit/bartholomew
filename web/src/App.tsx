@@ -9,6 +9,7 @@ import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
+import EnterpriseDesignPartnerSection from './components/EnterpriseDesignPartnerSection'
 import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
 import Founder from './components/Founder'
 import SDK from './components/SDK'
@@ -42,6 +43,7 @@ function HomeView() {
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <InteractiveAgentSandbox />
+      <EnterpriseDesignPartnerSection />
       <RuntimeThesisProof />
       <div id="policy-editor">
         <VisualPolicyEditor />

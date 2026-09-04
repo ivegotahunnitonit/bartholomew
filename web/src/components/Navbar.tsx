@@ -28,42 +28,50 @@ export default function Navbar() {
         </div>
 
         {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-7 text-xs font-mono font-semibold text-[#a1a1aa]">
-          <a href="#how-it-works" className="hover:text-[#ffffff] transition">
-            [HOW IT WORKS]
-          </a>
+        <nav className="hidden md:flex items-center gap-6 text-xs font-mono font-semibold text-[#a1a1aa]">
           <a href="#threat-simulator" className="hover:text-[#ffffff] transition">
-            [THREAT DEMOS]
+            [SANDBOX]
+          </a>
+          <a href="#enterprise" className="hover:text-[#10b981] transition text-[#10b981]">
+            [ENTERPRISE PILOT]
           </a>
           <a href="#policy-editor" className="hover:text-[#ffffff] transition">
-            [IN-BROWSER TESTER]
+            [POLICY TESTER]
           </a>
-          <a href="#founder" className="hover:text-[#10b981] transition text-[#10b981]">
+          <a href="#founder" className="hover:text-[#ffffff] transition">
             [FOUNDER &amp; TEAM]
           </a>
           <a href="#sdk" className="hover:text-[#ffffff] transition">
-            [PYTHON / JS SDK]
+            [SDK / CLI]
           </a>
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2.5">
+          <a
+            href="https://www.producthunt.com/products/bartholomew-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 text-xs font-mono font-bold bg-[#ff6154]/10 border border-[#ff6154]/40 hover:border-[#ff6154] text-[#ff6154] transition flex items-center gap-1.5 shadow-sm"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff6154] animate-pulse" />
+            <span>PRODUCT HUNT</span>
+          </a>
           <a
             href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-1.5 text-xs font-mono font-semibold bg-[#0a0a0a] border border-[#222222] text-[#d4d4d8] hover:text-[#ffffff] hover:border-[#444444] transition flex items-center gap-1.5"
+            className="px-3 py-1.5 text-xs font-mono font-semibold bg-[#0a0a0a] border border-[#222222] text-[#d4d4d8] hover:text-[#ffffff] hover:border-[#444444] transition flex items-center gap-1.5"
           >
             <Code2 size={13} />
             <span>GITHUB</span>
-            <ExternalLink size={11} className="text-[#71717a]" />
           </a>
           <a
             href="#download"
-            className="px-4 py-1.5 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 text-xs font-mono font-bold bg-[#f59e0b] hover:bg-[#d97706] text-[#000000] border border-[#f59e0b] transition flex items-center gap-1.5 shadow-sm"
           >
             <Download size={13} />
-            <span>GET STARTED (FREE)</span>
+            <span>INSTALL</span>
           </a>
         </div>
 
