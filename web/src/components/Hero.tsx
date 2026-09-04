@@ -1,5 +1,20 @@
 import { useState } from 'react'
-import { Check, Copy, Cpu, CheckCircle2, Shield } from 'lucide-react'
+import { 
+  Check, 
+  Copy, 
+  Cpu, 
+  CheckCircle2, 
+  Terminal, 
+  Package, 
+  Code2, 
+  GitBranch, 
+  ShieldCheck, 
+  ExternalLink, 
+  Lock, 
+  ChevronDown, 
+  ChevronUp, 
+  Zap
+} from 'lucide-react'
 
 type AgentTarget = 'simple' | 'claude' | 'openai' | 'langchain'
 type InstallTarget = 'npx' | 'mcp' | 'pip' | 'npm' | 'action' | 'git'
@@ -7,16 +22,76 @@ type InstallTarget = 'npx' | 'mcp' | 'pip' | 'npm' | 'action' | 'git'
 export default function Hero() {
   const [selectedAgent, setSelectedAgent] = useState<AgentTarget>('simple')
   const [activeInstallTab, setActiveInstallTab] = useState<InstallTarget>('npx')
+  const [nodePm, setNodePm] = useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm')
+  const [pythonPm, setPythonPm] = useState<'pip' | 'uv' | 'poetry'>('pip')
+  const [showIntegrityDrawer, setShowIntegrityDrawer] = useState(false)
   const [copiedCode, setCopiedCode] = useState(false)
   const [copiedCommand, setCopiedCommand] = useState(false)
 
-  const installCommands = {
-    npx: 'npx btp-guard',
-    mcp: 'npx -y btp-guard mcp',
-    pip: 'pip install btp-guard',
-    npm: 'npm install btp-guard',
-    action: 'uses: ivegotahunnitonit/bartholomew@v2.5.0',
-    git: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
+  const getDynamicCommand = (tab: InstallTarget) => {
+    switch (tab) {
+      case 'npx':
+        return 'npx -y btp-guard@latest demo'
+      case 'mcp':
+        return 'npx -y btp-guard mcp'
+      case 'pip':
+        if (pythonPm === 'uv') return 'uv add btp-guard'
+        if (pythonPm === 'poetry') return 'poetry add btp-guard'
+        return 'pip install btp-guard'
+      case 'npm':
+        if (nodePm === 'pnpm') return 'pnpm add btp-guard'
+        if (nodePm === 'yarn') return 'yarn add btp-guard'
+        if (nodePm === 'bun') return 'bun add btp-guard'
+        return 'npm install btp-guard'
+      case 'action':
+        return 'uses: ivegotahunnitonit/bartholomew@v2.5.0'
+      case 'git':
+        return 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
+    }
+  }
+
+  const tabDetails: Record<InstallTarget, {
+    badge: string
+    latency: string
+    description: string
+    icon: typeof Terminal
+  }> = {
+    npx: {
+      badge: 'Zero-Install Interactive Demo',
+      latency: '< 1ms dispatch',
+      description: 'Live in-flight secret scrubbing, 2.3µs micro-rollback, and Merkle root verification in local CPU memory.',
+      icon: Terminal
+    },
+    mcp: {
+      badge: 'Claude Desktop & Cursor MCP Server',
+      latency: 'Sub-microsecond gating',
+      description: 'Model Context Protocol security proxy intercepting bash commands, file edits, and network requests before dispatch.',
+      icon: Cpu
+    },
+    pip: {
+      badge: 'Python 3.10+ · PyPI Verified',
+      latency: '2.3 µs per tool call',
+      description: 'Universal drop-in decorators & safety middleware for Anthropic Computer-Use, CrewAI, AutoGen, and LangChain.',
+      icon: Package
+    },
+    npm: {
+      badge: 'TypeScript / ESM / CJS · npmjs.com',
+      latency: '0-dependency reference',
+      description: 'Pure RFC 8785 JSON Canonicalization Scheme and FIPS 186-5 Ed25519 verification with zero external dependencies.',
+      icon: Code2
+    },
+    action: {
+      badge: 'GitHub Marketplace Action',
+      latency: 'Automated CI/CD gatekeeper',
+      description: 'Blocks pull requests if unauthorized file deletions, dependency tampering, or unauthenticated prompt injections occur.',
+      icon: ShieldCheck
+    },
+    git: {
+      badge: 'Audited Open Source Pre-Print',
+      latency: '31/31 Unit Tests Passing',
+      description: 'Full repository source code with mathematical benchmarks, reproducible adversarial suites, and research pre-print.',
+      icon: GitBranch
+    }
   }
 
   const agentPairingSnippets: Record<AgentTarget, { title: string; filename: string; code: string; desc: string }> = {
@@ -89,7 +164,7 @@ if result["allowed"]:
   }
 
   const handleCopyCommand = () => {
-    navigator.clipboard.writeText(installCommands[activeInstallTab])
+    navigator.clipboard.writeText(getDynamicCommand(activeInstallTab))
     setCopiedCommand(true)
     setTimeout(() => setCopiedCommand(false), 2000)
   }
@@ -135,68 +210,216 @@ if result["allowed"]:
           Zero cloud lag. Zero external telemetry. Intercepts destructive commands (<code>rm -rf</code>, <code>DROP TABLE</code>), redacts leaked API keys, and restores pristine files in 2.3µs—stopping runaway agent mutations in local CPU memory before OS dispatch.
         </p>
 
-        {/* Standard Package Install Box (NO PIPED SCRIPTS) */}
-        <div className="bg-[#0a0a0a] border border-[#222222] max-w-3xl mx-auto mb-10 sm:mb-12 shadow-2xl overflow-hidden w-full">
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-[#000000] border-b border-[#222222]">
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <div className="w-2.5 h-2.5 bg-[#ef4444]" />
-              <div className="w-2.5 h-2.5 bg-[#f59e0b]" />
-              <div className="w-2.5 h-2.5 bg-[#10b981]" />
+        {/* Verified Package Install Box - Redesigned Frontier UI */}
+        <div className="relative rounded-xl border border-[#27272a] bg-gradient-to-b from-[#0e0e11] via-[#09090b] to-[#040405] max-w-3xl mx-auto mb-10 sm:mb-12 shadow-[0_20px_50px_-20px_rgba(16,185,129,0.18)] overflow-hidden w-full transition-all duration-300">
+          {/* Top Glowing Ambient Highlight */}
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10b981] to-transparent" />
+          
+          {/* Terminal Header Chrome */}
+          <div className="flex flex-wrap items-center justify-between px-3.5 sm:px-5 py-2.5 bg-[#08080a] border-b border-[#1f1f23] gap-2">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444] inline-block shadow-[0_0_8px_rgba(239,68,68,0.4)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] inline-block shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+              </div>
+              <div className="h-3.5 w-[1px] bg-[#27272a] mx-1" />
+              {/* Core Badge */}
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#10b981]/10 border border-[#10b981]/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-[#10b981] uppercase">
+                  verified-package-install
+                </span>
+              </div>
             </div>
-            <span className="text-[10px] sm:text-[11px] font-mono text-[#71717a]">verified-package-install</span>
-            <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-[11px] font-mono text-[#10b981]">
-              <Shield size={12} />
-              <span className="hidden xs:inline">Zero-Daemon Library</span>
-            </div>
-          </div>
 
-          {/* Tab Selector - Mobile Touch Friendly */}
-          <div className="flex bg-[#000000] border-b border-[#222222] p-1 sm:p-1.5 gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar">
-            {(['npx', 'mcp', 'pip', 'npm', 'action', 'git'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveInstallTab(tab)}
-                className={`flex-1 min-w-[75px] sm:min-w-0 py-1.5 px-1.5 sm:px-2 text-[11px] sm:text-xs font-mono font-bold transition border whitespace-nowrap text-center ${
-                  activeInstallTab === tab
-                    ? 'bg-[#f59e0b] text-[#000000] border-[#f59e0b]'
-                    : 'bg-[#0a0a0a] text-[#a1a1aa] border-[#222222] hover:text-[#ffffff]'
-                }`}
+            {/* Right Badges */}
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono">
+              <a
+                href="https://www.npmjs.com/package/btp-guard"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[#a1a1aa] hover:text-[#10b981] transition px-2 py-0.5 rounded bg-[#141417] border border-[#27272a]"
+                title="View verified npm package page"
               >
-                {tab === 'npx' && '[NPX (0-INSTALL)]'}
-                {tab === 'mcp' && '[MCP (CLAUDE & CURSOR)]'}
-                {tab === 'pip' && '[PYPI]'}
-                {tab === 'npm' && '[NPM]'}
-                {tab === 'action' && '[GH ACTION]'}
-                {tab === 'git' && '[SOURCE]'}
-              </button>
-            ))}
+                <Package size={12} className="text-[#10b981]" />
+                <span>npm: <strong className="text-white">btp-guard@2.5.0</strong></span>
+                <ExternalLink size={10} className="opacity-70 ml-0.5" />
+              </a>
+              <span className="hidden sm:inline-flex items-center gap-1 text-[#10b981] px-2 py-0.5 rounded bg-[#10b981]/10 border border-[#10b981]/20">
+                <ShieldCheck size={12} />
+                <span>Zero-Daemon</span>
+              </span>
+            </div>
           </div>
 
-          {/* Command Row */}
-          <div className="p-3 sm:p-5 flex items-center justify-between gap-2 sm:gap-3 bg-[#000000] font-mono text-xs sm:text-sm text-[#f59e0b]">
-            <span className="truncate flex-1">$ {installCommands[activeInstallTab]}</span>
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Ecosystem Tab Selector Chips */}
+          <div className="flex bg-[#060608] border-b border-[#1f1f23] p-1.5 sm:p-2 gap-1.5 overflow-x-auto no-scrollbar">
+            {(['npx', 'mcp', 'pip', 'npm', 'action', 'git'] as const).map((tab) => {
+              const TabIcon = tabDetails[tab].icon
+              const isActive = activeInstallTab === tab
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveInstallTab(tab)}
+                  className={`flex-1 min-w-[90px] sm:min-w-0 py-1.5 px-2 text-[11px] sm:text-xs font-mono font-semibold transition rounded flex items-center justify-center gap-1.5 border whitespace-nowrap text-center ${
+                    isActive
+                      ? 'bg-[#10b981]/15 text-[#ffffff] border-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                      : 'bg-[#0b0b0e] text-[#a1a1aa] border-[#222226] hover:text-white hover:border-[#38383f]'
+                  }`}
+                >
+                  <TabIcon size={13} className={isActive ? 'text-[#10b981]' : 'text-[#71717a]'} />
+                  <span>
+                    {tab === 'npx' && 'NPX Demo'}
+                    {tab === 'mcp' && 'MCP Proxy'}
+                    {tab === 'pip' && 'PyPI (Python)'}
+                    {tab === 'npm' && 'NPM (Node)'}
+                    {tab === 'action' && 'GH Action'}
+                    {tab === 'git' && 'Git Source'}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Sub-Package Manager Switcher for npm and pip */}
+          {activeInstallTab === 'npm' && (
+            <div className="px-4 py-1.5 bg-[#0b0b0e] border-b border-[#1c1c20] flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[#71717a] flex items-center gap-1.5">
+                <Code2 size={12} className="text-[#10b981]" />
+                <span>Select Node Package Manager:</span>
+              </span>
+              <div className="flex items-center gap-1">
+                {(['npm', 'pnpm', 'yarn', 'bun'] as const).map((pm) => (
+                  <button
+                    key={pm}
+                    onClick={() => setNodePm(pm)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono transition border ${
+                      nodePm === pm
+                        ? 'bg-[#10b981]/20 text-[#10b981] border-[#10b981]/50 font-bold'
+                        : 'bg-[#141418] text-[#a1a1aa] border-[#27272a] hover:text-white'
+                    }`}
+                  >
+                    {pm}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeInstallTab === 'pip' && (
+            <div className="px-4 py-1.5 bg-[#0b0b0e] border-b border-[#1c1c20] flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[#71717a] flex items-center gap-1.5">
+                <Package size={12} className="text-[#10b981]" />
+                <span>Select Python Toolchain:</span>
+              </span>
+              <div className="flex items-center gap-1">
+                {(['pip', 'uv', 'poetry'] as const).map((pm) => (
+                  <button
+                    key={pm}
+                    onClick={() => setPythonPm(pm)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono transition border ${
+                      pythonPm === pm
+                        ? 'bg-[#10b981]/20 text-[#10b981] border-[#10b981]/50 font-bold'
+                        : 'bg-[#141418] text-[#a1a1aa] border-[#27272a] hover:text-white'
+                    }`}
+                  >
+                    {pm}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Terminal Command Row */}
+          <div className="p-3.5 sm:p-5 flex items-center justify-between gap-3 bg-[#030304] font-mono text-xs sm:text-sm">
+            <div className="flex items-center gap-2.5 truncate flex-1">
+              <span className="text-[#10b981] font-bold select-none text-sm sm:text-base">❯</span>
+              <code className="text-[#f59e0b] truncate selection:bg-[#10b981]/30 selection:text-white">
+                {getDynamicCommand(activeInstallTab)}
+              </code>
+            </div>
+            
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleCopyCommand}
-                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-mono font-bold transition flex items-center gap-1 sm:gap-1.5 border shrink-0 ${
+                className={`px-3 py-1.5 text-[11px] sm:text-xs font-mono font-bold transition-all rounded flex items-center gap-1.5 border shadow-sm ${
                   copiedCommand
-                    ? 'bg-[#10b981] text-[#000000] border-[#10b981]'
-                    : 'bg-[#0a0a0a] text-[#ffffff] border-[#333333] hover:border-[#555555]'
+                    ? 'bg-[#10b981] text-black border-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                    : 'bg-[#111115] text-[#ffffff] border-[#2e2e33] hover:border-[#10b981] hover:text-[#10b981]'
                 }`}
+                title="Copy command to clipboard"
               >
-                {copiedCommand ? <Check size={12} /> : <Copy size={12} />}
-                <span>{copiedCommand ? '[COPIED]' : '[COPY]'}</span>
+                {copiedCommand ? <Check size={13} className="stroke-[3]" /> : <Copy size={13} />}
+                <span>{copiedCommand ? 'COPIED!' : 'COPY'}</span>
               </button>
             </div>
           </div>
 
-          <div className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#0a0a0a] border-t border-[#1c1c1c] flex flex-col xs:flex-row items-center justify-between text-[11px] sm:text-xs font-mono text-[#a1a1aa] gap-1">
-            <span className="text-[#10b981] flex items-center gap-1.5">
-              <CheckCircle2 size={13} />
-              <span>Fastest In-Memory Execution</span>
-            </span>
-            <span className="text-[#71717a] text-[10px] sm:text-[11px]">Zero Network Lag · Zero Telemetry</span>
+          {/* Dynamic Context Descriptor */}
+          <div className="px-3.5 sm:px-5 py-2.5 bg-[#08080a] border-t border-[#1a1a1e] flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-mono text-[#a1a1aa] gap-1.5">
+            <div className="flex items-center gap-2 text-white">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+              <span className="text-[#e4e4e7] font-sans font-medium text-xs">
+                {tabDetails[activeInstallTab].description}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[#10b981] shrink-0">
+              <Zap size={12} className="text-[#f59e0b]" />
+              <span className="font-semibold">{tabDetails[activeInstallTab].latency}</span>
+            </div>
           </div>
+
+          {/* Footer Security Badges & Expandable Checksum Toggle */}
+          <div className="px-3.5 sm:px-5 py-2 bg-[#050507] border-t border-[#161619] flex flex-wrap items-center justify-between text-[10px] sm:text-[11px] font-mono text-[#71717a] gap-2">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1 text-[#10b981]">
+                <CheckCircle2 size={12} />
+                <span>100% In-Memory</span>
+              </span>
+              <span>&bull;</span>
+              <span className="inline-flex items-center gap-1 text-[#a1a1aa]">
+                <Lock size={11} className="text-[#10b981]" />
+                <span>Zero Telemetry</span>
+              </span>
+              <span>&bull;</span>
+              <span className="hidden xs:inline text-[#a1a1aa]">FIPS 186-5 Ed25519</span>
+            </div>
+
+            <button
+              onClick={() => setShowIntegrityDrawer(!showIntegrityDrawer)}
+              className="inline-flex items-center gap-1 text-[#a1a1aa] hover:text-[#10b981] transition"
+            >
+              <span>{showIntegrityDrawer ? '[Hide Checksums]' : '[Verify Checksum & Integrity]'}</span>
+              {showIntegrityDrawer ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            </button>
+          </div>
+
+          {/* Expandable Cryptographic Checksum & Audit Drawer */}
+          {showIntegrityDrawer && (
+            <div className="p-4 bg-[#020203] border-t border-[#1f1f23] font-mono text-[11px] text-[#a1a1aa] space-y-2 animate-in fade-in duration-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-2 border-b border-[#1c1c20]">
+                <div>
+                  <span className="text-[#71717a] block text-[10px] uppercase">Package Tarball Registry</span>
+                  <span className="text-[#10b981] break-all">registry.npmjs.org/btp-guard/-/btp-guard-2.5.0.tgz</span>
+                </div>
+                <div>
+                  <span className="text-[#71717a] block text-[10px] uppercase">Canonical Serialization</span>
+                  <span className="text-white">RFC 8785 JSON Canonicalization Scheme (JCS)</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <span className="text-[#71717a] block text-[10px] uppercase">SHA-256 Release Digest</span>
+                  <span className="text-[#f59e0b] break-all">3c8e77a807f7f90be092b3a985e5ebad6b0c20188efee31e7c98b67cc1d89fa3</span>
+                </div>
+                <div>
+                  <span className="text-[#71717a] block text-[10px] uppercase">Cryptographic Identity Signer</span>
+                  <span className="text-white">itsub_sa &lt;itsub@bartholomew.info&gt; (Ed25519)</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Integration Selector */}
