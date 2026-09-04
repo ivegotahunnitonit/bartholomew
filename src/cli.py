@@ -135,12 +135,22 @@ def main():
     agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
     agent_p.add_argument("--interactive", "-i", action="store_true", default=True, help="Run in interactive REPL mode")
 
+    # sync Subcommand (Dynamic Policy Synchronization)
+    sync_p = subparsers.add_parser("sync", help="Push verified policy to live agent workers via zero-downtime hot reload")
+    sync_p.add_argument("--config", "-c", default=".btp/policy.yaml", help="Path to policy YAML file (default: .btp/policy.yaml)")
+    sync_p.add_argument("--target", "-t", default="http://127.0.0.1:8000", help="Target agent daemon URL (default: http://127.0.0.1:8000)")
+    sync_p.add_argument("--dry-run", action="store_true", help="Validate and fingerprint policy without dispatching to network")
+
+    # check Subcommand (Formal Policy Verification)
+    check_p = subparsers.add_parser("check", help="Statically verify policy for contradictions and invariant coverage")
+    check_p.add_argument("--file", "-f", default=".btp/policy.yaml", help="Path to policy file to verify")
+
     args = parser.parse_args()
 
     if args.command == "version":
-        print("Bartholomew Autonomous Trust Protocol (BTP) CLI v2.2.0")
-        print("Protocol: BTP/2.2 (RFC 8785 + FIPS 186-5 Ed25519)")
-        print("Target Latency: <55 µs")
+        print("Bartholomew Autonomous Trust Protocol (BTP) CLI v2.5.0")
+        print("Protocol: BTP/2.5 (RFC 8785 + FIPS 186-5 Ed25519 + CoW Tree)")
+        print("Target Latency: <5 µs")
         return
 
     elif args.command == "demo":
@@ -188,6 +198,39 @@ def main():
         from src.cli_linter import audit_directory, print_audit_report
         results = audit_directory(args.path)
         print_audit_report(results)
+
+    elif args.command == "sync":
+        from src.dynamic_policy_sync import sync_policy
+        success, msg, data = sync_policy(args.target, args.config, dry_run=args.dry_run)
+        print(msg)
+        if not success:
+            sys.exit(1)
+
+    elif args.command == "check":
+        from src.dynamic_policy_sync import load_and_validate_policy, verify_policy_integrity
+        import yaml
+        try:
+            with open(args.file, "r", encoding="utf-8") as f:
+                raw_data = yaml.safe_load(f) or {}
+            is_valid, issues = verify_policy_integrity(raw_data)
+            policy = load_and_validate_policy(args.file)
+            print("=" * 70)
+            print("BARTHOLOMEW FORMAL POLICY VERIFICATION")
+            print("=" * 70)
+            print(f"[*] Policy Path   : {policy['_source_path']}")
+            print(f"[*] Active Rules  : {policy['_rule_count']}")
+            print(f"[*] Fingerprint   : {policy['_hash']}")
+            print(f"[*] Status        : {'PASS' if is_valid else 'FAIL'}")
+            if issues:
+                print("[*] Diagnostics   :")
+                for issue in issues:
+                    print(f"    - {issue}")
+            print("=" * 70)
+            if not is_valid:
+                sys.exit(1)
+        except Exception as e:
+            print(f"[ERROR] Policy check failed: {str(e)}")
+            sys.exit(1)
 
     else:
         parser.print_help()

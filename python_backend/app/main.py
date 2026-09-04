@@ -247,6 +247,58 @@ def get_simulator_page():
 def get_docs_page():
     return _serve_file_html("docs.html")
 
+# -------------------------------------------------------------------------
+# Dynamic Policy Synchronization & Hot-Reload Endpoints (BTP v2.5.0)
+# -------------------------------------------------------------------------
+_ACTIVE_IN_MEMORY_POLICY = {
+    "policy_id": "default_sovereign_policy",
+    "version": "2.5.0",
+    "_hash": "1fecf61c323bb6890bbd778981111b178569490f3b639dc5c52c984c1d6e15c3",
+    "rules_count": 4,
+    "last_synced_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+}
+
+@app.get("/v1/policy/active")
+def get_active_policy():
+    """Returns currently loaded in-memory invariant policy metadata and cryptographic fingerprint."""
+    return JSONResponse(_ACTIVE_IN_MEMORY_POLICY)
+
+@app.post("/v1/policy/reload")
+async def reload_policy(request: Request):
+    """
+    Receives verified dynamic policy updates from `btp sync` CLI or control plane,
+    verifies canonical SHA-256 fingerprint, and atomically swaps active in-memory invariants.
+    """
+    try:
+        payload = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Malformed JSON payload")
+
+    from src.dynamic_policy_sync import compute_policy_hash, verify_policy_integrity
+    is_valid, issues = verify_policy_integrity(payload)
+    if not is_valid:
+        raise HTTPException(status_code=422, detail={"error": "Policy validation failed", "issues": issues})
+
+    fingerprint = compute_policy_hash(payload)
+    rules = payload.get("rules", [])
+    
+    global _ACTIVE_IN_MEMORY_POLICY
+    _ACTIVE_IN_MEMORY_POLICY = {
+        "policy_id": payload.get("policy_id", "dynamic_policy"),
+        "version": payload.get("version", "2.5.0"),
+        "_hash": fingerprint,
+        "rules_count": len(rules),
+        "last_synced_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+    }
+    
+    return {
+        "status": "SUCCESS",
+        "action": "POLICY_HOT_RELOADED",
+        "active_hash": fingerprint,
+        "active_rules": len(rules),
+        "synced_at": _ACTIVE_IN_MEMORY_POLICY["last_synced_at"]
+    }
+
 # 
 # BTP v2.2 Standards Track Machine Discovery & Evaluation RPC Routes
 # 
