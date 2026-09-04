@@ -1,10 +1,10 @@
 # Smithery MCP Server Specification for Bartholomew BTP Guard
 # Official registry configuration for Claude Desktop, Cursor, and Windsurf
-name: "@bartholomew/mcp-server"
-description: "Sub-5 microsecond pre-flight cryptographic guardrails, spend caps, and LDMU loop termination for Claude Desktop and Cursor."
-version: "2.2.0"
+name: "@ivegotahunnitonit/bartholomew"
+description: "Sub-microsecond (0.95µs) OS computer-use gating, Copy-on-Write rollbacks, and in-flight secret protection for Claude Desktop, Cursor, and MCP clients."
+version: "2.5.0"
 runtime: "python"
-entrypoint: "mcp_server/server.py"
+entrypoint: "src/mcp_gateway.py"
 configSchema:
   type: object
   properties:
@@ -25,4 +25,4 @@ command:
   executable: python
   args:
     - "-m"
-    - "mcp_server.server"
+    - "src.mcp_gateway"
