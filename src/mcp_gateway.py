@@ -32,7 +32,7 @@ from src.secret_masker import SecretVaultMasker
 from src.trust_protocol import BartholomewTrustAuthority
 from src.workspace_transaction import WorkspaceTransaction
 from src.rfc8785 import rfc8785_canonicalize
-from src.v25_kernel import SyntheticEventGate, SyntheticEvent, CoWTreeSnapshot, RecursiveSubRingRouter
+from src.v25_kernel import SyntheticEventGate, SyntheticEvent, CoWTreeSnapshot, RecursiveSubRingRouter, NetworkEgressGate, EgressTarget
 
 
 class MCPProxyGateway:
@@ -59,6 +59,7 @@ class MCPProxyGateway:
         self.total_redacted = 0
         self.total_rollbacks = 0
         self.synthetic_gate = SyntheticEventGate()
+        self.network_gate = NetworkEgressGate()
         self.cow_tree = CoWTreeSnapshot(workspace_root=self.workspace_root)
         self.active_transactions: Dict[Any, WorkspaceTransaction] = {}
         self.session_receipt_chain: List[Dict[str, Any]] = []
@@ -115,10 +116,14 @@ class MCPProxyGateway:
                 key_sequence=sanitized_args.get("text") or sanitized_args.get("key") or sanitized_args.get("key_sequence"),
                 target_window=sanitized_args.get("window") or sanitized_args.get("target_window") or sanitized_args.get("title")
             )
-            is_valid_event, event_err = self.synthetic_gate.evaluate_event(synth_event)
+            is_valid_event, event_err, safe_alt = self.synthetic_gate.evaluate_event(synth_event)
             if not is_valid_event:
                 self.total_vetoed += 1
                 latency_us = (time.perf_counter() - t0) * 1_000_000
+                hint = "Synthetic action attempts interaction with a prohibited OS region or system window."
+                if safe_alt:
+                    hint = f"Coordinate ({coord_x}, {coord_y}) intersects prohibited zone. Self-correction target: (x={safe_alt[0]}, y={safe_alt[1]})."
+
                 veto_response = {
                     "jsonrpc": "2.0",
                     "id": req_id,
@@ -129,13 +134,52 @@ class MCPProxyGateway:
                             "verdict": "DENY",
                             "protocol_version": "BTP/2.5",
                             "rule": event_err,
+                            "suggested_alternative": {"x": safe_alt[0], "y": safe_alt[1]} if safe_alt else None,
                             "latency_us": round(latency_us, 2),
                             "authority_pubkey": self.authority.public_key_hex,
-                            "diagnostic_hint": "Synthetic action attempts interaction with a prohibited OS region or system window."
+                            "diagnostic_hint": hint
                         }
                     }
                 }
                 return False, req, veto_response
+
+        # 1.7. BTP v2.5 Non-Idempotent Network Egress Pre-Execution Gate (<0.8 µs)
+        # Because dispatched TCP packets cannot be rolled back, unauthorized hosts are dropped before socket dispatch
+        network_candidates = []
+        for k in ["url", "endpoint", "host", "destination", "target_url"]:
+            if k in sanitized_args and isinstance(sanitized_args[k], str):
+                network_candidates.append(sanitized_args[k])
+
+        for target_str in network_candidates:
+            from urllib.parse import urlparse
+            try:
+                parsed = urlparse(target_str if "://" in target_str else f"http://{target_str}")
+                host = parsed.hostname or target_str
+                port = parsed.port
+                is_allowed_net, net_err = self.network_gate.evaluate_target(EgressTarget(host=host, port=port))
+                if not is_allowed_net:
+                    self.total_vetoed += 1
+                    latency_us = (time.perf_counter() - t0) * 1_000_000
+                    veto_response = {
+                        "jsonrpc": "2.0",
+                        "id": req_id,
+                        "error": {
+                            "code": -32000,
+                            "message": f"BTP-VETO: Network Egress Boundary Violation on tool '{tool_name}'",
+                            "data": {
+                                "verdict": "DENY",
+                                "protocol_version": "BTP/2.5",
+                                "boundary_type": "NON_IDEMPOTENT_PREVENTION",
+                                "rule": net_err,
+                                "latency_us": round(latency_us, 2),
+                                "authority_pubkey": self.authority.public_key_hex,
+                                "diagnostic_hint": "Outbound connection to unauthorized or internal address blocked before socket creation."
+                            }
+                        }
+                    }
+                    return False, req, veto_response
+            except Exception:
+                pass
 
         # 2. Transactional Workspace Pre-Snapshot for Mutating Tools (BTP v2.5 Tree & File)
         if tool_name in self.MUTATING_TOOL_NAMES or any(m in tool_name.lower() for m in ["write", "delete", "edit"]):

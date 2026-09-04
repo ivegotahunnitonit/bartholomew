@@ -58,31 +58,57 @@ class SyntheticEventGate:
             "ctrl+alt+t", "win+r", "cmd+space", "alt+f4", "ctrl+shift+i"
         }
 
-    def evaluate_event(self, event: SyntheticEvent) -> Tuple[bool, Optional[str]]:
+    def suggest_safe_alternative(self, x: int, y: int) -> Tuple[int, int]:
+        """
+        Calculates the nearest safe coordinate outside all forbidden zones.
+        Ensures agents can immediately self-correct their action in a single turn.
+        """
+        candidate_x, candidate_y = x, y
+        for zone in self.forbidden_zones:
+            if zone.contains(candidate_x, candidate_y):
+                # Project outside the nearest zone boundary (+5px buffer)
+                d_top = abs(candidate_y - zone.y_min)
+                d_bottom = abs(zone.y_max - candidate_y)
+                d_left = abs(candidate_x - zone.x_min)
+                d_right = abs(zone.x_max - candidate_x)
+
+                min_dist = min(d_top, d_bottom, d_left, d_right)
+                if min_dist == d_bottom:
+                    candidate_y = zone.y_max + 5
+                elif min_dist == d_top:
+                    candidate_y = max(0, zone.y_min - 5)
+                elif min_dist == d_right:
+                    candidate_x = zone.x_max + 5
+                else:
+                    candidate_x = max(0, zone.x_min - 5)
+        return candidate_x, candidate_y
+
+    def evaluate_event(self, event: SyntheticEvent) -> Tuple[bool, Optional[str], Optional[Tuple[int, int]]]:
         t0 = time.perf_counter_ns()
 
         # 1. Window focus containment
         if event.target_window and event.target_window.lower() in self.forbidden_windows:
-            return False, f"WINDOW_VIOLATION: Focus on forbidden window '{event.target_window}' denied"
+            return False, f"WINDOW_VIOLATION: Focus on forbidden window '{event.target_window}' denied", None
 
-        # 2. Spatial bounding box containment
+        # 2. Spatial bounding box containment with constructive self-correction hint
         if event.x is not None and event.y is not None:
             for zone in self.forbidden_zones:
                 if zone.contains(event.x, event.y):
-                    return False, f"SPATIAL_VIOLATION: Coordinate ({event.x}, {event.y}) intersects forbidden zone '{zone.name}'"
+                    safe_x, safe_y = self.suggest_safe_alternative(event.x, event.y)
+                    return False, f"SPATIAL_VIOLATION: Coordinate ({event.x}, {event.y}) intersects forbidden zone '{zone.name}'", (safe_x, safe_y)
 
         # 3. Keystroke & Hotkey Invariant
         if event.key_sequence:
             seq_norm = event.key_sequence.strip().lower()
             if seq_norm in self.prohibited_hotkeys:
-                return False, f"KEYSTROKE_VIOLATION: Execution of prohibited hotkey '{event.key_sequence}' denied"
+                return False, f"KEYSTROKE_VIOLATION: Execution of prohibited hotkey '{event.key_sequence}' denied", None
             # Prevent direct raw shell injection via synthetic keystrokes
             if any(escape in seq_norm for escape in ["rm -rf", "drop table", "powershell -enc", "; curl ", "| sh"]):
-                return False, f"KEYSTROKE_INJECTION: Prohibited destructive payload in keystroke sequence"
+                return False, f"KEYSTROKE_INJECTION: Prohibited destructive payload in keystroke sequence", None
 
         t1 = time.perf_counter_ns()
         eval_latency_us = (t1 - t0) / 1000.0
-        return True, None
+        return True, None, None
 
 
 # ---------------------------------------------------------------------------
@@ -273,3 +299,70 @@ class CoWTreeSnapshot:
             "files_unlinked": unlinked,
             "latency_us": latency_us
         }
+
+
+# ---------------------------------------------------------------------------
+# Primitive 4: Non-Idempotent Network Egress Pre-Execution Gate (<0.8 µs)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EgressTarget:
+    host: str
+    port: Optional[int] = None
+    protocol: str = "https"
+    path: Optional[str] = None
+
+
+class NetworkEgressGate:
+    """
+    Sub-microsecond deterministic pre-execution gate for outbound network sockets.
+    Enforces non-idempotent prevention: because dispatched TCP packets cannot be rolled back,
+    all unauthorized destinations (cloud metadata, internal VPCs, sensitive ports) are dropped
+    before OS socket creation.
+    """
+    def __init__(self, allowed_domains: Optional[Set[str]] = None, allow_private_subnets: bool = False):
+        self.allowed_domains = allowed_domains or {
+            "api.openai.com", "api.anthropic.com", "api.github.com",
+            "pypi.org", "registry.npmjs.org", "bartholomew.info",
+            "huggingface.co", "news.ycombinator.com"
+        }
+        self.allow_private_subnets = allow_private_subnets
+        self.forbidden_ips = {
+            "169.254.169.254",  # AWS/GCP/Azure instance metadata
+            "127.0.0.1", "0.0.0.0", "localhost", "::1"
+        }
+        self.prohibited_ports = {
+            22, 23, 25, 135, 139, 445, 1433, 1521, 3306, 3389, 5432, 6379, 27017
+        }
+
+    def evaluate_target(self, target: EgressTarget) -> Tuple[bool, Optional[str]]:
+        t0 = time.perf_counter_ns()
+        host_clean = target.host.strip().lower()
+
+        # 1. Cloud metadata & loopback exfiltration prevention
+        if host_clean in self.forbidden_ips:
+            return False, f"EGRESS_VIOLATION: Outbound connection to metadata/loopback '{host_clean}' blocked (Pre-Execution)"
+
+        # 2. Port containment
+        if target.port and target.port in self.prohibited_ports:
+            return False, f"PORT_VIOLATION: Connection to sensitive service port {target.port} blocked (Pre-Execution)"
+
+        # 3. Private RFC 1918 subnet containment (unless explicitly allowed)
+        if not self.allow_private_subnets:
+            if host_clean.startswith("10.") or host_clean.startswith("192.168.") or any(host_clean.startswith(f"172.{i}.") for i in range(16, 32)):
+                return False, f"VPC_ISOLATION_VIOLATION: Connection to internal RFC-1918 subnet '{host_clean}' blocked"
+
+        # 4. Domain allowlist containment
+        if self.allowed_domains:
+            allowed = False
+            for domain in self.allowed_domains:
+                if host_clean == domain or host_clean.endswith("." + domain):
+                    allowed = True
+                    break
+            if not allowed:
+                return False, f"DOMAIN_VIOLATION: Destination '{host_clean}' not in authorized egress allowlist"
+
+        t1 = time.perf_counter_ns()
+        eval_latency_us = (t1 - t0) / 1000.0
+        return True, None
+

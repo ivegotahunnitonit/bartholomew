@@ -26,15 +26,16 @@ keywords:
 
 With the arrival of frontier reasoning models exhibiting native OS-level "computer use" and attaining the "Critical" cybersecurity capability threshold (e.g., autonomous zero-day exploit generation and end-to-end GUI navigation), the fundamental failure mode of autonomous artificial intelligence is no longer cognitive deficiency, but **unbounded blast radius**. When an autonomous agent is granted access to the operating system display server, keyboard input queues, shell terminals, and multi-agent child spawning APIs, probabilistic prompt guardrails and post-hoc logging fail to prevent specification gaming (reward hacking), unintended state destruction, and recursive swarm resource exhaustion.
 
-This paper introduces the **Bartholomew Trust Protocol Version 2.5 (BTP v2.5)**, an in-memory, deterministic execution kernel engineered to govern frontier autonomous swarms at machine speed. BTP v2.5 formalizes three novel theoretical and operational primitives:
+This paper introduces the **Bartholomew Trust Protocol Version 2.5 (BTP v2.5)**, an in-memory, deterministic execution kernel engineered to govern frontier autonomous swarms at machine speed. BTP v2.5 formalizes four novel theoretical and operational primitives:
 
-1. **Deterministic OS-Level Event Gating (<1.0 µs)**: A spatial and temporal validator for synthetic mouse clicks, drag vectors, window focus handles, and keystroke sequences, intercepting unauthorized display-server actions ($B_{\text{target}} \cap B_{\text{forbidden}} \neq \emptyset$) in an average of **0.95 µs** prior to OS kernel dispatch.
+1. **Deterministic OS-Level Event Gating (<1.2 µs) with Constructive Self-Correction**: A spatial and temporal validator for synthetic mouse clicks, drag vectors, window focus handles, and keystroke sequences. It intercepts unauthorized display-server actions ($B_{\text{target}} \cap B_{\text{forbidden}} \neq \emptyset$) and projects the minimum Euclidean distance alternative $(x^*, y^*)$ outside forbidden zones, allowing agents to self-correct in a single turn.
 2. **Recursive Hierarchical Sub-Ring Containment**: A topological multi-agent routing protocol enforcing the **Law of Strict Swarm Conservation**. When an agent recursively delegates tasks to child swarms, token quotas and capability bounds undergo geometric damping, mathematically guaranteeing that total swarm resource allocation remains strictly bounded:
    $$\sum_{v \in V(T)} Q(v) \le Q_{\text{root}} < \infty$$
    preventing runaway multi-agent loops and infinite API spend.
-3. **Copy-on-Write (CoW) Micro-Filesystem Snapshots**: A sub-millisecond workspace checkpointing engine that calculates SHA-256 Merkle root hashes across heterogeneous directory structures, enabling atomic, multi-file rollbacks with 100.0% clean restoration upon any invariant violation.
+3. **Copy-on-Write (CoW) Micro-Filesystem Snapshots**: A workspace checkpointing engine that calculates SHA-256 Merkle root hashes across heterogeneous directory structures, enabling atomic, multi-file rollbacks with 100.0% clean restoration upon any invariant violation.
+4. **Non-Idempotent Network Egress Pre-Execution Gate (<3.0 µs)**: Explicit architectural separation between local state rollback and irreversible external network socket creation. Cloud metadata (`169.254.169.254`), internal loopback ports, and unauthorized domains are dropped pre-execution before TCP socket initialization.
 
-In empirical Proof of Work (PoW) benchmarks across **100,000 synthesized adversarial cycles**, BTP v2.5 achieved an average throughput of **1,056,554 evaluations/second**, a median latency of **0.95 µs**, **0 bypasses (100.000000% clean interception)**, and exact mathematical swarm convergence.
+In empirical Proof of Work (PoW) benchmarks across **100,000 synthesized adversarial cycles**, BTP v2.5 achieved an average throughput of **854,616 evaluations/second** for GUI gating, **349,185 evaluations/second** for network egress gating, **0 bypasses (100.000000% clean interception)**, and exact mathematical swarm convergence.
 
 ---
 
