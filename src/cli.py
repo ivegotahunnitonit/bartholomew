@@ -145,6 +145,11 @@ def main():
     check_p = subparsers.add_parser("check", help="Statically verify policy for contradictions and invariant coverage")
     check_p.add_argument("--file", "-f", default=".btp/policy.yaml", help="Path to policy file to verify")
 
+    # verify-offline Subcommand (Air-Gapped Receipt Verification)
+    v_off_p = subparsers.add_parser("verify-offline", help="Independently verify an offline BTP receipt in air-gapped environments")
+    v_off_p.add_argument("--receipt", "-r", required=True, help="Path to receipt JSON file")
+    v_off_p.add_argument("--pubkey", "-p", help="Trusted authority public key hex (optional)")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -230,6 +235,13 @@ def main():
                 sys.exit(1)
         except Exception as e:
             print(f"[ERROR] Policy check failed: {str(e)}")
+            sys.exit(1)
+
+    elif args.command == "verify-offline":
+        from src.offline_airgap_verifier import verify_btp_receipt_file
+        success, report, _ = verify_btp_receipt_file(args.receipt, args.pubkey)
+        print(report)
+        if not success:
             sys.exit(1)
 
     else:
