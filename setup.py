@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name="btp-guard",
-    version="2.4.0",
-    description="Resilient MCP Security Proxy, Sub-5µs Transactional Rollback Engine & In-Flight Secret Scrubber for Autonomous AI Agents.",
+    version="2.5.0",
+    description="Frontier MCP Security Proxy, Sub-Microsecond OS Event Gating, Copy-on-Write Rollback Engine & In-Flight Secret Scrubber for Autonomous AI Agents.",
     author="Bartholomew Protocol Team",
     packages=["btp_guard"],
     package_dir={"btp_guard": "src"},

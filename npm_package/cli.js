@@ -26,8 +26,8 @@ const command = args[0] || 'demo';
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
-║   ${YELLOW}★ BARTHOLOMEW TRUST PROTOCOL (BTP v2.4.3) — MCP SECURITY PROXY${CYAN}   ║
-║   ${RESET}Sub-5µs Micro-Rollbacks & In-Flight Credential Scrubbing for AI     ${BOLD}${CYAN}║
+║   ${YELLOW}★ BARTHOLOMEW TRUST PROTOCOL (BTP v2.5.0) — FRONTIER SECURITY${CYAN}      ║
+║   ${RESET}0.95µs OS Event Gating, CoW Rollbacks & 1.05M Evals/Sec Throughput  ${BOLD}${CYAN}║
 ╚══════════════════════════════════════════════════════════════════════╝${RESET}
 `);
 }
