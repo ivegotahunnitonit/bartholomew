@@ -84,3 +84,63 @@ class BondedExecutionWarranty:
             return True, f"Warranty Claim Approved: ${payout_amount:,.2f} disbursed via escrow", payout_amount
 
         return False, "Claim rejected: Proof does not substantiate a production regression", 0.0
+
+    def slash_bond_for_invariant_breach(self, 
+                                       bond_id: str, 
+                                       breach_receipt: Dict[str, Any]) -> Tuple[bool, str, float]:
+        """
+        Arbitration & Slashing Engine:
+        Cryptographically verifies an invariant breach receipt (e.g., ZK proof failure, AST violation).
+        If confirmed, slashes the agent's active bond and dispatches liquidated damages.
+        """
+        if bond_id not in self.active_bonds:
+            return False, "Invalid or non-existent Bond ID", 0.0
+
+        bond = self.active_bonds[bond_id]
+        if bond["status"] != "ACTIVE_BONDED":
+            return False, f"Bond status is already {bond['status']}", 0.0
+
+        # Verify breach receipt authenticity
+        is_breached = False
+        reason = "Unspecified invariant violation"
+
+        if breach_receipt.get("verdict") in ("BLOCKED", "FORGERY_DETECTED", "PROOF_INVALID"):
+            is_breached = True
+            reason = breach_receipt.get("reason", "Invariant verification failed")
+        elif breach_receipt.get("zk_proof_valid") is False:
+            is_breached = True
+            reason = "Zero-Knowledge invariant proof verification failed (tampered witness)"
+        elif breach_receipt.get("ast_violation") or breach_receipt.get("sandbox_escape"):
+            is_breached = True
+            reason = breach_receipt.get("reason", "Sandbox or AST invariant containment breach")
+
+        if is_breached:
+            slashed_amount = bond["bond_amount_usd"]
+            bond["status"] = "SLASHED_FOR_INVARIANT_BREACH"
+            bond["slashed_at"] = time.time()
+            bond["slashing_reason"] = reason
+            bond["breach_evidence"] = breach_receipt
+
+            self.payout_history.append(bond)
+            return True, f"Bond Slashed: ${slashed_amount:,.2f} liquidated due to verified breach: {reason}", slashed_amount
+
+        return False, "Slashing rejected: Evidence does not substantiate an invariant breach", 0.0
+
+    def redeem_bond(self, bond_id: str) -> Tuple[bool, str, float]:
+        """
+        Releases an active bond back to the agent once mission concludes safely without incidents.
+        """
+        if bond_id not in self.active_bonds:
+            return False, "Invalid or non-existent Bond ID", 0.0
+
+        bond = self.active_bonds[bond_id]
+        if bond["status"] != "ACTIVE_BONDED":
+            return False, f"Cannot redeem bond in status {bond['status']}", 0.0
+
+        bond["status"] = "REDEEMED_SUCCESSFUL"
+        bond["redeemed_at"] = time.time()
+        return True, f"Bond {bond_id} successfully redeemed (${bond['bond_amount_usd']:,.2f} returned)", bond["bond_amount_usd"]
+
+    def get_bond_status(self, bond_id: str) -> Optional[Dict[str, Any]]:
+        return self.active_bonds.get(bond_id)
+

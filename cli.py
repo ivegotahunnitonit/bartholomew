@@ -561,6 +561,71 @@ def cmd_verify_offline(args):
         sys.exit(1)
 
 
+def cmd_bond_issue(args):
+    """Issue a cryptographic execution warranty bond for an autonomous agent action."""
+    from src.bonded_warranty import BondedExecutionWarranty
+    import secrets
+
+    engine = BondedExecutionWarranty()
+    bond = engine.issue_warranty_bond(
+        attestation_hash=args.attestation or f"0x{secrets.token_hex(16)}",
+        agent_id=args.agent,
+        action_type=args.action,
+        bond_amount_usd=args.amount,
+    )
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(bond, f, indent=2)
+        print(f"[+] Warranty bond written to: {args.out}")
+
+    print("=" * 70)
+    print("BTP v3.1 BONDED EXECUTION WARRANTY ISSUANCE")
+    print("=" * 70)
+    print(f"[*] Bond ID       : {bond['bond_id']}")
+    print(f"[*] Agent ID      : {bond['originating_agent']}")
+    print(f"[*] Action Type   : {bond['action_type']}")
+    print(f"[*] Bond Amount   : ${bond['bond_amount_usd']:,.2f} USD")
+    print(f"[*] Status        : {bond['status']}")
+    print(f"[*] Coverage      : {bond['coverage']}")
+    print("=" * 70)
+
+
+def cmd_bond_slash(args):
+    """Slash an agent bond upon verified invariant breach or ZK proof discrepancy."""
+    from src.bonded_warranty import BondedExecutionWarranty
+
+    engine = BondedExecutionWarranty()
+    bond_id = args.bond_id
+
+    # If bond file path passed, load it
+    if os.path.exists(bond_id):
+        with open(bond_id, "r", encoding="utf-8") as f:
+            bdata = json.load(f)
+            bond_id = bdata.get("bond_id", bond_id)
+            engine.active_bonds[bond_id] = bdata
+
+    breach_evidence = {}
+    if args.proof and os.path.exists(args.proof):
+        with open(args.proof, "r", encoding="utf-8") as f:
+            raw_data = json.load(f)
+            breach_evidence = raw_data.get("btp_proof_receipt", raw_data)
+    else:
+        breach_evidence = {
+            "verdict": "BLOCKED",
+            "reason": args.reason or "Arbitrated invariant containment violation"
+        }
+
+    success, msg, slashed_amt = engine.slash_bond_for_invariant_breach(bond_id, breach_evidence)
+    print("=" * 70)
+    print("BTP v3.1 INVARIANT ARBITRATION & BOND SLASHING CEREMONY")
+    print("=" * 70)
+    print(f"[*] Arbitration   : {'SLASH APPROVED' if success else 'SLASH REJECTED'}")
+    print(f"[*] Details       : {msg}")
+    print(f"[*] Liquidated    : ${slashed_amt:,.2f} USD")
+    print("=" * 70)
+    if not success:
+        sys.exit(1)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Bartholomew AI Agent Guardrail CLI")
@@ -703,10 +768,33 @@ def main():
     zkv_p = subparsers.add_parser("zk-verify", help="Verify BTP v3.0 Zero-Knowledge Invariant Compliance Receipt")
     zkv_p.add_argument("--receipt", "-r", required=True, help="Path to compliance receipt JSON file")
 
+    # bond (BTP v3.1 Bonded Execution Warranty & Invariant Slashing)
+    bond_p = subparsers.add_parser("bond", help="BTP v3.1 Bonded Execution Warranty & Invariant Slashing Engine")
+    bond_sub = bond_p.add_subparsers(dest="bond_cmd")
+
+    b_issue_p = bond_sub.add_parser("issue", help="Issue an execution warranty bond for an autonomous agent action")
+    b_issue_p.add_argument("--agent", "-a", required=True, help="Agent identifier")
+    b_issue_p.add_argument("--action", default="EXECUTE_TOOL", help="Action type or tool category")
+    b_issue_p.add_argument("--amount", type=float, default=10000.0, help="Bond amount in USD (default: 10000.0)")
+    b_issue_p.add_argument("--attestation", help="Attestation hash (optional)")
+    b_issue_p.add_argument("--out", "-o", help="Output JSON file for bond artifact")
+
+    b_slash_p = bond_sub.add_parser("slash", help="Arbitrate and slash an agent bond upon verified invariant breach")
+    b_slash_p.add_argument("--bond-id", "-b", required=True, help="Bond ID string or path to bond JSON file")
+    b_slash_p.add_argument("--proof", "-p", help="Path to breach receipt or failed ZK receipt JSON")
+    b_slash_p.add_argument("--reason", "-r", help="Slashing reason description")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
+    elif args.command == "bond":
+        if args.bond_cmd == "issue":
+            cmd_bond_issue(args)
+        elif args.bond_cmd == "slash":
+            cmd_bond_slash(args)
+        else:
+            bond_p.print_help()
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)
