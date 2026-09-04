@@ -115,16 +115,13 @@ export default function Founder() {
 
             <div className="space-y-3.5 text-sm text-[#d4d4d8] leading-relaxed font-sans text-left">
               <p>
-                "Giving an autonomous AI agent the power to run computer code, modify enterprise databases, or trigger financial workflows is like handing someone the keys to your company car. Simply instructing an agent in plain English 'please don't break anything' is not security—it is wishful thinking. And asking a second AI to judge whether the first AI behaved is slow, adds seconds of delay, and can still be tricked by clever wording."
+                "Most agent safety today relies on prompt engineering—asking a model to behave, or calling a second model to review its actions. That approach might work for chat interfaces, but it breaks down the moment an agent begins executing terminal commands, modifying databases, or moving capital. It adds seconds of latency and remains vulnerable to the exact prompt confusion it tries to prevent."
               </p>
               <p>
-                "We built Bartholomew as the physical seatbelt and emergency brake for autonomous AI. Instead of guessing or waiting on distant cloud servers, Bartholomew lives right inside the local machine. The microsecond an agent attempts to delete a vital directory, run an obfuscated script, or accidentally leak an API key, Bartholomew inspects the command structure in less than the blink of an eye—blocking the hazard before it ever reaches the operating system. If an unexpected error ever occurs, it can undo accidental changes and roll back state in milliseconds."
+                "We built Bartholomew because mission-critical systems require deterministic guardrails. In every other domain of software engineering, safety is enforced by compilers, operating systems, and memory boundaries. AI agents should be no different. Bartholomew runs directly in local CPU memory, inspecting every tool call, parsing command structures, and redacting leaked credentials in under 100 microseconds—stopping destructive actions before they ever dispatch."
               </p>
               <p>
-                "With our <strong>v2.5 release</strong>, we have made this protection effortless. You don't have to retrain your models or rebuild your software. You simply wrap your agent's tools in Bartholomew, and they immediately gain strict physical safety boundaries, tamper-proof digital receipts for compliance auditors, and complete crash resilience."
-              </p>
-              <p className="text-xs text-[#a1a1aa] font-mono">
-                "Our promise is simple: total local control, zero required cloud delays, and mathematical certainty. When your agents build the future, Bartholomew makes sure they don't break the present."
+                "With <strong>BTP v2.5</strong>, safety is a drop-in primitive. You don't have to retrain your models or rebuild your orchestration pipeline. You wrap your agent's tools in a few lines of code, and you get immediate invariant enforcement, sub-millisecond state rollbacks, and cryptographic audit trails ready for production compliance."
               </p>
             </div>
 
