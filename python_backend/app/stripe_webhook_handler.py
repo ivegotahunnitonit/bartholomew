@@ -93,10 +93,11 @@ def _resolve_tier(amount_cents: int) -> str:
 
 def _provision_api_key(customer_email: str, tier: str, stripe_session_id: str) -> Dict[str, Any]:
     """
-    Generates a cryptographically secure age_live_ API key,
-    records it in-memory and appends to the JSONL ledger file.
+    Generates a cryptographically secure btp_ license key,
+    records it in-memory, appends to JSONL ledger, and attempts email delivery.
     """
-    api_key = f"age_live_{secrets.token_hex(20)}"
+    prefix = "btp_ent_" if ("199" in tier or "TEAM" in tier or "ENTERPRISE" in tier) else "btp_pro_"
+    api_key = f"{prefix}{secrets.token_hex(16)}"
     quota   = TIER_AUDIT_QUOTAS.get(tier, 10_000)
 
     record = {
@@ -118,6 +119,40 @@ def _provision_api_key(customer_email: str, tier: str, stripe_session_id: str) -
             f.write(json.dumps(record) + "\n")
     except Exception as e:
         print(f"[Webhook] Ledger write warning: {e}")
+
+    # Attempt customer email delivery via AWS SES if available
+    try:
+        import boto3
+        ses = boto3.client("ses", region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
+        subject = f"Your Bartholomew ({prefix.replace('_', ' ').upper()}) License Key is Ready"
+        body_text = f"""Welcome to Bartholomew Protocol (BTP v3.0)!
+
+Your subscription checkout has been verified. Here is your license key:
+
+License Key: {api_key}
+Plan Tier:   {tier}
+
+To activate your agent runtime, run this command in your terminal:
+  python cli.py activate --key {api_key}
+  OR
+  npx btp-guard activate {api_key}
+
+Documentation & Cloud Hub: https://bartholomew.info
+Support: itsub@bartholomew.info
+"""
+        ses.send_email(
+            Source="Itsub Alemayehu <itsub@bartholomew.info>",
+            Destination={"ToAddresses": [customer_email]},
+            Message={
+                "Subject": {"Data": subject},
+                "Body": {"Text": {"Data": body_text}}
+            }
+        )
+        print(f"[Webhook] License email sent to {customer_email}")
+    except Exception as email_err:
+        print(f"[Webhook] SES delivery skipped/failed: {email_err}")
+
+    return record
 
     return record
 

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "2.8.0"
-description = "Bartholomew Autonomous Trust Protocol (BTP v2.8) — FROST RFC 9591 & BIP 327 Threshold Signatures, Ring-0 eBPF Syscall Traps, Post-Quantum Hybrids, and ZK Invariant Proofs for AI Agents."
+version = "3.0.0"
+description = "Bartholomew Autonomous Trust Protocol (BTP v3.0) — The AI Agent Execution Gateway: Sub-35µs In-Process Tool Gating, AST Syntax Analysis, LDMU Loop Damping, and SOC 2 Merkle Receipts."
 readme = "README.md"
 authors = [
     { name = "Itsub Alemayehu", email = "security@bartholomew.info" }

@@ -1,7 +1,7 @@
 {
   "name": "btp-guard",
-  "version": "2.8.0",
-  "description": "BTP v2.8 Frontier MCP Security Proxy, RFC 9591 FROST Threshold Attestation, Post-Quantum Hybrid Envelopes & ZK Invariant Compliance for Autonomous AI Agents",
+  "version": "3.0.0",
+  "description": "BTP v3.0 The AI Agent Execution Gateway — Sub-35µs In-Process Tool Gating, AST Invariants, Secret Scrubbing, Loop Damping & Offline Merkle Receipts",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {

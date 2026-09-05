@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name="btp-guard",
-    version="2.5.0",
-    description="Frontier MCP Security Proxy, Sub-Microsecond OS Event Gating, Copy-on-Write Rollback Engine & In-Flight Secret Scrubber for Autonomous AI Agents.",
+    version="3.0.0",
+    description="The AI Agent Execution Gateway — Sub-35µs in-process tool gating, AST syntax analysis, Copy-on-Write rollbacks, and offline Merkle receipts for autonomous AI agents.",
     author="Bartholomew Protocol Team",
     packages=["btp_guard"],
     package_dir={"btp_guard": "src"},
