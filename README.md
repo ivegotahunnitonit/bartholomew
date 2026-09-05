@@ -7,6 +7,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v3.0.0-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
 [![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
@@ -112,6 +113,16 @@ Deploy Bartholomew alongside your agent runtime and microVM containers with a si
 ```bash
 docker-compose -f docker-compose.defense-in-depth.yml up -d
 ```
+
+#### **5. Cursor & VS Code Extension ([Open VSX](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode))**
+Install directly in Cursor, VS Code, or VSCodium:
+* Search **`Bartholomew`** in your editor's Extensions sidebar (`Ctrl+Shift+X`) and click **Install**.
+* Or install via terminal:
+  ```bash
+  code --install-extension Bartholomew.bartholomew-guard-vscode
+  # or in Cursor:
+  cursor --install-extension Bartholomew.bartholomew-guard-vscode
+  ```
 
 ---
 
