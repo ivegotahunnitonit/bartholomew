@@ -13,78 +13,22 @@ interface VersionMilestone {
 
 const UPCOMING_MILESTONES: VersionMilestone[] = [
   {
-    version: 'BTP v2.5.0',
-    timeline: 'STABLE CORE RUNTIME',
-    status: 'LIVE',
-    title: 'Universal Agent Compatibility & Stateful Guard',
-    paperPdf: '/paper_v2_5.pdf',
-    zenodoDoi: '10.5281/zenodo.18843719',
-    highlights: [
-      'Drop-in safety wrappers for leading agent orchestrators, swarms, and custom tool runtimes.',
-      'Stateful multi-turn session guard catching split attacks hidden across multiple conversation steps.',
-      'Digital cryptographic identity badges for non-human agent workers with automated revocation upon breach.',
-      'Real-time background audit streaming to enterprise security systems and encrypted local disks.'
-    ]
-  },
-  {
-    version: 'BTP v2.6.0',
-    timeline: 'COMPLETED IN RUNTIME',
-    status: 'LIVE',
-    title: 'Deep Kernel Sandboxing & Dynamic Memory Governor',
-    paperPdf: '/paper_v2_6.pdf',
-    zenodoDoi: '10.5281/zenodo.22076537',
-    highlights: [
-      'Operating system kernel-level eBPF traps intercepting file and network mutations with zero perceptible delay.',
-      'Hardware-isolated secure enclave deployment (AWS Nitro, Intel SGX) protecting workflows from memory tampering.',
-      'Dynamic memory governor preventing runaway recursive agent loops, context bloat, and host crashes.',
-      'Hermetic process and network sandboxing ensuring zero unauthorized inter-process side effects.'
-    ]
-  },
-  {
-    version: 'BTP v2.7.0',
-    timeline: 'COMPLETED IN RUNTIME',
-    status: 'LIVE',
-    title: 'Cross-Cloud Swarm Consensus & Collective Safety',
-    paperPdf: '/paper_v2_7.pdf',
-    zenodoDoi: '10.5281/zenodo.22076538',
-    highlights: [
-      'Practical Byzantine Fault Tolerant (PBFT) consensus enabling multi-agent swarms to verify and co-sign high-stakes actions.',
-      'Cross-organization authorization thresholds for large-scale enterprise swarm deployments.',
-      'Federated threat immunity that shares emerging defense patterns without exposing private customer prompts.',
-      'Epistemic physics invariant engine enforcing thermodynamic and causal constraints across multi-node swarms.'
-    ]
-  },
-  {
-    version: 'BTP v2.8.0',
-    timeline: 'COMPLETED IN RUNTIME',
-    status: 'LIVE',
-    title: 'FROST RFC 9591 & BIP 327 MuSig2 Threshold Signatures',
-    paperPdf: '/paper_v2_8.pdf',
-    zenodoDoi: '10.5281/zenodo.22076539',
-    highlights: [
-      'Cryptographic threshold signatures: any t-of-n swarm agents co-sign high-stakes actions with zero coordinator trust.',
-      'BIP 327 MuSig2 multi-signature support with pre-computed nonce rounds for sub-millisecond dispatch.',
-      'Single 64-byte Schnorr signature verifiable by external auditors using one static group public key.',
-      '100% mathematical rejection of forged signatures, bit-flips, replay attacks, and rogue-key substitutions.'
-    ]
-  },
-  {
     version: 'BTP v2.9.0',
-    timeline: 'COMPLETED IN RUNTIME',
+    timeline: 'FOUNDATION BEDROCK',
     status: 'LIVE',
-    title: 'Two-Round Adaptive Schemes & Post-Quantum Envelopes',
+    title: 'Post-Quantum Envelopes & MuSig2 Pre-Computed Rounds',
     paperPdf: '/paper_v2_9.pdf',
     zenodoDoi: '10.5281/zenodo.22076540',
     highlights: [
+      'Dual-layer post-quantum hybrid envelope binding FROST RFC 9591 with Winternitz One-Time Signatures (WOTS+).',
       'Two-round adaptive state machines dynamically reconfiguring threshold parameters without centralized coordinators.',
-      'Dual-layer post-quantum hybrid envelope binding FROST RFC 9591 with Winternitz One-Time Signatures (WOTS+ over SHA-256).',
       'Quantum-safe non-repudiation ensuring immutable multi-agent audit trails resist Shor\'s algorithm.',
       'Sub-5ms signing budget (2.42 ms median for 3-of-5 quorums) maintaining high agent throughput.'
     ]
   },
   {
     version: 'BTP v3.0.0',
-    timeline: 'COMPLETED IN RUNTIME',
+    timeline: 'CURRENT RUNTIME',
     status: 'LIVE',
     title: 'Zero-Knowledge Invariant Compliance Proofs (zk-ICP)',
     paperPdf: '/paper_v3_0.pdf',
@@ -95,11 +39,60 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
       'Sub-millisecond verification (0.42 ms) with fixed 512-byte cryptographic receipt payloads.',
       'Integrated CLI (btp-guard zk-prove, zk-verify) and Model Context Protocol (btp_verify_safety_proof) tooling.'
     ]
+  },
+  {
+    version: 'BTP v3.1.0',
+    timeline: 'Q2 2026 &bull; IN ACTIVE CORE',
+    status: 'IN DEVELOPMENT',
+    title: 'Autonomous Circularity Network (ACN) & Peer Discovery',
+    paperPdf: '/WHITEPAPER.md',
+    highlights: [
+      'Decentralized agent peer discovery and automated capability negotiation using signed cryptographic manifests.',
+      'Sovereign digital passports for non-human agent workers with cryptographically verifiable reputation vectors.',
+      'Zero-knowledge inter-agent delegation protocols preventing lateral privilege escalation across autonomous swarms.',
+      'Self-reconciling circuit breakers preventing multi-swarm cascading failures and cross-organization deadlocks.'
+    ]
+  },
+  {
+    version: 'BTP v3.2.0',
+    timeline: 'Q3 2026 &bull; KERNEL EXPANSION',
+    status: 'IN DEVELOPMENT',
+    title: 'Ring-0 eBPF Memory Hooks & Hot-Pluggable Invariants',
+    highlights: [
+      'Native Linux Ring-0 eBPF kernel traps executing deterministic invariant checks in sub-microsecond latency (<0.18µs).',
+      'Hot-reloading invariant rulesets without requiring agent process restart or context reconstruction.',
+      'Dynamic threshold rebalancing automatically adjusting quorum sizes based on real-time threat entropy metrics.',
+      'Hardware-assisted cryptographic acceleration using AVX-512 and ARM NEON vectorized field operations.'
+    ]
+  },
+  {
+    version: 'BTP v3.5.0',
+    timeline: 'Q4 2026 &bull; DISTRIBUTED SWARM',
+    status: 'PLANNED',
+    title: 'Cross-Cloud Hardware Enclave Attestation & zk-Rollups',
+    highlights: [
+      'Multi-cloud secure enclave attestation bridging AWS Nitro, Intel SGX, and Apple Secure Enclaves under unified proofs.',
+      'Recursive zk-Rollup batching 10,000 agent state transitions into a single verifiable 256-byte on-chain anchor.',
+      'Automated formal verification engine synthesizing provably sound safety invariants directly from plain-language policies.',
+      'Universal Model Context Protocol (MCP) hypervisor securing arbitrary third-party agent tools with zero configuration.'
+    ]
+  },
+  {
+    version: 'BTP v4.0.0',
+    timeline: '2027 &bull; FUTURE HORIZON',
+    status: 'PLANNED',
+    title: 'Sovereign Agent Clearinghouse & Global Invariant Mesh',
+    highlights: [
+      'Autonomous micro-settlement layer enabling non-human agents to exchange compute, data, and tools with mathematical finality.',
+      'Global cryptographic invariant mesh guaranteeing planetary-scale AI safety without centralized single points of failure.',
+      'Autonomous fault isolation and self-healing memory architectures for fully autonomous self-replicating workflows.',
+      'Universal verification primitives standardizing safe AI-to-AI interaction across all architectures and runtimes.'
+    ]
   }
 ]
 
 export default function Founder() {
-  const [selectedMilestone, setSelectedMilestone] = useState<number>(0)
+  const [selectedMilestone, setSelectedMilestone] = useState<number>(1)
 
   return (
     <section id="founder" className="py-24 px-5 sm:px-8 bg-[#040406] text-white border-t border-[#27272a]/70 relative overflow-hidden">
@@ -168,7 +161,7 @@ export default function Founder() {
                   [ 01 &middot; Where We Started ]
                 </span>
                 <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
-                  Prompt engineering and secondary observer LLMs broke down the moment agents started executing terminal commands, touching production data, and moving capital. We founded Bartholomew on a strict engineering law: agent safety requires deterministic memory boundaries and compiler-grade AST invariants, not polite requests.
+                  Prompt engineering and secondary observer LLMs broke down the moment agents started executing terminal commands, touching production data, and moving capital. We founded Bartholomew on a strict engineering law: autonomous agent safety requires deterministic memory boundaries and compiler-grade AST invariants.
                 </p>
               </div>
 
@@ -179,17 +172,17 @@ export default function Founder() {
                   <span className="text-[10px] bg-[#10b981]/15 px-2 py-0.5 rounded border border-[#10b981]/30">ACTIVE RUNTIME</span>
                 </span>
                 <p className="text-xs sm:text-sm text-[#e4e4e7] leading-relaxed">
-                  With <strong>BTP v3.0</strong>, we delivered a 100% offline cryptographic trust kernel. We unified in-process memory gating, Zero-Knowledge Invariant Compliance Proofs (zk-ICP), FROST RFC 9591 multi-agent threshold consensus, and post-quantum envelopes across Claude, OpenAI, Gemini, and Kimi—proving an agent adhered to all constraints with <strong>0 bytes of prompt or payload leaked</strong>.
+                  With <strong>BTP v3.0</strong>, we delivered a 100% offline cryptographic trust kernel. We unified in-process memory gating, Zero-Knowledge Invariant Compliance Proofs (zk-ICP), FROST RFC 9591 multi-agent threshold consensus, and post-quantum envelopes across every foundation model, open-source weight, and distributed agent swarm—proving an agent adhered to all constraints with <strong>0 bytes of prompt or payload leaked</strong>, accessible to everyone, everywhere.
                 </p>
               </div>
 
               {/* Where We're Headed */}
               <div className="p-3.5 rounded-xl bg-[#08080c] border border-[#1c1c22]">
                 <span className="text-[11px] font-mono font-bold text-[#38bdf8] block uppercase tracking-wider mb-1">
-                  [ 03 &middot; Where We're Headed ]
+                  [ 03 &middot; Where We're Headed &middot; Sovereign Agent Infrastructure ]
                 </span>
                 <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
-                  We are building the <strong>Autonomous Circularity Network (ACN)</strong>—a sovereign, self-healing agent substrate where distributed swarms can discover peers, conduct verifiable tool delegations, and settle economic transactions with mathematical finality and zero human bottlenecks.
+                  We are building the <strong>Autonomous Circularity Network (ACN)</strong>—a sovereign, self-healing substrate where distributed agents discover peers, negotiate zero-knowledge tool delegations, and settle commercial tasks with mathematical finality and zero human friction.
                 </p>
               </div>
 
