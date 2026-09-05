@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sparkles } from 'lucide-react'
+import { Globe } from 'lucide-react'
 
 interface PartnerLogo {
   name: string
@@ -12,10 +12,10 @@ interface PartnerLogo {
 export default function EnterpriseEcosystemBanner() {
   const partners: PartnerLogo[] = [
     {
-      name: 'Google Cloud',
-      label: 'Vertex AI & Gemini',
-      category: 'ENTERPRISE AI',
-      badge: 'Gemini 3.7 / 4.0 Ready',
+      name: 'Google Cloud & Gemini',
+      label: 'Gemini 2.5 Pro, Flash & Agentic SDK',
+      category: 'MULTIMODAL & AGENTIC AI',
+      badge: 'Universal Invariant Certified',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -26,35 +26,8 @@ export default function EnterpriseEcosystemBanner() {
       )
     },
     {
-      name: 'Amazon Web Services',
-      label: 'AWS Bedrock & APN',
-      category: 'CLOUD RUNTIME',
-      badge: 'APN Verified Tier-0',
-      svg: (
-        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
-          <path d="M12.78 14.87c-2.45 1.83-6.02 2.81-9.08 2.81-4.29 0-8.15-1.63-11.08-4.36-.23-.22-.03-.52.24-.35 3.16 1.94 7.04 3.1 11.05 3.1 2.72 0 5.86-.71 8.63-2.19.42-.23.76.3.24.62v.37z" fill="#FF9900" transform="translate(11, 0) scale(0.9)"/>
-          <path d="M6.2 9.5c.34.46.85.74 1.41.74.88 0 1.54-.66 1.54-1.54V4.8h1.6v3.9c0 1.77-1.33 3.1-3.14 3.1-.98 0-1.89-.44-2.47-1.18l1.06-1.12z" fill="#FFFFFF"/>
-          <path d="M17.5 4.8l-1.9 6.8h-1.6l-1.3-4.8-1.3 4.8h-1.6l-1.9-6.8h1.7l1.1 4.7 1.2-4.7h1.6l1.2 4.7 1.1-4.7h1.7z" fill="#FF9900"/>
-        </svg>
-      )
-    },
-    {
-      name: 'Microsoft Azure',
-      label: 'Azure OpenAI & AutoGen',
-      category: 'ENTERPRISE ORCHESTRATION',
-      badge: 'AutoGen Verified',
-      svg: (
-        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
-          <path d="M0 0h11.377v11.372H0z" fill="#F25022"/>
-          <path d="M12.623 0H24v11.372H12.623z" fill="#7FBA00"/>
-          <path d="M0 12.628h11.377V24H0z" fill="#00A4EF"/>
-          <path d="M12.623 12.628H24V24H12.623z" fill="#FFB900"/>
-        </svg>
-      )
-    },
-    {
       name: 'Anthropic',
-      label: 'Claude 4 & Opus 5',
+      label: 'Claude 5 Sonnet & Opus 5',
       category: 'MODEL CONTEXT PROTOCOL',
       badge: 'Official MCP Registry',
       svg: (
@@ -71,6 +44,69 @@ export default function EnterpriseEcosystemBanner() {
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.28 10.37a5.53 5.53 0 0 0-.47-4.48 5.64 5.64 0 0 0-4.06-2.73 5.58 5.58 0 0 0-4.43.68 5.53 5.53 0 0 0-3.95-1.74 5.62 5.62 0 0 0-5.32 3.86 5.57 5.57 0 0 0-2.4 3.65 5.63 5.63 0 0 0 .97 5.25 5.53 5.53 0 0 0 .47 4.48 5.64 5.64 0 0 0 4.06 2.73 5.58 5.58 0 0 0 4.43-.68 5.53 5.53 0 0 0 3.95 1.74 5.62 5.62 0 0 0 5.32-3.86 5.57 5.57 0 0 0 2.4-3.65 5.63 5.63 0 0 0-.97-5.25z" fill="#10B981"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Moonshot AI',
+      label: 'Kimi k1.5 & Infinite Context Core',
+      category: 'LONG-CONTEXT REASONING',
+      badge: 'Universal Agent Verified',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#38bdf8" strokeWidth="2"/>
+          <path d="M12 6a6 6 0 1 0 6 6 4.5 4.5 0 0 1-6-6z" fill="#38bdf8"/>
+        </svg>
+      )
+    },
+    {
+      name: 'DeepSeek',
+      label: 'DeepSeek-V3 & R1 Reasoning Swarms',
+      category: 'DISTRIBUTED REASONING & GATING',
+      badge: 'Post-Quantum Attested',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M4 14.5c2.5-3 5-4.5 8-4.5s5.5 1.5 8 4.5-5 6-8 6-6-3-8-6z" stroke="#0ea5e9" strokeWidth="2" fill="#0ea5e9" fillOpacity="0.25"/>
+          <circle cx="12" cy="13" r="2.5" fill="#38bdf8"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Alibaba Cloud & Qwen',
+      label: 'Qwen 2.5 & QwQ Autonomous Tools',
+      category: 'OPEN WEIGHTS & MULTILINGUAL',
+      badge: 'FROST Quorum Verified',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#ff6a00" strokeWidth="2" fill="#ff6a00" fillOpacity="0.2"/>
+          <path d="M12 7l4.33 2.5v5L12 17l-4.33-2.5v-5L12 7z" fill="#ff6a00"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Microsoft Azure',
+      label: 'Azure OpenAI & AutoGen Swarms',
+      category: 'ENTERPRISE ORCHESTRATION',
+      badge: 'AutoGen Verified',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M0 0h11.377v11.372H0z" fill="#F25022"/>
+          <path d="M12.623 0H24v11.372H12.623z" fill="#7FBA00"/>
+          <path d="M0 12.628h11.377V24H0z" fill="#00A4EF"/>
+          <path d="M12.623 12.628H24V24H12.623z" fill="#FFB900"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Amazon Web Services',
+      label: 'AWS Bedrock & APN Cloud',
+      category: 'CLOUD RUNTIME',
+      badge: 'APN Verified Tier-0',
+      svg: (
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
+          <path d="M12.78 14.87c-2.45 1.83-6.02 2.81-9.08 2.81-4.29 0-8.15-1.63-11.08-4.36-.23-.22-.03-.52.24-.35 3.16 1.94 7.04 3.1 11.05 3.1 2.72 0 5.86-.71 8.63-2.19.42-.23.76.3.24.62v.37z" fill="#FF9900" transform="translate(11, 0) scale(0.9)"/>
+          <path d="M6.2 9.5c.34.46.85.74 1.41.74.88 0 1.54-.66 1.54-1.54V4.8h1.6v3.9c0 1.77-1.33 3.1-3.14 3.1-.98 0-1.89-.44-2.47-1.18l1.06-1.12z" fill="#FFFFFF"/>
+          <path d="M17.5 4.8l-1.9 6.8h-1.6l-1.3-4.8-1.3 4.8h-1.6l-1.9-6.8h1.7l1.1 4.7 1.2-4.7h1.6l1.2 4.7 1.1-4.7h1.7z" fill="#FF9900"/>
         </svg>
       )
     },
@@ -97,17 +133,17 @@ export default function EnterpriseEcosystemBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/30 text-[#10b981] text-[11px] font-mono font-bold uppercase tracking-wider mb-2 rounded-full">
-            <Sparkles size={12} className="text-[#f59e0b] animate-pulse" />
-            <span>[ ENTERPRISE CLOUD COMPATIBILITY &amp; MODEL ECOSYSTEM ]</span>
+            <Globe size={12} className="text-[#38bdf8] animate-pulse" />
+            <span>[ UNIVERSAL FRONTIER AI &amp; CLOUD COMPATIBILITY ]</span>
           </div>
-          <p className="text-xs text-[#a1a1aa] font-sans max-w-xl mx-auto">
-            Certified drop-in protection for autonomous agents across the industry's premier cloud and AI platforms.
+          <p className="text-xs text-[#a1a1aa] font-sans max-w-2xl mx-auto">
+            Universal drop-in invariant protection for autonomous agents across Google Gemini, Claude 5, GPT-6 Astra, Moonshot Kimi, DeepSeek, Qwen &amp; global clouds.
           </p>
         </div>
 
         {/* Dynamic Animated Marquee Row */}
         <div className="relative w-full overflow-hidden mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex items-center gap-4 py-2 w-max animate-[marquee_28s_linear_infinite] hover:pause-animation">
+          <div className="flex items-center gap-4 py-2 w-max animate-[marquee_34s_linear_infinite] hover:pause-animation">
             {/* Render 2 duplicate sets for infinite continuous marquee loop */}
             {[...partners, ...partners].map((p, idx) => (
               <div
@@ -139,12 +175,12 @@ export default function EnterpriseEcosystemBanner() {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-[11px] font-mono text-[#71717a]">
           <span className="inline-flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
-            <span className="text-[#d4d4d8]">Instant Local Verification:</span> Zero Cloud Delay
+            <span className="text-[#d4d4d8]">Universal Invariant Ingestion:</span> Zero Cloud Lock-in
           </span>
           <span>•</span>
           <span className="text-[#d4d4d8]">Security Standard:</span> Tamper-Proof Digital Audit Logs
           <span>•</span>
-          <span className="text-[#d4d4d8]">Compliance:</span> SOC 2 &amp; ISO Ready
+          <span className="text-[#d4d4d8]">Compliance:</span> SOC 2 &amp; ISO 27001 Ready
         </div>
       </div>
     </section>

@@ -227,10 +227,11 @@ function runMcp(subargs = []) {
     tools.forEach(([name, desc], i) => {
       console.log(`  ${(i + 1).toString().padStart(2)}. ${CYAN}${name.padEnd(32)}${RESET} ${DIM}${desc}${RESET}`);
     });
-    console.log(`\n${BOLD}Quick Setup:${RESET}`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target claude${RESET}   (Auto-configure Claude Desktop)`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target cursor${RESET}   (Auto-configure Cursor IDE)`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target astra${RESET}    (Auto-configure OpenAI Astra / Swarm)`);
+    console.log(`\n${BOLD}Universal Frontier Model & IDE Setup:${RESET}`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target claude${RESET}   (Auto-configure Anthropic Claude 5 Desktop)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target cursor${RESET}   (Auto-configure Cursor & Local Swarms)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target astra${RESET}    (Auto-configure OpenAI GPT-6 Astra / Computer-Use)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target all${RESET}      (Provisions Claude 5, Cursor, Gemini & Astra)`);
   } else if (subcmd === 'install') {
     runInit();
   } else {

@@ -16,7 +16,7 @@ import {
   Zap
 } from 'lucide-react'
 
-type AgentTarget = 'simple' | 'claude' | 'openai' | 'langchain'
+type AgentTarget = 'simple' | 'claude' | 'openai' | 'gemini' | 'kimi' | 'langchain'
 type InstallTarget = 'npx' | 'mcp' | 'pip' | 'npm' | 'action' | 'git'
 
 export default function Hero() {
@@ -63,7 +63,7 @@ export default function Hero() {
       icon: Terminal
     },
     mcp: {
-      badge: 'Claude Desktop & Cursor MCP Server',
+      badge: 'Claude 5 Desktop, Cursor & Astra MCP Server',
       latency: 'Sub-microsecond gating',
       description: 'Model Context Protocol security proxy intercepting bash commands, file edits, and network requests before dispatch.',
       icon: Cpu
@@ -110,9 +110,9 @@ def execute_tool(command_or_sql: str):
     return run_on_system(command_or_sql)`
     },
     claude: {
-      title: 'Claude Desktop & Cursor (MCP)',
+      title: 'Claude 5 Desktop & Cursor (MCP)',
       filename: 'claude_desktop_config.json',
-      desc: 'In-process Model Context Protocol security server for Claude Desktop & Cursor. Intercepts tool calls and redacts secrets in-flight.',
+      desc: 'In-process Model Context Protocol security server for Anthropic Claude 5 and Cursor. Intercepts tool calls and redacts secrets in-flight.',
       code: `// Paste into claude_desktop_config.json:
 {
   "mcpServers": {
@@ -124,7 +124,7 @@ def execute_tool(command_or_sql: str):
 }`
     },
     openai: {
-      title: 'OpenAI GPT-6 Astra & Cursor',
+      title: 'OpenAI GPT-6 Astra & Swarms',
       filename: 'openai_assistant_guard.py',
       desc: 'Wraps GPT-6 Astra / Computer-Use agent function calling with hermetic path containment and spend limits.',
       code: `from btp_guard import Guard
@@ -132,15 +132,46 @@ import openai
 
 guard = Guard(spend_cap=50.0)
 
-# Check tool calls before execution
+# Intercept tool calls before OS dispatch
 def on_tool_call(name, args):
     res = guard.check(args.get("query", ""))
     if not res["allowed"]:
         return f"Error: {res['reason']}"
     return execute_safely(name, args)`
     },
+    gemini: {
+      title: 'Google Gemini 2.5 Pro & Agentic SDK',
+      filename: 'gemini_agent_guard.py',
+      desc: 'Protects Google Gemini 2.5 Pro/Flash and Agentic ADK tool executions with sub-50µs AST safety gates and transactional micro-rollbacks.',
+      code: `from btp_guard import Guard
+from google import genai
+
+guard = Guard(spend_cap=100.0, max_retries=5)
+client = genai.Client()
+
+# Protect Gemini function calls before execution
+@guard.protect
+def handle_gemini_tool(call_name: str, parameters: dict):
+    return execute_contained_tool(call_name, parameters)`
+    },
+    kimi: {
+      title: 'Moonshot AI Kimi (k1.5 Context Core)',
+      filename: 'kimi_agent_guard.py',
+      desc: 'Invariant gating for Moonshot AI Kimi long-context agent workflows, filtering prompt injections and unauthorized filesystem access.',
+      code: `from btp_guard import Guard
+from openai import OpenAI
+
+guard = Guard(spend_cap=75.0)
+client = OpenAI(base_url="https://api.moonshot.cn/v1")
+
+def execute_kimi_tool(name: str, arguments: dict):
+    check = guard.check(arguments.get("command", ""))
+    if not check["allowed"]:
+        raise PermissionError(f"Blocked by Bartholomew: {check['reason']}")
+    return run_tool(name, arguments)`
+    },
     langchain: {
-      title: 'LangChain & Multi-Agent Swarms',
+      title: 'LangChain, DeepSeek & Multi-Agent Swarms',
       filename: 'swarm_guard.py',
       desc: 'Halts infinite retry loops and traps runaway token consumption across agent swarms.',
       code: `from btp_guard import Guard
@@ -432,21 +463,27 @@ if result["allowed"]:
           </div>
 
           {/* Framework Selector Buttons */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
-            {(['simple', 'claude', 'openai', 'langchain'] as const).map((agent) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
+            {(['simple', 'claude', 'openai', 'gemini', 'kimi', 'langchain'] as const).map((agent) => (
               <button
                 key={agent}
                 onClick={() => setSelectedAgent(agent)}
-                className={`p-3 text-left transition font-mono border rounded-lg ${
+                className={`p-2.5 text-left transition font-mono border rounded-lg ${
                   selectedAgent === agent
                     ? 'bg-[#10b981]/15 border-[#10b981] text-white shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                     : 'bg-[#0b0b0e] border-[#222226] text-[#a1a1aa] hover:text-[#ffffff] hover:border-[#38383f]'
                 }`}
               >
                 <div className={`text-[10px] uppercase mb-1 font-bold ${selectedAgent === agent ? 'text-[#10b981]' : 'text-[#71717a]'}`}>
-                  [{agent.toUpperCase()}]
+                  [{agent === 'simple' ? 'PYTHON' : agent.toUpperCase()}]
                 </div>
-                <div className="text-xs font-semibold truncate text-white">{agentPairingSnippets[agent].title.split(' ')[0]}</div>
+                <div className="text-xs font-semibold truncate text-white">
+                  {agent === 'simple' ? '3-Line Guard' :
+                   agent === 'claude' ? 'Claude 5' :
+                   agent === 'openai' ? 'GPT-6 Astra' :
+                   agent === 'gemini' ? 'Gemini 2.5' :
+                   agent === 'kimi' ? 'Moonshot Kimi' : 'Swarms'}
+                </div>
               </button>
             ))}
           </div>
