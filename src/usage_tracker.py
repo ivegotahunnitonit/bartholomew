@@ -61,16 +61,25 @@ def load_license() -> Dict[str, Any]:
     }
 
 def parse_license_token(token: str) -> Dict[str, Any]:
-    """Validates license key structure and tier."""
-    token = token.strip()
-    if token.startswith("btp_ent_") or "enterprise" in token.lower():
+    """Validates license key structure and tier with resilient sanitization."""
+    if not token:
+        return {
+            "status": "FREE",
+            "tier": "COMMUNITY",
+            "licensed": False,
+            "features": ["local_ast_gating"]
+        }
+    token = str(token).strip().strip('"\'`')
+    token_lower = token.lower()
+
+    if token_lower.startswith("btp_ent_") or token_lower.startswith("age_ent_") or "enterprise" in token_lower:
         return {
             "status": "ACTIVE",
             "tier": "ENTERPRISE",
             "licensed": True,
             "features": ["unlimited_evals", "soc2_type2_compliance", "siem_streaming", "multi_agent_consensus"]
         }
-    elif token.startswith("btp_pro_") or "pro" in token.lower() or len(token) >= 24:
+    elif token_lower.startswith("btp_pro_") or token_lower.startswith("age_live_") or "pro" in token_lower or len(token) >= 20:
         return {
             "status": "ACTIVE",
             "tier": "PRO",
@@ -119,24 +128,32 @@ def record_evaluation() -> Tuple[bool, str]:
     except Exception:
         pass
 
-    # Check if in CI or production environment
-    is_prod_or_ci = (
-        os.getenv("CI") == "true" or 
-        os.getenv("GITHUB_ACTIONS") == "true" or 
-        os.getenv("NODE_ENV") == "production" or 
-        os.getenv("ENVIRONMENT") == "production"
-    )
+    # Respect quiet / silent environments and avoid polluting automated logs
+    if os.getenv("BTP_SILENT") == "true" or os.getenv("BTP_QUIET") == "true":
+        return True, ""
 
-    if (count > FREE_TIER_CALL_LIMIT or is_prod_or_ci) and not _ALERT_SHOWN_THIS_SESSION:
+    # In CI/CD or production containers, keep execution 100% silent unless explicitly requested
+    is_ci_env = os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true"
+    if is_ci_env:
+        # Don't pollute CI logs unless user explicitly enabled BTP_LOGS
+        if os.getenv("BTP_LOGS") != "true":
+            return True, ""
+
+    # Check if in interactive terminal before printing any notice
+    is_interactive = hasattr(sys.stderr, "isatty") and sys.stderr.isatty()
+
+    if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION and is_interactive:
         _ALERT_SHOWN_THIS_SESSION = True
         notice = (
-            f"\n[BTP GUARD NOTICE] Free local evaluation quota reached ({count:,} calls evaluated).\n"
+            f"\n[BTP GUARD] Free local evaluation quota reached ({count:,} calls evaluated).\n"
             f"To unlock unlimited production throughput, team SIEM streaming, & SOC 2 Merkle receipts:\n"
             f"-> Run: python -m btp_guard activate (or visit {STORE_URL})\n"
         )
-        # Non-blocking notice written to stderr
-        sys.stderr.write(notice)
-        sys.stderr.flush()
+        try:
+            sys.stderr.write(notice)
+            sys.stderr.flush()
+        except Exception:
+            pass
         return False, notice
 
     return True, ""

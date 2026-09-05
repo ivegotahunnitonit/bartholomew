@@ -255,9 +255,10 @@ function runActivate(key) {
   }
 
   if (key) {
-    const tier = key.startsWith("btp_ent_") || key.toLowerCase().includes("enterprise") ? "ENTERPRISE" : "PRO";
+    const cleanKey = key.trim().replace(/^["'`]+|["'`]+$/g, '');
+    const tier = cleanKey.startsWith("btp_ent_") || cleanKey.toLowerCase().includes("enterprise") ? "ENTERPRISE" : "PRO";
     const licenseData = {
-      key: key.trim(),
+      key: cleanKey,
       tier: tier,
       activated_at: Date.now(),
       status: "ACTIVE"
