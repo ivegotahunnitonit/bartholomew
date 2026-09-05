@@ -30,6 +30,7 @@ from src.polyglot_ast_validator import PolyglotASTValidator
 class AgentToAgentProtocol:
     """
     Cryptographic envelope generator and validator for multi-agent swarms.
+    BTP v3.1: Enforces Sovereign Digital Passports & Capability Least-Privilege.
     """
 
     @classmethod
@@ -40,9 +41,11 @@ class AgentToAgentProtocol:
                               task_action: str,
                               task_payload: Dict[str, Any],
                               capability_scope: Optional[List[str]] = None,
+                              sender_passport: Optional[Any] = None,
                               ttl_seconds: int = 60) -> Dict[str, Any]:
         """
         Agent A creates an RFC 8785 canonical signed handoff envelope for Agent B.
+        If sender_passport is provided, verifies authorization and attaches signed passport.
         """
         now = time.time()
         nonce = secrets.token_hex(16)
@@ -54,8 +57,21 @@ class AgentToAgentProtocol:
             if not is_safe:
                 raise ValueError(f"Cannot delegate unsafe command to Agent '{target_agent}': {msg}")
 
+        passport_data = None
+        if sender_passport is not None:
+            if hasattr(sender_passport, "verify_signature"):
+                is_valid, msg = sender_passport.verify_signature()
+                if not is_valid:
+                    raise ValueError(f"Cannot delegate with invalid passport: {msg}")
+                for cap in scope:
+                    if not sender_passport.has_capability(cap):
+                        raise ValueError(f"Privilege escalation blocked: Passport does not authorize capability '{cap}'")
+                passport_data = sender_passport.to_dict()
+            elif isinstance(sender_passport, dict):
+                passport_data = sender_passport
+
         envelope_body = {
-            "protocol": "BTP/A2A/2.3",
+            "protocol": "BTP/A2A/3.1",
             "envelope_nonce": nonce,
             "issued_at_unix": now,
             "expires_at_unix": now + ttl_seconds,
@@ -66,6 +82,8 @@ class AgentToAgentProtocol:
             "task_payload": task_payload,
             "granted_scope": scope
         }
+        if passport_data:
+            envelope_body["sender_passport"] = passport_data
 
         canonical_bytes = rfc8785_canonicalize(envelope_body)
         signature = sender_authority.private_key.sign(canonical_bytes).hex()
@@ -79,9 +97,11 @@ class AgentToAgentProtocol:
     def verify_incoming_handoff(cls, 
                                 signed_packet: Dict[str, Any],
                                 expected_recipient: str,
-                                trusted_sender_pubkey: Optional[str] = None) -> Tuple[bool, str, Dict[str, Any]]:
+                                trusted_sender_pubkey: Optional[str] = None,
+                                required_capability: Optional[str] = None) -> Tuple[bool, str, Dict[str, Any]]:
         """
         Agent B verifies incoming A2A envelope before executing delegated task.
+        Validates envelope signature, expiration, recipient match, and sovereign passport.
         """
         try:
             envelope = signed_packet["a2a_envelope"]
@@ -103,6 +123,19 @@ class AgentToAgentProtocol:
             from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
             public_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(pubkey_hex))
             public_key.verify(bytes.fromhex(sig_hex), canonical_bytes)
+
+            # 4. Sovereign Passport Verification (if attached)
+            if "sender_passport" in envelope:
+                from src.agent_passport import SovereignAgentPassport
+                p_dict = envelope["sender_passport"]
+                passport = SovereignAgentPassport.from_dict(p_dict)
+                p_valid, p_msg = passport.verify_signature()
+                if not p_valid:
+                    return False, f"A2A Delegated Passport Invalid: {p_msg}", {}
+
+                # Check required capability against passport
+                if required_capability and not passport.has_capability(required_capability):
+                    return False, f"A2A Passport Missing Required Capability: '{required_capability}'", {}
 
             return True, "A2A Cryptographic Handoff Verified Clean", envelope
 
