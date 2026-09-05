@@ -44,7 +44,7 @@ export default function Hero() {
         if (nodePm === 'bun') return 'bun add btp-guard'
         return 'npm install btp-guard'
       case 'action':
-        return 'uses: ivegotahunnitonit/bartholomew@v2.5.0'
+        return 'uses: ivegotahunnitonit/bartholomew@v2.8.0'
       case 'git':
         return 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
     }
@@ -124,9 +124,9 @@ def execute_tool(command_or_sql: str):
 }`
     },
     openai: {
-      title: 'OpenAI Assistants & Cursor',
+      title: 'OpenAI GPT-6 Astra & Cursor',
       filename: 'openai_assistant_guard.py',
-      desc: 'Wraps GPT-4o / Cursor agent function calling with hermetic path containment and spend limits.',
+      desc: 'Wraps GPT-6 Astra / Computer-Use agent function calling with hermetic path containment and spend limits.',
       code: `from btp_guard import Guard
 import openai
 

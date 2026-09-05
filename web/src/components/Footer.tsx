@@ -67,7 +67,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-2 text-xs text-[#10b981] font-mono pt-1">
               <CheckCircle2 size={14} />
-              <span>[PROTOCOL ACTIVE: BTP v2.5.0 · APACHE 2.0 / BSL LICENSED]</span>
+              <span>[PROTOCOL ACTIVE: BTP v2.8.0 · APACHE 2.0 / BSL LICENSED]</span>
             </div>
           </div>
 

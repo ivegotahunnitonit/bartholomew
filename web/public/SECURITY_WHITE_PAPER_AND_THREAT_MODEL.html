@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bartholomew Architecture White Paper & Formal Threat Model (BTP v2.2)</title>
+    <title>Bartholomew Architecture White Paper & Formal Threat Model (BTP v2.8)</title>
     <style>
         :root {
             --bg-color: #040813;
@@ -122,7 +122,7 @@
         <div class="header">
             <h1>Bartholomew Architecture White Paper & Formal Threat Model</h1>
             <div class="meta">
-                Protocol: BTP/2.2 (Standards Track) • Publication Date: August 2026 • Status: Open Specification
+                Protocol: BTP/2.8 (Standards Track) • RFC 9591 FROST Threshold Signatures • Publication Date: September 2026 • Status: Open Specification
             </div>
         </div>
 
@@ -201,13 +201,14 @@ def execute_database_mutation(sql_query: str):
 
         <h2>5. Cryptographic Standards Adherence</h2>
         <ul>
+            <li><strong>RFC 9591 (FROST) & BIP 327 (MuSig2)</strong>: Two-round decentralized Schnorr threshold signatures ($t$-of-$n$) verifiable with a single static group public key.</li>
             <li><strong>RFC 8785 (JSON Canonicalization Scheme)</strong>: Byte-exact deterministic hashing across Python, C, and Go.</li>
             <li><strong>FIPS 186-5 / RFC 8032 (Ed25519)</strong>: High-security elliptic curve digital signatures verifiable offline in 175 µs.</li>
             <li><strong>FIPS 180-4 (SHA-256)</strong>: Binary Merkle tree audit roots for zero-knowledge SOC 2 compliance verification.</li>
         </ul>
 
         <div class="footer">
-            Bartholomew Trust Protocol (BTP v2.2.0) • Open Source Specification • Apache 2.0 / MIT
+            Bartholomew Trust Protocol (BTP v2.8.0) • Open Source Specification • Apache 2.0 / MIT
         </div>
     </div>
 </body>

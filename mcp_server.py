@@ -20,6 +20,7 @@ if BASE_DIR not in sys.path:
 from src.trust_protocol import BartholomewTrustAuthority
 from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox
+from src.bonded_warranty import BondedExecutionWarranty
 
 
 class BartholomewMCPServer:
@@ -30,6 +31,7 @@ class BartholomewMCPServer:
         self.authority = BartholomewTrustAuthority()
         self.ast_validator = ASTSecurityValidator()
         self.sandbox = HermeticCommandSandbox()
+        self.warranty_manager = BondedExecutionWarranty()
         
         self.tools_schema = [
             {
@@ -142,6 +144,64 @@ class BartholomewMCPServer:
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
+                }
+            },
+            {
+                "name": "btp_issue_execution_bond",
+                "description": "[MILESTONE 3.1: Bonded Autonomous Settlement] Stakes an execution warranty bond for an AI agent action under BTP protocol arbitration rules.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {
+                            "type": "string",
+                            "description": "Identifier of the autonomous AI agent staking the bond."
+                        },
+                        "action_type": {
+                            "type": "string",
+                            "description": "The category of action being bonded (e.g., 'DATABASE_MIGRATION', 'FUND_TRANSFER')."
+                        },
+                        "bond_amount_usd": {
+                            "type": "number",
+                            "description": "Collateral amount in USD to lock in escrow (default 1000.0)."
+                        },
+                        "attestation_hash": {
+                            "type": "string",
+                            "description": "Optional SHA-256 hash of the pre-flight attestation."
+                        }
+                    },
+                    "required": ["agent_id", "action_type"]
+                }
+            },
+            {
+                "name": "btp_slash_execution_bond",
+                "description": "[MILESTONE 3.1: Invariant Breach Arbitration] Slashes a staked execution bond upon verified proof of an invariant breach or ZK witness failure, disbursing forfeited funds.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {
+                            "type": "string",
+                            "description": "The unique bond ID to slash."
+                        },
+                        "breach_receipt": {
+                            "type": "object",
+                            "description": "The verified breach receipt or failure proof dictionary."
+                        }
+                    },
+                    "required": ["bond_id", "breach_receipt"]
+                }
+            },
+            {
+                "name": "btp_get_bond_status",
+                "description": "[MILESTONE 3.1: Bond Verification] Retrieves escrow status, remaining collateral, and arbitration history for a specific execution bond.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {
+                            "type": "string",
+                            "description": "The unique bond ID to query."
+                        }
+                    },
+                    "required": ["bond_id"]
                 }
             }
         ]
@@ -377,6 +437,66 @@ class BartholomewMCPServer:
             return {
                 "isError": False,
                 "content": [{"type": "text", "text": json.dumps(status, indent=2)}]
+            }
+
+        elif name == "btp_issue_execution_bond":
+            try:
+                import secrets
+                agent_id = arguments.get("agent_id", "autonomous-agent")
+                action_type = arguments.get("action_type", "GENERIC_ACTION")
+                bond_amount = float(arguments.get("bond_amount_usd", 1000.0))
+                att_hash = arguments.get("attestation_hash") or f"0x{secrets.token_hex(16)}"
+                bond = self.warranty_manager.issue_warranty_bond(
+                    attestation_hash=att_hash,
+                    agent_id=agent_id,
+                    action_type=action_type,
+                    bond_amount_usd=bond_amount
+                )
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps(bond, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BOND ISSUANCE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_slash_execution_bond":
+            try:
+                bond_id = arguments.get("bond_id", "")
+                breach_receipt = arguments.get("breach_receipt", {})
+                success, msg, slashed_amt = self.warranty_manager.slash_bond_for_invariant_breach(
+                    bond_id=bond_id,
+                    breach_receipt=breach_receipt
+                )
+                res = {
+                    "slashed": success,
+                    "message": msg,
+                    "liquidated_amount_usd": slashed_amt,
+                    "bond_id": bond_id
+                }
+                return {
+                    "isError": not success,
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BOND SLASH ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_get_bond_status":
+            bond_id = arguments.get("bond_id", "")
+            bond = self.warranty_manager.get_bond_status(bond_id)
+            if not bond:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"Bond '{bond_id}' not found."}]
+                }
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(bond, indent=2)}]
             }
 
         else:

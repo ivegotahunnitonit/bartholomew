@@ -1,6 +1,6 @@
 # Bartholomew Architecture White Paper & Formal Threat Model
 
-**Version:** 2.2.0 (Standards Track)  
+**Version:** 2.8.0 (Standards Track)  
 **Author:** Bartholomew AI Security Contributors  
 **Classification:** Public Security Specification  
 
@@ -86,6 +86,7 @@ To eliminate "confused deputy" risks associated with local proxy daemons, Bartho
 
 ## 5. Formal Verification & Standards Adherence
 
+* **RFC 9591 (FROST) & BIP 327 (MuSig2)**: Two-round decentralized Schnorr threshold signatures ($t$-of-$n$) verifiable with a single static group public key.
 * **RFC 8785 (JSON Canonicalization Scheme)**: Ensures deterministic, byte-exact JSON hashing across all languages.
 * **FIPS 186-5 / RFC 8032 (Ed25519 Signatures)**: 128-bit security level elliptic-curve digital signatures.
 * **FIPS 180-4 (SHA-256)**: Cryptographic hashing for Merkle Audit Trees and Holographic Event Horizons.

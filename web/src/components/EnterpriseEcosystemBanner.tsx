@@ -65,9 +65,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'OpenAI',
-      label: 'GPT-5, o3 & Swarm Tools',
-      category: 'FUNCTION CALLING',
-      badge: 'Zero-Lag Safety Gate',
+      label: 'GPT-6 Astra, o3 & Swarm Tools',
+      category: 'FUNCTION CALLING & COMPUTER USE',
+      badge: 'Astra Invariant Certified',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.28 10.37a5.53 5.53 0 0 0-.47-4.48 5.64 5.64 0 0 0-4.06-2.73 5.58 5.58 0 0 0-4.43.68 5.53 5.53 0 0 0-3.95-1.74 5.62 5.62 0 0 0-5.32 3.86 5.57 5.57 0 0 0-2.4 3.65 5.63 5.63 0 0 0 .97 5.25 5.53 5.53 0 0 0 .47 4.48 5.64 5.64 0 0 0 4.06 2.73 5.58 5.58 0 0 0 4.43-.68 5.53 5.53 0 0 0 3.95 1.74 5.62 5.62 0 0 0 5.32-3.86 5.57 5.57 0 0 0 2.4-3.65 5.63 5.63 0 0 0-.97-5.25z" fill="#10B981"/>

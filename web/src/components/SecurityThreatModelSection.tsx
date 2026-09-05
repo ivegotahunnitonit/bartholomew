@@ -199,7 +199,7 @@ export default function SecurityThreatModelSection() {
                     Bartholomew Trust Protocol — Online Architecture &amp; Threat Model Spec
                   </h3>
                   <p className="text-xs font-mono text-[#a1a1aa]">
-                    Protocol Version: BTP/2.5.0 &bull; RFC 8785 JCS &bull; FIPS 186-5 Ed25519 &bull; DOI: 10.5281/zenodo.22076536
+                    Protocol Version: BTP/2.8.0 &bull; RFC 9591 FROST &bull; RFC 8785 JCS &bull; FIPS 186-5 Ed25519 &bull; DOI: 10.5281/zenodo.22076539
                   </p>
                 </div>
               </div>
@@ -310,7 +310,7 @@ export default function SecurityThreatModelSection() {
                   </p>
                   <pre className="p-4 bg-[#050505] border border-[#222222] rounded-xl font-mono text-xs text-[#10b981] overflow-x-auto">
 {`{
-  "protocol": "BTP/2.5.0",
+  "protocol": "BTP/2.8.0",
   "timestamp": "2026-09-04T02:00:00Z",
   "agent_id": "swe-bench-agent-01",
   "action_type": "POSTGRES_EXECUTE",
