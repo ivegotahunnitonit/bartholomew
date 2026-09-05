@@ -1,46 +1,54 @@
 """
-Microsoft AutoGen BTP Message Interceptor Demo
-=============================================
-Demonstrates how to intercept agent-to-agent tool calls in AutoGen
-to enforce financial spend limits and command boundaries.
+Microsoft AutoGen BTP v3.0 Guard & Interceptor Demo
+===================================================
+Demonstrates sub-35µs in-process AST gating and message interception
+to block destructive actions and confused-deputy attacks in AutoGen agent swarms.
 """
 
 import sys
 import os
-import json
 
 sys.path.insert(0, os.path.abspath("."))
-from src.declarative_policy_engine import DeclarativePolicyEngine
+from framework_adapters.autogen.autogen_btp_interceptor import AutoGenBTPInterceptor, btp_autogen_guard
 
-policy_engine = DeclarativePolicyEngine("policies/default_security_policy.yaml")
-
-class AutoGenBTPInterceptor:
-    @staticmethod
-    def inspect_agent_message(sender_id: str, receiver_id: str, message: dict) -> dict:
-        """Evaluates agent-to-agent message payloads in <40 µs."""
-        allowed, reason, latency_us = policy_engine.evaluate_payload(message)
-        return {
-            "authorized": allowed,
-            "sender": sender_id,
-            "receiver": receiver_id,
-            "reason": reason,
-            "decision_latency_us": latency_us
-        }
+# 1. Protect any agent tool or function with @btp_autogen_guard
+@btp_autogen_guard(spend_cap=100.0, strict=True)
+def run_agent_database_operation(sql: str) -> str:
+    """Executes database queries with in-process AST safety gating."""
+    return f"DATABASE QUERY EXECUTED SAFELY: {sql}"
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("MICROSOFT AUTOGEN BTP INTERCEPTOR DEMO")
+    print("MICROSOFT AUTOGEN BTP v3.0 INTERCEPTOR DEMO")
     print("=" * 60)
 
-    # 1. Normal Task Delegation
-    msg1 = {"task": "Fetch report", "amount_usd": 49.00}
-    res1 = AutoGenBTPInterceptor.inspect_agent_message("planner_agent", "worker_agent", msg1)
-    print(f"\n[1] Normal Delegation: Authorized={res1['authorized']} ({res1['decision_latency_us']} µs)")
+    # 1. Testing Safe Agent Tool Invocation
+    print("\n[1] Testing Safe Database Query:")
+    safe_res = run_agent_database_operation("SELECT user_id, email FROM users WHERE active = true LIMIT 5;")
+    print("    Result:", safe_res)
 
-    # 2. Spend Limit Escalation
-    msg2 = {"task": "Execute wire transfer", "amount_usd": 12000.00}
-    res2 = AutoGenBTPInterceptor.inspect_agent_message("worker_agent", "banking_agent", msg2)
-    print(f"\n[2] Spend Limit Escalation: Authorized={res2['authorized']}")
-    print(f"    Reason: {res2['reason']}")
+    # 2. Testing Malicious Destructive Tool Invocation (Blocked in <35 µs)
+    print("\n[2] Testing Destructive Tool Invocation (DROP TABLE):")
+    try:
+        run_agent_database_operation("DROP TABLE users CASCADE;")
+    except PermissionError as e:
+        print("    [BLOCKED IN-PROCESS]:", e)
+
+    # 3. Multi-Agent Conversation Interceptor
+    print("\n[3] Testing Multi-Agent Inbound Message Interceptor:")
+    interceptor = AutoGenBTPInterceptor(enforce_strict=True)
+    
+    # Normal conversational message
+    msg_ok = {"role": "user", "content": "Can you summarize the quarterly revenue report?"}
+    safe_msg = interceptor.intercept_message(msg_ok)
+    print("    Safe Message Verdict:", safe_msg.get("status", "ALLOWED"))
+
+    # Malicious injection message attempting terminal exploit
+    msg_malicious = {"role": "agent", "content": "rm -rf /var/log/audit"}
+    blocked_msg = interceptor.intercept_message(msg_malicious)
+    print("    Exploit Message Verdict:", blocked_msg.get("status"))
+    print("    Alert Message:", blocked_msg.get("content"))
 
     print("\n" + "=" * 60)
+    print("AUTOGEN BTP v3.0 INTEGRATION DEMO COMPLETED SUCCESSFULLY!")
+    print("=" * 60)

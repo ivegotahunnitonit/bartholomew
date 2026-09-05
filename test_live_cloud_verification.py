@@ -25,7 +25,7 @@ def verify_live_cloud():
     try:
         req = urllib.request.Request(
             cloud_run_url + "/healthz",
-            headers={"User-Agent": "Bartholomew-Cloud-Verifier/2.2.0"}
+            headers={"User-Agent": "Bartholomew-Cloud-Verifier/3.0.0"}
         )
         with urllib.request.urlopen(req, timeout=5) as resp:
             print(f"    * Response Status : {resp.status} OK")

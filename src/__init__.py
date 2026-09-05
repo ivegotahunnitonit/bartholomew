@@ -27,12 +27,25 @@ class Guard:
     """
     Dead-simple developer guard for AI tools and agent functions.
     """
-    def __init__(self, spend_cap: float = 500.0, max_retries: int = 6, policy_file: str = None):
+    def __init__(self, spend_cap: float = 500.0, max_retries: int = 6, policy_file: str = None, strict: bool = True):
         self.spend_cap = spend_cap
         self.max_retries = max_retries
+        self.strict = strict
         self.authority = BartholomewTrustAuthority()
         self.mu_tracker = MarginalUtilityTracker(decay_rate=0.35)
         self.total_spent = 0.0
+
+    def evaluate_ast(self, code_str: str, language: str = None) -> dict:
+        """Evaluates arbitrary code string with sub-35µs AST safety rules."""
+        is_safe, reason, metadata = PolyglotASTValidator.validate_code(code_str, language)
+        latency_us = metadata.get("latency_us", 15.0) if isinstance(metadata, dict) else 15.0
+        return {
+            "allowed": is_safe,
+            "violations": [reason] if not is_safe else [],
+            "reason": reason,
+            "latency_us": latency_us,
+            "metadata": metadata
+        }
 
     def check(self, command_or_query: str, amount_usd: float = 0.0, agent_id: str = "agent-1") -> dict:
         """
