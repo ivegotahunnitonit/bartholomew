@@ -4,6 +4,10 @@
   "description": "Sub-35µs in-process tool execution gateway, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
   "version": "3.0.0",
   "publisher": "Bartholomew",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
