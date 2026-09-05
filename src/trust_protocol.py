@@ -28,6 +28,11 @@ class BartholomewTrustAuthority:
         self.ttl_seconds = ttl_seconds
         self.issued_nonces = set()
 
+    def sign_receipt(self, receipt_data: Dict[str, Any]) -> str:
+        """Signs arbitrary dictionary data using RFC 8785 canonical bytes and sovereign Ed25519 key."""
+        canonical_bytes = rfc8785_canonicalize(receipt_data)
+        return self.private_key.sign(canonical_bytes).hex()
+
     def evaluate_intent(self, 
                         agent_id: str, 
                         action_type: str, 

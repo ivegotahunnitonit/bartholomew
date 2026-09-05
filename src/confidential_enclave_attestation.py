@@ -34,6 +34,41 @@ class EnclaveAttestationDocument:
     signature: str
     is_hardware_certified: bool
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "module_id": self.module_id,
+            "digest": self.digest,
+            "measurements": {
+                "pcr0": self.measurements.pcr0,
+                "pcr1": self.measurements.pcr1,
+                "pcr2": self.measurements.pcr2,
+                "nonce": self.measurements.nonce,
+                "timestamp": self.measurements.timestamp,
+            },
+            "public_key_pem": self.public_key_pem,
+            "signature": self.signature,
+            "is_hardware_certified": self.is_hardware_certified,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'EnclaveAttestationDocument':
+        m = data["measurements"]
+        meas = EnclaveMeasurements(
+            pcr0=m["pcr0"],
+            pcr1=m["pcr1"],
+            pcr2=m["pcr2"],
+            nonce=m["nonce"],
+            timestamp=m["timestamp"],
+        )
+        return cls(
+            module_id=data["module_id"],
+            digest=data["digest"],
+            measurements=meas,
+            public_key_pem=data["public_key_pem"],
+            signature=data["signature"],
+            is_hardware_certified=data.get("is_hardware_certified", True),
+        )
+
 class ConfidentialEnclaveAttestationEngine:
     """
     Manages confidential computing enclaves (AWS Nitro Enclaves, AMD SEV-SNP, Intel SGX).

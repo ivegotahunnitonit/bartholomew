@@ -181,3 +181,88 @@ def test_cli_bond_lifecycle():
         assert res_slash.returncode == 0, res_slash.stderr
         assert "SLASH APPROVED" in res_slash.stdout
         assert "$7,500.00 USD" in res_slash.stdout
+
+
+def test_cli_audit_certification():
+    """Validate btp-guard audit --certify generates verifiable compliance package & HTML."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        cert_html = os.path.join(tmpdir, "soc2_cert.html")
+        cert_json = os.path.join(tmpdir, "soc2_package.json")
+
+        # 1. HTML export
+        cmd_html = [
+            sys.executable, "cli.py", "audit", "policies/",
+            "--certify",
+            "--org", "Acme Frontier AI Systems",
+            "--out", cert_html,
+        ]
+        res_html = subprocess.run(cmd_html, capture_output=True, text=True)
+        assert res_html.returncode == 0, res_html.stderr
+        assert "BTP v3.2 ENTERPRISE COMPLIANCE & CRYPTOGRAPHIC AUDIT CERTIFICATE" in res_html.stdout
+        assert "Acme Frontier AI Systems" in res_html.stdout
+        assert os.path.exists(cert_html)
+        with open(cert_html, "r", encoding="utf-8") as f:
+            html_text = f.read()
+            assert "Bartholomew Autonomous AI Compliance Certificate" in html_text
+            assert "Acme Frontier AI Systems" in html_text
+
+        # 2. JSON export
+        cmd_json = [
+            sys.executable, "cli.py", "audit", "policies/",
+            "--certify",
+            "--org", "Acme Frontier AI Systems",
+            "--out", cert_json,
+        ]
+        res_json = subprocess.run(cmd_json, capture_output=True, text=True)
+        assert res_json.returncode == 0, res_json.stderr
+        assert os.path.exists(cert_json)
+        with open(cert_json, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            assert "merkle_root_hash" in data
+            assert "sovereign_signature" in data
+            assert data["signer_public_key"]
+
+
+def test_cli_enclave_lifecycle():
+    """Validate BTP v3.2 Confidential Enclave status, attest, and verify lifecycle."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        doc_file = os.path.join(tmpdir, "enclave_attestation.json")
+
+        # 1. Status
+        res_stat = subprocess.run([sys.executable, "cli.py", "enclave", "status"], capture_output=True, text=True)
+        assert res_stat.returncode == 0, res_stat.stderr
+        assert "BTP v3.2 CONFIDENTIAL COMPUTING & HARDWARE ENCLAVE RUNTIME" in res_stat.stdout
+        assert "AWS Nitro Enclaves / AMD SEV-SNP" in res_stat.stdout
+
+        # 2. Attest
+        attest_cmd = [
+            sys.executable, "cli.py", "enclave", "attest",
+            "--module-id", "enclave-worker-node-01",
+            "--nonce", "beefc001cafe002233445566778899aa",
+            "--out", doc_file,
+        ]
+        res_att = subprocess.run(attest_cmd, capture_output=True, text=True)
+        assert res_att.returncode == 0, res_att.stderr
+        assert "BTP v3.2 CONFIDENTIAL HARDWARE ENCLAVE ATTESTATION" in res_att.stdout
+        assert os.path.exists(doc_file)
+
+        # 3. Verify (valid)
+        ver_cmd = [
+            sys.executable, "cli.py", "enclave", "verify",
+            "--document", doc_file,
+            "--nonce", "beefc001cafe002233445566778899aa",
+        ]
+        res_ver = subprocess.run(ver_cmd, capture_output=True, text=True)
+        assert res_ver.returncode == 0, res_ver.stderr
+        assert "PASS (HARDWARE PROOF CERTIFIED)" in res_ver.stdout
+
+        # 4. Verify with tampered nonce (must fail)
+        bad_ver_cmd = [
+            sys.executable, "cli.py", "enclave", "verify",
+            "--document", doc_file,
+            "--nonce", "tampered_nonce_12345",
+        ]
+        res_bad = subprocess.run(bad_ver_cmd, capture_output=True, text=True)
+        assert res_bad.returncode != 0
+        assert "FAIL" in res_bad.stdout
+

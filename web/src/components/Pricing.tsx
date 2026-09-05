@@ -13,10 +13,22 @@ export default function Pricing() {
   }
 
   const handleCheckout = (tierName: string, price: string) => {
-    setCheckoutStatus(`Redirecting to secure Stripe Checkout for ${tierName} (${price}/mo)...`)
+    setCheckoutStatus(`Preparing secure checkout for ${tierName} (${price}/mo)...`)
+
+    // Check for configured Stripe Payment Links (tucked safely in environment variables)
+    const proPaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_PRO
+    const enterprisePaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_ENTERPRISE
+
     setTimeout(() => {
-      window.location.href = `mailto:contact@bartholomew.info?subject=Bartholomew%20${encodeURIComponent(tierName)}%20Subscription&body=Hi%20Itsub,%0D%0A%0D%0AI%20would%20like%20to%20activate%20the%20${encodeURIComponent(tierName)}%20subscription%20(${encodeURIComponent(price)}/mo)%20for%20our%20agent%20stack.`
-    }, 800)
+      if (tierName.includes('Pro') && proPaymentLink) {
+        window.location.href = proPaymentLink
+      } else if (tierName.includes('Enterprise') && enterprisePaymentLink) {
+        window.location.href = enterprisePaymentLink
+      } else {
+        // Direct contact to security@bartholomew.info for enterprise onboarding
+        window.location.href = `mailto:security@bartholomew.info?subject=Bartholomew%20${encodeURIComponent(tierName)}%20Subscription&body=Hi%20Itsub,%0D%0A%0D%0AI%20would%20like%20to%20activate%20the%20${encodeURIComponent(tierName)}%20subscription%20(${encodeURIComponent(price)}/mo)%20for%20our%20agent%20fleet.`
+      }
+    }, 600)
   }
 
   return (
