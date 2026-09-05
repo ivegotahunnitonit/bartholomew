@@ -32,6 +32,18 @@ const FAQS: FAQItem[] = [
     category: 'INTEGRITY',
     shortAnswer: 'Every trajectory, rule evaluation, and AST decision is cryptographically signed using FIPS 186-5 Ed25519 with nonced receipts.',
     detailedAnswer: 'Bartholomew implements RFC 8785 Canonical JSON (JCS) serialization paired with Ed25519 asymmetric signatures. When an agent attempts an action, Bartholomew computes a deterministic hash of the payload, verifies caller authorization against the local policy graph, and stamps the decision with a nonced, unforgeable cryptographic receipt. Downstream execution environments (MCP servers, database gateways, terminal runners) reject any payload lacking a valid cryptographic stamp.'
+  },
+  {
+    question: 'Is Bartholomew an operating system sandbox replacement (Docker, microVMs, gVisor)?',
+    category: 'ARCHITECTURE',
+    shortAnswer: 'No. Bartholomew is a Layer-7 in-process semantic tool gate. It is designed to be paired with container sandboxes, not replace OS kernel isolation.',
+    detailedAnswer: 'Operating system sandboxes (Docker, Firecracker, gVisor) provide essential kernel-level process and hardware isolation. However, an agent running inside a container can still drop its own production database, burn thousands of dollars in runaway API loops, or exfiltrate API keys. Bartholomew operates at the application runtime layer, intercepting tool dispatches in <2.3µs before commands hit the OS. For full production defense-in-depth, always run Bartholomew-protected agents inside isolated container environments.'
+  },
+  {
+    question: 'How does static AST parsing handle dynamic evaluation (eval, exec, reflection) and rule maintenance?',
+    category: 'ARCHITECTURE',
+    shortAnswer: 'Dynamic evaluation sinks (eval, exec) are blocked as high-entropy invariant violations; policies come with pre-packaged declarative defaults.',
+    detailedAnswer: 'Rather than attempting probabilistic guesswork on arbitrary runtime strings, Bartholomew treats un-gated dynamic code execution (eval, exec, runtime __import__ reflection) as an immediate invariant violation. This prevents obfuscated code from evading AST scrutiny. For policy management, Bartholomew ships with pre-configured default rule sets (rules-controller.yaml) covering standard database mutations, secret scrubbing, and loop damping so teams do not need to maintain brittle custom rule sets from scratch.'
   }
 ]
 
