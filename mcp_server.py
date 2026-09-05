@@ -21,6 +21,7 @@ from src.trust_protocol import BartholomewTrustAuthority
 from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox
 from src.bonded_warranty import BondedExecutionWarranty
+from src.agent_passport import SovereignAgentPassport, AgentPeerDiscoveryRegistry
 
 
 class BartholomewMCPServer:
@@ -32,6 +33,7 @@ class BartholomewMCPServer:
         self.ast_validator = ASTSecurityValidator()
         self.sandbox = HermeticCommandSandbox()
         self.warranty_manager = BondedExecutionWarranty()
+        self.passport_registry = AgentPeerDiscoveryRegistry()
         
         self.tools_schema = [
             {
@@ -202,6 +204,76 @@ class BartholomewMCPServer:
                         }
                     },
                     "required": ["bond_id"]
+                }
+            },
+            {
+                "name": "btp_issue_agent_passport",
+                "description": "[MILESTONE 3.1: Sovereign Non-Human Identity] Issues an Ed25519-signed digital passport for an autonomous agent worker with capability bounds and reputation vector.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the autonomous worker agent."
+                        },
+                        "worker_model": {
+                            "type": "string",
+                            "description": "Model family or engine (e.g., 'gpt-4o', 'claude-3-5-sonnet', 'gemini-1.5-pro')."
+                        },
+                        "granted_capabilities": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "List of authorized capability scopes."
+                        },
+                        "bonded_warranty_balance_usd": {
+                            "type": "number",
+                            "description": "Collateral staked in USD backing this passport (default 0.0)."
+                        }
+                    },
+                    "required": ["agent_id", "worker_model"]
+                }
+            },
+            {
+                "name": "btp_verify_agent_passport",
+                "description": "[MILESTONE 3.1: Sovereign Passport Verification] Cryptographically validates an agent passport signature, expiration, capability bounds, and circuit-breaker status.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passport": {
+                            "type": "object",
+                            "description": "Serialized passport dictionary to verify."
+                        },
+                        "required_capability": {
+                            "type": "string",
+                            "description": "Optional capability string to check authorization for."
+                        }
+                    },
+                    "required": ["passport"]
+                }
+            },
+            {
+                "name": "btp_discover_agent_peers",
+                "description": "[MILESTONE 3.1: Peer Discovery Mesh] Discovers registered autonomous peer agents in the BTP mesh matching required capabilities and minimum trust reputation.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "capability": {
+                            "type": "string",
+                            "description": "Required capability string (e.g. 'code:mutate', 'db:query')."
+                        },
+                        "min_reputation": {
+                            "type": "number",
+                            "description": "Minimum required trust score (0.0 to 1.0)."
+                        },
+                        "min_bond_usd": {
+                            "type": "number",
+                            "description": "Minimum required bonded collateral in USD."
+                        },
+                        "model_family": {
+                            "type": "string",
+                            "description": "Optional model filter (e.g. 'claude', 'gpt', 'gemini')."
+                        }
+                    }
                 }
             }
         ]
@@ -498,6 +570,90 @@ class BartholomewMCPServer:
                 "isError": False,
                 "content": [{"type": "text", "text": json.dumps(bond, indent=2)}]
             }
+
+        elif name == "btp_issue_agent_passport":
+            try:
+                agent_id = arguments.get("agent_id", "agent-worker")
+                worker_model = arguments.get("worker_model", "generic-agent")
+                capabilities = arguments.get("granted_capabilities", ["data:read", "tools:search"])
+                bonded_balance = float(arguments.get("bonded_warranty_balance_usd", 0.0))
+
+                passport = SovereignAgentPassport(
+                    agent_id=agent_id,
+                    worker_model=worker_model,
+                    owner_pubkey=self.authority.public_key_hex,
+                    granted_capabilities=capabilities,
+                    bonded_warranty_balance_usd=bonded_balance
+                )
+                passport.sign(self.authority.private_key)
+
+                # Auto-register into local discovery mesh
+                self.passport_registry.register_passport(passport.to_dict())
+
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps(passport.to_dict(), indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PASSPORT ISSUANCE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_verify_agent_passport":
+            try:
+                passport_dict = arguments.get("passport", {})
+                req_cap = arguments.get("required_capability")
+                passport = SovereignAgentPassport.from_dict(passport_dict)
+                is_valid, msg = passport.verify_signature(self.authority.public_key_hex)
+
+                cap_ok = True
+                if req_cap and is_valid:
+                    cap_ok = passport.has_capability(req_cap)
+                    if not cap_ok:
+                        msg = f"Passport valid but missing required capability '{req_cap}'"
+
+                res = {
+                    "verified": is_valid and cap_ok,
+                    "passport_id": passport.passport_id,
+                    "agent_id": passport.agent_id,
+                    "worker_model": passport.worker_model,
+                    "circuit_breaker_tripped": passport.circuit_breaker_tripped,
+                    "trust_score": passport.reputation_vector.get("trust_score", 1.0),
+                    "status": "AUTHORIZED" if (is_valid and cap_ok) else "DENIED",
+                    "reason": msg
+                }
+                return {
+                    "isError": not (is_valid and cap_ok),
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PASSPORT VERIFICATION ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_discover_agent_peers":
+            try:
+                cap = arguments.get("capability")
+                min_rep = arguments.get("min_reputation")
+                min_bond = arguments.get("min_bond_usd")
+                model = arguments.get("model_family")
+                peers = self.passport_registry.query_peers(
+                    capability=cap,
+                    min_reputation=float(min_rep) if min_rep is not None else None,
+                    min_bond_usd=float(min_bond) if min_bond is not None else None,
+                    model_family=model
+                )
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps({"count": len(peers), "peers": peers}, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PEER DISCOVERY ERROR]: {str(e)}"}]
+                }
 
         else:
             return {

@@ -133,11 +133,13 @@ def test_cli_mcp_status():
     assert res.returncode == 0, res.stderr
     assert "BARTHOLOMEW MODEL CONTEXT PROTOCOL (MCP) RUNTIME STATUS" in res.stdout
     assert "BTP v3.1" in res.stdout
-    assert "10 ACTIVE" in res.stdout
+    assert "13 ACTIVE" in res.stdout
     assert "btp_execute_command" in res.stdout
     assert "btp_issue_execution_bond" in res.stdout
     assert "btp_slash_execution_bond" in res.stdout
     assert "btp_get_bond_status" in res.stdout
+    assert "btp_issue_agent_passport" in res.stdout
+    assert "btp_discover_agent_peers" in res.stdout
 
 
 def test_cli_mcp_install_dry_run():
