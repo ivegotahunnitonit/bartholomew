@@ -50,7 +50,7 @@ const FAQS: FAQItem[] = [
 export default function SecurityThreatModelSection() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0)
   const [showInlineWhitepaper, setShowInlineWhitepaper] = useState<boolean>(false)
-  const [activeTab, setActiveTab] = useState<'architecture' | 'threat_model' | 'crypto' | 'enterprise'>('architecture')
+  const [activeTab, setActiveTab] = useState<'architecture' | 'threat_model' | 'crypto' | 'enterprise' | 'landscape'>('architecture')
 
   const toggleFAQ = (idx: number) => {
     setActiveFaq(activeFaq === idx ? null : idx)
@@ -249,6 +249,12 @@ export default function SecurityThreatModelSection() {
               >
                 [4. Enterprise &amp; SIEM Roadmap]
               </button>
+              <button
+                onClick={() => setActiveTab('landscape')}
+                className={`px-4 py-2 rounded-lg transition font-bold ${activeTab === 'landscape' ? 'bg-[#10b981] text-black' : 'bg-[#111111] text-[#a1a1aa] hover:text-white'}`}
+              >
+                [5. Industry Landscape &amp; Defense-in-Depth]
+              </button>
             </div>
 
             {/* Tab Contents */}
@@ -353,6 +359,77 @@ export default function SecurityThreatModelSection() {
                     <li><strong>HSM &amp; KMS Delegation</strong>: Support for AWS KMS, GCP Cloud KMS, and HashiCorp Vault for institutional root-of-trust rotation.</li>
                     <li><strong>Kernel-Level Sandbox Containment</strong>: Hard limits enforced via Linux namespaces (<code>unshare</code>), cgroups v2, and eBPF syscall filtering.</li>
                   </ul>
+                </div>
+              )}
+
+              {activeTab === 'landscape' && (
+                <div className="space-y-5">
+                  <h4 className="text-base font-bold text-white font-mono flex items-center gap-2">
+                    <ShieldCheck size={16} className="text-[#10b981]" />
+                    <span>Industry Landscape &amp; Defense-in-Depth Model</span>
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
+                    Most security frameworks in the AI industry operate from <em>outside</em> the local runtime process—typically as external HTTP proxies or secondary LLM classification calls. Bartholomew is purpose-built for the sub-50µs in-process tool execution boundary.
+                  </p>
+
+                  {/* Comparative Matrix Table */}
+                  <div className="overflow-x-auto border border-[#222222] rounded-xl bg-[#050505]">
+                    <table className="w-full text-left font-mono text-xs">
+                      <thead>
+                        <tr className="border-b border-[#222222] bg-[#0c0c10] text-[#a1a1aa]">
+                          <th className="p-3">Dimension</th>
+                          <th className="p-3">Standard AI Guardrails (NeMo, Guardrails AI, LlamaGuard)</th>
+                          <th className="p-3 text-[#10b981]">Bartholomew Protocol (BTP v3.0)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#1c1c1c] text-[#d4d4d8]">
+                        <tr>
+                          <td className="p-3 font-bold text-white">Primary Target</td>
+                          <td className="p-3 text-[#a1a1aa]">Natural language text, PII, and conversational topics</td>
+                          <td className="p-3 text-[#10b981]">Raw tool arguments, local AST structures, and filesystem actions</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-bold text-white">Latency Profile</td>
+                          <td className="p-3 text-[#a1a1aa]">~80ms to 2,500ms (secondary LLM classification calls)</td>
+                          <td className="p-3 text-[#10b981]">&lt;35 microseconds (in-process static analysis &amp; constant folding)</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-bold text-white">Deployment Mode</td>
+                          <td className="p-3 text-[#a1a1aa]">Cloud APIs, HTTP proxy sidecars, or microservices</td>
+                          <td className="p-3 text-[#10b981]">In-memory FFI library (<code>pip install btp-guard</code> / <code>npm i btp-guard</code>)</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-bold text-white">Verification</td>
+                          <td className="p-3 text-[#a1a1aa]">Mutable text logs and unstructured JSON output</td>
+                          <td className="p-3 text-[#10b981]">Cryptographic RFC 8785 Ed25519 signatures and ZK-proof receipts</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Defense in Depth 3-Layer Stack */}
+                  <div className="p-4 bg-[#08080c] border border-[#222222] rounded-xl space-y-2">
+                    <span className="font-mono text-xs font-bold text-[#f59e0b] block uppercase tracking-wider">
+                      [ The Unified 3-Layer Defense-in-Depth Architecture ]
+                    </span>
+                    <p className="text-xs text-[#a1a1aa] leading-relaxed">
+                      Enterprise AI architectures converge on layered safety:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs pt-1">
+                      <div className="p-3 bg-[#050505] border border-[#1a1a24] rounded-lg">
+                        <span className="text-[#38bdf8] font-bold block mb-1">Layer 1: External Dialog</span>
+                        <p className="text-[#71717a]">NeMo / LlamaGuard handles conversational tone, user sentiment, and high-level dialogue rules.</p>
+                      </div>
+                      <div className="p-3 bg-[#050505] border border-[#10b981]/40 rounded-lg">
+                        <span className="text-[#10b981] font-bold block mb-1">Layer 2: In-Process Invariant</span>
+                        <p className="text-[#a1a1aa]">Bartholomew gates destructive commands (rm -rf, DROP TABLE), API keys, and loops in &lt;35µs.</p>
+                      </div>
+                      <div className="p-3 bg-[#050505] border border-[#1a1a24] rounded-lg">
+                        <span className="text-[#a855f7] font-bold block mb-1">Layer 3: OS Container</span>
+                        <p className="text-[#71717a]">Docker / microVMs provide kernel-level network isolation and host filesystem boundaries.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
