@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Download, Menu, X } from 'lucide-react'
+import { Download, Menu, X, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import { BTP_ENGINE_LABEL } from '../constants/version'
@@ -51,9 +51,6 @@ export default function Navbar() {
           <a href="#sdk" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [SDK / CLI]
           </a>
-          <a href="/store/" className="hover:text-[#ffffff] transition hover:text-[#38bdf8] text-[#38bdf8]">
-            [STORE &amp; MONETIZE]
-          </a>
         </nav>
 
         {/* Action Logo Buttons (Tailored Product Hunt, GitHub, and Install) */}
@@ -96,6 +93,16 @@ export default function Navbar() {
             className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#10b981] border border-[#10b981]/40 hover:border-[#10b981] transition-all shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.35)] group"
           >
             <Download size={16} className="transition-transform group-hover:scale-110 group-hover:translate-y-0.5" />
+          </a>
+
+          {/* Storefront / Shop Icon Button */}
+          <a
+            href="/store/"
+            title="Bartholomew Defense Storefront & Licenses"
+            aria-label="Defense Storefront"
+            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#38bdf8]/10 hover:bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/30 hover:border-[#38bdf8] transition-all shadow-sm hover:shadow-[0_0_14px_rgba(56,189,248,0.35)] group"
+          >
+            <ShoppingBag size={16} className="transition-transform group-hover:scale-110" />
           </a>
         </div>
 
@@ -148,9 +155,10 @@ export default function Navbar() {
           <a
             href="/store/"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#38bdf8] hover:text-[#ffffff]"
+            className="flex items-center gap-2 text-sm font-mono text-[#38bdf8] hover:text-[#ffffff] transition"
           >
-            [STORE &amp; MONETIZE]
+            <ShoppingBag size={14} />
+            <span>[STORE &amp; LICENSES]</span>
           </a>
           <div className="pt-3 border-t border-[#222222] flex flex-col gap-2.5">
             <a
