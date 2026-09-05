@@ -162,31 +162,39 @@ export default function Founder() {
             </div>
 
             <div className="space-y-3.5 text-sm text-[#d4d4d8] leading-relaxed font-sans text-left">
-              <p>
-                "Most agent safety today relies on prompt engineering — asking a model to behave, or asking a second model to review its work.
-                That works fine for conversational chat. It breaks down the moment an agent starts executing terminal commands, modifying production databases, or moving capital.
-                You get seconds of latency and a system that's vulnerable to the exact prompt confusion it was supposed to prevent."
-              </p>
-              <p>
-                "We built Bartholomew because mission-critical systems need deterministic guarantees, not probabilistic ones.
-                Every other domain of software engineering enforces safety through compilers, operating systems, and memory boundaries — not polite requests.
-                Our Tier-0 gate runs directly in local CPU memory at <strong>42 microseconds median latency</strong>, inspecting every tool call before it dispatches.
-                Destructive actions are blocked before they ever execute. Sensitive credentials are redacted in-process. Nothing leaves the host machine."
-              </p>
-              <p>
-                "Where our roadmap leads across <strong>v2.6, v2.7, v2.8, v2.9, and v3.0</strong> changes the category entirely.
-                Bartholomew is moving autonomous systems toward <strong>mathematical proof</strong> of agent behavior — not logs, not dashboards, not a second model's opinion.
-                Real cryptography. In our lab benchmark across 800 adversarial forgery attempts — bit-flip attacks, replay attacks, rogue key substitutions, sub-threshold collusion — <strong>the rejection rate was 100.0% across all four attack vectors</strong>.
-                Our zero-knowledge compliance engine generates a verifiable receipt for a 5-tool-call session in <strong>31ms</strong>, and verification takes <strong>4.7ms</strong> with zero access to the original tool calls.
-                The complete cryptographic pipeline — BFT swarm consensus, FROST threshold signature, and ZK compliance proof — runs end-to-end in a <strong>96ms median across 30 measured iterations</strong>, entirely offline."
-              </p>
-              <p>
-                "An auditor doesn't need to trust our infrastructure. They need one number: the swarm's group public key.
-                From that, every quorum certificate is independently verifiable by anyone with a standard verification tool.
-                When we say <em>mathematical certainty</em>, that's not a marketing claim — it's a Schnorr verification equation that either holds or it doesn't."
-              </p>
-              <p className="text-xs text-[#a1a1aa] font-mono pt-2 border-t border-[#27272a]/70">
-                "Our promise is simple: total local control, zero required cloud delays, and mathematical certainty. When your agents build the future, Bartholomew makes sure they don't break the present."
+              {/* Where We Were */}
+              <div className="p-3.5 rounded-xl bg-[#08080c] border border-[#1c1c22]">
+                <span className="text-[11px] font-mono font-bold text-[#f59e0b] block uppercase tracking-wider mb-1">
+                  [ 01 &middot; Where We Started ]
+                </span>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
+                  Prompt engineering and secondary observer LLMs broke down the moment agents started executing terminal commands, touching production data, and moving capital. We founded Bartholomew on a strict engineering law: agent safety requires deterministic memory boundaries and compiler-grade AST invariants, not polite requests.
+                </p>
+              </div>
+
+              {/* Where We Are (v3.0) */}
+              <div className="p-3.5 rounded-xl bg-[#080d0b] border border-[#10b981]/30 shadow-[0_0_20px_rgba(16,185,129,0.06)]">
+                <span className="text-[11px] font-mono font-bold text-[#10b981] block uppercase tracking-wider mb-1 flex items-center justify-between">
+                  <span>[ 02 &middot; Where We Are &middot; BTP v3.0 ]</span>
+                  <span className="text-[10px] bg-[#10b981]/15 px-2 py-0.5 rounded border border-[#10b981]/30">ACTIVE RUNTIME</span>
+                </span>
+                <p className="text-xs sm:text-sm text-[#e4e4e7] leading-relaxed">
+                  With <strong>BTP v3.0</strong>, we delivered a 100% offline cryptographic trust kernel. We unified in-process memory gating, Zero-Knowledge Invariant Compliance Proofs (zk-ICP), FROST RFC 9591 multi-agent threshold consensus, and post-quantum envelopes across Claude, OpenAI, Gemini, and Kimi—proving an agent adhered to all constraints with <strong>0 bytes of prompt or payload leaked</strong>.
+                </p>
+              </div>
+
+              {/* Where We're Headed */}
+              <div className="p-3.5 rounded-xl bg-[#08080c] border border-[#1c1c22]">
+                <span className="text-[11px] font-mono font-bold text-[#38bdf8] block uppercase tracking-wider mb-1">
+                  [ 03 &middot; Where We're Headed ]
+                </span>
+                <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
+                  We are building the <strong>Autonomous Circularity Network (ACN)</strong>—a sovereign, self-healing agent substrate where distributed swarms can discover peers, conduct verifiable tool delegations, and settle economic transactions with mathematical finality and zero human bottlenecks.
+                </p>
+              </div>
+
+              <p className="text-xs text-[#71717a] font-mono pt-1">
+                "When your agents build the future, Bartholomew makes sure they don't break the present."
               </p>
             </div>
 

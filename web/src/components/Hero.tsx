@@ -141,7 +141,7 @@ export default function Hero() {
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a0f] border border-[#1f1f26] mb-6 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
           <span className="text-xs font-mono font-semibold text-[#a1a1aa]">
-            Bartholomew Engine v2.8 &middot; <strong className="text-white font-medium">Sub-Microsecond In-Memory AI Safety</strong>
+            Bartholomew Protocol v3.0 &middot; <strong className="text-white font-medium">Deterministic Invariant Guard</strong>
           </span>
         </div>
 

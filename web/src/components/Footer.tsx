@@ -62,9 +62,6 @@ export default function Footer() {
             <div className="flex items-center">
               <Logo size={28} showText={true} />
             </div>
-            <p className="text-xs text-[#a1a1aa] max-w-sm leading-relaxed font-sans">
-              Sub-50 microsecond cryptographic safety infrastructure and deterministic invariant guardrails for autonomous AI agents.
-            </p>
             <div className="flex items-center gap-2 text-xs text-[#10b981] font-mono pt-1">
               <CheckCircle2 size={14} />
               <span>[PROTOCOL ACTIVE: BTP v2.8.0 · APACHE 2.0 / BSL LICENSED]</span>
