@@ -228,10 +228,10 @@ function runMcp(subargs = []) {
       console.log(`  ${(i + 1).toString().padStart(2)}. ${CYAN}${name.padEnd(32)}${RESET} ${DIM}${desc}${RESET}`);
     });
     console.log(`\n${BOLD}Universal Frontier Model & IDE Setup:${RESET}`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target claude${RESET}   (Auto-configure Anthropic Claude 5 Desktop)`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target cursor${RESET}   (Auto-configure Cursor & Local Swarms)`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target astra${RESET}    (Auto-configure OpenAI GPT-6 Astra / Computer-Use)`);
-    console.log(`  ${YELLOW}npx btp-guard mcp install --target all${RESET}      (Provisions Claude 5, Cursor, Gemini & Astra)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target claude${RESET}   (Auto-configure Anthropic Claude Desktop)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target cursor${RESET}   (Auto-configure Cursor IDE & Windsurf)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target openai${RESET}   (Auto-configure OpenAI Swarm / Computer-Use)`);
+    console.log(`  ${YELLOW}npx btp-guard mcp install --target all${RESET}      (Provisions Claude, Cursor, Gemini & OpenAI)`);
   } else if (subcmd === 'install') {
     runInit();
   } else {

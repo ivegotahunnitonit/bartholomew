@@ -35,12 +35,12 @@
     }
 
     .container {
-      max-width: 1140px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 0 24px;
     }
 
-    /* Top Navigation Bar */
+    /* Navigation Bar */
     .nav-bar {
       display: flex;
       align-items: center;
@@ -104,7 +104,7 @@
       box-shadow: 0 0 8px var(--primary);
     }
     h1 {
-      font-size: clamp(30px, 4vw, 42px);
+      font-size: clamp(28px, 4vw, 40px);
       font-weight: 800;
       letter-spacing: -0.03em;
       margin-bottom: 14px;
@@ -113,21 +113,21 @@
     }
     p.subtitle {
       color: #a1a1aa;
-      font-size: 16px;
-      max-width: 640px;
+      font-size: 15px;
+      max-width: 620px;
       margin: 0 auto;
       line-height: 1.6;
     }
 
-    /* 3-Tier Grid with Equal Heights & Locked Baselines */
+    /* 3-Tier Grid */
     .grid-plans {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 24px;
-      margin-bottom: 64px;
+      margin-bottom: 56px;
       align-items: stretch;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 900px) {
       .grid-plans {
         grid-template-columns: 1fr;
       }
@@ -137,7 +137,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 32px 26px;
+      padding: 32px 24px;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -279,215 +279,84 @@
       transform: translateY(-1px);
     }
 
-    /* Frictionless Multi-Persona Delivery Console */
-    .console-card {
+    /* Clean, Concise Fulfillment Flow Strip */
+    .flow-strip {
       background: #07070b;
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 28px;
-      margin-bottom: 64px;
-      box-sizing: border-box;
-      max-width: 100%;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 56px;
     }
-    .console-header {
+    .flow-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
+      gap: 8px;
+      font-size: 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-weight: 700;
       color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 8px;
+      margin-bottom: 20px;
     }
-    .console-subtitle {
-      font-size: 13px;
-      color: #a1a1aa;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    .tab-pills {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    .tab-pill {
-      background: #0b0b10;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .tab-pill.active {
-      background: #14141e;
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    /* Sub-card delivery grid with minmax(0, 1fr) to prevent overflow */
-    .delivery-grid {
+    .flow-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 20px;
       align-items: stretch;
-      width: 100%;
-      box-sizing: border-box;
     }
-    @media (max-width: 860px) {
-      .delivery-grid {
+    @media (max-width: 768px) {
+      .flow-grid {
         grid-template-columns: 1fr;
       }
     }
-
-    .sub-card {
+    .flow-step {
       background: #0a0a10;
       border: 1px solid #161622;
-      border-radius: 12px;
-      padding: 22px;
+      border-radius: 10px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
       height: 100%;
-      box-sizing: border-box;
-      min-width: 0; /* Prevents flex child overflow */
     }
-    .sub-card-top {
-      flex: 1;
-      margin-bottom: 16px;
-    }
-    .sub-label {
+    .step-num {
       font-size: 11px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       color: var(--primary);
       font-weight: 700;
       margin-bottom: 6px;
     }
-    .sub-title {
+    .step-title {
       font-size: 14px;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-    .sub-text {
+    .step-desc {
       font-size: 12px;
       color: #a1a1aa;
       line-height: 1.5;
     }
-    .sub-card-bottom {
-      margin-top: auto;
-    }
-
-    .code-box {
+    .step-code {
+      margin-top: 10px;
       background: #020204;
       border: 1px solid #1c1c28;
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: 6px;
+      padding: 8px 10px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 11px;
       color: #34d399;
       overflow-x: auto;
       white-space: nowrap;
-      box-sizing: border-box;
-      max-width: 100%;
     }
 
-    /* Key Validator Section */
-    .validator-container {
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid #151520;
-    }
-    .validator-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .validator-title {
-      font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-weight: 700;
-      color: #fff;
-    }
-    .validator-latency {
-      font-size: 11px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      color: var(--text-muted);
-    }
-    .validator-input-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    .validator-input {
-      flex: 1;
-      min-width: 260px;
-      height: 44px;
-      background: #020204;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0 16px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      color: #fff;
-      outline: none;
-      box-sizing: border-box;
-      transition: border-color 0.15s ease;
-    }
-    .validator-input:focus {
-      border-color: var(--primary);
-    }
-    .validator-btn {
-      height: 44px;
-      background: var(--primary);
-      color: #000;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-weight: 800;
-      font-size: 12px;
-      padding: 0 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s ease;
-      white-space: nowrap;
-      box-sizing: border-box;
-    }
-    .validator-btn:hover {
-      background: var(--primary-hover);
-    }
-    .validator-result {
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      background: #050d08;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 11px;
-      color: #34d399;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      box-sizing: border-box;
-    }
-
-    /* FAQ Strip with Equal Height Rows */
+    /* Balanced 2x2 FAQ Grid */
     .faq-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
-      margin-bottom: 64px;
+      margin-bottom: 56px;
       align-items: stretch;
     }
     @media (max-width: 768px) {
@@ -503,7 +372,6 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      box-sizing: border-box;
     }
     .faq-q {
       font-size: 14px;
@@ -586,7 +454,7 @@
       <div class="card">
         <div class="card-top">
           <div class="plan-title">Community</div>
-          <p class="plan-desc">Essential in-process AST memory gate for individual developers and researchers.</p>
+          <p class="plan-desc">Essential in-process AST memory gate for individual developers and research.</p>
           <div class="plan-price-row">
             <span class="price-num">$0</span>
             <span class="price-term">Free forever &bull; Apache 2.0</span>
@@ -661,158 +529,28 @@
 
     </div>
 
-    <!-- Frictionless Multi-Persona Delivery Console -->
-    <div class="console-card">
-      <div class="console-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-        <span>Frictionless Delivery &amp; Instant Activation Console</span>
+    <!-- Crisp 3-Step Instant Fulfillment Flow -->
+    <div class="flow-strip">
+      <div class="flow-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>Instant Fleet Fulfillment Flow</span>
       </div>
-      <p class="console-subtitle">
-        Zero-delay fulfillment across human operators, autonomous agent swarms, and enterprise procurement.
-      </p>
-
-      <!-- Persona Selector Tabs -->
-      <div class="tab-pills">
-        <button id="tab-person" class="tab-pill active" onclick="switchDeliveryTab('person')">
-          &bull; For Developers (Person)
-        </button>
-        <button id="tab-agent" class="tab-pill" onclick="switchDeliveryTab('agent')">
-          &bull; For Autonomous Agents (It)
-        </button>
-        <button id="tab-client" class="tab-pill" onclick="switchDeliveryTab('client')">
-          &bull; For Enterprise (Client)
-        </button>
-      </div>
-
-      <!-- Tab Content: Developer (Person) -->
-      <div id="content-person" style="display: block;">
-        <div class="delivery-grid">
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Method A &bull; Single-Line Shell</div>
-              <div class="sub-title">Automated Host Install</div>
-              <p class="sub-text">Fetches signed binaries and injects the Ed25519 invariant engine into memory:</p>
-            </div>
-            <div class="sub-card-bottom">
-              <div class="code-box">curl -sSL https://bartholomew.info/install.sh | sh -s -- --key &lt;KEY&gt;</div>
-            </div>
-          </div>
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Method B &bull; Containerized</div>
-              <div class="sub-title">Docker / Kubernetes</div>
-              <p class="sub-text">Pass the license token as an environmental invariant gate:</p>
-            </div>
-            <div class="sub-card-bottom">
-              <div class="code-box">docker run -e BTP_LICENSE_KEY="btp_live_..." ghcr.io/bartholomew/btp-guard</div>
-            </div>
-          </div>
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Method C &bull; SDK Native</div>
-              <div class="sub-title">Python, Node, or Go</div>
-              <p class="sub-text">Activate in application startup code with zero phone-home lag:</p>
-            </div>
-            <div class="sub-card-bottom">
-              <div class="code-box">btp-guard activate btp_live_lic_...</div>
-            </div>
-          </div>
+      <div class="flow-grid">
+        <div class="flow-step">
+          <div class="step-num">Step 01</div>
+          <div class="step-title">Cryptographic License Key</div>
+          <p class="step-desc">Upon checkout, an Ed25519-signed production license key (<code>btp_live_lic_...</code>) is generated and emailed immediately.</p>
         </div>
-      </div>
-
-      <!-- Tab Content: Autonomous Agent (It) -->
-      <div id="content-agent" style="display: none;">
-        <div style="background: #0a0a10; border: 1px solid #161622; border-radius: 12px; padding: 22px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; font-weight: 700; color: #10b981;">
-              MACHINE-READABLE AGENT AUTO-CONFIG SPECIFICATION
-            </div>
-            <button onclick="copyAgentSpec()" style="background: #111117; border: 1px solid var(--border); color: #fff; padding: 5px 12px; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; cursor: pointer;">
-              Copy JSON Manifest
-            </button>
-          </div>
-          <p style="font-size: 12px; color: #a1a1aa; line-height: 1.5; margin-bottom: 14px;">
-            Autonomous agents can configure themselves programmatically without human intervention. Load this manifest into runtime context:
-          </p>
-          <pre id="agent-json" style="background: #020204; border: 1px solid #1c1c28; border-radius: 8px; padding: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; color: #a1a1aa; overflow-x: auto;">{
-  "protocol": "Bartholomew-Trust-Protocol-v3.0",
-  "license_tier": "pro",
-  "attestation": {
-    "verification_mode": "local_offline_ast",
-    "signature_scheme": "Ed25519",
-    "enforce_rollback": true,
-    "max_rollback_latency_us": 50
-  },
-  "guardrails": {
-    "secret_scrubbing": true,
-    "ldmu_entropy_damper": true,
-    "zk_compliance_receipts": true
-  }
-}</pre>
+        <div class="flow-step">
+          <div class="step-num">Step 02</div>
+          <div class="step-title">Single-Command Activation</div>
+          <p class="step-desc">Inject into host memory, Docker, or Kubernetes with zero downtime and zero phone-home delay:</p>
+          <div class="step-code">btp-guard activate &lt;key&gt;</div>
         </div>
-      </div>
-
-      <!-- Tab Content: Enterprise Client (Organization) -->
-      <div id="content-client" style="display: none;">
-        <div class="delivery-grid">
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Step 01 &bull; Self-Service Billing</div>
-              <div class="sub-title">Stripe Customer Center</div>
-              <p class="sub-text">Access real-time PDF tax invoices, add team seat delegations, or update payment cards.</p>
-            </div>
-            <div class="sub-card-bottom">
-              <a href="https://billing.stripe.com/p/login/test_placeholder" target="_blank" class="btn btn-subtle" style="font-size: 12px;">
-                Launch Billing Portal &rarr;
-              </a>
-            </div>
-          </div>
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Step 02 &bull; Instant Compliance</div>
-              <div class="sub-title">SOC 2 &amp; ISO Evidence</div>
-              <p class="sub-text">Download mathematically sealed compliance bundles mapped to SOC 2 Type II and ISO 27001.</p>
-            </div>
-            <div class="sub-card-bottom">
-              <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank" class="btn btn-subtle" style="font-size: 12px;">
-                View Security Whitepaper &rarr;
-              </a>
-            </div>
-          </div>
-          <div class="sub-card">
-            <div class="sub-card-top">
-              <div class="sub-label">Step 03 &bull; Enterprise SLA</div>
-              <div class="sub-title">Dedicated Channel</div>
-              <p class="sub-text">Enterprise Fleet subscribers receive custom VPC routing, private bridges, and 99.99% uptime guarantees.</p>
-            </div>
-            <div class="sub-card-bottom">
-              <a href="mailto:enterprise@bartholomew.info" class="btn btn-subtle" style="font-size: 12px;">
-                Contact Solutions Desk &rarr;
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Balanced Key Validator Section -->
-      <div class="validator-container">
-        <div class="validator-header">
-          <span class="validator-title">
-            Test or Claim Active License Key:
-          </span>
-          <span class="validator-latency">
-            Local In-Memory Cryptographic Validation (0.2µs)
-          </span>
-        </div>
-        <div class="validator-input-group">
-          <input id="lic-input" type="text" class="validator-input" placeholder="Paste license key (e.g. btp_live_lic_... or click Verify Key)" value="btp_live_test_pro_demo">
-          <button onclick="verifyKeyInput()" class="validator-btn">
-            Verify Key &rarr;
-          </button>
-        </div>
-        <div id="lic-result" class="validator-result">
-          <span>&#10003; <strong>KEY VALID</strong> &bull; Tier: <strong>PRO DEVELOPER</strong> &bull; Signature: <strong>Ed25519 Validated</strong> &bull; In-Process AST Gate: <strong>ACTIVE</strong></span>
-          <span style="color: var(--text-muted);">0.18µs local check &bull; 0 bytes leaked</span>
+        <div class="flow-step">
+          <div class="step-num">Step 03</div>
+          <div class="step-title">Audit Readiness Unlocked</div>
+          <p class="step-desc">Continuous Merkle proofs stream to your SIEM with instant 1-click export of ready-to-file SOC 2 evidence packages.</p>
         </div>
       </div>
     </div>
@@ -849,48 +587,6 @@
     </footer>
 
   </div>
-
-  <!-- Interactive Scripts -->
-  <script>
-    function switchDeliveryTab(tab) {
-      document.getElementById('content-person').style.display = tab === 'person' ? 'block' : 'none';
-      document.getElementById('content-agent').style.display = tab === 'agent' ? 'block' : 'none';
-      document.getElementById('content-client').style.display = tab === 'client' ? 'block' : 'none';
-
-      const btnPerson = document.getElementById('tab-person');
-      const btnAgent = document.getElementById('tab-agent');
-      const btnClient = document.getElementById('tab-client');
-
-      btnPerson.className = 'tab-pill ' + (tab === 'person' ? 'active' : '');
-      btnAgent.className = 'tab-pill ' + (tab === 'agent' ? 'active' : '');
-      btnClient.className = 'tab-pill ' + (tab === 'client' ? 'active' : '');
-    }
-
-    function copyAgentSpec() {
-      const text = document.getElementById('agent-json').innerText;
-      navigator.clipboard.writeText(text);
-      alert('Copied agent auto-config JSON to clipboard!');
-    }
-
-    function verifyKeyInput() {
-      const val = document.getElementById('lic-input').value.trim();
-      const res = document.getElementById('lic-result');
-      if (!val) {
-        res.style.background = '#1a0d0d';
-        res.style.borderColor = '#ef4444';
-        res.style.color = '#f87171';
-        res.innerHTML = '&#10007; Please enter a valid license key string.';
-        return;
-      }
-
-      const isEnt = val.toLowerCase().includes('ent');
-      const tierName = isEnt ? 'ENTERPRISE FLEET' : 'PRO DEVELOPER';
-      res.style.background = '#050d08';
-      res.style.borderColor = 'rgba(16,185,129,0.3)';
-      res.style.color = '#34d399';
-      res.innerHTML = '<span>&#10003; <strong>KEY VALID</strong> &bull; Tier: <strong>' + tierName + '</strong> &bull; Signature: <strong>Ed25519 Validated</strong> &bull; In-Process AST Gate: <strong>ACTIVE</strong></span><span style="color: var(--text-muted);">0.18µs local check &bull; 0 bytes leaked</span>';
-    }
-  </script>
 
 </body>
 </html>

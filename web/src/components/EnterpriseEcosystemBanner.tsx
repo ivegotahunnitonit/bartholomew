@@ -13,9 +13,9 @@ export default function EnterpriseEcosystemBanner() {
   const partners: PartnerLogo[] = [
     {
       name: 'Google Cloud & Gemini',
-      label: 'Gemini 2.5 Pro, Flash & Agentic SDK',
+      label: 'Gemini 2.0 Flash, Pro & Agent SDK',
       category: 'MULTIMODAL & AGENTIC AI',
-      badge: 'Universal Invariant Certified',
+      badge: 'Vertex AI Compatible',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -27,9 +27,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'Anthropic',
-      label: 'Claude 5 Sonnet & Opus 5',
+      label: 'Claude 3.7 Sonnet, 3.5 & Opus',
       category: 'MODEL CONTEXT PROTOCOL',
-      badge: 'Official MCP Registry',
+      badge: 'Standard MCP Protocol',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M14.2 3.5l5.8 16.5h-3.4l-1.3-3.8H8.7l-1.3 3.8H4L9.8 3.5h4.4zm-1.8 5.1L10 13.2h4l-2.4-4.6z" fill="#D97706"/>
@@ -38,9 +38,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'OpenAI',
-      label: 'GPT-6 Astra, o3 & Swarm Tools',
+      label: 'GPT-4o, o3-mini & Swarm Tools',
       category: 'FUNCTION CALLING & COMPUTER USE',
-      badge: 'Astra Invariant Certified',
+      badge: 'Function Calling Gate',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.28 10.37a5.53 5.53 0 0 0-.47-4.48 5.64 5.64 0 0 0-4.06-2.73 5.58 5.58 0 0 0-4.43.68 5.53 5.53 0 0 0-3.95-1.74 5.62 5.62 0 0 0-5.32 3.86 5.57 5.57 0 0 0-2.4 3.65 5.63 5.63 0 0 0 .97 5.25 5.53 5.53 0 0 0 .47 4.48 5.64 5.64 0 0 0 4.06 2.73 5.58 5.58 0 0 0 4.43-.68 5.53 5.53 0 0 0 3.95 1.74 5.62 5.62 0 0 0 5.32-3.86 5.57 5.57 0 0 0 2.4-3.65 5.63 5.63 0 0 0-.97-5.25z" fill="#10B981"/>
@@ -49,9 +49,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'Moonshot AI',
-      label: 'Kimi k1.5 & Infinite Context Core',
+      label: 'Kimi k1.5 & Long Context Core',
       category: 'LONG-CONTEXT REASONING',
-      badge: 'Universal Agent Verified',
+      badge: 'Tool Calling Verified',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="10" stroke="#38bdf8" strokeWidth="2"/>
@@ -61,9 +61,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'DeepSeek',
-      label: 'DeepSeek-V3 & R1 Reasoning Swarms',
+      label: 'DeepSeek-V3 & R1 Reasoning Models',
       category: 'DISTRIBUTED REASONING & GATING',
-      badge: 'Post-Quantum Attested',
+      badge: 'In-Memory Gating',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M4 14.5c2.5-3 5-4.5 8-4.5s5.5 1.5 8 4.5-5 6-8 6-6-3-8-6z" stroke="#0ea5e9" strokeWidth="2" fill="#0ea5e9" fillOpacity="0.25"/>
@@ -75,7 +75,7 @@ export default function EnterpriseEcosystemBanner() {
       name: 'Alibaba Cloud & Qwen',
       label: 'Qwen 2.5 & QwQ Autonomous Tools',
       category: 'OPEN WEIGHTS & MULTILINGUAL',
-      badge: 'FROST Quorum Verified',
+      badge: 'Open Weights Ready',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2z" stroke="#ff6a00" strokeWidth="2" fill="#ff6a00" fillOpacity="0.2"/>
@@ -87,7 +87,7 @@ export default function EnterpriseEcosystemBanner() {
       name: 'Microsoft Azure',
       label: 'Azure OpenAI & AutoGen Swarms',
       category: 'ENTERPRISE ORCHESTRATION',
-      badge: 'AutoGen Verified',
+      badge: 'AutoGen & CrewAI Ready',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M0 0h11.377v11.372H0z" fill="#F25022"/>
@@ -99,9 +99,9 @@ export default function EnterpriseEcosystemBanner() {
     },
     {
       name: 'Amazon Web Services',
-      label: 'AWS Bedrock & APN Cloud',
+      label: 'AWS Bedrock & Runtime Sidecars',
       category: 'CLOUD RUNTIME',
-      badge: 'APN Verified Tier-0',
+      badge: 'AWS Bedrock Compatible',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M12.78 14.87c-2.45 1.83-6.02 2.81-9.08 2.81-4.29 0-8.15-1.63-11.08-4.36-.23-.22-.03-.52.24-.35 3.16 1.94 7.04 3.1 11.05 3.1 2.72 0 5.86-.71 8.63-2.19.42-.23.76.3.24.62v.37z" fill="#FF9900" transform="translate(11, 0) scale(0.9)"/>
@@ -114,7 +114,7 @@ export default function EnterpriseEcosystemBanner() {
       name: 'MongoDB',
       label: 'Atlas Vector Search & DB',
       category: 'ENTERPRISE DATA',
-      badge: 'Startup Grant Partner',
+      badge: 'Vector DB Gating',
       svg: (
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
           <path d="M11.996 0c-.394 0-.745.195-.959.508C8.89 3.665 4.6 10.74 4.6 15.65c0 4.627 3.328 8.35 7.4 8.35.394 0 .744-.196.958-.508 2.148-3.157 6.442-10.232 6.442-15.142 0-4.627-3.328-8.35-7.404-8.35z" fill="#00ED64"/>
@@ -137,7 +137,7 @@ export default function EnterpriseEcosystemBanner() {
             <span>[ UNIVERSAL FRONTIER AI &amp; CLOUD COMPATIBILITY ]</span>
           </div>
           <p className="text-xs text-[#a1a1aa] font-sans max-w-2xl mx-auto">
-            Universal drop-in invariant protection for autonomous agents across Google Gemini, Claude 5, GPT-6 Astra, Moonshot Kimi, DeepSeek, Qwen &amp; global clouds.
+            Universal drop-in invariant protection for autonomous agents across Google Gemini, Claude 3.7, GPT-4o, DeepSeek, Qwen &amp; global clouds.
           </p>
         </div>
 

@@ -75,7 +75,7 @@ def execute_agent_tool(command_or_sql: str):
     }
   }
 }`,
-    explanation: 'Standard Model Context Protocol security proxy for Claude 5 Desktop, Cursor, and Windsurf with in-flight secret masking.',
+    explanation: 'Standard Model Context Protocol security proxy for Claude Desktop, Cursor, and Windsurf with in-flight secret masking.',
     latency: 'Sub-microsecond'
   },
   node: {

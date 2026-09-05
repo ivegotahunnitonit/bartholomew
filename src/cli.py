@@ -135,7 +135,7 @@ def cmd_mcp_status(args):
     print(f"[*] Pre-flight Latency : Sub-50 microseconds (in-process AST & Secret Scrubber)")
     print(f"[*] Micro-Rollback     : Copy-on-Write Invariant Sandbox (<5ms)")
     print(f"[*] Bond Arbitration   : BTP v3.1 Bonded Execution Warranty Escrow")
-    print(f"[*] Universal Targets  : Google Gemini 2.5, Anthropic Claude 5, OpenAI GPT-6 Astra, Moonshot Kimi, DeepSeek, Qwen")
+    print(f"[*] Universal Targets  : Google Gemini 2.0, Anthropic Claude 3.7, OpenAI GPT-4o, Moonshot Kimi, DeepSeek, Qwen")
     print("-" * 74)
     print(f"REGISTERED MCP INVARIANT TOOLS ({len(tools)} ACTIVE):")
     for i, t in enumerate(tools, 1):

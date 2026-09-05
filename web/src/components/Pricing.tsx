@@ -15,20 +15,19 @@ export default function Pricing() {
   const handleCheckout = (tierName: string, price: string) => {
     setCheckoutStatus(`Preparing secure checkout for ${tierName} (${price}/mo)...`)
 
-    // Check for configured Stripe Payment Links (tucked safely in environment variables)
-    const proPaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_PRO
-    const enterprisePaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_ENTERPRISE
+    // Direct verified Stripe checkout links
+    const proPaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_PRO || 'https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'
+    const enterprisePaymentLink = (import.meta as any).env?.VITE_STRIPE_PAYMENT_LINK_ENTERPRISE || 'https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601'
 
     setTimeout(() => {
-      if (tierName.includes('Pro') && proPaymentLink) {
+      if (tierName.includes('Pro')) {
         window.location.href = proPaymentLink
-      } else if (tierName.includes('Enterprise') && enterprisePaymentLink) {
+      } else if (tierName.includes('Enterprise')) {
         window.location.href = enterprisePaymentLink
       } else {
-        // Direct contact to security@bartholomew.info for enterprise onboarding
-        window.location.href = `mailto:security@bartholomew.info?subject=Bartholomew%20${encodeURIComponent(tierName)}%20Subscription&body=Hi%20Itsub,%0D%0A%0D%0AI%20would%20like%20to%20activate%20the%20${encodeURIComponent(tierName)}%20subscription%20(${encodeURIComponent(price)}/mo)%20for%20our%20agent%20fleet.`
+        window.location.href = '/store/'
       }
-    }, 600)
+    }, 400)
   }
 
   return (
@@ -148,7 +147,7 @@ export default function Pricing() {
                 ENTERPRISE & WARRANTY
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-extrabold">$499</span>
+                <span className="text-4xl font-extrabold">$199</span>
                 <span className="text-[#71717a] text-sm">/ month</span>
               </div>
               <p className="text-sm text-[#a1a1aa] mb-6">
@@ -178,11 +177,11 @@ export default function Pricing() {
               </ul>
             </div>
             <button
-              onClick={() => handleCheckout('Enterprise & Bonded Warranty', '$499')}
+              onClick={() => handleCheckout('Enterprise & Bonded Warranty', '$199')}
               className="w-full py-3 px-4 bg-[#18181b] hover:bg-[#27272a] text-white font-medium rounded-xl text-sm transition-all border border-[#27272a] flex items-center justify-center gap-2"
             >
               <Shield className="w-4 h-4 text-[#a855f7]" />
-              <span>Get Enterprise License</span>
+              <span>Get Enterprise License ($199/mo)</span>
             </button>
           </div>
         </div>
