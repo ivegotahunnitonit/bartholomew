@@ -21,8 +21,8 @@ import argparse
 
 
 def publish_pypi():
-    print("[*] Publishing btp-guard v2.3.0 to PyPI...")
-    cmd = [sys.executable, "-m", "twine", "upload", "dist/btp_guard-2.3.0*"]
+    print("[*] Publishing btp-guard v3.0.0 to PyPI...")
+    cmd = [sys.executable, "-m", "twine", "upload", "dist/btp_guard-3.0.0*"]
     res = subprocess.run(cmd)
     if res.returncode == 0:
         print("[✔] PyPI release published successfully: pip install btp-guard")
