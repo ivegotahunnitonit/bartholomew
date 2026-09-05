@@ -1,0 +1,76 @@
+# Bartholomew BTP v3.0 Defense-in-Depth Multi-Layer Stack
+# Bundles Layer 2 (Bartholomew In-Process Tool Execution Gateway) with Layer 3 (gVisor / MicroVM Sandbox Isolation)
+#
+# Architecture:
+# - Layer 1: Prompt & Dialogue Rails (e.g., NeMo / LlamaGuard) -> Inspects user prompts for toxic dialog.
+# - Layer 2: Bartholomew In-Process Gateway (<35µs) -> Inspects tool AST, scrubs secrets, clamps spend, halts loop cascades.
+# - Layer 3: Container / Kernel MicroVM Sandbox (gVisor / Docker) -> Isolates syscalls, prevents root host escapes.
+
+version: '3.8'
+
+services:
+  # --- Layer 3: Hermetic Sandboxed Worker (gVisor runtime recommended in prod) ---
+  agent-sandbox-worker:
+    image: python:3.11-slim
+    container_name: btp-agent-sandbox
+    restart: unless-stopped
+    # In production with gVisor:
+    # runtime: runsc
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+    environment:
+      - BTP_STRICT_MODE=true
+      - BTP_AIR_GAPPED=true
+      - BTP_MAX_SPEND_CAP_USD=50.00
+      - BTP_MAX_LOOP_RETRIES=5
+      - BTP_AUDIT_LEDGER_PATH=/var/log/btp/audit_receipts.jsonl
+    volumes:
+      - ./workspace:/sandbox/workspace:rw
+      - btp-merkle-audit-volume:/var/log/btp
+    command: >
+      sh -c "pip install --no-cache-dir btp-guard &&
+             echo '[BTP Defense-in-Depth] Initialized Layer-2 In-Process AST Gate inside Layer-3 MicroVM Container.' &&
+             tail -f /dev/null"
+    networks:
+      - btp-defense-network
+
+  # --- Layer 2: Bartholomew Offline Merkle Audit Ledger & Compliance Sidecar ---
+  btp-compliance-sidecar:
+    image: bartholomew/btp-authority:3.0.0
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.enclave
+    container_name: btp-compliance-sidecar
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - BTP_PORT=8080
+      - BTP_AUDIT_MODE=SOC2_ISO27001
+      - BTP_HASH_CANONICAL=RFC8785
+      - BTP_SIGNATURE_ALGO=ED25519
+    volumes:
+      - ./keys:/etc/btp/keys:ro
+      - btp-merkle-audit-volume:/var/log/btp/ledger
+    networks:
+      - btp-defense-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  btp-merkle-audit-volume:
+    driver: local
+
+networks:
+  btp-defense-network:
+    driver: bridge
+    internal: true

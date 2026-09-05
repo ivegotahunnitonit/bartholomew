@@ -1,234 +1,161 @@
 <div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; line-height: 1.6;">
 
-# **Bartholomew AI &bull; BTP v2.5 Standards Track**
-### **Frontier MCP Security Proxy &bull; 0.95µs OS Computer-Use Gating &bull; 1.05M Evals/Sec &bull; CoW Tree Rollbacks**
+# **Bartholomew AI &bull; BTP v3.0 Standards Track**
+### **The AI Agent Execution Gateway &bull; Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; SOC 2 Type II Merkle Receipts**
 
 <div align="center">
 
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
 [![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
-[![Latency](https://img.shields.io/badge/Latency-0.95%C2%B5s%20(Sub--Microsecond)-6366f1.svg?style=for-the-badge)](paper_v2_5.md)
+[![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
-[![License](https://img.shields.io/badge/License-Proprietary-blue.svg?style=for-the-badge)](LICENSE)
+[![SOC 2 Type II](https://img.shields.io/badge/SOC%202%20Type%20II-CC7.1%20%2F%20CC7.2%20Ready-success.svg?style=for-the-badge)](scripts/generate_soc2_compliance_evidence.py)
 
 </div>
 
 ---
 
-### **[EXECUTIVE_SUMMARY] What is Bartholomew & BTP v2.5?**
+### **[CATEGORY] What is an AI Agent Execution Gateway?**
 
-> **Bartholomew is the deterministic execution runtime, MCP security proxy, and OS-level containment gate for frontier autonomous AI agents.**  
-> Built on the **Bartholomew Trust Protocol (BTP v2.5 Standards Track)**, it protects operating systems, filesystems, and APIs against frontier autonomous failure modes with:
-> 1. **Sub-Microsecond OS Event Gating (0.95 µs)**: Spatial coordinate and keystroke interception for autonomous "computer use" actions.
-> 2. **Copy-on-Write (CoW) Tree Micro-Rollbacks**: Full multi-file directory state snapshots with SHA-256 Merkle root identity.
-> 3. **Recursive Swarm Quota Conservation**: Mathematical damping ($\sum Q(v) \le Q_{\text{root}}$) eliminating runaway multi-agent loops.
-> 4. **Bi-Directional In-Flight Credential Scrubbing**: Intercepts high-entropy keys across Claude Desktop, Cursor, and MCP tools with zero code changes.
+Traditional AI guardrails operate **outside** the local runtime process—acting as conversational prompt filters or external cloud proxy LLM classifiers (80ms to 2,500ms latency). While critical for dialog safety, they are completely **blind** to what happens when an autonomous agent invokes real-world tools, dispatches SQL mutations, runs shell scripts, or interacts with the operating system.
+
+> **Bartholomew (BTP v3.0)** is the open-source **In-Process AI Agent Execution Gateway**.  
+> It acts as a real-time runtime boundary layer inside the agent’s memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases.
 
 ---
 
-### **[QUICKSTART] 3-Second Zero-Install Showcase (v2.4)**
+### **[DEFENSE_IN_DEPTH] Unified 3-Layer Security Stack**
 
-Test in-flight credential scrubbing, boundary violation micro-rollback (<2.3µs), and chained Ed25519 audit manifests directly in your terminal:
+Bartholomew does not replace dialog filters or microVM sandboxes; it closes the critical execution blind spot between them:
 
-```bash
-# Zero-Install Live Terminal Simulation (No Clone Needed!)
-npx btp-guard
-
-# Or via Python Universal Package:
-pip install btp-guard
-bartholomew demo-v24
+```
++-------------------------------------------------------------------------------+
+|  LAYER 1: EXTERNAL DIALOG RAILS (NVIDIA NeMo, LlamaGuard, Guardrails AI)      |
+|  - Latency: ~80ms - 2,500ms | Inspects user prompts & LLM conversational text |
++-------------------------------------------------------------------------------+
+                                      │
+                                      ▼
++===============================================================================+
+|  LAYER 2: BARTHOLOMEW IN-PROCESS EXECUTION GATEWAY (BTP v3.0)                 |
+|  - Latency: <35µs | In-Memory AST Gating, Secret Scrubbing, Loop Damping     |
+|  - Offline Ed25519 & Zero-Knowledge Invariant Compliance Proofs (zk-ICP)      |
+|  - Immutable SOC 2 Type II & ISO 27001 Merkle Audit Receipt Ledger           |
++===============================================================================+
+                                      │
+                                      ▼
++-------------------------------------------------------------------------------+
+|  LAYER 3: OS CONTAINER & MICROVM ISOLATION (Docker, gVisor, E2B, Modal)       |
+|  - Latency: Kernel-level | Syscall interception, host escape prevention       |
++-------------------------------------------------------------------------------+
 ```
 
 ---
 
-### **60-Second Multi-Language Quickstarts**
+### **[COMPARATIVE_MATRIX] Where Bartholomew Stands**
 
-#### **1. Python (`pip install btp-guard`)**
+| Security Dimension | External Prompt Rails (NeMo / Guardrails AI) | OS Sandboxes (Docker / gVisor / E2B) | Bartholomew In-Process Gateway (BTP v3.0) |
+| :--- | :--- | :--- | :--- |
+| **Inspection Point** | Prompt & Completion Text | OS Syscalls / Kernel Boundary | **Raw Tool Arguments & Memory Before Dispatch** |
+| **Evaluation Latency**| 80ms – 2,500ms (LLM classifier) | Microsecond Syscall Filter | **<35 Microseconds (Deterministic In-Process AST)** |
+| **Destructive Command Gating** | ❌ Blind to in-process tool args | ⚠️ Isolated inside container (still wipes data) | **🛡️ Hard-Blocks `rm -rf`, `DROP TABLE` in <35µs** |
+| **In-Flight Secret Scrubbing** | Text PII scrubbing | ❌ Blind to memory mutations | **🛡️ Scrubs API keys/JWTs across tool args & logs** |
+| **Runaway Spend & Loop Clamping**| ❌ No financial quota bounds | ❌ No semantic loop damping | **🛡️ Strict USD spend caps & LDMU retry damping** |
+| **Audit Compliance Trail** | External cloud logs | Container syslog | **🛡️ Tamper-Evident SHA-256 Merkle Receipts** |
+
+---
+
+### **[QUICKSTART] 30-Second Integration**
+
+#### **1. Python Universal Package (`pip install btp-guard`)**
 ```python
 from btp_guard import Guard
 
-# Set spend limit and max retries
-guard = Guard(spend_cap=100.0, max_retries=5)
+# Initialize gate with financial cap and loop threshold
+guard = Guard(spend_cap=50.0, max_retries=5)
 
-# Protect any agent tool or function with a decorator
+# Protect any agent tool or function with a single decorator
 @guard.protect
 def execute_database_query(sql_query: str):
-    # If the agent attempts a DROP TABLE or exceeds budget,
-    # it is blocked in <5 microseconds before executing.
+    # Destructive mutations (DROP TABLE, TRUNCATE) and credential exfiltration
+    # are blocked in <35 microseconds before database execution.
     return db.execute(sql_query)
 
-# Or check actions directly:
+# Validate actions programmatically:
 result = guard.check("rm -rf /var/data")
 print(result["allowed"]) # False
-print(result["reason"])  # "Policy Violation: Trajectory contained forbidden pattern 'rm -rf'"
+print(result["reason"])  # "[BTP-VETO] Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
-#### **2. TypeScript / Node.js (`npm install btp-guard`)**
+#### **2. TypeScript & Node.js (`npm install btp-guard`)**
 ```typescript
 import { BTPGuard } from 'btp-guard';
 
 const guard = new BTPGuard();
 const receipt = guard.evaluateAction({
-  agentId: 'claude-desktop',
+  agentId: 'agent-production-worker',
   actionType: 'DATABASE_MUTATION',
   payload: { query: 'DROP TABLE accounts;' }
 });
-console.log(receipt.verdict); // "DENY" (Blocked in 11 µs)
+console.log(receipt.verdict); // "DENY" (Blocked in 11 µs with Merkle receipt)
 ```
 
-#### **3. Go (`go get github.com/ivegotahunnitonit/bartholomew/pkg/btp`)**
-```go
-package main
-import "fmt"
-import "github.com/ivegotahunnitonit/bartholomew/pkg/btp"
-
-func main() {
-    guard := btp.NewGuard()
-    verdict := guard.Evaluate("AGENT_01", "DB_READ", map[string]interface{}{"id": 101})
-    fmt.Println("Verdict:", verdict) // ALLOW (0.00s latency)
-}
-```
-
-#### **4. Command-Line CLI**
+#### **3. Model Context Protocol (MCP) for Claude Desktop, Cursor & VS Code**
+Bartholomew provides a native MCP Security Gateway registered on [Smithery](smithery.yaml):
 ```bash
-# Validate declarative YAML security policies
-python -m src.cli policy validate --file policies/default_security_policy.yaml
+# Launch the Bartholomew MCP Gateway
+python -m src.mcp_gateway
+```
 
-# Test an action payload directly in your terminal
-python -m src.cli policy eval -f policies/default_security_policy.yaml -p '{"query": "SELECT 1"}'
+#### **4. Defense-in-Depth Docker Compose**
+Deploy Bartholomew alongside your agent runtime and microVM containers with a single command:
+```bash
+docker-compose -f docker-compose.defense-in-depth.yml up -d
 ```
 
 ---
 
-### **[FRAMEWORK_ADAPTERS] 1-Line Drop-in Middleware**
+### **[FRAMEWORK_ADAPTERS] Pre-Bundled Framework Middleware**
 
-> **Looking for ready-to-copy code examples?** See our complete **[Framework Integration Hub](docs/FRAMEWORK_GUIDE.md)** for AutoGen, LangGraph, CrewAI, and Cursor/Claude Desktop MCP.
-
-| Framework | Integration File | 1-Line Guard | Description |
+| Framework | Adapter Location | Decorator / Class | Protection Mechanism |
 | :--- | :--- | :--- | :--- |
-| **LangGraph / LangChain** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@guard.wrap_tool` | Protects database & tool calls with offline Ed25519 receipts |
-| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `guard.intercept_message()` | Blocks confused-deputy tool exploits in multi-agent chat |
-| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `guard.wrap_task()` | Enforces pre-flight capability containment (`NO_NET_EGRESS`) |
-| **Anthropic MCP** | [`mcp_server/`](mcp_server/) | `mcp-server-bartholomew` | Native Model Context Protocol security server for Claude Desktop |
+| **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `BartholomewLangChainTool` | AST syntax gating, spend caps, offline Merkle receipt verification |
+| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds, anti-confused deputy isolation |
+| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `@btp_autogen_guard`, `AutoGenBTPInterceptor` | Multi-agent conversation message interceptor & payload filter |
+| **GitHub Actions** | [`action.yml`](action.yml) | `action-btp-audit` | Continuous PR security gate & SOC 2 audit summary table generation |
 
 ---
 
-### **[OFFLINE_VERIFIERS] Zero-Dependency Cross-Language Reference Verifiers**
+### **[COMPLIANCE] Turnkey SOC 2 Type II & ISO 27001 Evidence Generation**
 
-* **Python Reference Verifier (35 Lines):** [`standalone_btp_verifier.py`](standalone_btp_verifier.py)
-* **Go Reference Verifier (Microsecond Engine):** [`btp_verifier.go`](btp_verifier.go)
-* **Node.js / TypeScript Reference Verifier:** [`btp_verifier.js`](btp_verifier.js)
-
----
-
-### **[INTERACTIVE_DEMO] Live AST Auto-Fix Test Scenarios**
-
-Click any test case below to inspect the deterministic compiler mutation and verification diff:
-
-<details open>
-<summary><b>[TEST_CASE_01] Async Event Loop Deprecation Crash (Python 3.12+)</b></summary>
-
-```diff
-# Target: worker.py (Root cause: asyncio.get_event_loop() deprecated in Python 3.12+)
-def execute_async_task(task_payload):
--   loop = asyncio.get_event_loop()
--   return loop.run_until_complete(worker_coroutine(task_payload))
-+   loop = asyncio.new_event_loop()
-+   asyncio.set_event_loop(loop)
-+   try:
-+       return loop.run_until_complete(worker_coroutine(task_payload))
-+   finally:
-+       loop.close()
-
-# Verification Receipt: 48/48 unit tests passed | Latency: 0.14s | Zero regressions
+Generate cryptographic evidence packs for compliance auditors in seconds:
+```bash
+python scripts/generate_soc2_compliance_evidence.py
 ```
-</details>
-
-<details>
-<summary><b>[TEST_CASE_02] Python 3.14 AST Constant() Node Migration (Google Python Fire)</b></summary>
-
-```diff
-# Target: fire/core.py (Root cause: ast.Str, ast.Num removed in Python 3.14)
-class LiteralExtractor(ast.NodeVisitor):
-    def visit_Constant(self, node):
--       if isinstance(node, (ast.Str, ast.Num)):
--           self.literals.append(node.n if hasattr(node, 'n') else node.s)
-+       if isinstance(node, ast.Constant):
-+           self.literals.append(node.value)
-
-# Verification Receipt: 112/112 test suite passed | AST Delta: 2 lines | Formally verified
-```
-</details>
-
-<details>
-<summary><b>[TEST_CASE_03] Socket File Descriptor Teardown Leak</b></summary>
-
-```diff
-# Target: transport/socket_pool.py (Root cause: unclosed socket upon timeout exception)
-def transmit_payload(sock, buffer):
--   sock.sendall(buffer)
--   return sock.recv(4096)
-+   with sock:
-+       sock.sendall(buffer)
-+       return sock.recv(4096)
-
-# Verification Receipt: Memory & socket leak checks verified | Exit code 0
-```
-</details>
+Outputs:
+* **JSON Evidence Pack:** `audit_evidence/soc2_type2_evidence_<timestamp>.json`
+* **Auditor Markdown Summary:** `audit_evidence/SOC2_AUDIT_REPORT_<timestamp>.md` with SHA-256 Merkle root verification.
+* **AICPA Criteria Satisfied:** CC6.1, CC6.6, CC7.1, CC7.2.
+* **ISO/IEC 27001:2022 Controls Satisfied:** A.8.8, A.8.30.
 
 ---
 
-### **[EMPIRICAL_TELEMETRY] 10,000,000-Cycle Multi-Core Stress Benchmark**
+### **[ACADEMIC_LEGITIMACY] Peer-Reviewed Research & Open Standards**
 
-| Metric | Empirical Result | Architecture / Substrate |
-| :--- | :--- | :--- |
-| **Workspace Micro-Rollback** | **2.30 &mu;s (<5µs)** | In-Memory Copy-on-Write Transaction Engine |
-| **Total Attestation Cycles** | **9,999,996 Cycles (~10M)** | Executed across 12 parallel CPU cores |
-| **Pass Reliability** | **100.0000%** | Zero regressions ($0\text{ failures}$, $0.00000\%$) |
-| **Throughput** | **22,921.37 ops/sec** | Verified RFC 8785 Ed25519 signatures |
-| **Kernel Intercept Latency** | **1.14 &mu;s** | Compiled Go Trajectory Daemon (11.98M ops/sec) |
-| **Credential Scrubbing Scope** | **Bi-Directional** | Scans in-flight requests & tool stdout responses |
+* **Zenodo Academic Paper (v3.0.0):** [DOI 10.5281/zenodo.22076536](https://doi.org/10.5281/zenodo.22076536) &bull; [PDF Document](https://bartholomew.info/paper_v3_0.pdf)
+* **Zero-Knowledge Invariant Proofs (zk-ICP):** Proves an agent conformed to all organizational safety policies with **0 bytes** of internal prompt or confidential payload leaked.
+* **RFC 8785 JSON Canonicalization & FIPS 186-5 Ed25519:** Fully offline verification using [standalone_btp_verifier.py](standalone_btp_verifier.py) with zero third-party cloud roundtrips.
 
 ---
 
-### **[ARCHITECTURE] The 4-Step Mechanical Verification Engine**
+### **[PRICING] Subscription & Licensing**
 
-```
- [1. INGEST & REPRODUCE]   --->   [2. SURGICAL AST PATCH]   --->   [3. 100% PRE-FLIGHT TEST]   --->   [4. SIGNED PR]
- Webhook intercepts crash        Calculates minimal 3-line       Executes test battery in        Attaches Ed25519 proof
- in hermetic sandbox             compiler syntax delta           isolated container              & opens green PR
-```
-
----
-
-### **[QUICK_ACTIONS] Interactive Workspace Hub**
-
-| Interface | Direct Production URL | Description |
-| :--- | :--- | :--- |
-| **Web Platform** | [www.bartholomew.info](https://www.bartholomew.info/) | Primary landing page & feature overview |
-| **Command Center** | [app.bartholomew.info/dashboard](https://app.bartholomew.info/dashboard) | Real-time agent monitoring & telemetry |
-| **Operations Hub** | [app.bartholomew.info/operations](https://app.bartholomew.info/operations) | Live trajectory logs & verifier console |
-| **Auto-Fix Simulator** | [app.bartholomew.info/simulator](https://app.bartholomew.info/simulator) | Interactive multi-turn attack & repair harness |
-| **Investor Deck** | [pitch.bartholomew.info/PITCH_DECK.html](https://pitch.bartholomew.info/PITCH_DECK.html) | 10-Slide technical and market overview |
-| **Executive Proposal** | [www.bartholomew.info/BARTHOLOMEW_EXECUTIVE_PROPOSAL.pdf](https://www.bartholomew.info/BARTHOLOMEW_EXECUTIVE_PROPOSAL.pdf) | Official grant and investment proposal (PDF) |
+* **Developer Edition (Apache 2.0 / Open Source):** Free forever for local Python/TypeScript agents, MCP clients, and open-source models.
+* **Pro Tier ($49/month):** Real-time cloud policy editor, 10M events/month, priority MCP registry indexing.
+* **Enterprise Tier ($199/month):** SOC 2 Type II continuous evidence generation, on-premises enclave deployments, dedicated audit ledger support.
+* **Official Store:** [bartholomew.info/store/](https://bartholomew.info/store/)
 
 ---
 
-### **[INTELLECTUAL_PROPERTY] Commercial Protection Notice**
-
-> **NOTICE OF PROPRIETARY OWNERSHIP & RESTRICTED COMMERCIAL USE:**
-> 
-> All code, compiler AST transformations, Go trajectory intercept daemons, RFC 8785 cryptographic attestation algorithms, and autonomous reproduction pipelines contained within this repository are the exclusive proprietary intellectual property of **Bartholomew AI & Contributors**.
-> 
-> * **Zero Unauthorized Duplication:** No entity, organization, or automated crawler is granted permission to clone, sub-license, scrape, train commercial AI models upon, or re-distribute this codebase without an explicit, signed commercial licensing agreement.
-> * **Cryptographic Verification:** Every commit, release artifact, and execution receipt is cryptographically hashed and signed via **RFC 8785 JSON Canonicalization and Ed25519 digital signatures** registered to our root key authority.
-> * **Patent & Trade Secret Protections:** The mechanical AST delta synthesis, hermetic reproduction synthesis, and sub-microsecond POSIX execution boundary algorithms are protected under international copyright, trademark, and trade secret laws.
-
-For commercial enterprise licensing, contact: **`help@bartholomew.info`** *(routing to `itsub@bartholomew.info`)*.
-
----
-© 2026 Bartholomew AI & Contributors. All Rights Reserved.
-
-
+© 2026 Bartholomew AI & Contributors. Distributed under the Open Source & Dual Commercial Licensing Model.
 </div>

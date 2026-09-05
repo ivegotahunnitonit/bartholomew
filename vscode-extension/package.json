@@ -1,8 +1,8 @@
 {
   "name": "bartholomew-guard-vscode",
-  "displayName": "Bartholomew Autonomous AI Guard",
-  "description": "Sub-millisecond cryptographic attestation and invariant guard for Cursor and VS Code agent sessions.",
-  "version": "2.8.0",
+  "displayName": "Bartholomew Autonomous AI Guard (BTP v3.0)",
+  "description": "Sub-35µs in-process tool execution gateway, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
+  "version": "3.0.0",
   "publisher": "Bartholomew",
   "engines": {
     "vscode": "^1.80.0"
@@ -26,7 +26,15 @@
       },
       {
         "command": "bartholomew.validatePolicy",
-        "title": "Bartholomew: Validate Workspace Security Policy"
+        "title": "Bartholomew: Validate & Lint Workspace Security Policy"
+      },
+      {
+        "command": "bartholomew.dryRunTrace",
+        "title": "Bartholomew: Dry-Run Policy against Synthetic Agent Trace"
+      },
+      {
+        "command": "bartholomew.generateComplianceEvidence",
+        "title": "Bartholomew: Generate SOC 2 / ISO 27001 Evidence Pack"
       }
     ],
     "menus": {

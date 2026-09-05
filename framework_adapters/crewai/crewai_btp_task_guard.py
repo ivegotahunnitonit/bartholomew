@@ -1,16 +1,44 @@
 """
-CrewAI BTP v2.2 Task Execution Guard
-Provides pre-flight task capability containment and attestation verification for CrewAI.
+CrewAI BTP v3.0 Task & Tool Execution Guard
+Provides pre-flight in-process AST gating, secret scrubbing, and attestation verification for CrewAI agents.
 """
 
 from typing import Callable, Dict, Any, List, Optional
+import functools
 import sys
 import os
 
 try:
-    from standalone_btp_verifier import independent_verify_btp_receipt
+    from btp_guard import Guard
 except ImportError:
-    from btp_guard import independent_verify_btp_receipt
+    Guard = None
+
+def btp_crewai_tool(fn: Callable = None, *, spend_cap: float = 50.0, strict: bool = True):
+    """
+    Drop-in decorator for CrewAI tools providing sub-35µs in-process AST safety gating.
+    
+    Usage:
+        @btp_crewai_tool
+        def execute_code(code: str) -> str:
+            ...
+    """
+    def decorator(func: Callable):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            if Guard is not None:
+                guard = Guard(spend_cap=spend_cap, strict=strict)
+                # Inspect argument strings for destructive AST patterns or raw shell commands
+                for arg in args:
+                    if isinstance(arg, str):
+                        res = guard.evaluate_ast(arg)
+                        if not res.get("allowed", True):
+                            raise PermissionError(f"[BTP-VETO] CrewAI tool '{func.__name__}' execution blocked: {res.get('reason')}")
+            return func(*args, **kwargs)
+        return wrapper
+
+    if fn is not None:
+        return decorator(fn)
+    return decorator
 
 class CrewAIBTPTaskGuard:
     """

@@ -1,8 +1,8 @@
 # Smithery MCP Server Specification for Bartholomew BTP Guard
 # Official registry configuration for Claude Desktop, Cursor, and Windsurf
 name: "@ivegotahunnitonit/bartholomew"
-description: "Sub-microsecond (0.95µs) OS computer-use gating, Copy-on-Write rollbacks, and in-flight secret protection for Claude Desktop, Cursor, and MCP clients."
-version: "2.5.0"
+description: "Sub-35µs in-process tool execution gateway, AST syntax gating, Copy-on-Write rollbacks, and offline Merkle receipts for Claude Desktop, Cursor, VS Code, and MCP clients."
+version: "3.0.0"
 runtime: "python"
 entrypoint: "src/mcp_gateway.py"
 configSchema:
