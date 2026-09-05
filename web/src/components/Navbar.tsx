@@ -51,6 +51,9 @@ export default function Navbar() {
           <a href="#sdk" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [SDK / CLI]
           </a>
+          <a href="/store/" className="hover:text-[#ffffff] transition hover:text-[#38bdf8] text-[#38bdf8]">
+            [STORE &amp; MONETIZE]
+          </a>
         </nav>
 
         {/* Action Logo Buttons (Tailored Product Hunt, GitHub, and Install) */}
@@ -141,6 +144,13 @@ export default function Navbar() {
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
             [SDKS &amp; API]
+          </a>
+          <a
+            href="/store/"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-mono text-[#38bdf8] hover:text-[#ffffff]"
+          >
+            [STORE &amp; MONETIZE]
           </a>
           <div className="pt-3 border-t border-[#222222] flex flex-col gap-2.5">
             <a

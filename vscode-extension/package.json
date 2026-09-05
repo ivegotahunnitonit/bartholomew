@@ -2,7 +2,7 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Autonomous AI Guard",
   "description": "Sub-millisecond cryptographic attestation and invariant guard for Cursor and VS Code agent sessions.",
-  "version": "2.2.0",
+  "version": "2.8.0",
   "publisher": "Bartholomew",
   "engines": {
     "vscode": "^1.80.0"
