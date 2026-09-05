@@ -71,7 +71,7 @@ export default function Pricing() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Up to 10,000 local evals/month</span>
+                  <span>Unlimited local evals (100% Pro Bono Forever)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />

@@ -88,9 +88,9 @@ console.log(scrubbed.data.payload); // "token [REDACTED_OPENAI_KEY]"
 
 ## **Enterprise & Team Licensing**
 
-* **Community Tier**: Free for individual developers (up to 1,000 local calls/month).
-* **Pro Tier ($49/mo)**: Unlimited evaluations, dynamic cloud policy distribution.
-* **Enterprise Tier ($199/mo)**: SOC 2 Type II / ISO 27001 automated compliance evidence generator & team SIEM logging.
+* **Community Tier (Pro Bono)**: 100% Free & Open-Source forever for individual developers, researchers, and open-source projects.
+* **Pro Tier ($49/mo)**: Cross-agent cloud policy sync, priority support, and multi-IDE management.
+* **Enterprise Tier ($199/mo)**: Certified SOC 2 Type II / ISO 27001 auditor evidence packs & centralized team SIEM export.
 * Storefront: [https://bartholomew.info/store/](https://bartholomew.info/store/)
 
 ---

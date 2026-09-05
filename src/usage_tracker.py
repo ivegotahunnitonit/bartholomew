@@ -145,8 +145,8 @@ def record_evaluation() -> Tuple[bool, str]:
     if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION and is_interactive:
         _ALERT_SHOWN_THIS_SESSION = True
         notice = (
-            f"\n[BTP GUARD] Free local evaluation quota reached ({count:,} calls evaluated).\n"
-            f"To unlock unlimited production throughput, team SIEM streaming, & SOC 2 Merkle receipts:\n"
+            f"\n[BTP GUARD] Core Local Engine: 100% Pro Bono & Free Forever for open-source development.\n"
+            f"To unlock multi-agent cloud sync, team SIEM streaming, & certified SOC 2 auditor packs:\n"
             f"-> Run: python -m btp_guard activate (or visit {STORE_URL})\n"
         )
         try:
