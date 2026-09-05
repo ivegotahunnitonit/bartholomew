@@ -599,6 +599,17 @@ class BartholomewMCPServer:
                 sys.stdout.flush()
 
 
-if __name__ == "__main__":
-    server = BartholomewMCPServer()
+def start_mcp_server(workspace_root: Optional[str] = None):
+    """Starts the official Bartholomew MCP stdio server."""
+    server = BartholomewMCPServer(workspace_root=workspace_root)
     server.run_stdio()
+
+
+def get_registered_tools() -> List[Dict[str, Any]]:
+    """Returns the list of all registered Bartholomew MCP tools and schemas."""
+    server = BartholomewMCPServer()
+    return server.tools_schema
+
+
+if __name__ == "__main__":
+    start_mcp_server()

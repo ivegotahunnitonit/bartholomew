@@ -124,3 +124,60 @@ def test_cli_zk_prove_and_verify(cli_test_env):
     )
     assert res_tamper.returncode != 0
     assert "FAIL" in res_tamper.stdout
+
+
+def test_cli_mcp_status():
+    """Validate btp-guard mcp status reports all 10 registered tools and BTP v3.1 info."""
+    cmd = [sys.executable, "cli.py", "mcp", "status"]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    assert res.returncode == 0, res.stderr
+    assert "BARTHOLOMEW MODEL CONTEXT PROTOCOL (MCP) RUNTIME STATUS" in res.stdout
+    assert "BTP v3.1" in res.stdout
+    assert "10 ACTIVE" in res.stdout
+    assert "btp_execute_command" in res.stdout
+    assert "btp_issue_execution_bond" in res.stdout
+    assert "btp_slash_execution_bond" in res.stdout
+    assert "btp_get_bond_status" in res.stdout
+
+
+def test_cli_mcp_install_dry_run():
+    """Validate btp-guard mcp install --dry-run across claude, cursor, and astra."""
+    for target in ["claude", "cursor", "astra"]:
+        cmd = [sys.executable, "cli.py", "mcp", "install", "--target", target, "--dry-run"]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        assert res.returncode == 0, res.stderr
+        assert f"Target runtime : {target.upper()}" in res.stdout
+        assert "[DRY-RUN]" in res.stdout
+        assert "bartholomew-guard" in res.stdout
+        assert "bartholomew" in res.stdout
+
+
+def test_cli_bond_lifecycle():
+    """Validate full BTP v3.1 Bond Issuance and Invariant Slashing lifecycle via CLI."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        bond_file = os.path.join(tmpdir, "test_bond.json")
+        
+        # 1. Issue warranty bond
+        issue_cmd = [
+            sys.executable, "cli.py", "bond", "issue",
+            "--agent", "gpt6-astra-evaluator",
+            "--action", "DATABASE_MIGRATION",
+            "--amount", "7500.0",
+            "--out", bond_file,
+        ]
+        res_issue = subprocess.run(issue_cmd, capture_output=True, text=True)
+        assert res_issue.returncode == 0, res_issue.stderr
+        assert "BTP v3.1 BONDED EXECUTION WARRANTY ISSUANCE" in res_issue.stdout
+        assert "$7,500.00 USD" in res_issue.stdout
+        assert os.path.exists(bond_file)
+
+        # 2. Arbitrate and slash bond upon verified breach
+        slash_cmd = [
+            sys.executable, "cli.py", "bond", "slash",
+            "--bond-id", bond_file,
+            "--reason", "Unverified production schema drop attempt",
+        ]
+        res_slash = subprocess.run(slash_cmd, capture_output=True, text=True)
+        assert res_slash.returncode == 0, res_slash.stderr
+        assert "SLASH APPROVED" in res_slash.stdout
+        assert "$7,500.00 USD" in res_slash.stdout
