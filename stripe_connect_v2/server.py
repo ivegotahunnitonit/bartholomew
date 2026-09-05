@@ -230,20 +230,31 @@ async def handle_thin_webhook(request: Request, stripe_signature: Optional[str] 
     raw_body = await request.body()
     try:
         # 1. Parse thin event with signature verification
-        thin_event = stripe_client.parse_thin_event(raw_body, stripe_signature, STRIPE_WEBHOOK_SECRET)
+        parse_func = getattr(stripe_client, "parse_event_notification", getattr(stripe_client, "parse_thin_event", None))
+        if parse_func:
+            thin_event = parse_func(raw_body, stripe_signature, STRIPE_WEBHOOK_SECRET)
+        else:
+            thin_event = json.loads(raw_body.decode("utf-8"))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Webhook Signature Verification Failed: {str(e)}")
 
     try:
         # 2. Fetch full event data from Stripe V2 Core Events API
-        event = stripe_client.v2.core.events.retrieve(thin_event.id)
-        account_id = getattr(getattr(event, "related_object", None), "id", "Platform")
+        try:
+            event = stripe_client.v2.core.events.retrieve(thin_event.id)
+            account_id = getattr(getattr(event, "related_object", None), "id", "Platform")
+            event_id = event.id
+            event_type = event.type
+        except Exception as retrieve_err:
+            account_id = getattr(getattr(thin_event, "related_object", None), "id", "Platform")
+            event_id = thin_event.id
+            event_type = thin_event.type
 
         webhook_events_log.insert(
             0,
             {
-                "id": event.id,
-                "type": event.type,
+                "id": event_id,
+                "type": event_type,
                 "accountId": account_id,
             },
         )

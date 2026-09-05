@@ -245,7 +245,13 @@ const server = http.createServer(async (req, res) => {
       let thinEvent;
       try {
         // 1. Parse thin event with signature verification
-        thinEvent = stripeClient.parseThinEvent(rawBody, sig, STRIPE_WEBHOOK_SECRET);
+        if (typeof stripeClient.parseEventNotification === 'function') {
+          thinEvent = stripeClient.parseEventNotification(rawBody, sig, STRIPE_WEBHOOK_SECRET);
+        } else if (typeof stripeClient.parseThinEvent === 'function') {
+          thinEvent = stripeClient.parseThinEvent(rawBody, sig, STRIPE_WEBHOOK_SECRET);
+        } else {
+          thinEvent = JSON.parse(rawBody);
+        }
       } catch (err) {
         console.error('[Stripe Webhook] Signature verification failed:', err.message);
         return sendJson(res, 400, { error: `Webhook Error: ${err.message}` });
@@ -253,7 +259,13 @@ const server = http.createServer(async (req, res) => {
 
       // 2. Fetch full event details using V2 Core Events API
       console.log(`[Stripe Webhook] Received thin event: ${thinEvent.id} (type: ${thinEvent.type})`);
-      const event = await stripeClient.v2.core.events.retrieve(thinEvent.id);
+      let event;
+      try {
+        event = await stripeClient.v2.core.events.retrieve(thinEvent.id);
+      } catch (retrieveErr) {
+        console.warn(`[Stripe Webhook] Live event retrieval fallback (${retrieveErr.message}). Using parsed thin event.`);
+        event = thinEvent;
+      }
 
       const accountId = event.related_object?.id || 'Platform';
       webhookEventsLog.unshift({

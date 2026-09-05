@@ -21,7 +21,7 @@ const eventType = process.argv[2] || 'requirements';
 // Construct simulated V2 Thin Event payload
 const thinEventPayload = {
   id: `evt_test_thin_${Date.now()}`,
-  object: 'event',
+  object: 'v2.core.event',
   type: eventType === 'capability' 
     ? 'v2.core.account[.recipient].capability_status_updated'
     : 'v2.core.account[requirements].updated',
