@@ -33,14 +33,20 @@ from src.snapshot_engine import WorkspaceSnapshotEngine
 from src.mcp_gateway import MCPProxyGateway
 from src.a2a_protocol import AgentToAgentProtocol
 from src.cloud_identity import CloudKMSProvider, LocalEd25519Provider, OIDCPolicyEvaluator
+from src.usage_tracker import load_license, save_license, record_evaluation, STRIPE_PRO_URL, STRIPE_ENTERPRISE_URL
 
-__version__ = "2.3.0"
+__version__ = "3.0.0"
 __all__ = [
     "Guard",
     "wrap_client",
     "secure_tool",
     "SecurityVetoException",
     "guard",
+    "load_license",
+    "save_license",
+    "record_evaluation",
+    "STRIPE_PRO_URL",
+    "STRIPE_ENTERPRISE_URL",
     "BartholomewTrustAuthority",
     "IndependentTrustVerifier",
     "ASTSecurityValidator",

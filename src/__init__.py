@@ -15,6 +15,7 @@ from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.marginal_utility_engine import MarginalUtilityTracker
 from src.decorator import secure_tool, SecurityVetoException
 from src.polyglot_ast_validator import PolyglotASTValidator
+from src.usage_tracker import record_evaluation, load_license, save_license
 
 
 def guard(code_str: str, language: str = None):
@@ -72,11 +73,16 @@ class Guard:
         if allowed:
             self.total_spent += amount_usd
 
+        # Usage tracking & non-blocking quota reminder
+        record_evaluation()
+        lic = load_license()
+
         return {
             "allowed": allowed,
             "verdict": verdict,
             "reason": att.get("reason", "Approved"),
             "latency_us": att.get("evaluation_latency_us", 4.5),
+            "license_tier": lic.get("tier", "COMMUNITY"),
             "receipt": receipt
         }
 

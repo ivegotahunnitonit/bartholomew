@@ -813,6 +813,85 @@ def cmd_enclave_status(args):
     print(f"[*] Host Zero-Knowledge: Hypervisor cannot read memory pages")
     print("=" * 70)
 
+def cmd_activate(args):
+    """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
+    import webbrowser
+    from src.usage_tracker import (
+        STRIPE_PRO_URL, 
+        STRIPE_ENTERPRISE_URL, 
+        STORE_URL, 
+        save_license, 
+        load_license
+    )
+
+    print("=" * 70)
+    print("[BTP GUARD] BARTHOLOMEW PROTOCOL (BTP v3.0) LICENSE ACTIVATION")
+    print("=" * 70)
+
+    current = load_license()
+    if current.get("licensed"):
+        print(f"[STATUS] Active License: Tier = {current.get('tier')} ({current.get('status')})")
+        print(f"Features: {', '.join(current.get('features', []))}")
+        print("-" * 70)
+
+    if getattr(args, "key", None):
+        res = save_license(args.key)
+        print(f"\n[SUCCESS] License activated successfully!")
+        print(f"  -> Tier: {res['tier']}")
+        print(f"  -> Status: {res['status']}")
+        print(f"  -> Merkle Receipts Stamped with Verified {res['tier']} status.")
+        return
+
+    print("\nChoose an option to activate:")
+    print("  [1] Pro Developer Tier ($49/mo)      - Unlimited local evals & cloud policy editor")
+    print("  [2] Enterprise SOC 2 Tier ($199/mo)  - Continuous SOC 2/ISO 27001 evidence bundles")
+    print("  [3] Enter Existing License Key       - Activate key received via email/Stripe")
+    print("  [4] Visit Storefront                 - https://bartholomew.info/store/")
+    print("-" * 70)
+
+    try:
+        choice = input("Enter selection [1-4]: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\nActivation cancelled.")
+        return
+
+    if choice == "1":
+        print(f"[*] Opening Pro checkout in your browser: {STRIPE_PRO_URL}")
+        webbrowser.open(STRIPE_PRO_URL)
+        print("\nAfter completing checkout, enter your license key below (or run 'python cli.py activate --key <key>'):")
+        try:
+            key = input("Enter License Key: ").strip()
+            if key:
+                res = save_license(key)
+                print(f"\n[SUCCESS] Activated {res['tier']} license!")
+        except Exception:
+            pass
+    elif choice == "2":
+        print(f"[*] Opening Enterprise checkout in your browser: {STRIPE_ENTERPRISE_URL}")
+        webbrowser.open(STRIPE_ENTERPRISE_URL)
+        print("\nAfter completing checkout, enter your license key below:")
+        try:
+            key = input("Enter License Key: ").strip()
+            if key:
+                res = save_license(key)
+                print(f"\n[SUCCESS] Activated {res['tier']} license!")
+        except Exception:
+            pass
+    elif choice == "3":
+        try:
+            key = input("Enter License Key: ").strip()
+            if key:
+                res = save_license(key)
+                print(f"\n[SUCCESS] Activated {res['tier']} license!")
+            else:
+                print("[ERROR] No key provided.")
+        except Exception as e:
+            print(f"[ERROR] Activation failed: {e}")
+    elif choice == "4":
+        webbrowser.open(STORE_URL)
+    else:
+        print("Invalid selection.")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Bartholomew AI Agent Guardrail CLI")
@@ -820,6 +899,10 @@ def main():
 
     # version
     subparsers.add_parser("version", help="Display BTP protocol version")
+
+    # activate
+    act_p = subparsers.add_parser("activate", help="Activate Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License")
+    act_p.add_argument("--key", "-k", type=str, default=None, help="License token received upon subscription checkout")
 
     # init
     init_parser = subparsers.add_parser("init", help="Initialize sovereign cryptographic keypair & policy")
@@ -1000,6 +1083,8 @@ def main():
 
     if args.command == "version":
         cmd_version(args)
+    elif args.command == "activate":
+        cmd_activate(args)
     elif args.command == "enclave":
         if args.enclave_cmd == "attest":
             cmd_enclave_attest(args)

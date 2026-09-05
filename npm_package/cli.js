@@ -241,7 +241,50 @@ function runMcp(subargs = []) {
   }
 }
 
+function runActivate(key) {
+  console.log(`\n${BOLD}[BTP GUARD] BARTHOLOMEW PROTOCOL (BTP v3.0) LICENSE ACTIVATION${RESET}`);
+  console.log('='.repeat(65));
+
+  const STRIPE_PRO_URL = "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600";
+  const STRIPE_ENTERPRISE_URL = "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601";
+  const STORE_URL = "https://bartholomew.info/store/";
+
+  const btpDir = path.join(os.homedir(), '.btp');
+  if (!fs.existsSync(btpDir)) {
+    fs.mkdirSync(btpDir, { recursive: true });
+  }
+
+  if (key) {
+    const tier = key.startsWith("btp_ent_") || key.toLowerCase().includes("enterprise") ? "ENTERPRISE" : "PRO";
+    const licenseData = {
+      key: key.trim(),
+      tier: tier,
+      activated_at: Date.now(),
+      status: "ACTIVE"
+    };
+    fs.writeFileSync(path.join(btpDir, 'license.json'), JSON.stringify(licenseData, null, 2));
+    console.log(`\n${GREEN}✓ License activated successfully!${RESET}`);
+    console.log(`  -> Tier: ${BOLD}${tier}${RESET}`);
+    console.log(`  -> Status: ACTIVE`);
+    console.log(`  -> Stamped into ~/.btp/license.json`);
+    return;
+  }
+
+  console.log(`\nChoose a plan to upgrade your agent runtime:`);
+  console.log(`  [1] Pro Developer Tier ($49/mo)      - Unlimited local evals & cloud policy sync`);
+  console.log(`      ${CYAN}${STRIPE_PRO_URL}${RESET}`);
+  console.log(`  [2] Enterprise SOC 2 Tier ($199/mo)  - Continuous SOC 2 / ISO 27001 evidence bundles`);
+  console.log(`      ${CYAN}${STRIPE_ENTERPRISE_URL}${RESET}`);
+  console.log(`  [3] Official Storefront:`);
+  console.log(`      ${CYAN}${STORE_URL}${RESET}`);
+  console.log(`\nTo activate your key, run:`);
+  console.log(`  ${BOLD}npx btp-guard activate <your-license-key>${RESET}\n`);
+}
+
 switch (command) {
+  case 'activate':
+    runActivate(args[1]);
+    break;
   case 'demo':
     runDemo();
     break;
@@ -265,6 +308,7 @@ switch (command) {
   case '-h':
     printBanner();
     console.log(`Usage:
+  ${BOLD}npx btp-guard activate [key]${RESET}        Activate Pro ($49/mo) or Enterprise ($199/mo) license
   ${BOLD}npx btp-guard${RESET}                   Run interactive live terminal showcase
   ${BOLD}npx btp-guard init${RESET}              Show Claude Desktop integration configuration
   ${BOLD}npx btp-guard mcp [status|install]${RESET} Model Context Protocol tools & configuration
