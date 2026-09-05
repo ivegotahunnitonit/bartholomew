@@ -11,7 +11,7 @@ Use this kit to list Bartholomew on the official and community Model Context Pro
 Under the **Security** or **Developer Tools** section:
 
 ```markdown
-- [Bartholomew](https://github.com/ivegotahunnitonit/bartholomew) - Sub-5µs transactional execution harness, in-memory Copy-on-Write micro-rollbacks, and in-flight secret scrubber for MCP agent tools.
+- [mcp-proxy-guard](https://github.com/ivegotahunnitonit/bartholomew) - Sub-35µs in-process security proxy for MCP servers in Claude Desktop and Cursor. Intercepts destructive commands (`rm -rf`, `DROP TABLE`) and scrubs API keys in-flight with zero configuration.
 ```
 
 ---
@@ -20,30 +20,31 @@ Under the **Security** or **Developer Tools** section:
 
 **Title:**
 ```text
-Add Bartholomew: Transactional security proxy & rollback harness for MCP tools
+Add mcp-proxy-guard: Sub-35µs security proxy & credential scrubber for MCP servers
 ```
 
 **Body:**
 ```markdown
 ### Summary
-Add **Bartholomew** to the Security / Developer Tools category.
+Add **mcp-proxy-guard** to the Security / Developer Tools category.
 
 - **Repository**: https://github.com/ivegotahunnitonit/bartholomew
 - **Website**: https://bartholomew.info
-- **npm Registry**: https://www.npmjs.com/package/btp-guard (`npx btp-guard`)
+- **npm Registry**: https://www.npmjs.com/package/mcp-proxy-guard (`npx mcp-proxy-guard`)
 - **PyPI Registry**: https://pypi.org/project/btp-guard/ (`pip install btp-guard`)
-- **License**: Apache-2.0
+- **Open VSX**: https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode
+- **License**: MIT / Apache-2.0 (100% Pro Bono & Free for Developers)
 
 ### What it does:
-Bartholomew operates directly on the JSON-RPC stdio boundary between MCP clients (Claude Desktop, Cursor) and tool servers:
-1. **In-Memory Copy-on-Write Rollbacks**: Intercepts path escapes and AST invariant breaches, restoring pristine files in 2.30µs before filesystem damage occurs.
-2. **In-Flight Secret Scrubbing**: Redacts OpenAI, Anthropic, AWS, and GitHub tokens in 0.82µs across inbound arguments and outbound stdout.
-3. **Offline Merkle Receipts**: Signs chained RFC 8785 Ed25519 execution manifests verifiable 100% offline.
+`mcp-proxy-guard` wraps any Model Context Protocol server (filesystem, terminal, sqlite, postgres) across stdio:
+1. **Destructive Tool Veto**: Intercepts and blocks destructive arguments (`rm -rf`, `mkfs`, `DROP TABLE`, `TRUNCATE`, `/etc/shadow`) in <35 microseconds before reaching the OS or database.
+2. **In-Flight Secret Redaction**: Scrubs OpenAI, Anthropic, AWS, GitHub, Stripe, and private keys from tool inputs and output logs.
+3. **Zero Configuration**: Simply prepend `npx -y mcp-proxy-guard --` to your existing MCP server command in `claude_desktop_config.json`.
 
 ### Verification:
-You can run an instant 3-second simulation in any terminal:
+Run instant in-terminal test:
 ```bash
-npx btp-guard
+npx mcp-proxy-guard test
 ```
 ```
 
