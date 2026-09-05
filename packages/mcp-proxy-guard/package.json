@@ -1,0 +1,38 @@
+{
+  "name": "mcp-proxy-guard",
+  "version": "1.0.0",
+  "description": "Sub-35µs security proxy and credential scrubber for Model Context Protocol (MCP) servers in Claude Desktop, Cursor, and Windsurf.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "mcp-proxy-guard": "bin/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-proxy",
+    "mcp-guard",
+    "mcp-security",
+    "claude-desktop",
+    "cursor",
+    "windsurf",
+    "anthropic",
+    "model-context-protocol",
+    "ai-safety",
+    "guardrails",
+    "secret-scrubber"
+  ],
+  "author": "Itsub Alemayehu <itsub@bartholomew.info>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivegotahunnitonit/bartholomew.git"
+  },
+  "homepage": "https://bartholomew.info",
+  "bugs": {
+    "url": "https://github.com/ivegotahunnitonit/bartholomew/issues"
+  }
+}
