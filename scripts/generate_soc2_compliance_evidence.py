@@ -24,6 +24,13 @@ import platform
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, os.path.abspath("."))
+try:
+    from src.usage_tracker import load_license
+except ImportError:
+    def load_license():
+        return {"tier": "COMMUNITY", "status": "FREE", "licensed": False}
+
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -47,6 +54,16 @@ def generate_evidence_pack(output_dir: str = "audit_evidence") -> dict:
     
     timestamp = datetime.now(timezone.utc).isoformat()
     evidence_id = f"BTP-EVID-{int(time.time())}"
+    lic = load_license()
+    tier = lic.get("tier", "COMMUNITY")
+    is_ent = (tier == "ENTERPRISE")
+    
+    certification_status = "CERTIFIED ENTERPRISE AUDIT PACK" if is_ent else "COMMUNITY EVALUATION COPY"
+    attestation_statement = (
+        "This cryptographic evidence pack is certified by Bartholomew Protocol (BTP v3.0) for third-party AICPA SOC 2 Type II and ISO/IEC 27001 auditor review."
+        if is_ent else
+        "Community evaluation copy. Upgrade to Bartholomew Enterprise ($199/mo) at https://bartholomew.info/store/ for certified official filing with Drata/Vanta auditors."
+    )
     
     # 1. Audit core control definitions
     controls = [
@@ -102,6 +119,9 @@ def generate_evidence_pack(output_dir: str = "audit_evidence") -> dict:
         "report_id": evidence_id,
         "protocol_version": "BTP v3.0",
         "generated_at_utc": timestamp,
+        "license_tier": tier,
+        "certification_status": certification_status,
+        "attestation_statement": attestation_statement,
         "environment": {
             "os": platform.system(),
             "python_version": platform.python_version(),
@@ -125,11 +145,15 @@ def generate_evidence_pack(output_dir: str = "audit_evidence") -> dict:
     # Write human-readable Markdown auditor report
     md_path = out_path / f"SOC2_AUDIT_REPORT_{int(time.time())}.md"
     with open(md_path, "w", encoding="utf-8") as f:
-        f.write(f"# **Bartholomew Protocol (BTP v3.0) SOC 2 Type II Compliance Evidence Report**\n")
+        f.write(f"# **Bartholomew Protocol (BTP v3.0) SOC 2 Type II Compliance Evidence Report**\n\n")
         f.write(f"**Report ID:** `{evidence_id}`  \n")
         f.write(f"**Generated:** {timestamp}  \n")
+        f.write(f"**License Tier:** `{tier}`  \n")
+        f.write(f"**Certification Status:** **{certification_status}**  \n")
         f.write(f"**Root Merkle Hash:** `{merkle_root}`  \n")
         f.write(f"**Overall Assessment:** **EFFECTIVE (PASS)**  \n\n")
+        f.write(f"> **Official Attestation Statement:**  \n")
+        f.write(f"> {attestation_statement}\n\n")
         f.write(f"| Control ID | Control Description | Security Invariant | Status |\n")
         f.write(f"| :--- | :--- | :--- | :--- |\n")
         for c in controls:
@@ -138,10 +162,14 @@ def generate_evidence_pack(output_dir: str = "audit_evidence") -> dict:
         f.write(f"Auditors can verify the validity of this evidence pack 100% offline using:\n")
         f.write(f"```bash\npython standalone_btp_verifier.py --verify-evidence {json_path.name}\n```\n")
 
-    print(f"[BTP Compliance] Successfully generated SOC 2 Type II Evidence Pack:")
-    print(f"  -> JSON: {json_path}")
-    print(f"  -> Markdown: {md_path}")
-    print(f"  -> Merkle Root (SHA-256): {merkle_root}")
+    print(f"======================================================================")
+    print(f"[BTP COMPLIANCE] SOC 2 Type II & ISO 27001 Evidence Pack Generated:")
+    print(f"  -> License Tier        : {tier}")
+    print(f"  -> Certification Status: {certification_status}")
+    print(f"  -> JSON Pack           : {json_path}")
+    print(f"  -> Markdown Summary    : {md_path}")
+    print(f"  -> Merkle Root (SHA256): {merkle_root}")
+    print(f"======================================================================")
     return bundle
 
 if __name__ == "__main__":
