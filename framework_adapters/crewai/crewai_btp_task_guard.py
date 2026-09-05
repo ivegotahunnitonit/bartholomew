@@ -13,6 +13,14 @@ try:
 except ImportError:
     Guard = None
 
+try:
+    from standalone_btp_verifier import independent_verify_btp_receipt
+except ImportError:
+    try:
+        from btp_guard import independent_verify_btp_receipt
+    except ImportError:
+        independent_verify_btp_receipt = None
+
 def btp_crewai_tool(fn: Callable = None, *, spend_cap: float = 50.0, strict: bool = True):
     """
     Drop-in decorator for CrewAI tools providing sub-35µs in-process AST safety gating.
