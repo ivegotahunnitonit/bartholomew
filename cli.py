@@ -684,6 +684,105 @@ def cmd_bond_issue(args):
     print("=" * 70)
 
 
+def cmd_passport_issue(args):
+    """Issues an Ed25519-signed sovereign digital passport for a non-human worker agent."""
+    from src.agent_passport import SovereignAgentPassport
+    from src.trust_protocol import BartholomewTrustAuthority
+
+    auth = BartholomewTrustAuthority()
+    caps = [c.strip() for c in args.capabilities.split(",")] if args.capabilities else ["data:read", "tools:search"]
+    bond_val = float(getattr(args, "bond", 0.0) or 0.0)
+
+    passport = SovereignAgentPassport(
+        agent_id=args.agent,
+        worker_model=args.model,
+        owner_pubkey=auth.public_key_hex,
+        granted_capabilities=caps,
+        bonded_warranty_balance_usd=bond_val
+    )
+    passport.sign(auth.private_key)
+    p_dict = passport.to_dict()
+
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(p_dict, f, indent=2)
+        print(f"[+] Sovereign Passport written to: {args.out}")
+
+    print("=" * 70)
+    print("BTP v3.1 SOVEREIGN AGENT DIGITAL PASSPORT ISSUANCE")
+    print("=" * 70)
+    print(f"[*] Passport ID   : {p_dict['passport_id']}")
+    print(f"[*] Agent ID      : {p_dict['agent_id']}")
+    print(f"[*] Worker Model  : {p_dict['worker_model']}")
+    print(f"[*] Capabilities  : {', '.join(p_dict['granted_capabilities'])}")
+    print(f"[*] Bond Staked   : ${p_dict['bonded_warranty_balance_usd']:,.2f} USD")
+    print(f"[*] Trust Score   : {p_dict['reputation_vector']['trust_score']}")
+    print(f"[*] Signature     : {p_dict['signature'][:32]}...{p_dict['signature'][-16:]}")
+    print(f"[*] Owner Pubkey  : {p_dict['owner_pubkey']}")
+    print("=" * 70)
+
+
+def cmd_passport_verify(args):
+    """Cryptographically verifies a sovereign agent digital passport."""
+    from src.agent_passport import SovereignAgentPassport
+
+    if not os.path.exists(args.file):
+        print(f"[ERROR] Passport file not found: {args.file}")
+        sys.exit(1)
+
+    with open(args.file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    passport = SovereignAgentPassport.from_dict(data)
+    is_valid, msg = passport.verify_signature()
+
+    cap_ok = True
+    if getattr(args, "capability", None) and is_valid:
+        cap_ok = passport.has_capability(args.capability)
+        if not cap_ok:
+            msg = f"Valid signature, but capability '{args.capability}' not granted."
+
+    print("=" * 70)
+    print("BTP v3.1 SOVEREIGN AGENT PASSPORT VERIFICATION")
+    print("=" * 70)
+    print(f"[*] Passport ID   : {passport.passport_id}")
+    print(f"[*] Agent ID      : {passport.agent_id}")
+    print(f"[*] Worker Model  : {passport.worker_model}")
+    print(f"[*] Status        : {'PASS (AUTHORIZED)' if (is_valid and cap_ok) else 'FAIL (REJECTED)'}")
+    print(f"[*] Reason        : {msg}")
+    print(f"[*] Trust Score   : {passport.reputation_vector.get('trust_score', 1.0)}")
+    print("=" * 70)
+    if not (is_valid and cap_ok):
+        sys.exit(1)
+
+
+def cmd_peers_discover(args):
+    """Discovers peer agent nodes across the BTP mesh."""
+    from src.agent_passport import AgentPeerDiscoveryRegistry
+
+    registry = AgentPeerDiscoveryRegistry()
+    peers = registry.query_peers(
+        capability=getattr(args, "capability", None),
+        min_reputation=getattr(args, "min_reputation", None),
+        min_bond_usd=getattr(args, "min_bond", None),
+        model_family=getattr(args, "model", None)
+    )
+
+    print("=" * 70)
+    print("BTP v3.1 AUTONOMOUS PEER DISCOVERY MESH")
+    print("=" * 70)
+    print(f"[*] Query Filters : capability={getattr(args, 'capability', None)}, min_rep={getattr(args, 'min_reputation', None)}, min_bond={getattr(args, 'min_bond', None)}")
+    print(f"[*] Matching Peers: {len(peers)} active sovereign agents found")
+    print("=" * 70)
+    for idx, peer in enumerate(peers, 1):
+        print(f"  [{idx}] {peer['agent_id']} ({peer['worker_model']})")
+        print(f"      Passport ID  : {peer['passport_id']}")
+        print(f"      Trust Score  : {peer['reputation_vector']['trust_score']}")
+        print(f"      Bond Staked  : ${peer['bonded_warranty_balance_usd']:,.2f} USD")
+        print(f"      Capabilities : {', '.join(peer['granted_capabilities'])}")
+    print("=" * 70)
+
+
 def cmd_bond_slash(args):
     """Slash an agent bond upon verified invariant breach or ZK proof discrepancy."""
     from src.bonded_warranty import BondedExecutionWarranty
@@ -1079,6 +1178,31 @@ def main():
 
     e_stat_p = enc_sub.add_parser("status", help="Display confidential enclave hardware telemetry and golden PCR baselines")
 
+    # passport (BTP v3.1 Sovereign Digital Passports for Non-Human Workers)
+    pass_p = subparsers.add_parser("passport", help="BTP v3.1 Sovereign Digital Passports for Non-Human Workers")
+    pass_sub = pass_p.add_subparsers(dest="passport_cmd")
+
+    p_issue_p = pass_sub.add_parser("issue", help="Issue an Ed25519-signed sovereign passport for an agent worker")
+    p_issue_p.add_argument("--agent", "-a", required=True, help="Agent identifier")
+    p_issue_p.add_argument("--model", "-m", required=True, help="Worker model or engine (e.g. gpt-4o, claude-3-5)")
+    p_issue_p.add_argument("--capabilities", "-c", help="Comma-separated capability scopes (e.g. data:read,code:mutate)")
+    p_issue_p.add_argument("--bond", "-b", type=float, default=0.0, help="Bonded warranty balance in USD")
+    p_issue_p.add_argument("--out", "-o", help="Output JSON file path")
+
+    p_verify_p = pass_sub.add_parser("verify", help="Cryptographically verify a sovereign passport file")
+    p_verify_p.add_argument("--file", "-f", required=True, help="Path to passport JSON file")
+    p_verify_p.add_argument("--capability", "-c", help="Optional capability scope to check authorization for")
+
+    # peers (BTP v3.1 Autonomous Agent Peer Discovery Mesh)
+    peer_p = subparsers.add_parser("peers", help="BTP v3.1 Autonomous Agent Peer Discovery Mesh")
+    peer_sub = peer_p.add_subparsers(dest="peers_cmd")
+
+    pr_disc_p = peer_sub.add_parser("discover", help="Discover peer agents matching capability and trust thresholds")
+    pr_disc_p.add_argument("--capability", "-c", help="Required capability scope")
+    pr_disc_p.add_argument("--min-reputation", type=float, help="Minimum trust reputation score (0.0 to 1.0)")
+    pr_disc_p.add_argument("--min-bond", type=float, help="Minimum staked warranty bond in USD")
+    pr_disc_p.add_argument("--model", help="Filter by model family (e.g. claude, gpt, gemini)")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -1101,6 +1225,18 @@ def main():
             cmd_bond_slash(args)
         else:
             bond_p.print_help()
+    elif args.command == "passport":
+        if args.passport_cmd == "issue":
+            cmd_passport_issue(args)
+        elif args.passport_cmd == "verify":
+            cmd_passport_verify(args)
+        else:
+            pass_p.print_help()
+    elif args.command == "peers":
+        if args.peers_cmd == "discover":
+            cmd_peers_discover(args)
+        else:
+            peer_p.print_help()
     elif args.command == "demo":
         from src.interactive_demo import run_interactive_demo
         run_interactive_demo(speed=args.speed)

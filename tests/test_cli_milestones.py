@@ -268,3 +268,56 @@ def test_cli_enclave_lifecycle():
         assert res_bad.returncode != 0
         assert "FAIL" in res_bad.stdout
 
+
+def test_cli_passport_lifecycle():
+    """Validate BTP v3.1 Sovereign Digital Passport issuance and verification via CLI."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        pass_file = os.path.join(tmpdir, "agent_passport.json")
+
+        # 1. Issue passport
+        issue_cmd = [
+            sys.executable, "cli.py", "passport", "issue",
+            "--agent", "agent-worker-42",
+            "--model", "claude-3-5-sonnet",
+            "--capabilities", "data:read,code:mutate",
+            "--bond", "3500.0",
+            "--out", pass_file
+        ]
+        res_issue = subprocess.run(issue_cmd, capture_output=True, text=True)
+        assert res_issue.returncode == 0, res_issue.stderr
+        assert "BTP v3.1 SOVEREIGN AGENT DIGITAL PASSPORT ISSUANCE" in res_issue.stdout
+        assert "agent-worker-42" in res_issue.stdout
+        assert os.path.exists(pass_file)
+
+        # 2. Verify valid passport
+        ver_cmd = [
+            sys.executable, "cli.py", "passport", "verify",
+            "--file", pass_file,
+            "--capability", "code:mutate"
+        ]
+        res_ver = subprocess.run(ver_cmd, capture_output=True, text=True)
+        assert res_ver.returncode == 0, res_ver.stderr
+        assert "PASS (AUTHORIZED)" in res_ver.stdout
+
+        # 3. Verify unauthorized capability (must fail with exit code 1)
+        unauth_cmd = [
+            sys.executable, "cli.py", "passport", "verify",
+            "--file", pass_file,
+            "--capability", "root:admin"
+        ]
+        res_unauth = subprocess.run(unauth_cmd, capture_output=True, text=True)
+        assert res_unauth.returncode != 0
+        assert "FAIL (REJECTED)" in res_unauth.stdout
+
+
+def test_cli_peers_discover():
+    """Validate BTP v3.1 Autonomous Agent Peer Discovery via CLI."""
+    disc_cmd = [
+        sys.executable, "cli.py", "peers", "discover",
+        "--capability", "data:read"
+    ]
+    res_disc = subprocess.run(disc_cmd, capture_output=True, text=True)
+    assert res_disc.returncode == 0, res_disc.stderr
+    assert "BTP v3.1 AUTONOMOUS PEER DISCOVERY MESH" in res_disc.stdout
+
+
