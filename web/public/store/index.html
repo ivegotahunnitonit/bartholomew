@@ -3,160 +3,545 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew Protocol v3.0 — Pricing & Licensing</title>
+  <title>Bartholomew Protocol v3.0 — Pricing &amp; Commercial Licensing</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z' fill='%2310b981'/><path d='M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z' fill='%23000000'/><path d='M13 10.5H18.8C20.8 10.5 22.3 11.6 22.3 13.2C22.3 14.4 21.4 15.3 20.1 15.7C21.7 16.1 22.8 17.2 22.8 18.9C22.8 20.8 21.1 22.2 18.8 22.2H13V10.5ZM16.2 12.6V15.1H18.4C19.3 15.1 20 14.5 20 13.8C20 13.1 19.3 12.6 18.4 12.6H16.2ZM16.2 17.2V20.1H18.6C19.7 20.1 20.5 19.4 20.5 18.6C20.5 17.8 19.7 17.2 18.6 17.2H16.2Z' fill='%23ffffff'/></svg>">
   <style>
     :root {
       --bg: #030305;
       --card-bg: #08080c;
-      --card-popular: #0b0d13;
-      --border: #1c1c24;
-      --border-popular: rgba(16, 185, 129, 0.45);
-      --text: #f4f4f6;
-      --text-muted: #8e8e99;
+      --card-popular: #090c12;
+      --border: #181820;
+      --border-popular: rgba(16, 185, 129, 0.4);
+      --text: #f4f4f7;
+      --text-muted: #9ca3af;
       --primary: #10b981;
       --primary-hover: #34d399;
       --accent: #38bdf8;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 32px 20px 80px; line-height: 1.5; min-height: 100vh; }
-    .container { max-width: 1100px; margin: 0 auto; }
 
-    /* Top Navigation */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Navigation Bar */
     .nav-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 56px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 20px;
+      margin-bottom: 56px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
     .brand {
-      display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
     }
-    .brand-title { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+    .brand-title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
     .back-link {
-      font-size: 12px; font-family: monospace; color: var(--text-muted); text-decoration: none;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--text-muted);
+      text-decoration: none;
       transition: color 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .back-link:hover { color: #fff; }
+    .back-link:hover {
+      color: #fff;
+    }
 
-    /* Header */
-    .header { text-align: center; margin-bottom: 56px; }
+    /* Hero Header */
+    .header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
     .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25);
-      color: var(--primary); font-size: 11px; font-weight: 700;
-      padding: 4px 12px; border-radius: 9999px; text-transform: uppercase;
-      letter-spacing: 0.06em; margin-bottom: 16px; font-family: monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
-    .pulse-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--primary); }
-    h1 { font-size: clamp(28px, 4vw, 38px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; color: #fff; }
-    p.subtitle { color: var(--text-muted); font-size: 15px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+    }
+    h1 {
+      font-size: clamp(30px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      color: #fff;
+      line-height: 1.2;
+    }
+    p.subtitle {
+      color: #a1a1aa;
+      font-size: 16px;
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
 
-    /* 3-Tier Grid */
+    /* 3-Tier Grid with Equal Heights & Locked Baselines */
     .grid-plans {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 56px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+      align-items: stretch;
     }
-    @media (max-width: 900px) { .grid-plans { grid-template-columns: 1fr; } }
+    @media (max-width: 960px) {
+      .grid-plans {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .card {
-      background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
-      padding: 32px 24px; display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; transition: border-color 0.2s, transform 0.2s;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 26px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      height: 100%;
     }
-    .card:hover { border-color: #2e2e3a; }
+    .card:hover {
+      border-color: #282836;
+    }
     .card.popular {
-      background: var(--card-popular); border-color: var(--border-popular);
-      box-shadow: 0 12px 35px -10px rgba(16, 185, 129, 0.15);
+      background: var(--card-popular);
+      border-color: var(--border-popular);
+      box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.12);
     }
     .tag-popular {
-      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-      background: var(--primary); color: #000; font-size: 10px; font-weight: 800;
-      font-family: monospace; padding: 2px 10px; border-radius: 9999px;
-      letter-spacing: 0.06em; text-transform: uppercase;
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .plan-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .plan-desc { font-size: 13px; color: var(--text-muted); line-height: 1.45; margin-bottom: 24px; min-height: 38px; }
+    .card-top {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .plan-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .plan-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      min-height: 40px;
+    }
 
-    .plan-price-row { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-    .price-num { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
-    .price-term { font-size: 13px; color: var(--text-muted); font-family: monospace; margin-left: 4px; }
+    .plan-price-row {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+    }
+    .price-num {
+      font-size: 38px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .price-term {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      margin-left: 8px;
+    }
 
-    .feature-list { list-style: none; margin-bottom: 28px; flex-grow: 1; }
+    .feature-list {
+      list-style: none;
+      margin-bottom: 32px;
+      flex: 1;
+    }
     .feature-list li {
-      display: flex; align-items: flex-start; gap: 9px;
-      font-size: 13px; color: #d1d1db; margin-bottom: 12px; line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #d1d1db;
+      margin-bottom: 12px;
+      line-height: 1.45;
     }
-    .chk { color: var(--primary); font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .chk {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .card-bottom {
+      margin-top: auto;
+    }
 
     .btn {
-      display: block; width: 100%; padding: 12px 16px; border-radius: 8px;
-      font-size: 13px; font-weight: 700; font-family: monospace; text-align: center;
-      cursor: pointer; text-decoration: none; transition: all 0.15s ease; border: none;
+      display: block;
+      width: 100%;
+      height: 44px;
+      line-height: 44px;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: none;
+      box-sizing: border-box;
     }
     .btn-pro {
-      background: var(--primary); color: #000;
+      background: var(--primary);
+      color: #000;
     }
     .btn-pro:hover {
-      background: var(--primary-hover); transform: translateY(-1px);
+      background: var(--primary-hover);
+      transform: translateY(-1px);
     }
     .btn-subtle {
-      background: #121218; color: #fff; border: 1px solid var(--border);
+      background: #111117;
+      color: #fff;
+      border: 1px solid var(--border);
     }
     .btn-subtle:hover {
-      background: #181822; border-color: #383848;
+      background: #181822;
+      border-color: #343444;
     }
     .btn-ent {
-      background: #10151c; color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.35);
+      background: #0d141e;
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
     }
     .btn-ent:hover {
-      background: #141c26; border-color: var(--accent);
+      background: #121c2a;
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
 
-    /* Process Flow Banner */
-    .flow-banner {
-      background: #06060a; border: 1px solid var(--border); border-radius: 14px;
-      padding: 28px; margin-bottom: 48px;
+    /* Frictionless Multi-Persona Delivery Console */
+    .console-card {
+      background: #07070b;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      margin-bottom: 64px;
+      box-sizing: border-box;
+      max-width: 100%;
     }
-    .flow-header {
-      font-size: 13px; font-family: monospace; font-weight: 700; color: #fff;
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px;
-      display: flex; align-items: center; gap: 8px;
+    .console-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
     }
-    .flow-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    .console-subtitle {
+      font-size: 13px;
+      color: #a1a1aa;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
-    @media (max-width: 768px) { .flow-grid { grid-template-columns: 1fr; } }
-    .flow-step {
-      background: #09090e; border: 1px solid #171720; border-radius: 10px; padding: 18px;
-    }
-    .step-label { font-size: 11px; font-family: monospace; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
-    .step-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .step-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-    /* FAQ Strip */
+    .tab-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .tab-pill {
+      background: #0b0b10;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-pill.active {
+      background: #14141e;
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Sub-card delivery grid with minmax(0, 1fr) to prevent overflow */
+    .delivery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    @media (max-width: 860px) {
+      .delivery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sub-card {
+      background: #0a0a10;
+      border: 1px solid #161622;
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+      min-width: 0; /* Prevents flex child overflow */
+    }
+    .sub-card-top {
+      flex: 1;
+      margin-bottom: 16px;
+    }
+    .sub-label {
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .sub-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .sub-text {
+      font-size: 12px;
+      color: #a1a1aa;
+      line-height: 1.5;
+    }
+    .sub-card-bottom {
+      margin-top: auto;
+    }
+
+    .code-box {
+      background: #020204;
+      border: 1px solid #1c1c28;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      color: #34d399;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+
+    /* Key Validator Section */
+    .validator-container {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #151520;
+    }
+    .validator-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .validator-title {
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 700;
+      color: #fff;
+    }
+    .validator-latency {
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--text-muted);
+    }
+    .validator-input-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .validator-input {
+      flex: 1;
+      min-width: 260px;
+      height: 44px;
+      background: #020204;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #fff;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease;
+    }
+    .validator-input:focus {
+      border-color: var(--primary);
+    }
+    .validator-btn {
+      height: 44px;
+      background: var(--primary);
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 0 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .validator-btn:hover {
+      background: var(--primary-hover);
+    }
+    .validator-result {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: #050d08;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    /* FAQ Strip with Equal Height Rows */
     .faq-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 48px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 64px;
+      align-items: stretch;
     }
-    @media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
     .faq-item {
-      background: #06060a; border: 1px solid var(--border); border-radius: 10px; padding: 20px;
+      background: #07070b;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
     }
-    .faq-q { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .faq-a { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+    .faq-q {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.55;
+    }
 
     /* Footer */
     .footer {
-      text-align: center; font-size: 12px; font-family: monospace; color: #52525c;
-      padding-top: 24px; border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #64748b;
+      padding: 32px 0 48px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
     }
-    .footer a { color: var(--text-muted); text-decoration: none; margin: 0 8px; }
-    .footer a:hover { color: #fff; }
+    .footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.15s ease;
+    }
+    .footer a:hover {
+      color: #fff;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
 
-    <!-- Navigation Bar with Official Shield Logo -->
+    <!-- Top Navigation Bar with Official Shield Logo -->
     <header class="nav-bar">
       <a href="/" class="brand">
         <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,29 +561,32 @@
         </svg>
         <span class="brand-title">Bartholomew Protocol v3.0</span>
       </a>
-      <a href="/" class="back-link">&larr; Back to Runtime</a>
+      <a href="/" class="back-link">
+        <span>&larr;</span>
+        <span>Back to Runtime</span>
+      </a>
     </header>
 
-    <!-- Header -->
+    <!-- Header Section -->
     <div class="header">
       <div class="badge">
         <span class="pulse-dot"></span>
-        <span>Commercial Licensing</span>
+        <span>Deterministic Security Licensing</span>
       </div>
       <h1>Simple, transparent security pricing.</h1>
       <p class="subtitle">
-        Deterministic in-process safety, cryptographic attestation, and enterprise compliance for autonomous AI agents.
+        Sub-50 microsecond in-process safety, cryptographic attestation, and enterprise compliance for autonomous AI agents.
       </p>
     </div>
 
-    <!-- 3-Tier Grid -->
+    <!-- 3-Tier Grid with Locked Horizontal Action Baselines -->
     <div class="grid-plans">
 
-      <!-- Community Tier -->
+      <!-- Community Tier ($0) -->
       <div class="card">
-        <div>
+        <div class="card-top">
           <div class="plan-title">Community</div>
-          <p class="plan-desc">Essential in-process AST memory gate for individual developers and research.</p>
+          <p class="plan-desc">Essential in-process AST memory gate for individual developers and researchers.</p>
           <div class="plan-price-row">
             <span class="price-num">$0</span>
             <span class="price-term">Free forever &bull; Apache 2.0</span>
@@ -211,15 +599,17 @@
             <li><span class="chk">&#10003;</span> Python, Node.js, and Go SDKs</li>
           </ul>
         </div>
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer" class="btn btn-subtle">
-          View on GitHub
-        </a>
+        <div class="card-bottom">
+          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer" class="btn btn-subtle">
+            View on GitHub
+          </a>
+        </div>
       </div>
 
-      <!-- Pro Developer Tier -->
+      <!-- Pro Developer Tier ($49/mo) -->
       <div class="card popular">
         <span class="tag-popular">Most Popular</span>
-        <div>
+        <div class="card-top">
           <div class="plan-title">Pro Developer</div>
           <p class="plan-desc">Cloud attestation sync, automated compliance packs, and loop breakers for AI teams.</p>
           <div class="plan-price-row">
@@ -236,14 +626,16 @@
             <li><span class="chk">&#10003;</span> Signed Ed25519 Production License Key</li>
           </ul>
         </div>
-        <a href="https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600" class="btn btn-pro">
-          Upgrade to Pro ($49/mo) &rarr;
-        </a>
+        <div class="card-bottom">
+          <a href="https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600" class="btn btn-pro">
+            Upgrade to Pro ($49/mo) &rarr;
+          </a>
+        </div>
       </div>
 
-      <!-- Enterprise Fleet Tier -->
+      <!-- Enterprise Fleet Tier ($199/mo) -->
       <div class="card">
-        <div>
+        <div class="card-top">
           <div class="plan-title">Enterprise Fleet</div>
           <p class="plan-desc">Hardware enclaves, multi-agent threshold consensus, and air-gapped SLAs.</p>
           <div class="plan-price-row">
@@ -260,61 +652,69 @@
             <li><span class="chk">&#10003;</span> 99.99% Availability SLA &amp; Direct Channel</li>
           </ul>
         </div>
-        <a href="https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601" class="btn btn-ent">
-          Deploy Enterprise ($199/mo) &rarr;
-        </a>
+        <div class="card-bottom">
+          <a href="https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601" class="btn btn-ent">
+            Deploy Enterprise ($199/mo) &rarr;
+          </a>
+        </div>
       </div>
 
     </div>
 
-    <!-- Seamless Delivery & Activation Center for Person / Agent / Client -->
-    <div class="flow-banner">
-      <div class="flow-header">
+    <!-- Frictionless Multi-Persona Delivery Console -->
+    <div class="console-card">
+      <div class="console-header">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
         <span>Frictionless Delivery &amp; Instant Activation Console</span>
       </div>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-        Designed for zero-delay fulfillment across human operators, autonomous agent swarms, and enterprise procurement.
+      <p class="console-subtitle">
+        Zero-delay fulfillment across human operators, autonomous agent swarms, and enterprise procurement.
       </p>
 
-      <!-- Delivery Persona Selector -->
-      <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-        <button id="tab-person" onclick="switchDeliveryTab('person')" style="background: #181822; color: #fff; border: 1px solid var(--primary); padding: 8px 14px; border-radius: 6px; font-family: monospace; font-size: 12px; font-weight: 700; cursor: pointer;">
+      <!-- Persona Selector Tabs -->
+      <div class="tab-pills">
+        <button id="tab-person" class="tab-pill active" onclick="switchDeliveryTab('person')">
           &bull; For Developers (Person)
         </button>
-        <button id="tab-agent" onclick="switchDeliveryTab('agent')" style="background: #09090e; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 6px; font-family: monospace; font-size: 12px; font-weight: 700; cursor: pointer;">
+        <button id="tab-agent" class="tab-pill" onclick="switchDeliveryTab('agent')">
           &bull; For Autonomous Agents (It)
         </button>
-        <button id="tab-client" onclick="switchDeliveryTab('client')" style="background: #09090e; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 6px; font-family: monospace; font-size: 12px; font-weight: 700; cursor: pointer;">
+        <button id="tab-client" class="tab-pill" onclick="switchDeliveryTab('client')">
           &bull; For Enterprise (Client)
         </button>
       </div>
 
       <!-- Tab Content: Developer (Person) -->
       <div id="content-person" style="display: block;">
-        <div class="flow-grid">
-          <div class="flow-step">
-            <div class="step-label">Method A &bull; Single-Line Shell</div>
-            <div class="step-title">Automated Host Install</div>
-            <p class="step-text" style="margin-bottom: 10px;">Fetches signed binaries and injects the Ed25519 invariant engine into memory:</p>
-            <div style="background: #000; border: 1px solid #222; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 11px; color: #34d399; overflow-x: auto; white-space: nowrap;">
-              curl -sSL https://bartholomew.info/install.sh | sh -s -- --key &lt;YOUR_KEY&gt;
+        <div class="delivery-grid">
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Method A &bull; Single-Line Shell</div>
+              <div class="sub-title">Automated Host Install</div>
+              <p class="sub-text">Fetches signed binaries and injects the Ed25519 invariant engine into memory:</p>
+            </div>
+            <div class="sub-card-bottom">
+              <div class="code-box">curl -sSL https://bartholomew.info/install.sh | sh -s -- --key &lt;KEY&gt;</div>
             </div>
           </div>
-          <div class="flow-step">
-            <div class="step-label">Method B &bull; Docker / Kubernetes</div>
-            <div class="step-title">Zero-Downtime Container Env</div>
-            <p class="step-text" style="margin-bottom: 10px;">Pass the license token as an environmental invariant gate:</p>
-            <div style="background: #000; border: 1px solid #222; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 11px; color: #38bdf8; overflow-x: auto; white-space: nowrap;">
-              docker run -e BTP_LICENSE_KEY="btp_live_..." ghcr.io/bartholomew/btp-guard
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Method B &bull; Containerized</div>
+              <div class="sub-title">Docker / Kubernetes</div>
+              <p class="sub-text">Pass the license token as an environmental invariant gate:</p>
+            </div>
+            <div class="sub-card-bottom">
+              <div class="code-box">docker run -e BTP_LICENSE_KEY="btp_live_..." ghcr.io/bartholomew/btp-guard</div>
             </div>
           </div>
-          <div class="flow-step">
-            <div class="step-label">Method C &bull; SDK Native</div>
-            <div class="step-title">Python, Node, or Go</div>
-            <p class="step-text" style="margin-bottom: 10px;">Activate in your application startup code with zero phone-home lag:</p>
-            <div style="background: #000; border: 1px solid #222; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 11px; color: #fbbf24; overflow-x: auto; white-space: nowrap;">
-              btp-guard activate btp_live_lic_...
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Method C &bull; SDK Native</div>
+              <div class="sub-title">Python, Node, or Go</div>
+              <p class="sub-text">Activate in application startup code with zero phone-home lag:</p>
+            </div>
+            <div class="sub-card-bottom">
+              <div class="code-box">btp-guard activate btp_live_lic_...</div>
             </div>
           </div>
         </div>
@@ -322,19 +722,19 @@
 
       <!-- Tab Content: Autonomous Agent (It) -->
       <div id="content-agent" style="display: none;">
-        <div style="background: #09090e; border: 1px solid #171720; border-radius: 10px; padding: 20px;">
+        <div style="background: #0a0a10; border: 1px solid #161622; border-radius: 12px; padding: 22px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #10b981;">
+            <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; font-weight: 700; color: #10b981;">
               MACHINE-READABLE AGENT AUTO-CONFIG SPECIFICATION
             </div>
-            <button onclick="copyAgentSpec()" style="background: #121218; border: 1px solid var(--border); color: #fff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 11px; cursor: pointer;">
+            <button onclick="copyAgentSpec()" style="background: #111117; border: 1px solid var(--border); color: #fff; padding: 5px 12px; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; cursor: pointer;">
               Copy JSON Manifest
             </button>
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
-            Autonomous agents can configure themselves programmatically without human intervention. Load this manifest into your agent's runtime context:
+          <p style="font-size: 12px; color: #a1a1aa; line-height: 1.5; margin-bottom: 14px;">
+            Autonomous agents can configure themselves programmatically without human intervention. Load this manifest into runtime context:
           </p>
-          <pre id="agent-json" style="background: #000; border: 1px solid #222; border-radius: 6px; padding: 14px; font-family: monospace; font-size: 11px; color: #a1a1aa; overflow-x: auto;">{
+          <pre id="agent-json" style="background: #020204; border: 1px solid #1c1c28; border-radius: 8px; padding: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; color: #a1a1aa; overflow-x: auto;">{
   "protocol": "Bartholomew-Trust-Protocol-v3.0",
   "license_tier": "pro",
   "attestation": {
@@ -354,58 +754,70 @@
 
       <!-- Tab Content: Enterprise Client (Organization) -->
       <div id="content-client" style="display: none;">
-        <div class="flow-grid">
-          <div class="flow-step">
-            <div class="step-label">Step 01 &bull; Self-Service Portal</div>
-            <div class="step-title">Stripe Customer Center</div>
-            <p class="step-text">Access real-time PDF tax invoices, add team seat delegations, or update billing credentials at any time.</p>
-            <a href="https://billing.stripe.com/p/login/test_placeholder" target="_blank" class="btn btn-subtle" style="margin-top: 12px; font-size: 11px; padding: 8px;">
-              Launch Billing Portal &rarr;
-            </a>
+        <div class="delivery-grid">
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Step 01 &bull; Self-Service Billing</div>
+              <div class="sub-title">Stripe Customer Center</div>
+              <p class="sub-text">Access real-time PDF tax invoices, add team seat delegations, or update payment cards.</p>
+            </div>
+            <div class="sub-card-bottom">
+              <a href="https://billing.stripe.com/p/login/test_placeholder" target="_blank" class="btn btn-subtle" style="font-size: 12px;">
+                Launch Billing Portal &rarr;
+              </a>
+            </div>
           </div>
-          <div class="flow-step">
-            <div class="step-label">Step 02 &bull; Instant Compliance</div>
-            <div class="step-title">SOC 2 &amp; ISO Evidence</div>
-            <p class="step-text">Download mathematically sealed compliance bundles mapped to SOC 2 Type II (CC6.1-CC7.2) and ISO 27001 Annex A.8.</p>
-            <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank" class="btn btn-subtle" style="margin-top: 12px; font-size: 11px; padding: 8px;">
-              View Security Whitepaper &rarr;
-            </a>
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Step 02 &bull; Instant Compliance</div>
+              <div class="sub-title">SOC 2 &amp; ISO Evidence</div>
+              <p class="sub-text">Download mathematically sealed compliance bundles mapped to SOC 2 Type II and ISO 27001.</p>
+            </div>
+            <div class="sub-card-bottom">
+              <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank" class="btn btn-subtle" style="font-size: 12px;">
+                View Security Whitepaper &rarr;
+              </a>
+            </div>
           </div>
-          <div class="flow-step">
-            <div class="step-label">Step 03 &bull; Enterprise SLA</div>
-            <div class="step-title">Dedicated Channel</div>
-            <p class="step-text">Enterprise Fleet subscribers receive custom VPC routing, private Slack/Teams bridges, and 99.99% uptime guarantees.</p>
-            <a href="mailto:enterprise@bartholomew.info" class="btn btn-subtle" style="margin-top: 12px; font-size: 11px; padding: 8px;">
-              Contact Solutions Desk &rarr;
-            </a>
+          <div class="sub-card">
+            <div class="sub-card-top">
+              <div class="sub-label">Step 03 &bull; Enterprise SLA</div>
+              <div class="sub-title">Dedicated Channel</div>
+              <p class="sub-text">Enterprise Fleet subscribers receive custom VPC routing, private bridges, and 99.99% uptime guarantees.</p>
+            </div>
+            <div class="sub-card-bottom">
+              <a href="mailto:enterprise@bartholomew.info" class="btn btn-subtle" style="font-size: 12px;">
+                Contact Solutions Desk &rarr;
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Interactive Instant Key Validator & Activation Bar -->
-      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #1a1a24;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 12px; font-family: monospace; font-weight: 700; color: #fff;">
+      <!-- Balanced Key Validator Section -->
+      <div class="validator-container">
+        <div class="validator-header">
+          <span class="validator-title">
             Test or Claim Active License Key:
           </span>
-          <span style="font-size: 11px; font-family: monospace; color: var(--text-muted);">
+          <span class="validator-latency">
             Local In-Memory Cryptographic Validation (0.2µs)
           </span>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <input id="lic-input" type="text" placeholder="Paste license key (e.g. btp_live_lic_... or click Test)" style="flex: 1; min-width: 260px; background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 12px; color: #fff; outline: none;" value="btp_live_test_pro_demo">
-          <button onclick="verifyKeyInput()" style="background: var(--primary); color: #000; font-family: monospace; font-weight: 800; font-size: 12px; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease;">
+        <div class="validator-input-group">
+          <input id="lic-input" type="text" class="validator-input" placeholder="Paste license key (e.g. btp_live_lic_... or click Verify Key)" value="btp_live_test_pro_demo">
+          <button onclick="verifyKeyInput()" class="validator-btn">
             Verify Key &rarr;
           </button>
         </div>
-        <div id="lic-result" style="margin-top: 12px; padding: 12px; border-radius: 8px; background: #060d09; border: 1px solid rgba(16,185,129,0.3); font-family: monospace; font-size: 11px; color: #34d399; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <div id="lic-result" class="validator-result">
           <span>&#10003; <strong>KEY VALID</strong> &bull; Tier: <strong>PRO DEVELOPER</strong> &bull; Signature: <strong>Ed25519 Validated</strong> &bull; In-Process AST Gate: <strong>ACTIVE</strong></span>
           <span style="color: var(--text-muted);">0.18µs local check &bull; 0 bytes leaked</span>
         </div>
       </div>
     </div>
 
-    <!-- Brief FAQ Strip -->
+    <!-- Balanced 2x2 FAQ Strip -->
     <div class="faq-grid">
       <div class="faq-item">
         <div class="faq-q">Does verification cause latency?</div>
@@ -413,72 +825,22 @@
       </div>
       <div class="faq-item">
         <div class="faq-q">Can I deploy in air-gapped environments?</div>
-        <div class="faq-a">Yes. Enterprise Fleet includes full offline deployment rights for isolated VPCs, secure enclaves (Nitro/SGX), and Kubernetes clusters.</div>
+        <div class="faq-a">Yes. Enterprise Fleet includes full offline deployment rights for isolated VPCs, secure enclaves (Nitro/SGX), and air-gapped Kubernetes clusters.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">Can I cancel or upgrade anytime?</div>
         <div class="faq-a">Yes. All subscriptions are managed directly through the self-service Stripe Customer Portal. Cancel or switch tiers with one click.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">What models are supported?</div>
+        <div class="faq-q">What models and runtimes are supported?</div>
         <div class="faq-a">Universal support for all foundation models, open-source weights (Llama, Mistral, DeepSeek), tool runtimes, Model Context Protocol (MCP) clients, and custom autonomous agent swarms.</div>
       </div>
     </div>
 
-    <!-- Interactive Delivery Script -->
-    <script>
-      function switchDeliveryTab(tab) {
-        document.getElementById('content-person').style.display = tab === 'person' ? 'block' : 'none';
-        document.getElementById('content-agent').style.display = tab === 'agent' ? 'block' : 'none';
-        document.getElementById('content-client').style.display = tab === 'client' ? 'block' : 'none';
-
-        const btnPerson = document.getElementById('tab-person');
-        const btnAgent = document.getElementById('tab-agent');
-        const btnClient = document.getElementById('tab-client');
-
-        btnPerson.style.background = tab === 'person' ? '#181822' : '#09090e';
-        btnPerson.style.color = tab === 'person' ? '#fff' : 'var(--text-muted)';
-        btnPerson.style.borderColor = tab === 'person' ? 'var(--primary)' : 'var(--border)';
-
-        btnAgent.style.background = tab === 'agent' ? '#181822' : '#09090e';
-        btnAgent.style.color = tab === 'agent' ? '#fff' : 'var(--text-muted)';
-        btnAgent.style.borderColor = tab === 'agent' ? 'var(--primary)' : 'var(--border)';
-
-        btnClient.style.background = tab === 'client' ? '#181822' : '#09090e';
-        btnClient.style.color = tab === 'client' ? '#fff' : 'var(--text-muted)';
-        btnClient.style.borderColor = tab === 'client' ? 'var(--primary)' : 'var(--border)';
-      }
-
-      function copyAgentSpec() {
-        const text = document.getElementById('agent-json').innerText;
-        navigator.clipboard.writeText(text);
-        alert('Copied agent auto-config JSON to clipboard!');
-      }
-
-      function verifyKeyInput() {
-        const val = document.getElementById('lic-input').value.trim();
-        const res = document.getElementById('lic-result');
-        if (!val) {
-          res.style.background = '#1a0d0d';
-          res.style.borderColor = '#ef4444';
-          res.style.color = '#f87171';
-          res.innerHTML = '&#10007; Please enter a valid license key string.';
-          return;
-        }
-
-        const isEnt = val.toLowerCase().includes('ent');
-        const tierName = isEnt ? 'ENTERPRISE FLEET' : 'PRO DEVELOPER';
-        res.style.background = '#060d09';
-        res.style.borderColor = 'rgba(16,185,129,0.3)';
-        res.style.color = '#34d399';
-        res.innerHTML = '<span>&#10003; <strong>KEY VALID</strong> &bull; Tier: <strong>' + tierName + '</strong> &bull; Signature: <strong>Ed25519 Validated</strong> &bull; In-Process AST Gate: <strong>ACTIVE</strong></span><span style="color: var(--text-muted);">0.18µs local check &bull; 0 bytes leaked</span>';
-      }
-    </script>
-
     <!-- Footer -->
     <footer class="footer">
       <span>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved.</span>
-      <div style="margin-top: 8px;">
+      <div style="margin-top: 10px;">
         <a href="/">Runtime</a> &bull;
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer">GitHub</a> &bull;
         <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank">Security Whitepaper</a> &bull;
@@ -487,6 +849,48 @@
     </footer>
 
   </div>
+
+  <!-- Interactive Scripts -->
+  <script>
+    function switchDeliveryTab(tab) {
+      document.getElementById('content-person').style.display = tab === 'person' ? 'block' : 'none';
+      document.getElementById('content-agent').style.display = tab === 'agent' ? 'block' : 'none';
+      document.getElementById('content-client').style.display = tab === 'client' ? 'block' : 'none';
+
+      const btnPerson = document.getElementById('tab-person');
+      const btnAgent = document.getElementById('tab-agent');
+      const btnClient = document.getElementById('tab-client');
+
+      btnPerson.className = 'tab-pill ' + (tab === 'person' ? 'active' : '');
+      btnAgent.className = 'tab-pill ' + (tab === 'agent' ? 'active' : '');
+      btnClient.className = 'tab-pill ' + (tab === 'client' ? 'active' : '');
+    }
+
+    function copyAgentSpec() {
+      const text = document.getElementById('agent-json').innerText;
+      navigator.clipboard.writeText(text);
+      alert('Copied agent auto-config JSON to clipboard!');
+    }
+
+    function verifyKeyInput() {
+      const val = document.getElementById('lic-input').value.trim();
+      const res = document.getElementById('lic-result');
+      if (!val) {
+        res.style.background = '#1a0d0d';
+        res.style.borderColor = '#ef4444';
+        res.style.color = '#f87171';
+        res.innerHTML = '&#10007; Please enter a valid license key string.';
+        return;
+      }
+
+      const isEnt = val.toLowerCase().includes('ent');
+      const tierName = isEnt ? 'ENTERPRISE FLEET' : 'PRO DEVELOPER';
+      res.style.background = '#050d08';
+      res.style.borderColor = 'rgba(16,185,129,0.3)';
+      res.style.color = '#34d399';
+      res.innerHTML = '<span>&#10003; <strong>KEY VALID</strong> &bull; Tier: <strong>' + tierName + '</strong> &bull; Signature: <strong>Ed25519 Validated</strong> &bull; In-Process AST Gate: <strong>ACTIVE</strong></span><span style="color: var(--text-muted);">0.18µs local check &bull; 0 bytes leaked</span>';
+    }
+  </script>
 
 </body>
 </html>
