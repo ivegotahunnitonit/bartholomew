@@ -1,0 +1,74 @@
+name: Continuous Integration & Invariant Security Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  python-security-gate:
+    name: Python Security Invariants & Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography pyyaml
+
+      - name: Run Core AST Security & Evasion Tests
+        run: |
+          python -m unittest test_advanced_ast_evasions.py
+
+      - name: Run Pro Bono Usage & License Manager Tests
+        run: |
+          python -m unittest test_usage_and_activation.py
+
+      - name: Run Prometheus & OpenTelemetry Metrics Test
+        run: |
+          python test_telemetry_exporter.py
+
+      - name: Generate Turnkey SOC 2 Type II Evidence Bundle
+        run: |
+          python scripts/generate_soc2_compliance_evidence.py
+
+      - name: Run LangChain / LangGraph Guard Demo
+        run: |
+          python examples/langchain_guard_demo.py
+
+  node-mcp-gate:
+    name: Node.js & MCP Proxy Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Test mcp-proxy-guard Package
+        run: |
+          cd packages/mcp-proxy-guard
+          node test.js
+
+      - name: Test btp-guard Node Package
+        run: |
+          cd npm_package
+          node test.js
+
+      - name: Compile VS Code / Cursor Extension
+        run: |
+          cd vscode-extension
+          npm ci || npm install
+          npm run compile
