@@ -19,13 +19,19 @@ import os
 import subprocess
 import argparse
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 def publish_pypi(version: str = "4.1.0"):
     print(f"[*] Publishing btp-guard v{version} to PyPI...")
     cmd = [sys.executable, "-m", "twine", "upload", f"dist/btp_guard-{version}*"]
     res = subprocess.run(cmd)
     if res.returncode == 0:
-        print("[✔] PyPI release published successfully: pip install btp-guard")
+        print("[OK] PyPI release published successfully: pip install btp-guard")
     else:
         print("[!] PyPI upload failed or was cancelled.")
 
@@ -35,7 +41,7 @@ def publish_npm():
     cmd = ["npm", "publish", "--access", "public"]
     res = subprocess.run(cmd, cwd="npm_package", shell=True)
     if res.returncode == 0:
-        print("[✔] npm package published successfully: npm install @bartholomew/guard")
+        print("[OK] npm package published successfully: npm install @bartholomew/guard")
     else:
         print("[!] npm publish failed or was cancelled.")
 
