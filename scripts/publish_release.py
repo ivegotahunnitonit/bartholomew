@@ -20,9 +20,9 @@ import subprocess
 import argparse
 
 
-def publish_pypi():
-    print("[*] Publishing btp-guard v3.0.0 to PyPI...")
-    cmd = [sys.executable, "-m", "twine", "upload", "dist/btp_guard-3.0.0*"]
+def publish_pypi(version: str = "4.1.0"):
+    print(f"[*] Publishing btp-guard v{version} to PyPI...")
+    cmd = [sys.executable, "-m", "twine", "upload", f"dist/btp_guard-{version}*"]
     res = subprocess.run(cmd)
     if res.returncode == 0:
         print("[✔] PyPI release published successfully: pip install btp-guard")
@@ -42,13 +42,14 @@ def publish_npm():
 
 def main():
     parser = argparse.ArgumentParser(description="Bartholomew Registry Release Publisher")
+    parser.add_argument("--version", default="4.1.0", help="Release version to publish (default: 4.1.0)")
     parser.add_argument("--pypi", action="store_true", help="Publish to PyPI")
     parser.add_argument("--npm", action="store_true", help="Publish to npm")
     parser.add_argument("--all", action="store_true", help="Publish to both PyPI and npm")
     args = parser.parse_args()
 
     if args.all or args.pypi:
-        publish_pypi()
+        publish_pypi(version=args.version)
     if args.all or args.npm:
         publish_npm()
     if not (args.all or args.pypi or args.npm):
