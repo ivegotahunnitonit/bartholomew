@@ -3,11 +3,29 @@ replicaCount: 2
 image:
   repository: ghcr.io/ivegotahunnitonit/bartholomew-sidecar
   pullPolicy: IfNotPresent
-  tag: "2.2.0"
+  tag: "3.5.0"
 
 service:
   type: ClusterIP
   port: 8080
+  daemonPort: 9090
+
+prometheus:
+  enabled: true
+  path: /metrics
+  port: 9090
+  scrapeInterval: 15s
+
+daemon:
+  enabled: true
+  hostTracepoints: true
+  mountDebugfs: true
+  containerSecurityContext:
+    privileged: false
+    capabilities:
+      add:
+        - BPF
+        - SYS_ADMIN
 
 policy:
   id: "urn:btp:policy:k8s-cluster-default"
@@ -18,8 +36,8 @@ policy:
 
 resources:
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 500m
+    memory: 512Mi
   requests:
-    cpu: 50m
-    memory: 64Mi
+    cpu: 100m
+    memory: 128Mi

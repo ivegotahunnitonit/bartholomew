@@ -143,6 +143,11 @@ class SovereignAgentPassport:
         self.reputation_vector["violation_count"] += 1
         self.reputation_vector["trust_score"] = max(0.0, self.reputation_vector.get("trust_score", 1.0) - 0.25)
 
+    def record_violation(self, reason: str):
+        """Records a policy violation, reducing trust score."""
+        self.reputation_vector["violation_count"] += 1
+        self.reputation_vector["trust_score"] = max(0.0, self.reputation_vector.get("trust_score", 1.0) - 0.1)
+
     def record_successful_action(self, value_usd: float = 0.0):
         """Updates reputation vector after verified execution."""
         if self.circuit_breaker_tripped:
