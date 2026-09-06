@@ -411,7 +411,7 @@ export default function SwarmArbitrationArena() {
   }
 
   return (
-    <section id="swarm-arbitration" className="py-20 bg-[#06060c] border-t border-b border-emerald-950/40 relative overflow-hidden">
+    <section id="swarm-arena" className="py-20 bg-[#06060c] border-t border-b border-emerald-950/40 relative overflow-hidden">
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -866,7 +866,7 @@ export default function SwarmArbitrationArena() {
           </div>
 
           {/* Milestone 5.3: Cross-Tenant Autonomous Agent Marketplace & SLA Escrows */}
-          <div className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-amber-500/30 backdrop-blur-md shadow-2xl">
+          <div id="marketplace" className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-amber-500/30 backdrop-blur-md shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2.5">
                 <Store className="w-4 h-4 text-amber-400" />
@@ -1040,7 +1040,7 @@ export default function SwarmArbitrationArena() {
           </div>
 
           {/* Enterprise Developer Polish: Quickstart Scaffolding & Metered Billing */}
-          <div className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-cyan-500/30 backdrop-blur-md shadow-2xl">
+          <div id="quickstart" className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-cyan-500/30 backdrop-blur-md shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2.5">
                 <Terminal className="w-4 h-4 text-cyan-400" />
@@ -1164,7 +1164,7 @@ export default function SwarmArbitrationArena() {
           </div>
 
           {/* Enterprise Continuous Audit & Regulatory Compliance Dossier */}
-          <div className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-emerald-500/30 backdrop-blur-md shadow-2xl">
+          <div id="compliance" className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-emerald-500/30 backdrop-blur-md shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2.5">
                 <FileCheck className="w-4 h-4 text-emerald-400" />
@@ -1242,7 +1242,7 @@ export default function SwarmArbitrationArena() {
           </div>
 
           {/* Milestone 5.4: P2P Reputation Gossip Mesh & Cross-Chain Escrow Bridge Card */}
-          <div className="p-5 rounded-xl border border-cyan-500/30 bg-gradient-to-b from-cyan-950/20 via-zinc-900/60 to-black/80 backdrop-blur-md">
+          <div id="p2p-mesh" className="mt-6 p-5 rounded-xl border border-cyan-500/30 bg-gradient-to-b from-cyan-950/20 via-zinc-900/60 to-black/80 backdrop-blur-md shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-zinc-800">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">

@@ -27,38 +27,42 @@ export default function Navbar() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo & Box Status Tag */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
             <Logo size={28} showText={true} />
           </Link>
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-mono text-emerald-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>v5.4.0 ACTIVE</span>
+          </div>
         </div>
 
         {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-mono font-semibold text-[#a1a1aa]">
-          <a href="#threat-simulator" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [SANDBOX]
+        <nav className="hidden md:flex items-center gap-5 text-xs font-mono font-semibold text-[#a1a1aa]">
+          <a href="#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [ARENA]
+          </a>
+          <a href="#marketplace" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [MARKETPLACE]
+          </a>
+          <a href="#p2p-mesh" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
+            <span>[P2P MESH &amp; BRIDGE]</span>
+          </a>
+          <a href="#compliance" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [COMPLIANCE]
           </a>
           <a href="#universal-cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COOKBOOK]
           </a>
-          <a href="#enterprise" className="text-[#10b981] hover:text-[#34d399] transition flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-            <span>[ENTERPRISE PILOT]</span>
-          </a>
-          <a href="#policy-editor" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [POLICY TESTER]
-          </a>
-          <a href="#founder" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [FOUNDER &amp; TEAM]
-          </a>
-          <a href="#sdk" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [SDK / CLI]
+          <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>[QUICKSTART]</span>
           </a>
         </nav>
 
-        {/* Action Logo Buttons (Tailored Product Hunt, GitHub, and Install) */}
+        {/* Action Buttons */}
         <div className="hidden sm:flex items-center gap-2">
-          {/* Product Hunt Official Mark */}
+          {/* Product Hunt Mark */}
           <a
             href="https://www.producthunt.com/products/bartholomew-2"
             target="_blank"
@@ -74,7 +78,7 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* GitHub Official Mark */}
+          {/* GitHub Mark */}
           <a
             href="https://github.com/ivegotahunnitonit/bartholomew"
             target="_blank"
@@ -88,7 +92,7 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* Install Logo Button */}
+          {/* Quick Install Button */}
           <a
             href="#download"
             title="Install Bartholomew CLI & SDK"
@@ -121,39 +125,46 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#000000] border-b border-[#222222] px-5 py-5 space-y-4">
+        <div className="md:hidden bg-[#000000] border-b border-[#222222] px-5 py-5 space-y-3">
           <div className="flex items-center gap-2 px-2.5 py-1 bg-[#0a0a0a] border border-[#222222] text-xs font-mono mb-2">
             <span className="w-1.5 h-1.5 bg-[#10b981] animate-pulse" />
             <span className="text-[#10b981] font-bold">[STATUS: ACTIVE]</span>
             <span className="text-[#a1a1aa]">{BTP_ENGINE_LABEL}</span>
           </div>
           <a
-            href="#how-it-works"
+            href="#swarm-arena"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [HOW IT WORKS]
+            [SWARM ARENA &amp; ARBITRATION]
           </a>
           <a
-            href="#threat-simulator"
+            href="#marketplace"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [THREAT DEMOS]
+            [AGENT MARKETPLACE &amp; ESCROWS]
           </a>
           <a
-            href="#policy-editor"
+            href="#p2p-mesh"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-cyan-400 hover:text-cyan-300"
           >
-            [RULE BUILDER]
+            [P2P GOSSIP MESH &amp; BRIDGE]
           </a>
           <a
-            href="#sdk"
+            href="#compliance"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [SDKS &amp; API]
+            [COMPLIANCE DOSSIER]
+          </a>
+          <a
+            href="#quickstart"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-mono text-emerald-400 hover:text-emerald-300"
+          >
+            [10-SECOND QUICKSTART]
           </a>
           <a
             href="/store/"
@@ -172,31 +183,6 @@ export default function Navbar() {
               <Download size={14} />
               <span>INSTALL BTP RUNTIME</span>
             </a>
-            <div className="grid grid-cols-2 gap-2">
-              <a
-                href="https://www.producthunt.com/products/bartholomew-2"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="py-2.5 text-xs font-mono font-semibold bg-[#ff6154]/10 border border-[#ff6154]/30 text-[#ff6154] text-center flex items-center justify-center gap-2 rounded-lg"
-              >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="12" fill="#ff6154" />
-                  <path d="M13.6 13.2h-2.8V8.4h2.8c1.325 0 2.4 1.075 2.4 2.4s-1.075 2.4-2.4 2.4zm0-6.8H8.8v11.2h2v-2.4h2.8c2.43 0 4.4-1.97 4.4-4.4s-1.97-4.4-4.4-4.4z" fill="#ffffff" />
-                </svg>
-                <span>PRODUCT HUNT</span>
-              </a>
-              <a
-                href="https://github.com/ivegotahunnitonit/bartholomew"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="py-2.5 text-xs font-mono font-semibold bg-[#0a0a0a] border border-[#222222] text-[#d4d4d8] text-center flex items-center justify-center gap-2 rounded-lg"
-              >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                </svg>
-                <span>GITHUB</span>
-              </a>
-            </div>
           </div>
         </div>
       )}
