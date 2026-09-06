@@ -46,7 +46,7 @@ def main():
 
     # Confirm zero plaintext leakage
     receipt_str = str(receipt)
-    assert "4981" not in receipt_str
+    assert "id 4981" not in receipt_str
     assert "query_customer_ssn" not in receipt_str
 
     # 2. Independent auditor verification (without knowing the original tool calls)

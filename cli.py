@@ -1800,6 +1800,92 @@ def cmd_billing_invoice(args):
     print("=" * 70)
 
 
+def cmd_gossip_peer_list(args):
+    from src.p2p.reputation_gossip import PeerReputationMesh
+    mesh = PeerReputationMesh()
+    print("=" * 70)
+    print("BTP v5.4 DECENTRALIZED P2P PEER REPUTATION MESH")
+    print("=" * 70)
+    for p in mesh.peers.values():
+        tag = " [PRE-TRUSTED]" if p.is_pretrusted else ""
+        print(f"[*] Node ID     : {p.node_id}{tag}")
+        print(f"    Address     : {p.address}")
+        print(f"    Global Trust: {p.global_trust * 100:.1f}% (Direct: {p.direct_trust * 100:.1f}%)")
+        print(f"    Vector Clock: {p.vector_clock} | Audited Jobs: {p.jobs_audited}")
+        print("-" * 70)
+
+
+def cmd_gossip_rate(args):
+    from src.p2p.reputation_gossip import PeerReputationMesh
+    mesh = PeerReputationMesh()
+    ok, msg, gossip_msg = mesh.broadcast_rating(
+        rater_agent_id=args.rater,
+        target_agent_id=args.target,
+        score=args.score,
+        task_contract_id=getattr(args, "contract_id", "SLA-AUTO-101")
+    )
+    print("=" * 70)
+    print("BTP v5.4 P2P REPUTATION GOSSIP BROADCAST")
+    print("=" * 70)
+    if ok:
+        print(f"[+] Gossip ID     : {gossip_msg.message_id}")
+        print(f"[+] Rater Agent   : {gossip_msg.rater_agent_id}")
+        print(f"[+] Target Agent  : {gossip_msg.target_agent_id}")
+        print(f"[+] Score Gossiped: {gossip_msg.score * 100:.1f}%")
+        print(f"[+] Signature     : {gossip_msg.signature}")
+        print(f"[+] EigenTrust    : Global trust vectors re-converged across mesh.")
+    else:
+        print(f"[!] Gossip Error  : {msg}")
+    print("=" * 70)
+
+
+def cmd_bridge_transfer(args):
+    from src.settlement.cross_chain_bridge import CrossChainBridgeRelay
+    bridge = CrossChainBridgeRelay()
+    ok, msg, voucher = bridge.lock_source_escrow(
+        source_chain=args.source,
+        target_chain=args.target,
+        depositor=args.depositor,
+        recipient=args.recipient,
+        amount_usd=args.amount
+    )
+    print("=" * 70)
+    print("BTP v5.4 ATOMIC CROSS-CHAIN ESCROW BRIDGE: LOCK")
+    print("=" * 70)
+    if ok:
+        print(f"[+] Voucher ID   : {voucher.voucher_id}")
+        print(f"[+] Route        : {voucher.source_chain} -> {voucher.target_chain}")
+        print(f"[+] Amount Locked: ${voucher.amount_usd:.2f} USD")
+        print(f"[+] Lock Hash    : {voucher.lock_hash}")
+        print(f"[+] Preimage Key : {voucher.preimage}")
+        print(f"[+] Relayer Sig  : {voucher.signature}")
+        print(f"[+] Status       : {voucher.status}")
+    else:
+        print(f"[!] Bridge Error : {msg}")
+    print("=" * 70)
+
+
+def cmd_bridge_claim(args):
+    from src.settlement.cross_chain_bridge import CrossChainBridgeRelay
+    bridge = CrossChainBridgeRelay()
+    ok, msg, voucher = bridge.claim_target_escrow(
+        voucher_id=args.voucher,
+        secret_preimage=args.preimage
+    )
+    print("=" * 70)
+    print("BTP v5.4 ATOMIC CROSS-CHAIN ESCROW BRIDGE: CLAIM")
+    print("=" * 70)
+    if ok:
+        print(f"[+] Voucher ID   : {voucher.voucher_id}")
+        print(f"[+] Target Rail  : {voucher.target_chain}")
+        print(f"[+] Disbursed To : {voucher.recipient}")
+        print(f"[+] Amount       : ${voucher.amount_usd:.2f} USD")
+        print(f"[+] Status       : {voucher.status}")
+    else:
+        print(f"[!] Claim Error  : {msg}")
+    print("=" * 70)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -2268,6 +2354,33 @@ def main():
     b_inv_p.add_argument("--tenant", "-t", required=True, help="Tenant workspace ID")
     b_inv_p.add_argument("--rail", default="STRIPE_METERED", choices=["STRIPE_METERED", "L402_LIGHTNING"], help="Settlement payment rail")
 
+    # gossip (BTP v5.4 Decentralized P2P Peer Reputation Mesh)
+    gossip_p = subparsers.add_parser("gossip", help="BTP v5.4 Decentralized P2P Peer Reputation Gossip")
+    gossip_sub = gossip_p.add_subparsers(dest="gossip_cmd")
+
+    g_list_p = gossip_sub.add_parser("peer-list", help="List active P2P mesh peers and EigenTrust scores")
+
+    g_rate_p = gossip_sub.add_parser("rate", help="Broadcast signed peer performance rating across gossip mesh")
+    g_rate_p.add_argument("--rater", "-r", required=True, help="Rater agent ID")
+    g_rate_p.add_argument("--target", "-t", required=True, help="Target agent ID to rate")
+    g_rate_p.add_argument("--score", "-s", type=float, required=True, help="Performance rating (0.0 to 1.0)")
+    g_rate_p.add_argument("--contract-id", "-c", default="SLA-AUTO-101", help="Associated SLA task contract ID")
+
+    # bridge (BTP v5.4 Atomic Cross-Chain Escrow Bridge Relay)
+    bridge_p = subparsers.add_parser("bridge", help="BTP v5.4 Cross-Chain Escrow Bridge Relay")
+    bridge_sub = bridge_p.add_subparsers(dest="bridge_cmd")
+
+    b_lock_p = bridge_sub.add_parser("transfer", help="Initiate hash-locked cross-chain bridge transfer")
+    b_lock_p.add_argument("--source", "-s", required=True, choices=["EVM_BASE", "EVM_ARBITRUM", "L402_LIGHTNING"], help="Source settlement rail")
+    b_lock_p.add_argument("--target", "-t", required=True, choices=["EVM_BASE", "EVM_ARBITRUM", "L402_LIGHTNING"], help="Target settlement rail")
+    b_lock_p.add_argument("--depositor", "-d", required=True, help="Depositor address/pubkey")
+    b_lock_p.add_argument("--recipient", "-r", required=True, help="Recipient address/pubkey")
+    b_lock_p.add_argument("--amount", "-a", type=float, required=True, help="Transfer amount in USD")
+
+    b_claim_p = bridge_sub.add_parser("claim", help="Claim locked bridge escrow using cryptographic preimage")
+    b_claim_p.add_argument("--voucher", "-v", required=True, help="Bridge voucher ID")
+    b_claim_p.add_argument("--preimage", "-p", required=True, help="Secret preimage to unlock voucher")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -2276,6 +2389,20 @@ def main():
         cmd_activate(args)
     elif args.command == "init":
         cmd_init(args)
+    elif args.command == "gossip":
+        if args.gossip_cmd == "peer-list":
+            cmd_gossip_peer_list(args)
+        elif args.gossip_cmd == "rate":
+            cmd_gossip_rate(args)
+        else:
+            gossip_p.print_help()
+    elif args.command == "bridge":
+        if args.bridge_cmd == "transfer":
+            cmd_bridge_transfer(args)
+        elif args.bridge_cmd == "claim":
+            cmd_bridge_claim(args)
+        else:
+            bridge_p.print_help()
     elif args.command == "billing":
         if args.billing_cmd == "usage":
             cmd_billing_usage(args)
