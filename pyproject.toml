@@ -48,3 +48,8 @@ btp-guard = "src.cli:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src*", "btp_guard*", "daemon*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*"]
+

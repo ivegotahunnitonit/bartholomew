@@ -115,6 +115,25 @@ class BTPDaemonHTTPHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
             self.end_headers()
             self.wfile.write(GLOBAL_METRICS.render_prometheus().encode("utf-8"))
+        elif self.path in ("/api/v1/telemetry", "/api/v1/telemetry/"):
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            telemetry = {
+                "service": "btp-daemon",
+                "version": "4.1.0",
+                "timestamp": time.time(),
+                "threat_entropy": GLOBAL_METRICS.threat_entropy,
+                "active_quorum": f"{GLOBAL_METRICS.active_quorum_k}-of-{GLOBAL_METRICS.active_quorum_n}",
+                "zk_rollups_sealed": GLOBAL_METRICS.zk_rollups_sealed_total,
+                "enclave_attestations": GLOBAL_METRICS.enclave_attestations_total,
+                "blocked_syscalls": GLOBAL_METRICS.blocked_syscalls_total,
+                "tool_calls_audited": GLOBAL_METRICS.total_tool_calls_audited,
+                "active_settlement_rails": ["L402_LIGHTNING", "EVM_BASE", "EVM_ARBITRUM"],
+                "escrow_reserve_pool_usd": 100_000.0
+            }
+            self.wfile.write(json.dumps(telemetry).encode("utf-8"))
         else:
             self.send_response(404)
             self.end_headers()

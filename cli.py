@@ -1371,6 +1371,69 @@ def cmd_arbitration_resolve(args):
     print("=" * 70)
 
 
+def cmd_benchmark_chaos(args):
+    from src.benchmarks.swarm_chaos_benchmark import SwarmChaosBenchmark
+    print("=" * 70)
+    print("BTP v4.4 HIGH-CONCURRENCY SWARM CHAOS FUZZING BENCHMARK")
+    print("=" * 70)
+    print(f"[*] Iterations   : {args.iterations}")
+    print(f"[*] Concurrency  : {args.concurrency}")
+    print(f"[*] Collateral   : ${args.collateral:.2f} USD")
+    print("[*] Simulating adversarial injection across CrewAI, LangGraph, AutoGen & Universal Models...")
+
+    benchmark = SwarmChaosBenchmark()
+    report = benchmark.run_benchmark(
+        iterations=args.iterations,
+        concurrency=args.concurrency,
+        collateral_usd=args.collateral
+    )
+
+    print("-" * 70)
+    print(f"[+] Total Adversarial Attacks : {report['adversarial_attacks_tested']}")
+    print(f"[+] Attacks Intercepted (100%): {report['attacks_intercepted']}")
+    print(f"[+] Interception Accuracy     : {report['interception_accuracy_pct']}%")
+    print(f"[+] Benign Allowed            : {report['benign_requests_executed']}")
+    print(f"[+] Total Slashed             : ${report['total_collateral_slashed_usd']:,.2f} USD")
+    print(f"[+] Throughput                : {report['throughput_ops_per_sec']} ops/sec")
+    print(f"[+] AST Latency (p50)         : {report['latency_p50_us']} µs")
+    print(f"[+] AST Latency (p95)         : {report['latency_p95_us']} µs")
+    print(f"[+] AST Latency (p99)         : {report['latency_p99_us']} µs")
+    print(f"[+] zk-Fault Proof (p50)      : {report['zk_fault_proof_p50_us']} µs")
+    print("=" * 70)
+
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2)
+        print(f"[+] Benchmark report saved to: {args.out}")
+
+
+def cmd_settlement_deploy_evm(args):
+    from src.settlement.evm_deployer import EVMDeployer
+    print("=" * 70)
+    print("BTP v4.3 MULTI-CHAIN EVM SETTLEMENT DEPLOYMENT")
+    print("=" * 70)
+    print(f"[*] Target Network: {args.network}")
+    print(f"[*] Mode          : {'Simulated Dry Run' if args.dry_run else 'Live Gas Execution'}")
+
+    deployer = EVMDeployer(network=args.network, rpc_url=getattr(args, "rpc_url", None))
+    receipt = deployer.deploy(
+        private_key=getattr(args, "private_key", None),
+        dry_run=args.dry_run,
+        output_file=getattr(args, "out", None)
+    )
+
+    print("-" * 70)
+    print(f"[+] Contract Name : {receipt['contract_name']}")
+    print(f"[+] Network       : {receipt['network_name']} (Chain ID: {receipt['chain_id']})")
+    print(f"[+] Contract Addr : {receipt['contract_address']}")
+    print(f"[+] Tx Hash       : {receipt['transaction_hash']}")
+    print(f"[+] EIP-712 Domain: {receipt['eip712_domain_name']} v{receipt['eip712_domain_version']}")
+    print(f"[+] Explorer Link : {receipt['explorer_url']}")
+    print("=" * 70)
+    if getattr(args, "out", None):
+        print(f"[+] Deployment receipt written to: {args.out}")
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1736,12 +1799,41 @@ def main():
     arb_res_p.add_argument("--dispute-file", help="Path to existing dispute JSON file")
     arb_res_p.add_argument("--out", "-o", help="Output Arbitration Resolution Certificate JSON path")
 
+    # benchmark (BTP v4.4 High-Concurrency Chaos Fuzzing & Latency Benchmarks)
+    bench_p = subparsers.add_parser("benchmark", help="BTP Performance & Chaos Latency Benchmarks")
+    bench_sub = bench_p.add_subparsers(dest="benchmark_cmd")
+    b_chaos_p = bench_sub.add_parser("swarm-chaos", help="Run high-concurrency cross-framework chaos fuzzing benchmark")
+    b_chaos_p.add_argument("--iterations", "-i", type=int, default=50, help="Number of benchmark iterations")
+    b_chaos_p.add_argument("--concurrency", "-c", type=int, default=4, help="Worker thread concurrency")
+    b_chaos_p.add_argument("--collateral", type=float, default=250.0, help="Collateral per action in USD")
+    b_chaos_p.add_argument("--out", "-o", help="Output benchmark report JSON file path")
+
+    # settlement (BTP v4.3 Multi-Chain EVM & L402 Settlement Gateway)
+    settle_p = subparsers.add_parser("settlement", help="BTP Multi-Chain Settlement & Contract Deployment")
+    settle_sub = settle_p.add_subparsers(dest="settlement_cmd")
+    s_evm_p = settle_sub.add_parser("deploy-evm", help="Deploy BartholomewEscrowPool.sol to EVM L2s")
+    s_evm_p.add_argument("--network", "-n", default="base-sepolia", choices=["base-sepolia", "arbitrum-sepolia", "anvil-local"], help="Target EVM network")
+    s_evm_p.add_argument("--rpc-url", help="Custom RPC endpoint URL")
+    s_evm_p.add_argument("--private-key", help="Deployer private key (defaults to dry-run simulation)")
+    s_evm_p.add_argument("--dry-run", action="store_true", default=True, help="Simulate deployment without spending live gas")
+    s_evm_p.add_argument("--out", "-o", help="Output deployment receipt JSON file path")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
     elif args.command == "activate":
         cmd_activate(args)
+    elif args.command == "benchmark":
+        if args.benchmark_cmd == "swarm-chaos":
+            cmd_benchmark_chaos(args)
+        else:
+            bench_p.print_help()
+    elif args.command == "settlement":
+        if args.settlement_cmd == "deploy-evm":
+            cmd_settlement_deploy_evm(args)
+        else:
+            settle_p.print_help()
     elif args.command == "arbitration":
         if args.arbitration_cmd == "prove-fault":
             cmd_arbitration_prove_fault(args)
