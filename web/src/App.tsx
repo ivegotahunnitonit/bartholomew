@@ -6,6 +6,7 @@ import EnterpriseEcosystemBanner from './components/EnterpriseEcosystemBanner'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
 import SecurityThreatModelSection from './components/SecurityThreatModelSection'
 import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
+import UniversalCookbookExplorer from './components/UniversalCookbookExplorer'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
 import { LiveAttestationInspector } from './components/LiveAttestationInspector'
@@ -43,6 +44,7 @@ function HomeView() {
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <InteractiveAgentSandbox />
+      <UniversalCookbookExplorer />
       <EnterpriseDesignPartnerSection />
       <RuntimeThesisProof />
       <div id="policy-editor">

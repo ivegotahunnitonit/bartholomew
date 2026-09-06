@@ -38,6 +38,9 @@ export default function Navbar() {
           <a href="#threat-simulator" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [SANDBOX]
           </a>
+          <a href="#universal-cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [COOKBOOK]
+          </a>
           <a href="#enterprise" className="text-[#10b981] hover:text-[#34d399] transition flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
             <span>[ENTERPRISE PILOT]</span>

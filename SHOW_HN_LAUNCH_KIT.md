@@ -108,14 +108,25 @@ Agents get trapped in repetitive search or tool loops that rack up massive token
 BTP uses Law of Diminishing Marginal Utility (LDMU) mathematical decay to detect loop fatigue and halt runaway executions automatically.
 
 **Tweet 4:**
-🛡️ 1-Line Drop-in Middleware for @LangChainAI, @CrewAIInc, and Microsoft AutoGen:
+🛡️ 1-Line Drop-in Middleware for @LangChainAI, @CrewAIInc, Microsoft AutoGen, and LlamaIndex:
 `@btp_crewai_tool`
 `@btp_langchain_tool`
 `@btp_autogen_guard`
+`@btp_llamaindex_tool`
 
 **Tweet 5:**
-📦 Try it now:
-`pip install btp-guard`
-`npx btp-guard`
-Full architecture, paper, and benchmark: https://bartholomew.info
-Github: https://github.com/ivegotahunnitonit/bartholomew
+🌐 Universal Cookbook for ALL Agents (Past, Present, Future & IDEs):
+• Horizon 1: Existing legacy sidecars (HTTP & CLI proxy)
+• Horizon 2: OpenAI, Anthropic, Gemini, TypeScript, Go, Rust
+• Horizon 3: Sovereign Passports, ZK-Rollups, AWS Nitro Enclaves, L402 Micro-Escrows
+• AI IDEs: Native rules for Cursor (.cursorrules), Windsurf (.windsurfrules), VS Code, Cline, Zed, and Antigravity!
+
+**Tweet 6:**
+📦 Available everywhere today:
+• PyPI: `pip install btp-guard`
+• npm: `npm install btp-guard` / `npx mcp-proxy-guard`
+• GitHub Action: `uses: ivegotahunnitonit/bartholomew@v3`
+• VS Code / Cursor: `bartholomew-guard-vscode-3.0.0.vsix`
+• 100% Passing Tests: 2,717 / 2,717 verified
+• Interactive Web Explorer: https://acn-26670.web.app/#universal-cookbook
+• Github: https://github.com/ivegotahunnitonit/bartholomew

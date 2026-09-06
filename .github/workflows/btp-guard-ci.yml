@@ -1,0 +1,23 @@
+name: "BTP Guard AI Agent Security Gate"
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  btp-guard-audit:
+    name: "Sub-35µs AST Invariant & SOC 2 Merkle Audit"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+
+      - name: "Run Bartholomew Guard Action"
+        uses: ivegotahunnitonit/bartholomew@v3
+        with:
+          audit-path: "."
+          generate-compliance-pack: "true"
+          fail-on-violation: "true"
