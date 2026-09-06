@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Pause length="1"/>
+    <Say voice="Polly.Joey-Neural">
+        Hey! This is Alex from Bartholomew.
+        Saw your team is building with autonomous agents in production.
+        Did I catch you in the middle of something?
+    </Say>
+    <Pause length="3"/>
+    <Say voice="Polly.Joey-Neural">
+        We built Bartholomew, an open source in-process AST security runtime and firewall for AI agents.
+        When agents execute terminal, code, or SQL tools, prompt injections or hallucinations can run destructive commands like rm -rf or drop tables.
+        Our engine intercepts and blocks dangerous commands in under 35 microseconds before anything hits your operating system or database.
+    </Say>
+    <Pause length="2"/>
+    <Say voice="Polly.Joey-Neural">
+        It integrates with CrewAI, LangGraph, or AutoGen in a single line of Python with pip install btp-guard.
+        Check out the code and documentation at bartholomew dot info.
+        Thanks for taking the call, and talk soon!
+    </Say>
+</Response>
