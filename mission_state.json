@@ -1,8 +1,8 @@
 {
   "mandate": "Continuously discover authorized opportunities in connected worlds. Rank by expected owner value relative to compute cost. Investigate only opportunities supported by sufficient evidence.",
   "started_at_utc": "2026-08-14T20:46:44Z",
-  "last_cycle_timestamp_utc": "2026-09-06T07:17:00Z",
-  "cycle": 22,
+  "last_cycle_timestamp_utc": "2026-09-06T07:22:00Z",
+  "cycle": 23,
   "cash_spent_usd": 4.289999999999998,
   "confirmed_value_usd": 232050.09999999998,
   "pending_value_usd": 0.0,
@@ -109,11 +109,12 @@
     "ACTIVATED Milestone 5.1 Real-Time Incident Webhooks & SecOps Alerts with HMAC-SHA256 signatures, native Slack Block Kit / Discord / PagerDuty / Generic SIEM adapters, multi-tenant incident isolation, and live Webhook simulator on Firebase Hosting (https://acn-26670.web.app).",
     "ACTIVATED Milestone 5.2 Continuous Red-Teaming & Self-Healing Policy Synthesizer (Auto-Immunity Engine) with RedTeamFuzzer mutation generation, GoldenCorpus zero-false-positive verification, atomic hot-reloading into .btp/policy.yaml, and live Auto-Immunity visualizer on Firebase Hosting (https://acn-26670.web.app).",
     "ACTIVATED Milestone 5.3 Cross-Tenant Autonomous Agent Marketplace & Two-Sided SLA Escrows with Zero-Knowledge Task Completion Proofs (zk-TCP), Pedersen commitment & Fiat-Shamir verification, and trustless settlement on Firebase Hosting (https://acn-26670.web.app).",
-    "ACTIVATED Enterprise Developer Quickstart Wizard (btp-guard init) with framework auto-detection (CrewAI/LangGraph/AutoGen/OpenAI) and Multi-Tenant Metered Usage & Signed Invoicing Engine (btp-guard billing) on Firebase Hosting (https://acn-26670.web.app)."
+    "ACTIVATED Enterprise Developer Quickstart Wizard (btp-guard init) with framework auto-detection (CrewAI/LangGraph/AutoGen/OpenAI) and Multi-Tenant Metered Usage & Signed Invoicing Engine (btp-guard billing) on Firebase Hosting (https://acn-26670.web.app).",
+    "ACTIVATED Enterprise Continuous Audit & Regulatory Compliance Dossier Exporter (btp-guard audit --dossier) with SOC 2 Type II, EU AI Act Art. 14/15, ISO 27001 Merkle roots, HMAC attestation signatures, and 1-Click Dossier Export on Firebase Hosting (https://acn-26670.web.app)."
   ],
   "last_verified_state": {
-    "opp_id": "BTP_ENTERPRISE_QUICKSTART_AND_METERED_BILLING",
-    "target": "acn/init_wizard_and_metering",
+    "opp_id": "BTP_COMPLIANCE_DOSSIER_EXPORTER",
+    "target": "acn/compliance_dossier_exporter",
     "verified": true
   },
   "known_file_hashes": {},

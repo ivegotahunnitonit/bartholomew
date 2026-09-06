@@ -647,6 +647,32 @@ def cmd_zk_verify(args):
 
 
 def cmd_audit(args):
+    if getattr(args, "dossier", False):
+        from src.compliance_dossier_exporter import ComplianceDossierExporter
+        tenant_id = getattr(args, "tenant", None) or "ten_default_enterprise"
+        exporter = ComplianceDossierExporter(
+            tenant_id=tenant_id,
+            org_id=getattr(args, "org", None) or "Autonomous AI Deployment"
+        )
+        out = getattr(args, "out", None)
+        fmt = getattr(args, "format", "md")
+        if fmt == "json":
+            dossier = exporter.build_dossier()
+            res_str = json.dumps(dossier, indent=2)
+            if out:
+                with open(out, "w", encoding="utf-8") as f:
+                    f.write(res_str)
+                print(f"[+] Cryptographic evidence pack saved to: {out}")
+            else:
+                print(res_str)
+        else:
+            md = exporter.export_markdown_dossier(output_path=out)
+            if out:
+                print(f"[+] Compliance Dossier saved to: {out}")
+            else:
+                print(md)
+        return
+
     from src.cli_linter import audit_directory, print_audit_report
     results = audit_directory(args.path)
     print_audit_report(results)
@@ -1977,6 +2003,9 @@ def main():
     aud_p = subparsers.add_parser("audit", help="Audit local codebase for OWASP Agentic AI vulnerabilities")
     aud_p.add_argument("path", nargs="?", default=".", help="Target directory to audit (default: .)")
     aud_p.add_argument("--certify", action="store_true", help="Generate verifiable SOC 2 / OWASP compliance certificate with Merkle root & signature")
+    aud_p.add_argument("--dossier", action="store_true", help="Export comprehensive CISO-ready SOC 2 / EU AI Act cryptographic dossier")
+    aud_p.add_argument("--tenant", "-t", default="ten_default_enterprise", help="Tenant workspace ID for dossier")
+    aud_p.add_argument("--format", "-F", choices=["md", "json"], default="md", help="Export format for compliance dossier")
     aud_p.add_argument("--org", type=str, default="Autonomous AI Deployment", help="Organization name for audit certificate")
     aud_p.add_argument("--out", "-o", type=str, default=None, help="Output path for certificate HTML or JSON package")
 
