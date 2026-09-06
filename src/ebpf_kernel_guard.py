@@ -211,3 +211,114 @@ class EBPFKernelGuard:
             "memory_audit": mem_summary,
             "status": "HEALTHY"
         }
+
+
+class HotPluggableInvariantEngine:
+    """
+    BTP v3.2 Hot-Pluggable Invariant Engine:
+    Enables live reloading of kernel and process invariant rulesets without requiring
+    monitored agent process restarts or dropping active conversation contexts.
+    """
+    def __init__(self, initial_policy: Optional[KernelSecurityPolicy] = None):
+        self.active_policy = initial_policy or KernelSecurityPolicy()
+        self.policy_history: List[tuple[int, KernelSecurityPolicy, str]] = []
+        self.generation: int = 1
+        self.policy_history.append((self.generation, self.active_policy, "Initial Baseline Policy"))
+
+    def hot_reload_rules(
+        self,
+        new_blocked_binaries: Optional[List[str]] = None,
+        new_protected_paths: Optional[List[str]] = None,
+        network_egress_restricted: Optional[bool] = None,
+        change_rationale: str = "Live threat mitigation"
+    ) -> tuple[bool, str, int]:
+        """
+        Hot-swaps kernel invariant policies atomically.
+        """
+        try:
+            staged_binaries = list(self.active_policy.blocked_binaries)
+            if new_blocked_binaries:
+                staged_binaries.extend(new_blocked_binaries)
+
+            staged_paths = list(self.active_policy.protected_paths)
+            if new_protected_paths:
+                staged_paths.extend(new_protected_paths)
+
+            staged_egress = (
+                network_egress_restricted 
+                if network_egress_restricted is not None 
+                else self.active_policy.network_egress_restricted
+            )
+
+            staged_policy = KernelSecurityPolicy(
+                blocked_binaries=list(set(staged_binaries)),
+                protected_paths=list(set(staged_paths)),
+                network_egress_restricted=staged_egress
+            )
+
+            self.generation += 1
+            self.active_policy = staged_policy
+            self.policy_history.append((self.generation, self.active_policy, change_rationale))
+            return True, f"Hot-reload successful: Generation {self.generation}", self.generation
+        except Exception as e:
+            return False, f"Hot-reload failed: {str(e)}", self.generation
+
+    def rollback(self) -> tuple[bool, str, int]:
+        """Rolls back to previous policy generation."""
+        if len(self.policy_history) <= 1:
+            return False, "Cannot rollback: At baseline generation 1", self.generation
+        self.policy_history.pop()
+        gen, prev_policy, reason = self.policy_history[-1]
+        self.active_policy = prev_policy
+        self.generation = gen
+        return True, f"Rolled back to Generation {gen} ({reason})", self.generation
+
+
+class DynamicThresholdRebalancer:
+    """
+    BTP v3.2 Dynamic Threshold Rebalancing Engine:
+    Monitors kernel event stream, blocked syscall entropy, and anomaly spikes
+    to automatically adjust multi-agent threshold quorum requirements (e.g. 2-of-3 -> 3-of-5 -> 5-of-7).
+    """
+    def __init__(self, baseline_threshold: int = 2, baseline_total: int = 3):
+        self.baseline_k = baseline_threshold
+        self.baseline_n = baseline_total
+        self.current_k = baseline_threshold
+        self.current_n = baseline_total
+        self.threat_entropy: float = 0.0
+
+    def evaluate_threat_entropy(self, events: List[KernelSyscallEvent]) -> tuple[float, int, int, str]:
+        """
+        Calculates threat entropy from recent kernel events:
+        Entropy = (blocked_count / total_events)
+        """
+        if not events:
+            self.threat_entropy = 0.0
+            self.current_k = self.baseline_k
+            self.current_n = self.baseline_n
+            return 0.0, self.current_k, self.current_n, "NORMAL_BASELINE"
+
+        recent = events[-50:]
+        blocked = sum(1 for e in recent if e.action == "BLOCK")
+        ratio = blocked / len(recent)
+
+        self.threat_entropy = round(ratio, 4)
+
+        if self.threat_entropy >= 0.40:
+            # Critical threat spike: 5-of-7 quorum
+            self.current_k = 5
+            self.current_n = 7
+            status = "CRITICAL_ATTACK_ELEVATION"
+        elif self.threat_entropy >= 0.15:
+            # Elevated anomaly: 3-of-5 quorum
+            self.current_k = 3
+            self.current_n = 5
+            status = "ELEVATED_THREAT_REBALANCED"
+        else:
+            # Normal baseline: 2-of-3 quorum
+            self.current_k = self.baseline_k
+            self.current_n = self.baseline_n
+            status = "NORMAL_BASELINE"
+
+        return self.threat_entropy, self.current_k, self.current_n, status
+

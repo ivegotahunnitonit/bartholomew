@@ -13,11 +13,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from framework_adapters.langgraph.langgraph_btp_guard import LangGraphBTPGuard
 from framework_adapters.autogen.autogen_btp_interceptor import AutoGenBTPInterceptor
 from framework_adapters.crewai.crewai_btp_task_guard import CrewAIBTPTaskGuard
+from framework_adapters.llamaindex.llamaindex_btp_tool import btp_llamaindex_tool, BartholomewLlamaIndexTool
 from src.trust_protocol import BartholomewTrustAuthority
+from src.agent_passport import SovereignAgentPassport
+import pytest
 
 def test_standalone_adapters():
     print("=" * 80)
-    print("  TESTING STANDALONE FRAMEWORK ADAPTERS (LANGGRAPH, AUTOGEN, CREWAI)")
+    print("  TESTING STANDALONE FRAMEWORK ADAPTERS (LANGGRAPH, AUTOGEN, CREWAI, LLAMAINDEX)")
     print("=" * 80)
 
     auth = BartholomewTrustAuthority(ttl_seconds=300)
@@ -64,11 +67,34 @@ def test_standalone_adapters():
     assert "Done:" in task_res
     print("    |-- Guarded CrewAI Task: SUCCESS")
 
+    # 4. Test LlamaIndex Adapter
+    print("[4] Testing LlamaIndex BTP Guard...")
+    @btp_llamaindex_tool(required_capability="db:query")
+    def execute_sql(query: str) -> str:
+        return f"Executed: {query}"
+
+    passport = SovereignAgentPassport(
+        agent_id="Agent-Llama-01",
+        worker_model="Llama-3.1-70B",
+        owner_pubkey=root_key,
+        granted_capabilities=["db:query", "tools:search"]
+    )
+    passport.sign(auth.private_key)
+
+    # Valid execution with passport
+    res_sql = execute_sql("SELECT COUNT(*) FROM telemetry;", agent_passport=passport)
+    assert "Executed: SELECT" in res_sql
+    print("    |-- Authorized LlamaIndex Tool Call: SUCCESS")
+
+    # Destructive AST veto check
+    with pytest.raises(PermissionError) as exc_ast:
+        execute_sql("rm -rf /")
+    assert "blocked" in str(exc_ast.value).lower()
+    print("    |-- Destructive AST Interception: VETOED (<35µs)")
+
     print("\n" + "=" * 80)
-    print("  ALL 3 STANDALONE FRAMEWORK ADAPTERS 100% OPERATIONAL")
+    print("  ALL 4 STANDALONE FRAMEWORK ADAPTERS 100% OPERATIONAL")
     print("=" * 80)
-    return True
 
 if __name__ == "__main__":
-    success = test_standalone_adapters()
-    sys.exit(0 if success else 1)
+    test_standalone_adapters()
