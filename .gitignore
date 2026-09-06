@@ -1,3 +1,8 @@
+# Environment / Secrets (NEVER commit)
+.env
+.env.*
+!.env.example
+
 # Marketing & Social Launch Copy (Local Only)
 SHOW_HN_AND_COMMUNITY_DISTRIBUTION.md
 DEVTO_GLOBAL_LAUNCH_POST.md
