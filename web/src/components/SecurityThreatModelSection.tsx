@@ -13,13 +13,13 @@ const FAQS: FAQItem[] = [
     question: 'Why avoid piped shell installer scripts (curl | bash or irm | iex)?',
     category: 'SUPPLY_CHAIN',
     shortAnswer: 'Piped shell execution is a supply-chain anti-pattern. We distribute exclusively through standard package registries.',
-    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through official package registries: PyPI (pip install btp-guard), npm (npm install btp-guard), standard VS Code VSIX, or direct source clones (git clone) with reproducible CI test gates.'
+    detailedAnswer: 'Piping remote scripts directly into a shell execution engine bypasses static scanning and hash verification. Bartholomew is distributed through official channels: PyPI (pip install btp-guard), official VS Code extension bundles, or direct source repository clones (git clone) with reproducible CI test gates.'
   },
   {
     question: 'Does Bartholomew require a background proxy daemon (Confused Deputy Risk)?',
     category: 'ARCHITECTURE',
     shortAnswer: 'No. Bartholomew runs 100% in-process as an embedded library with zero daemons, zero sockets, and zero IPC.',
-    detailedAnswer: 'Running a local background proxy daemon creates a potential attack surface. Bartholomew is designed as an embedded in-process library. When integrated with LangGraph, CrewAI, or Python scripts, the invariant evaluator executes directly in caller memory in <5.0 microseconds with zero inter-process communication, zero open network sockets, and zero background daemons.'
+    detailedAnswer: 'Running a local background proxy daemon creates a potential attack surface. Bartholomew is designed as an embedded in-process library. When integrated with LangGraph, CrewAI, or Python scripts, the invariant evaluator executes directly in caller memory with near-zero latency, zero inter-process communication, zero open network sockets, and zero background daemons.'
   },
   {
     question: 'Why not rely solely on Claude Desktop native human confirmation popups?',
@@ -37,7 +37,7 @@ const FAQS: FAQItem[] = [
     question: 'Is Bartholomew an operating system sandbox replacement (Docker, microVMs, gVisor)?',
     category: 'ARCHITECTURE',
     shortAnswer: 'No. Bartholomew is a Layer-7 in-process semantic tool gate. It is designed to be paired with container sandboxes, not replace OS kernel isolation.',
-    detailedAnswer: 'Operating system sandboxes (Docker, Firecracker, gVisor) provide essential kernel-level process and hardware isolation. However, an agent running inside a container can still drop its own production database, burn thousands of dollars in runaway API loops, or exfiltrate API keys. Bartholomew operates at the application runtime layer, intercepting tool dispatches in <2.3µs before commands hit the OS. For full production defense-in-depth, always run Bartholomew-protected agents inside isolated container environments.'
+    detailedAnswer: 'Operating system sandboxes (Docker, Firecracker, gVisor) provide essential kernel-level process and hardware isolation. However, an agent running inside a container can still drop its own production database, burn thousands of dollars in runaway API loops, or exfiltrate API keys. Bartholomew operates at the application runtime layer, intercepting tool dispatches with the fastest and most reliable local AST gating before commands hit the OS. For full production defense-in-depth, always run Bartholomew-protected agents inside isolated container environments.'
   },
   {
     question: 'How does static AST parsing handle dynamic evaluation (eval, exec, reflection) and rule maintenance?',
@@ -86,7 +86,7 @@ export default function SecurityThreatModelSection() {
               <span>ZERO INJECTION ESCAPES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Sub-2.3 µs deterministic AST invariant checking blocks catastrophic shell patterns (rm -rf, DROP TABLE) in-memory before OS dispatch.
+              Deterministic AST invariant checking blocks catastrophic shell patterns (rm -rf, DROP TABLE) in-memory before OS dispatch.
             </p>
           </div>
 
@@ -108,7 +108,7 @@ export default function SecurityThreatModelSection() {
               <span>VERIFIED PACKAGE REGISTRIES</span>
             </div>
             <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-              Distributed officially via npm (npm install btp-guard), PyPI, and standard VS Code VSIX. No raw shell script piping.
+              Distributed officially via PyPI (pip install btp-guard), official VS Code extension bundles, and source GitHub releases. No raw shell script piping.
             </p>
           </div>
 
@@ -271,11 +271,11 @@ export default function SecurityThreatModelSection() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
                     <div className="p-4 bg-[#050505] border border-[#222222] rounded-xl space-y-2">
                       <span className="text-[#f59e0b] font-bold block">STEP 1: THE FIREWALL</span>
-                      <p className="text-[#a1a1aa]">Deterministic polyglot AST constant folding, secret scrubbing, and prompt injection syntax verification in &lt;1.8 µs.</p>
+                      <p className="text-[#a1a1aa]">Deterministic polyglot AST constant folding, secret scrubbing, and prompt injection syntax verification at in-memory speed.</p>
                     </div>
                     <div className="p-4 bg-[#050505] border border-[#222222] rounded-xl space-y-2">
                       <span className="text-[#06b6d4] font-bold block">STEP 2: THE SANDBOX</span>
-                      <p className="text-[#a1a1aa]">Copy-on-Write (CoW) micro-snapshots capturing workspace state, providing instant auto-rollback in &lt;3.8 ms on assertion failure.</p>
+                      <p className="text-[#a1a1aa]">Copy-on-Write (CoW) micro-snapshots capturing workspace state, providing instant auto-rollback on assertion failure.</p>
                     </div>
                     <div className="p-4 bg-[#050505] border border-[#222222] rounded-xl space-y-2">
                       <span className="text-[#10b981] font-bold block">STEP 3: THE DIGITAL NOTARY</span>
@@ -369,7 +369,7 @@ export default function SecurityThreatModelSection() {
                     <span>Industry Landscape &amp; Defense-in-Depth Model</span>
                   </h4>
                   <p className="text-xs sm:text-sm text-[#a1a1aa] leading-relaxed">
-                    Most security frameworks in the AI industry operate from <em>outside</em> the local runtime process—typically as external HTTP proxies or secondary LLM classification calls. Bartholomew is purpose-built for the sub-50µs in-process tool execution boundary.
+                    Most security frameworks in the AI industry operate from <em>outside</em> the local runtime process—typically as external HTTP proxies or secondary LLM classification calls. Bartholomew is purpose-built for the in-process tool execution boundary with the fastest and most reliable local AST gating.
                   </p>
 
                   {/* Comparative Matrix Table */}
@@ -391,12 +391,12 @@ export default function SecurityThreatModelSection() {
                         <tr>
                           <td className="p-3 font-bold text-white">Latency Profile</td>
                           <td className="p-3 text-[#a1a1aa]">~80ms to 2,500ms (secondary LLM classification calls)</td>
-                          <td className="p-3 text-[#10b981]">&lt;35 microseconds (in-process static analysis &amp; constant folding)</td>
+                          <td className="p-3 text-[#10b981]">Near-instantaneous (fastest and most reliable local AST gating)</td>
                         </tr>
                         <tr>
                           <td className="p-3 font-bold text-white">Deployment Mode</td>
                           <td className="p-3 text-[#a1a1aa]">Cloud APIs, HTTP proxy sidecars, or microservices</td>
-                          <td className="p-3 text-[#10b981]">In-memory FFI library (<code>pip install btp-guard</code> / <code>npm i btp-guard</code>)</td>
+                          <td className="p-3 text-[#10b981]">In-memory embedded library (<code>pip install btp-guard</code>)</td>
                         </tr>
                         <tr>
                           <td className="p-3 font-bold text-white">Verification</td>

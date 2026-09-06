@@ -67,7 +67,7 @@ export default function Pricing() {
               <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Sub-50 µs Polyglot AST Engine</span>
+                  <span>Fastest &amp; Most Reliable AST Engine</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />

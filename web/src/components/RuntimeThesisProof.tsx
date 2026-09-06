@@ -127,7 +127,7 @@ export default function RuntimeThesisProof() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#f59e0b] uppercase tracking-wider">[STEP 1]</span>
-                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/40">&lt;35 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/40">LOCAL AST GATE</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#f59e0b] transition-colors">
                 <Search size={18} className="text-[#f59e0b]" />
@@ -146,7 +146,7 @@ export default function RuntimeThesisProof() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#10b981] uppercase tracking-wider">[STEP 2]</span>
-                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">&lt;150 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">ZERO-LEAK ISOLATION</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#10b981] transition-colors">
                 <Box size={18} className="text-[#10b981]" />
@@ -165,7 +165,7 @@ export default function RuntimeThesisProof() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
                 <span className="text-xs font-bold font-mono text-[#ffffff] uppercase tracking-wider">[STEP 3]</span>
-                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">&lt;40 µs</span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/40">ED25519 NOTARY</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2.5 flex items-center gap-2 font-sans group-hover:text-[#10b981] transition-colors">
                 <Award size={18} className="text-[#10b981]" />

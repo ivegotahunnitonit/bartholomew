@@ -31,7 +31,7 @@ export default function EnterpriseDesignPartnerSection() {
               Deterministic Security &amp; Compliance for Agent Workflows
             </h2>
             <p className="text-[#a1a1aa] text-sm sm:text-base mt-3 max-w-3xl font-sans leading-relaxed">
-              Replace secondary LLM judge latency (800ms–2500ms) with sub-100 microsecond deterministic AST enforcement, Ed25519 cryptographic execution receipts, and automated SOC 2 / ISO 27001 audit streams.
+              Replace slow secondary LLM judge latency with the fastest and most reliable deterministic AST enforcement, Ed25519 cryptographic execution receipts, and audit streams ready for SOC 2 / ISO 27001 compliance reviews.
             </p>
           </div>
 

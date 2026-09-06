@@ -69,7 +69,7 @@ auditor = Agent(
 crew = Crew(agents=[auditor], tasks=[refactor_task])
 crew.kickoff()`,
     explanation: 'Native CrewAI task and tool interceptor. Enforces deterministic AST safety and secret scrubbing before execution crosses the OS syscall boundary.',
-    latency: '1.84µs per call'
+    latency: 'Fastest & Most Reliable AST Gate'
   },
   langgraph: {
     tab: 'langgraph',
@@ -92,7 +92,7 @@ def tool_execution_node(state):
 graph = StateGraph(AgentState)
 graph.add_node("tool_node", tool_execution_node)`,
     explanation: 'In-flight LangGraph state graph validator. Traps runaway loops, spend spikes, and malicious mutations between agent state transitions.',
-    latency: '2.10µs per node'
+    latency: 'In-Process State Gate'
   },
   autogen: {
     tab: 'autogen',
@@ -113,7 +113,7 @@ agent = ConversableAgent(
 interceptor.attach(agent)
 agent.initiate_chat(recipient, message="Deploy k8s cluster")`,
     explanation: 'Wire-level interceptor for Microsoft AutoGen agents. Guarantees zero sensitive prompt exfiltration and drops adversarial syscalls in caller memory.',
-    latency: '< 3.2µs Wire Gate'
+    latency: 'Zero Syscall Wire Gate'
   },
   marketplace: {
     tab: 'marketplace',

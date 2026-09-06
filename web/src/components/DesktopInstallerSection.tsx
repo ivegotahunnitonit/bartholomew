@@ -2,26 +2,26 @@ import { useState } from 'react'
 import { Shield, Check, Copy, CheckCircle2, FileCode, Cpu } from 'lucide-react'
 
 export default function DesktopInstallerSection() {
-  const [activeTab, setActiveTab] = useState<'pip' | 'npm' | 'vscode' | 'source'>('pip')
+  const [activeTab, setActiveTab] = useState<'pip' | 'cli' | 'vscode' | 'source'>('pip')
   const [copied, setCopied] = useState<string | null>(null)
 
   const commands = {
     pip: 'pip install btp-guard',
-    npm: 'npm install btp-guard',
-    vscode: 'code --install-extension https://bartholomew.info/bartholomew.vsix',
+    cli: 'pip install btp-guard && btp-guard init',
+    vscode: 'code --install-extension bartholomew.vsix',
     source: 'git clone https://github.com/ivegotahunnitonit/bartholomew.git && cd bartholomew && pip install -e .'
   }
 
   const tabLabels = {
     pip: '[PYTHON PIP (PYPI)]',
-    npm: '[NODE.JS (NPM)]',
+    cli: '[BTP-GUARD CLI INIT]',
     vscode: '[VS CODE / CURSOR VSIX]',
     source: '[SOURCE REPO]'
   }
 
   const directDownloadFiles = {
     pip: { filename: 'pypi-btp-guard', href: 'https://pypi.org/project/btp-guard/', label: 'VIEW PYPI PACKAGE' },
-    npm: { filename: 'npm-btp-guard', href: 'https://www.npmjs.com/package/btp-guard', label: 'VIEW NPM PACKAGE' },
+    cli: { filename: 'pypi-btp-guard', href: 'https://pypi.org/project/btp-guard/', label: 'VIEW PYPI DOCUMENTATION' },
     vscode: { filename: 'bartholomew.vsix', href: 'https://bartholomew.info/bartholomew.vsix', label: 'DOWNLOAD .VSIX' },
     source: { filename: 'source-main.zip', href: 'https://github.com/ivegotahunnitonit/bartholomew/archive/refs/heads/main.zip', label: 'DOWNLOAD SOURCE ZIP' }
   }
@@ -48,7 +48,7 @@ export default function DesktopInstallerSection() {
             Install Directly from Verified Registries
           </h2>
           <p className="mt-4 text-base text-[#a1a1aa] font-sans">
-            Bartholomew is 100% open source. Install directly via npm, pip (git), VS Code VSIX, or clone the repository to run the 31-suite security gate on your own machine with zero remote script execution.
+            Bartholomew is 100% open source. Install directly via pip, btp-guard CLI, VS Code extension, or clone the repository to run the 31-suite security gate on your own machine with zero remote script execution.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function DesktopInstallerSection() {
 
           {/* Selector Tabs — 2 col grid on mobile, 4 col on sm+ */}
           <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#1f1f23] bg-[#060608] p-2 gap-2">
-            {(['pip', 'npm', 'vscode', 'source'] as const).map((tab) => (
+            {(['pip', 'cli', 'vscode', 'source'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -140,7 +140,7 @@ export default function DesktopInstallerSection() {
                   <span>EMBEDDED IN-PROCESS MODE (ZERO DAEMONS REQUIRED)</span>
                 </div>
                 <p className="text-[#a1a1aa] font-sans text-xs">
-                  Runs directly in your Python or Node.js process memory. Evaluates AST invariants in &lt;2.3 microseconds with zero IPC, zero background daemons, and zero network telemetry.
+                  Runs directly in your process memory. Evaluates AST invariants with the fastest and most reliable local gating, with zero IPC, zero background daemons, and zero network telemetry.
                 </p>
               </div>
               <a
@@ -179,7 +179,7 @@ export default function DesktopInstallerSection() {
                   <span>NO PROXY BOTTLENECK</span>
                 </div>
                 <p className="text-xs text-[#a1a1aa] font-sans leading-relaxed">
-                  Compiled pure-C FFI executes in &lt;2.3 µs, avoiding the latency and network failure modes of remote webhooks.
+                  Pure local in-process gating provides the fastest and most reliable AST inspection, avoiding the latency and network failure modes of remote webhooks.
                 </p>
               </div>
             </div>
