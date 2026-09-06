@@ -80,7 +80,25 @@ const PRESET_SCENARIOS: AttackScenario[] = [
   }
 ]
 
+interface WorkspaceTenantOption {
+  id: string
+  org: string
+  orgName: string
+  project: string
+  projectName: string
+  env: 'dev' | 'staging' | 'prod'
+  keyPrefix: string
+}
+
+const WORKSPACE_TENANTS: WorkspaceTenantOption[] = [
+  { id: 'acme-prod', org: 'acme-corp', orgName: '🏢 Acme Corp', project: 'finance-mesh', projectName: '📦 finance-mesh', env: 'prod', keyPrefix: 'btp_live_7f8a...' },
+  { id: 'acme-stage', org: 'acme-corp', orgName: '🏢 Acme Corp', project: 'support-agent', projectName: '🎧 support-agent', env: 'staging', keyPrefix: 'btp_test_41b2...' },
+  { id: 'bartholomew-dev', org: 'bartholomew-core', orgName: '🏛️ Bartholomew Core', project: 'antigravity-dev', projectName: '🤖 antigravity-pair-programming', env: 'dev', keyPrefix: 'btp_test_90e1...' },
+  { id: 'novartis-prod', org: 'novartis-mesh', orgName: '🏥 Novartis Health', project: 'clinical-data', projectName: '🧬 clinical-data-lake', env: 'prod', keyPrefix: 'btp_live_cc32...' },
+]
+
 export default function SwarmArbitrationArena() {
+  const [activeTenant, setActiveTenant] = useState<WorkspaceTenantOption>(WORKSPACE_TENANTS[0])
   const [activeScenario, setActiveScenario] = useState<AttackScenario>(PRESET_SCENARIOS[0])
   const [selectedModel, setSelectedModel] = useState<ModelProviderInfo>(MODEL_PROVIDERS[0])
   const [isRunning, setIsRunning] = useState(false)
@@ -112,6 +130,10 @@ export default function SwarmArbitrationArena() {
     const proofSample = {
       btp_zk_fault_proof: {
         proof_id: `zk_fp_${activeScenario.id}_${Math.random().toString(16).slice(2, 10)}`,
+        tenant_id: `ten_${activeTenant.org}_${activeTenant.project}_${activeTenant.env}`,
+        organization: activeTenant.org,
+        project: activeTenant.project,
+        environment: activeTenant.env,
         model_provider: selectedModel.name,
         target_action: activeScenario.title,
         violated_invariant: activeScenario.ruleId,
@@ -133,16 +155,56 @@ export default function SwarmArbitrationArena() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Milestone 5.0 Multi-Tenant Workspace Selector */}
+        <div className="mb-10 p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xs uppercase font-mono tracking-wider text-zinc-400 font-bold flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 inline-block"></span>
+              Tenant Workspace:
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              {WORKSPACE_TENANTS.map((t) => {
+                const isCurrent = activeTenant.id === t.id
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setActiveTenant(t)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                      isCurrent
+                        ? 'bg-emerald-500/20 border-emerald-500/80 text-white shadow'
+                        : 'bg-zinc-800/60 border-zinc-700/60 text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <span>{t.orgName}</span>
+                    <span className="text-zinc-500 mx-1">/</span>
+                    <span className="text-zinc-300 font-mono text-[11px]">{t.project}</span>
+                    <span className={`ml-2 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
+                      t.env === 'prod' ? 'bg-emerald-500/20 text-emerald-400' :
+                      t.env === 'staging' ? 'bg-amber-500/20 text-amber-400' : 'bg-blue-500/20 text-blue-400'
+                    }`}>
+                      {t.env}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="text-xs font-mono text-zinc-400 bg-black/40 px-3 py-1.5 rounded-lg border border-zinc-800/80">
+            Scoped Key: <span className="text-emerald-400">{activeTenant.keyPrefix}</span>
+          </div>
+        </div>
+
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-4">
             <Gavel className="w-3.5 h-3.5" />
-            Milestone 4.4 Universal Model & Swarm Slashing Arena
+            Milestone 5.0 Multi-Tenant Enterprise Workspaces & Swarm Slashing
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Universal Gating, Swarm Slashing & Zero-Knowledge Fault Proofs
+            Multi-Tenant Gating, Swarm Slashing & Zero-Knowledge Proofs
           </h2>
           <p className="mt-3 text-base text-zinc-400">
-            Guaranteed compatibility across <strong className="text-white">OpenAI, Anthropic Claude, Google Gemini, Moonshot Kimi & DeepSeek</strong>. Intercepts destructive actions in <span className="text-emerald-400 font-semibold">&lt;35µs</span>, preserves complete prompt privacy, and arbitrates collateral slashing over Lightning & EVM.
+            Guaranteed isolation across <strong className="text-white">Acme Corp, Bartholomew Core, and Novartis</strong>. Scoped API keys prevent cross-tenant leakage, while sub-35µs AST rules drop destructive actions before execution.
           </p>
 
           {/* Live Telemetry Streaming Ribbon */}
@@ -161,6 +223,8 @@ export default function SwarmArbitrationArena() {
                 {isLiveStreaming ? 'LIVE TELEMETRY STREAM' : 'STREAM PAUSED'}
               </span>
             </div>
+            <div className="h-3 w-px bg-zinc-700 hidden sm:block" />
+            <div>Active Workspace: <strong className="text-white font-mono">{activeTenant.org}/{activeTenant.project}</strong></div>
             <div className="h-3 w-px bg-zinc-700 hidden sm:block" />
             <div>Threat Entropy: <strong className="text-emerald-400 font-mono">0.038 (Stable)</strong></div>
             <div className="h-3 w-px bg-zinc-700 hidden sm:block" />

@@ -13,6 +13,7 @@ and Micro-Escrow collateral protection for:
 import json
 import time
 import functools
+import hashlib
 from typing import Dict, Any, List, Optional, Tuple, Union
 
 try:
@@ -56,6 +57,9 @@ class UniversalBTPModelGuard:
         passport: Optional[Any] = None,
         settlement_rail: str = "L402_LIGHTNING",
         payee_destination: Optional[str] = None,
+        org_id: str = "default_org",
+        project_id: str = "default_project",
+        environment: str = "dev",
     ):
         self.spend_cap = spend_cap
         self.strict = strict
@@ -63,6 +67,10 @@ class UniversalBTPModelGuard:
         self.passport = passport
         self.settlement_rail = settlement_rail
         self.payee_destination = payee_destination
+        self.org_id = org_id.lower().strip()
+        self.project_id = project_id.lower().strip()
+        self.environment = environment.lower().strip()
+        self.tenant_id = f"ten_{hashlib.sha256(f'{self.org_id}:{self.project_id}:{self.environment}'.encode()).hexdigest()[:24]}"
         self._guard = Guard() if Guard is not None else None
         self._escrow_pool = AutonomousEscrowPool() if AutonomousEscrowPool is not None else None
         self._zk_engine = ZKFaultProofEngine() if ZKFaultProofEngine is not None else None
@@ -234,12 +242,18 @@ class UniversalBTPModelGuard:
                     monitor_pass1 = SovereignAgentPassport.issue(
                         agent_id=f"agent-juror-sentinel-{provider}-1",
                         model_family="claude-3-5-sonnet",
-                        authorized_capabilities=["audit:verify"]
+                        authorized_capabilities=["audit:verify"],
+                        org_id=self.org_id,
+                        project_id=self.project_id,
+                        environment=self.environment
                     )
                     monitor_pass2 = SovereignAgentPassport.issue(
                         agent_id=f"agent-juror-sentinel-{provider}-2",
                         model_family="gemini-1-5-pro",
-                        authorized_capabilities=["audit:verify"]
+                        authorized_capabilities=["audit:verify"],
+                        org_id=self.org_id,
+                        project_id=self.project_id,
+                        environment=self.environment
                     )
                     arb.register_validator(monitor_pass1)
                     arb.register_validator(monitor_pass2)
@@ -302,6 +316,9 @@ def btp_universal_guard(
     action_type: Optional[str] = None,
     settlement_rail: str = "L402_LIGHTNING",
     payee_destination: Optional[str] = None,
+    org_id: str = "default_org",
+    project_id: str = "default_project",
+    environment: str = "dev",
 ):
     guard_inst = UniversalBTPModelGuard(
         spend_cap=spend_cap,
@@ -310,6 +327,9 @@ def btp_universal_guard(
         passport=passport,
         settlement_rail=settlement_rail,
         payee_destination=payee_destination,
+        org_id=org_id,
+        project_id=project_id,
+        environment=environment,
     )
 
     def decorator(fn: Any):

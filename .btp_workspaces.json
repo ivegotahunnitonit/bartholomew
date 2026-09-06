@@ -1,0 +1,24 @@
+{
+  "tenants": [
+    {
+      "tenant_id": "ten_2b6cccc13e3403e2b22a6f83",
+      "org_id": "acme",
+      "project_id": "finance",
+      "environment": "dev",
+      "display_name": "acme/finance (dev)",
+      "created_at": 1788674658.6719797
+    }
+  ],
+  "api_keys": {
+    "2d98bb8921cd85c3212cc279ab2f3689a62ffc17e6eb215c2b7f3fb0735ee577": {
+      "tenant_id": "ten_2b6cccc13e3403e2b22a6f83",
+      "org_id": "acme",
+      "project_id": "finance",
+      "environment": "dev",
+      "role": "developer",
+      "created_at": 1788674658.6726599,
+      "prefix": "btp_test_"
+    }
+  },
+  "updated_at": 1788674658.672819
+}

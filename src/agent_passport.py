@@ -45,13 +45,20 @@ class SovereignAgentPassport:
         created_at: Optional[float] = None,
         expires_at: Optional[float] = None,
         circuit_breaker_tripped: bool = False,
-        trip_reason: Optional[str] = None
+        trip_reason: Optional[str] = None,
+        org_id: str = "default_org",
+        project_id: str = "default_project",
+        environment: str = "dev"
     ):
         self.agent_id = agent_id
         self.worker_model = worker_model
         self.owner_pubkey = owner_pubkey
         self.granted_capabilities = granted_capabilities or ["data:read", "tools:search"]
         self.bonded_warranty_balance_usd = float(bonded_warranty_balance_usd)
+        self.org_id = org_id.lower().strip()
+        self.project_id = project_id.lower().strip()
+        self.environment = environment.lower().strip()
+        self.tenant_id = f"ten_{hashlib.sha256(f'{self.org_id}:{self.project_id}:{self.environment}'.encode()).hexdigest()[:24]}"
         
         now = time.time()
         self.created_at = created_at or now
@@ -67,7 +74,7 @@ class SovereignAgentPassport:
         }
 
         if not passport_id:
-            raw = f"{agent_id}:{worker_model}:{owner_pubkey}:{self.created_at}"
+            raw = f"{agent_id}:{worker_model}:{owner_pubkey}:{self.tenant_id}:{self.created_at}"
             digest = hashlib.sha256(raw.encode()).hexdigest()[:16]
             self.passport_id = f"urn:agent:passport:{digest}"
         else:
@@ -83,6 +90,10 @@ class SovereignAgentPassport:
             "agent_id": self.agent_id,
             "worker_model": self.worker_model,
             "owner_pubkey": self.owner_pubkey,
+            "org_id": self.org_id,
+            "project_id": self.project_id,
+            "environment": self.environment,
+            "tenant_id": self.tenant_id,
             "granted_capabilities": sorted(list(set(self.granted_capabilities))),
             "bonded_warranty_balance_usd": round(self.bonded_warranty_balance_usd, 2),
             "reputation_vector": {
@@ -197,6 +208,9 @@ class SovereignAgentPassport:
         authorized_capabilities: Optional[List[str]] = None,
         bonded_warranty_usd: float = 0.0,
         ttl_seconds: int = 86400,
+        org_id: str = "default_org",
+        project_id: str = "default_project",
+        environment: str = "dev",
         private_key: Optional[ed25519.Ed25519PrivateKey] = None
     ) -> "SovereignAgentPassport":
         """Convenience factory to generate and sign a new sovereign passport."""
@@ -208,7 +222,10 @@ class SovereignAgentPassport:
             owner_pubkey=pubkey_hex,
             granted_capabilities=authorized_capabilities,
             bonded_warranty_balance_usd=bonded_warranty_usd,
-            ttl_seconds=ttl_seconds
+            ttl_seconds=ttl_seconds,
+            org_id=org_id,
+            project_id=project_id,
+            environment=environment
         )
         passport.sign(priv)
         return passport
@@ -233,7 +250,10 @@ class SovereignAgentPassport:
             created_at=data.get("created_at"),
             expires_at=data.get("expires_at"),
             circuit_breaker_tripped=data.get("circuit_breaker_tripped", False),
-            trip_reason=data.get("trip_reason")
+            trip_reason=data.get("trip_reason"),
+            org_id=data.get("org_id", "default_org"),
+            project_id=data.get("project_id", "default_project"),
+            environment=data.get("environment", "dev")
         )
         passport.signature_hex = data.get("signature")
         return passport

@@ -1434,6 +1434,65 @@ def cmd_settlement_deploy_evm(args):
         print(f"[+] Deployment receipt written to: {args.out}")
 
 
+def cmd_workspace_create(args):
+    from src.tenancy.workspace_manager import WorkspaceManager
+    wm = WorkspaceManager()
+    tenant = wm.create_tenant(
+        org_id=args.org,
+        project_id=args.project,
+        environment=args.env,
+        display_name=getattr(args, "display_name", None)
+    )
+    print("=" * 70)
+    print("BTP v5.0 MULTI-TENANT WORKSPACE CREATION")
+    print("=" * 70)
+    print(f"[*] Organization : {tenant.org_id}")
+    print(f"[*] Project      : {tenant.project_id}")
+    print(f"[*] Environment  : {tenant.environment}")
+    print(f"[*] Tenant ID    : {tenant.tenant_id}")
+    print(f"[*] Display Name : {tenant.display_name}")
+    print("=" * 70)
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(tenant.to_dict(), f, indent=2)
+        print(f"[+] Workspace configuration saved to: {args.out}")
+
+
+def cmd_workspace_list(args):
+    from src.tenancy.workspace_manager import WorkspaceManager
+    wm = WorkspaceManager()
+    tenants = wm.list_tenants()
+    print("=" * 70)
+    print("BTP v5.0 REGISTERED WORKSPACE TENANTS")
+    print("=" * 70)
+    if not tenants:
+        print("  No custom workspaces configured. Default tenant active.")
+    else:
+        for idx, t in enumerate(tenants, 1):
+            print(f"  [{idx}] {t['display_name']} -> Tenant ID: {t['tenant_id']}")
+    print("=" * 70)
+
+
+def cmd_workspace_keygen(args):
+    from src.tenancy.workspace_manager import WorkspaceManager
+    wm = WorkspaceManager()
+    api_key = wm.generate_scoped_api_key(
+        org_id=args.org,
+        project_id=args.project,
+        environment=args.env,
+        role=getattr(args, "role", "developer")
+    )
+    print("=" * 70)
+    print("BTP v5.0 SCOPED API KEY GENERATION")
+    print("=" * 70)
+    print(f"[*] Organization : {args.org}")
+    print(f"[*] Project      : {args.project}")
+    print(f"[*] Environment  : {args.env}")
+    print(f"[*] Scoped Key   : {api_key}")
+    print("=" * 70)
+    print("-> Use in your agent with: Guard(api_key='...') or export BTP_API_KEY='...'")
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1818,12 +1877,40 @@ def main():
     s_evm_p.add_argument("--dry-run", action="store_true", default=True, help="Simulate deployment without spending live gas")
     s_evm_p.add_argument("--out", "-o", help="Output deployment receipt JSON file path")
 
+    # workspace (BTP v5.0 Multi-Tenant Enterprise Workspaces & Scoped Projects)
+    ws_p = subparsers.add_parser("workspace", help="BTP v5.0 Multi-Tenant Enterprise Workspaces & Scoped Projects")
+    ws_sub = ws_p.add_subparsers(dest="workspace_cmd")
+
+    ws_create_p = ws_sub.add_parser("create", help="Create a scoped organization and project workspace")
+    ws_create_p.add_argument("--org", "-o", required=True, help="Organization / company identifier")
+    ws_create_p.add_argument("--project", "-p", required=True, help="Project or swarm name")
+    ws_create_p.add_argument("--env", "-e", default="dev", choices=["dev", "staging", "prod"], help="Deployment environment")
+    ws_create_p.add_argument("--display-name", help="Friendly human-readable display name")
+    ws_create_p.add_argument("--out", help="Output workspace configuration JSON file path")
+
+    ws_list_p = ws_sub.add_parser("list", help="List registered workspace tenants")
+
+    ws_key_p = ws_sub.add_parser("keygen", help="Generate a cryptographically scoped API key for this workspace")
+    ws_key_p.add_argument("--org", "-o", required=True, help="Organization / company identifier")
+    ws_key_p.add_argument("--project", "-p", required=True, help="Project or swarm name")
+    ws_key_p.add_argument("--env", "-e", default="dev", choices=["dev", "staging", "prod"], help="Deployment environment")
+    ws_key_p.add_argument("--role", default="developer", choices=["admin", "developer", "auditor"], help="API key role")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
     elif args.command == "activate":
         cmd_activate(args)
+    elif args.command == "workspace":
+        if args.workspace_cmd == "create":
+            cmd_workspace_create(args)
+        elif args.workspace_cmd == "list":
+            cmd_workspace_list(args)
+        elif args.workspace_cmd == "keygen":
+            cmd_workspace_keygen(args)
+        else:
+            ws_p.print_help()
     elif args.command == "benchmark":
         if args.benchmark_cmd == "swarm-chaos":
             cmd_benchmark_chaos(args)

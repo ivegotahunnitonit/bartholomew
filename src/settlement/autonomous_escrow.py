@@ -44,6 +44,8 @@ class EscrowDeposit:
     l402_challenge: Optional[Dict[str, Any]] = None
     l402_preimage: Optional[str] = None
     evm_claim: Optional[Dict[str, Any]] = None
+    tenant_id: str = "ten_default"
+    org_id: str = "default_org"
 
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
@@ -115,6 +117,9 @@ class AutonomousEscrowPool:
             l402_challenge_dict = challenge.to_dict()
             l402_preimage = preimage
 
+        tenant_id = getattr(passport, "tenant_id", "ten_default")
+        org_id = getattr(passport, "org_id", "default_org")
+
         deposit = EscrowDeposit(
             escrow_id=escrow_id,
             agent_id=agent_id,
@@ -125,7 +130,9 @@ class AutonomousEscrowPool:
             status="LOCKED",
             settlement_rail=settlement_rail,
             l402_challenge=l402_challenge_dict,
-            l402_preimage=l402_preimage
+            l402_preimage=l402_preimage,
+            tenant_id=tenant_id,
+            org_id=org_id
         )
 
         self.active_escrows[escrow_id] = deposit
@@ -237,6 +244,11 @@ class AutonomousEscrowPool:
 
         if arbitration_cert.quorum_count < 2:
             return False, f"Insufficient arbitration quorum ({arbitration_cert.quorum_count} votes).", {}
+
+        # Cross-Tenant Boundary Firewall
+        if agent_passport and hasattr(agent_passport, "tenant_id"):
+            if deposit.tenant_id and deposit.tenant_id != "ten_default" and agent_passport.tenant_id != deposit.tenant_id:
+                return False, f"Cross-tenant slashing vetoed: Passport tenant '{agent_passport.tenant_id}' != Escrow tenant '{deposit.tenant_id}'.", {}
 
         # Execute Slashing
         deposit.status = "SLASHED"
