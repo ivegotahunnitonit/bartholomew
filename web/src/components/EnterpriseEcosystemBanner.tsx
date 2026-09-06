@@ -132,7 +132,7 @@ export default function EnterpriseEcosystemBanner() {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[11px] font-mono text-zinc-400">
           <span className="inline-flex items-center gap-1.5 text-emerald-400">
             <ShieldCheck size={13} />
-            <span>SOC 2 Type II Certified Control A.8.28</span>
+            <span>SOC 2-Ready Control Framework</span>
           </span>
           <span>•</span>
           <span className="inline-flex items-center gap-1.5 text-cyan-300">

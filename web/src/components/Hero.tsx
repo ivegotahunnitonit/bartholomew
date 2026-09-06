@@ -33,8 +33,9 @@ const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
     label: '10s Quickstart',
     pill: 'Auto-Detect',
     filename: 'terminal — btp-guard init',
-    command: 'npx -y btp-guard@latest init',
-    code: `❯ npx -y btp-guard@latest init
+    command: 'pip install btp-guard',
+    code: `❯ pip install btp-guard
+❯ btp-guard init
 [BTP v5.4] Scanning project environment...
 [+] Detected Agent Framework : CrewAI & LangGraph
 [+] Sovereign Ed25519 Keypair : Generated (pubkey: 3d2b0e...7fabc5)
@@ -133,11 +134,11 @@ contract = mkt.create_contract(
     rail="L402_LIGHTNING"
 )
 
-# 2. Settle atomically with sub-50µs Zero-Knowledge Task Completion Proof
+# 2. Settle atomically with a Zero-Knowledge Task Completion Proof (zk-TCP)
 zk_proof = ZKTaskCompletionProof.generate(contract.id, result_hash)
 mkt.fulfill_contract(contract.id, zk_proof)  # Funds disbursed trustlessly`,
     explanation: 'Cross-tenant agent hiring and two-sided SLA micro-escrows settled via Zero-Knowledge Task Completion Proofs (zk-TCP) with zero prompt disclosure.',
-    latency: 'Sub-50µs ZK Verify'
+    latency: 'zk-TCP Verified'
   },
   bridge: {
     tab: 'bridge',
@@ -219,10 +220,10 @@ export default function Hero() {
           {/* Quick Terminal Copy Pill */}
           <div className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#0c0c10] border border-[#27272a] font-mono text-xs text-[#e4e4e7] shadow-inner max-w-full">
             <span className="text-emerald-400 select-none font-bold">❯</span>
-            <span className="text-amber-400 truncate">npx -y btp-guard@latest init</span>
+            <span className="text-amber-400 truncate">pip install btp-guard</span>
             <button
               onClick={() => {
-                navigator.clipboard.writeText('npx -y btp-guard@latest init')
+                navigator.clipboard.writeText('pip install btp-guard')
                 setCopiedCmd(true)
                 setTimeout(() => setCopiedCmd(false), 2000)
               }}

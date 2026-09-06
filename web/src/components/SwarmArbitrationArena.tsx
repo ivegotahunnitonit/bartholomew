@@ -467,7 +467,7 @@ export default function SwarmArbitrationArena() {
             Guaranteed isolation across <strong className="text-white">Acme Corp, Bartholomew Core, and Novartis</strong>. Scoped API keys prevent cross-tenant leakage, while the fastest and most reliable local AST safety rules drop destructive actions before execution.
           </p>
 
-          {/* Live Telemetry Streaming Ribbon */}
+          {/* Telemetry Demo Ribbon */}
           <button
             onClick={() => setIsLiveStreaming(!isLiveStreaming)}
             className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 px-4 py-2 rounded-xl bg-zinc-900/80 hover:bg-zinc-900 border border-zinc-800 transition-colors text-xs text-zinc-300 cursor-pointer"
@@ -480,7 +480,10 @@ export default function SwarmArbitrationArena() {
                 <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isLiveStreaming ? 'bg-emerald-500' : 'bg-zinc-600'}`}></span>
               </span>
               <span className={`font-mono font-medium ${isLiveStreaming ? 'text-emerald-400' : 'text-zinc-400'}`}>
-                {isLiveStreaming ? 'LIVE TELEMETRY STREAM' : 'STREAM PAUSED'}
+                {isLiveStreaming ? 'SIMULATED TELEMETRY STREAM' : 'STREAM PAUSED'}
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                Demo Data
               </span>
             </div>
             <div className="h-3 w-px bg-zinc-700 hidden sm:block" />
@@ -874,7 +877,7 @@ export default function SwarmArbitrationArena() {
                   Milestone 5.3: Cross-Tenant Autonomous Agent Marketplace & SLA Escrows
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                  zk-TCP Verified Settlement
+                  ⚠ Simulated Demo
                 </span>
               </div>
 
@@ -1045,10 +1048,10 @@ export default function SwarmArbitrationArena() {
               <div className="flex items-center gap-2.5">
                 <Terminal className="w-4 h-4 text-cyan-400" />
                 <span className="text-xs font-bold text-white uppercase tracking-wider">
-                  Developer Experience & Commercial Metered Billing Console
+                  Developer Experience & Metered Billing Console
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                  Real-Time Usage Metering
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  ⚠ Simulated Demo
                 </span>
               </div>
 
@@ -1113,8 +1116,8 @@ export default function SwarmArbitrationArena() {
               {/* Right Column: Metered Billing Breakdown */}
               <div className="p-4 rounded-lg bg-black/50 border border-zinc-800 space-y-2.5">
                 <div className="flex items-center justify-between text-xs font-bold text-zinc-200 pb-1 border-b border-zinc-800">
-                  <span>CURRENT MONTH USAGE STATEMENT</span>
-                  <span className="text-emerald-400 font-mono text-[11px]">BTP Pro Subscription ($49/mo)</span>
+                  <span>EXAMPLE USAGE STATEMENT</span>
+                  <span className="text-zinc-400 font-mono text-[11px]">BTP Pro Subscription ($49/mo)</span>
                 </div>
 
                 <div className="space-y-1.5 text-[11px] font-mono">
@@ -1172,7 +1175,7 @@ export default function SwarmArbitrationArena() {
                   Enterprise Continuous Audit & Regulatory Compliance Dossier
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  SOC 2 Type II • EU AI Act • ISO 27001
+                  SOC 2-Ready Controls Framework
                 </span>
               </div>
 
@@ -1194,15 +1197,15 @@ export default function SwarmArbitrationArena() {
             {/* Regulatory Standards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
               {[
-                { name: 'SOC 2 Type II', control: 'CC6.1 Logical Tool Access', status: 'COMPLIANT' },
-                { name: 'EU AI Act Art. 14', control: 'Human Oversight & Circuit Breaker', status: 'COMPLIANT' },
-                { name: 'EU AI Act Art. 15', control: 'Cybersecurity & Prompt Shield', status: 'COMPLIANT' },
-                { name: 'ISO 27001:2022', control: 'Control A.8.28 AST Security', status: 'COMPLIANT' },
+                { name: 'SOC 2 Type II', control: 'CC6.1 Logical Tool Access', status: 'CONTROLS MAPPED' },
+                { name: 'EU AI Act Art. 14', control: 'Human Oversight & Circuit Breaker', status: 'CONTROLS MAPPED' },
+                { name: 'EU AI Act Art. 15', control: 'Cybersecurity & Prompt Shield', status: 'CONTROLS MAPPED' },
+                { name: 'ISO 27001:2022', control: 'Control A.8.28 AST Security', status: 'CONTROLS MAPPED' },
               ].map(reg => (
                 <div key={reg.name} className="p-3 rounded-lg bg-black/40 border border-zinc-800">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-bold text-white">{reg.name}</span>
-                    <span className="text-[10px] font-mono text-emerald-400 font-bold">{reg.status}</span>
+                    <span className="text-[10px] font-mono text-amber-400 font-bold">{reg.status}</span>
                   </div>
                   <span className="text-[10px] text-zinc-400 font-mono block">{reg.control}</span>
                 </div>
@@ -1252,6 +1255,9 @@ export default function SwarmArbitrationArena() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
                       MILESTONE 5.4
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      ⚠ Simulated Demo
                     </span>
                     <h3 className="text-sm font-bold text-white tracking-wide">
                       Decentralized P2P Peer Reputation Gossip & Cross-Chain Escrow Bridge

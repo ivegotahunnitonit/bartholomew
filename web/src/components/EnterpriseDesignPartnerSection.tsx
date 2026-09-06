@@ -104,7 +104,7 @@ export default function EnterpriseDesignPartnerSection() {
               </div>
               <h3 className="font-mono text-sm font-bold text-white mb-2.5 group-hover:text-[#c084fc] transition-colors">Automated Compliance</h3>
               <p className="text-xs text-[#a1a1aa] leading-relaxed font-sans">
-                Turnkey alignment with SOC 2 Type II (CC6.1, CC6.8, CC7.2) and ISO/IEC 27001:2022 (A.8.15, A.8.16, A.8.24) with offline-verifiable cryptographic receipts.
+                Turnkey alignment with SOC 2 Type II (CC6.1, CC6.8, CC7.2) and ISO/IEC 27001:2022 (A.8.15, A.8.16, A.8.24) controls mapped to offline-verifiable cryptographic execution receipts.
               </p>
             </div>
             <div className="mt-5 pt-3.5 border-t border-[#27272a]/60 text-[11px] font-mono text-[#c084fc] flex items-center gap-1.5">
@@ -123,8 +123,8 @@ export default function EnterpriseDesignPartnerSection() {
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
             <div className="space-y-2.5">
               <div className="flex items-center gap-2.5">
-                <span className="px-2.5 py-1 bg-[#f59e0b]/15 text-[#f59e0b] border border-[#f59e0b]/40 text-[10px] font-mono font-bold rounded-full">
-                  LIMITED ENROLLMENT (5 TEAMS)
+                <span className="px-2.5 py-1 bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/40 text-[10px] font-mono font-bold rounded-full">
+                  APPLICATIONS OPEN
                 </span>
                 <span className="text-xs font-mono text-[#a1a1aa]">14-Day Assisted Engineering Pilot</span>
               </div>
@@ -132,7 +132,7 @@ export default function EnterpriseDesignPartnerSection() {
                 Integrate BTP into your staging agent cluster with dedicated architectural support.
               </h3>
               <p className="text-xs sm:text-sm text-[#a1a1aa] font-sans max-w-2xl leading-relaxed">
-                Includes custom policy generation, synthetic adversarial stress-testing (10k fuzz iterations), and an auditor-certified SOC 2 compliance evidence package.
+                Includes custom policy generation, synthetic adversarial stress-testing (10k fuzz iterations), and a compliance evidence package to help prepare your SOC 2 audit trail.
               </p>
             </div>
 
