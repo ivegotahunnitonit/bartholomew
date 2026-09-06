@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "btp-guard": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server"
+      ],
+      "env": {
+        "BTP_ENFORCE_STRICT": "true",
+        "BTP_POLICY_ID": "urn:btp:policy:cursor-agent-v2026.1"
+      }
+    }
+  }
+}

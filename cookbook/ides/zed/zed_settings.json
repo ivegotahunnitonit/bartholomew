@@ -1,0 +1,15 @@
+{
+  "assistant": {
+    "context_servers": {
+      "btp-guard": {
+        "command": {
+          "path": "python",
+          "args": ["-m", "mcp_server"],
+          "env": {
+            "BTP_ENFORCE_STRICT": "true"
+          }
+        }
+      }
+    }
+  }
+}

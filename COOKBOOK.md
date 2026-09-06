@@ -63,7 +63,22 @@ Add BTP Guard as a persistent MCP supervisor in `~/.codeium/windsurf/mcp_config.
 
 ---
 
-## 2. Protecting Agents "Being Built Right Now"
+## 2. AI IDEs & Developer Agent Environments
+
+BTP Guard provides turnkey guardrails for all modern agentic coding environments:
+
+| IDE / Environment | Guardrail Pattern | Setup Artifact | One-Line Installation |
+| :--- | :--- | :--- | :--- |
+| **Cursor IDE** | Background MCP Supervisor + `.cursorrules` | [`cookbook/ides/cursor/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/cursor/) | Drop `.cursorrules` into workspace root |
+| **VS Code** | Packaged VSIX Extension + Settings | [`cookbook/ides/vscode/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/vscode/) | `code --install-extension vscode-extension/bartholomew-guard-vscode-3.0.0.vsix` |
+| **Windsurf (Codeium)** | Cascade Agent Rules + MCP Gateway | [`cookbook/ides/windsurf/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/windsurf/) | Copy `.windsurfrules` into workspace root |
+| **Cline / Roo Code** | Pre-authorized MCP Security Layer | [`cookbook/ides/cline_roo_code/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/cline_roo_code/) | Import `cline_mcp_settings.json` |
+| **Zed Editor** | Context Server Assistant Protocol | [`cookbook/ides/zed/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/zed/) | Merge `zed_settings.json` into Zed config |
+| **Antigravity IDE** | Customization System Skills & Rules | [`cookbook/ides/antigravity/`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/ides/antigravity/) | Place in `.agents/rules/` or `AGENTS.md` |
+
+---
+
+## 3. Protecting Agents "Being Built Right Now"
 
 ### OpenAI Function Calling Guard
 Wrap function execution dispatchers in 5 lines:
@@ -100,7 +115,7 @@ const { allowed, reason } = await guard.guardToolCall(toolCall);
 
 ---
 
-## 3. Future-Proof Autonomous Swarms & Economic Networks
+## 4. Future-Proof Autonomous Swarms & Economic Networks
 
 ### Sovereign Digital Passports & Peer Discovery
 Issue non-human cryptographic passports with Ed25519 signatures:
