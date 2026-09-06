@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bartholomew Voice AI — Cold Call Engineering Simulator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z' fill='%2310b981'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030306;
+      --card-bg: rgba(13, 13, 18, 0.85);
+      --border: rgba(39, 39, 42, 0.7);
+      --primary: #10b981;
+      --primary-hover: #34d399;
+      --accent: #38bdf8;
+      --text: #f4f4f8;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1000px;
+      width: 100%;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .version-tag {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--primary);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+    .links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: 16px;
+      transition: color 0.2s;
+    }
+    .links a:hover { color: #fff; }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 850px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    label {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px 14px;
+      background: #08080c;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+    select:focus, input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-call {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #000;
+      box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.4);
+    }
+    .btn-call:hover {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      transform: translateY(-2px);
+    }
+    .btn-hangup {
+      background: #ef4444;
+      color: #fff;
+      display: none;
+    }
+    .btn-hangup:hover { background: #dc2626; }
+
+    /* Visualizer */
+    .viz-box {
+      margin: 16px 0;
+      background: #020204;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      height: 80px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 12px;
+      color: var(--text-muted);
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+    .dot.live {
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Transcript Box */
+    .transcript-box {
+      background: #06060a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .msg {
+      padding: 10px 14px;
+      border-radius: 10px;
+      max-width: 85%;
+      line-height: 1.5;
+    }
+    .msg.alex {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      align-self: flex-start;
+    }
+    .msg.user {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #7dd3fc;
+      align-self: flex-end;
+    }
+    .speaker-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Objection Quick Action Buttons */
+    .objection-strip {
+      margin-top: 16px;
+    }
+    .objection-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .input-row input {
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .btn-send {
+      width: auto;
+      padding: 0 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .btn-send:hover {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="/" class="brand">
+        <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+          <path d="M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z" fill="#10b981"/>
+          <path d="M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z" fill="#000000"/>
+        </svg>
+        <span>Bartholomew Voice AI</span>
+        <span class="version-tag">Alex &bull; Cold Caller</span>
+      </a>
+      <div class="links">
+        <a href="/">&larr; Runtime Home</a>
+        <a href="/store">&larr; Storefront</a>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      
+      <!-- Left Panel: Campaign & Call Control -->
+      <div class="card">
+        <h2>
+          <span>Target Prospect</span>
+        </h2>
+        
+        <label>Select Prospect</label>
+        <select id="prospectSelect">
+          <option value="marcus">Marcus Vance (Head of AI Platform &bull; Synthetix)</option>
+          <option value="elena">Elena Rostova (Lead ML Infra &bull; VectorFlow)</option>
+          <option value="devin">Devin Chen (CTO &bull; HyperScale Agents)</option>
+          <option value="sarah">Sarah Jenkins (VP Engineering &bull; Cognitive Corp)</option>
+        </select>
+
+        <label>Engine Mode</label>
+        <input type="text" id="engineMode" value="Simulated / Zero-API-Cost" readonly style="color: var(--primary);">
+
+        <button id="btnStart" class="btn btn-call" onclick="startCall()">
+          <span>&#9742;</span> Start Interactive Call
+        </button>
+        <button id="btnHangup" class="btn btn-hangup" onclick="hangupCall()">
+          <span>&#10006;</span> End Call
+        </button>
+
+        <div class="viz-box">
+          <canvas id="vizCanvas"></canvas>
+        </div>
+
+        <div class="status-indicator">
+          <div id="statusDot" class="dot"></div>
+          <span id="statusText">Ready to connect</span>
+        </div>
+
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <label>Twilio Outbound Dial</label>
+          <input type="tel" id="dialPhone" placeholder="+1 (555) 000-0000">
+          <button class="btn" style="background: rgba(56, 189, 248, 0.1); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3);" onclick="dialTwilio()">
+            Dial Real Phone Number
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Panel: Live Transcript & Objection Sandbox -->
+      <div class="card">
+        <h2>
+          <span>Live Call Telemetry</span>
+          <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: auto;" id="callTimer">00:00</span>
+        </h2>
+
+        <div class="transcript-box" id="transcriptBox">
+          <div class="msg alex">
+            <div class="speaker-tag">Alex (Bartholomew AI)</div>
+            Click "Start Interactive Call" to simulate an outbound pitch from Alex.
+          </div>
+        </div>
+
+        <!-- Quick Objection Tester -->
+        <div class="objection-strip">
+          <label>Simulate Prospect Reaction / Objection</label>
+          <div class="objection-chips">
+            <span class="chip" onclick="simulateSpeech('We already use OpenAI system prompts and guardrails.')">"Already have OpenAI guardrails"</span>
+            <span class="chip" onclick="simulateSpeech('How much does it cost?')">"How much does it cost?"</span>
+            <span class="chip" onclick="simulateSpeech('How hard is this to install in our CrewAI pipeline?')">"How hard to install?"</span>
+            <span class="chip" onclick="simulateSpeech('Can you just send me an email with the repo?')">"Send me an email"</span>
+            <span class="chip" onclick="simulateSpeech('I am driving in the car, call me back later.')">"I am busy right now"</span>
+            <span class="chip" onclick="simulateSpeech('We don\'t use autonomous tools so not interested.')">"Not interested"</span>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <input type="text" id="customInput" placeholder="Type custom prospect response or speak into mic..." onkeypress="handleKey(event)">
+          <button class="btn btn-send" onclick="sendCustomText()">Send</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let ws = null;
+    let audioCtx = null;
+    let timerInterval = null;
+    let callSeconds = 0;
+    let isCalling = false;
+
+    const btnStart = document.getElementById('btnStart');
+    const btnHangup = document.getElementById('btnHangup');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const transcriptBox = document.getElementById('transcriptBox');
+    const callTimer = document.getElementById('callTimer');
+    const customInput = document.getElementById('customInput');
+
+    function startCall() {
+      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${proto}//${location.host}/voice/browser-stream`;
+      
+      statusText.innerText = "Connecting to voice socket...";
+      statusDot.className = "dot";
+      
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        isCalling = true;
+        btnStart.style.display = "none";
+        btnHangup.style.display = "flex";
+        statusDot.className = "dot live";
+        statusText.innerText = "Live Call &bull; Alex Speaking";
+        transcriptBox.innerHTML = "";
+        startTimer();
+        initAudio();
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "ready") {
+          document.getElementById('engineMode').value = data.mode === "openai" ? "Live OpenAI Realtime API" : "Simulated / Zero-API-Cost";
+        } else if (data.type === "transcript") {
+          appendTranscript(data.role === "assistant" ? "Alex (Bartholomew AI)" : "Prospect", data.text, data.role === "assistant" ? "alex" : "user");
+        } else if (data.type === "audio") {
+          playAudioChunk(data.payload);
+        }
+      };
+
+      ws.onclose = () => {
+        hangupCall();
+      };
+    }
+
+    function hangupCall() {
+      if (ws) {
+        try { ws.close(); } catch(e) {}
+        ws = null;
+      }
+      isCalling = false;
+      btnStart.style.display = "flex";
+      btnHangup.style.display = "none";
+      statusDot.className = "dot";
+      statusText.innerText = "Call ended";
+      stopTimer();
+    }
+
+    function appendTranscript(speaker, text, cssClass) {
+      const div = document.createElement('div');
+      div.className = `msg ${cssClass}`;
+      div.innerHTML = `<div class="speaker-tag">${speaker}</div>${text}`;
+      transcriptBox.appendChild(div);
+      transcriptBox.scrollTop = transcriptBox.scrollHeight;
+    }
+
+    function simulateSpeech(text) {
+      if (!isCalling) startCall();
+      setTimeout(() => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "text", text: text }));
+        }
+      }, 400);
+    }
+
+    function sendCustomText() {
+      const text = customInput.value.trim();
+      if (!text) return;
+      simulateSpeech(text);
+      customInput.value = "";
+    }
+
+    function handleKey(e) {
+      if (e.key === "Enter") sendCustomText();
+    }
+
+    function startTimer() {
+      callSeconds = 0;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        callSeconds++;
+        const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+        const secs = String(callSeconds % 60).padStart(2, '0');
+        callTimer.innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      drawVisualizer();
+    }
+
+    function playAudioChunk(b64Data) {
+      if (!audioCtx) return;
+      try {
+        const raw = atob(b64Data);
+        const buffer = new ArrayBuffer(raw.length);
+        const bytes = new Uint8Array(buffer);
+        for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+        const pcm16 = new Int16Array(buffer);
+        const audioBuffer = audioCtx.createBuffer(1, pcm16.length, 24000);
+        const channelData = audioBuffer.getChannelData(0);
+        for (let i = 0; i < pcm16.length; i++) {
+          channelData[i] = pcm16[i] / 32768.0;
+        }
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(audioCtx.destination);
+        source.start();
+      } catch (e) {
+        console.error("Audio playback error:", e);
+      }
+    }
+
+    function drawVisualizer() {
+      const canvas = document.getElementById('vizCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      function render() {
+        ctx.fillStyle = "#020204";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = isCalling ? "#10b981" : "#334155";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const mid = canvas.height / 2;
+        const width = canvas.width;
+        
+        ctx.moveTo(0, mid);
+        for (let x = 0; x < width; x += 4) {
+          const amp = isCalling ? Math.sin(x * 0.05 + Date.now() * 0.008) * (mid * 0.45) : 0;
+          ctx.lineTo(x, mid + amp);
+        }
+        ctx.stroke();
+
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    async function dialTwilio() {
+      const phone = document.getElementById('dialPhone').value.trim();
+      if (!phone) {
+        alert("Please enter a destination phone number.");
+        return;
+      }
+      try {
+        const res = await fetch(`/api/dial?phone=${encodeURIComponent(phone)}`, { method: "POST" });
+        const data = await res.json();
+        alert(data.message || `Outbound dialing initiated! Call SID: ${data.call_sid}`);
+      } catch (e) {
+        alert("Error initiating dial: " + e);
+      }
+    }
+  </script>
+</body>
+</html>

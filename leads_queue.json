@@ -1,0 +1,58 @@
+[
+  {
+    "id": "e78802b5",
+    "name": "Marcus Vance",
+    "company": "Synthetix AI",
+    "phone": "+14155552671",
+    "email": null,
+    "role": "Head of AI Platform",
+    "status": "PENDING",
+    "notes": "Deploys multi-agent CrewAI clusters with code execution tools.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "last_called_at": null,
+    "created_at": 1788696910.6006384
+  },
+  {
+    "id": "46a509ad",
+    "name": "Elena Rostova",
+    "company": "VectorFlow Dynamics",
+    "phone": "+12065558914",
+    "email": null,
+    "role": "Lead ML Infrastructure Engineer",
+    "status": "PENDING",
+    "notes": "Scaling LangGraph pipelines for enterprise financial clients.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "last_called_at": null,
+    "created_at": 1788696910.6006534
+  },
+  {
+    "id": "132f5d0f",
+    "name": "Devin Chen",
+    "company": "HyperScale Agents",
+    "phone": "+16505553190",
+    "email": null,
+    "role": "CTO",
+    "status": "PENDING",
+    "notes": "Building autonomous database query agents with Postgres & BigQuery.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "last_called_at": null,
+    "created_at": 1788696910.6006596
+  },
+  {
+    "id": "d29494a6",
+    "name": "Sarah Jenkins",
+    "company": "Cognitive Corp",
+    "phone": "+13125557732",
+    "email": null,
+    "role": "VP of Engineering",
+    "status": "PENDING",
+    "notes": "Needs SOC 2 Type II audit compliance for LLM tool executions.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "last_called_at": null,
+    "created_at": 1788696910.6006641
+  }
+]
