@@ -427,4 +427,15 @@ def test_cli_rollup_lifecycle():
         assert os.path.exists(anchor_file)
 
 
+def test_cli_onboard_lifecycle():
+    """Validate BTP Guard fast onboarding wizard via CLI."""
+    cmd = [sys.executable, "cli.py", "onboard", "--target", "cursor"]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    assert res.returncode == 0, res.stderr
+    assert "BARTHOLOMEW BTP GUARD" in res.stdout
+    assert "Cursor IDE Invariant Rules" in res.stdout
+    assert "Local In-Memory Verification" in res.stdout
+
+
+
 

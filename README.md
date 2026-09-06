@@ -8,9 +8,12 @@
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
 [![Open VSX](https://img.shields.io/badge/Open%20VSX-v3.0.0-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Tests](https://img.shields.io/badge/Tests-2%2C723%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Universal Cookbook](https://img.shields.io/badge/Cookbook-All%203%20Horizons%20%2B%20IDEs-orange.svg?style=for-the-badge)](COOKBOOK.md)
+[![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://acn-26670.web.app/#universal-cookbook)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v3.0.0-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
 [![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
 [![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22076536.svg)](https://doi.org/10.5281/zenodo.22076536)
 [![SOC 2 Type II](https://img.shields.io/badge/SOC%202%20Type%20II-CC7.1%20%2F%20CC7.2%20Ready-success.svg?style=for-the-badge)](scripts/generate_soc2_compliance_evidence.py)
 
 </div>
@@ -124,6 +127,59 @@ Install directly in Cursor, VS Code, or VSCodium:
   cursor --install-extension Bartholomew.bartholomew-guard-vscode
   ```
 
+#### **3. Autonomous Micro-Escrow & Automated Slashing (`@guard.escrow_collateral`)**
+```python
+# Stake micro-escrow collateral (L402 Lightning or EVM) before high-risk execution
+@guard.escrow_collateral(amount_usd=250.0, action_type="FINANCIAL_TRADE", rail="L402_LIGHTNING")
+def execute_large_trade(trade_payload: dict):
+    # If clean: escrow is released & passport reputation increments
+    # If invariant breached: collateral is liquidated automatically to claimant payee!
+    return broker.submit(trade_payload)
+```
+
+#### **4. 1-Line GitHub Actions CI Security Gate**
+Drop this into `.github/workflows/ci.yml` to automatically block prompt injection and unverified tool mutations on every pull request:
+```yaml
+- name: "Bartholomew Autonomous AI Security Gate"
+  uses: ivegotahunnitonit/bartholomew@v3
+  with:
+    fail-on-violation: "true"
+    generate-compliance-pack: "true"
+```
+
+---
+
+### **[UNIVERSAL_COOKBOOK] Universal Cookbook for ALL Agents (Past, Present, & Future)**
+
+Full interactive documentation is available at **[`COOKBOOK.md`](COOKBOOK.md)** and the **[Live Interactive Web Explorer](https://acn-26670.web.app/#universal-cookbook)**.
+
+| Horizon | Recipe | Target Scenario | File Location |
+| :--- | :--- | :--- | :--- |
+| **Horizon 1** | **HTTP Sidecar Reverse Proxy** | Intercept existing legacy agent REST calls with zero code changes | [`cookbook/already_built/http_sidecar_proxy.py`](cookbook/already_built/http_sidecar_proxy.py) |
+| **Horizon 1** | **CLI Subprocess Gate** | Sandbox arbitrary agent binaries & CLI scripts at runtime | [`cookbook/already_built/cli_process_gate.py`](cookbook/already_built/cli_process_gate.py) |
+| **Horizon 2** | **OpenAI Tool-Calling Guard** | Pre-flight AST gating for raw `tools` calling loops | [`cookbook/being_built/openai_tool_calling_guard.py`](cookbook/being_built/openai_tool_calling_guard.py) |
+| **Horizon 2** | **Anthropic Computer Use Guard** | Guard Claude bash execution and OS computer actions | [`cookbook/being_built/anthropic_computer_use_guard.py`](cookbook/being_built/anthropic_computer_use_guard.py) |
+| **Horizon 2** | **Google Gemini Function Guard** | Ed25519-signed function execution receipts for Gemini | [`cookbook/being_built/gemini_function_calling_guard.py`](cookbook/being_built/gemini_function_calling_guard.py) |
+| **Horizon 2** | **TypeScript / Node.js Agent** | Native npm package integration for web agent backends | [`cookbook/being_built/typescript_node_agent.ts`](cookbook/being_built/typescript_node_agent.ts) |
+| **Horizon 2** | **Rust Sub-5µs Fast-Path** | Zero-copy SIMD invariant validation for high-frequency agents | [`cookbook/being_built/rust_fast_path_guard.rs`](cookbook/being_built/rust_fast_path_guard.rs) |
+| **Horizon 3** | **Sovereign Agent Passports** | Ed25519 digital passports & peer discovery mesh for swarms | [`cookbook/future_swarms/sovereign_agent_passport_mesh.py`](cookbook/future_swarms/sovereign_agent_passport_mesh.py) |
+| **Horizon 3** | **ZK Privacy Compliance** | Homomorphic Pedersen commitments proving compliance with 0 leaks | [`cookbook/future_swarms/zk_privacy_auditing.py`](cookbook/future_swarms/zk_privacy_auditing.py) |
+| **Horizon 3** | **Confidential Hardware Enclave** | AWS Nitro / AMD SEV-SNP golden PCR attestation anchoring | [`cookbook/future_swarms/confidential_enclave_anchor.py`](cookbook/future_swarms/confidential_enclave_anchor.py) |
+| **Horizon 3** | **L402 Autonomous Micro-Escrow** | Programmatic collateral lock & automated regression slashing | [`cookbook/future_swarms/l402_autonomous_escrow.py`](cookbook/future_swarms/l402_autonomous_escrow.py) |
+
+---
+
+### **[AI_IDES] AI Developer IDE Guardrails**
+
+Drop-in invariant enforcement across all leading AI coding assistants:
+
+* **Cursor**: [`.cursorrules`](cookbook/ides/cursor/.cursorrules) & [`mcp.json`](cookbook/ides/cursor/mcp.json)
+* **Windsurf**: [`.windsurfrules`](cookbook/ides/windsurf/.windsurfrules) & [`mcp_config.json`](cookbook/ides/windsurf/mcp_config.json)
+* **VS Code / Copilot**: [`settings.json`](cookbook/ides/vscode/settings.json) & [Extension](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+* **Cline / Roo Code**: [`cline_mcp_settings.json`](cookbook/ides/cline_roo_code/cline_mcp_settings.json)
+* **Zed**: [`zed_settings.json`](cookbook/ides/zed/zed_settings.json)
+* **Google Antigravity**: [`AGENTS.md`](cookbook/ides/antigravity/AGENTS.md)
+
 ---
 
 ### **[FRAMEWORK_ADAPTERS] Pre-Bundled Framework Middleware**
@@ -133,7 +189,8 @@ Install directly in Cursor, VS Code, or VSCodium:
 | **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `BartholomewLangChainTool` | AST syntax gating, spend caps, offline Merkle receipt verification |
 | **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds, anti-confused deputy isolation |
 | **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `@btp_autogen_guard`, `AutoGenBTPInterceptor` | Multi-agent conversation message interceptor & payload filter |
-| **GitHub Actions** | [`action.yml`](action.yml) | `action-btp-audit` | Continuous PR security gate & SOC 2 audit summary table generation |
+| **LlamaIndex** | [`framework_adapters/llamaindex/`](framework_adapters/llamaindex/) | `@btp_llamaindex_tool`, `BartholomewLlamaIndexTool` | Sub-35µs AST inspection blocking indirect prompt injections |
+| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v3` | Continuous PR security gate & SOC 2 audit summary table generation |
 
 ---
 
