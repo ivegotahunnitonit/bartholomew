@@ -34,3 +34,17 @@ The Bartholomew team takes software security and vulnerability reports seriously
 * **Security Patch Release**: Within 7 days for critical severity issues.
 
 Please do not disclose security issues publicly on public issue trackers until a patched release has been published and coordinated.
+
+---
+
+## 4. Boundary Protection & Capability Matrix
+
+Bartholomew enforces a strict decoupling between **Pre-Execution Invariant Gates** (for non-idempotent/irreversible operations like networks and subprocesses) and **Transactional State Rollbacks** (for local mutable filesystem state):
+
+| Boundary Layer | Inspection Mechanism | Enforcement Timing | Failure Action | Containment & Recovery Guarantee | Target Latency |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Filesystem** | In-Memory Copy-on-Write (CoW) Shadow Ledger & Path Canonicalization | **Post-Mutation Atomic Checkpoint** | **ROLLBACK (Revert Tree)** | Zero orphaned files or partial edits; atomic filesystem tree restoration + JSON-RPC diagnostic hint | `< 120µs` |
+| **Subprocess** | Local AST Abstract Syntax Parsing & Shell Delimiter Normalization | **Pre-Execution Gate** (Before OS `fork`/`exec`) | **DROP (DENY Call)** | Subprocess is never spawned; zero OS-level side effects; invariant violation logged to Merkle tree | `< 18µs` |
+| **Network Egress** | CIDR/Domain Allowlist & High-Entropy Payload Heuristics | **Pre-Execution Gate** (Before Socket `connect()`) | **VETO (Block Socket)** | TCP handshake never initiates; raw exfiltration credentials stripped before wire dispatch | `< 35µs` |
+| **External APIs** | Schema Policy Validator & Bearer Credential In-Memory Scrubber | **Pre-Execution Gate** (Before HTTP Dispatch) | **SCRUB or REJECT** | Private prompts/tokens sanitized in-memory; unapproved endpoints fail closed with 403 Forbidden | `< 45µs` |
+

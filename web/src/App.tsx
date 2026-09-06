@@ -5,17 +5,11 @@ import Hero from './components/Hero'
 import EnterpriseEcosystemBanner from './components/EnterpriseEcosystemBanner'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
 import SecurityThreatModelSection from './components/SecurityThreatModelSection'
-import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
 import SwarmArbitrationArena from './components/SwarmArbitrationArena'
 import UniversalCookbookExplorer from './components/UniversalCookbookExplorer'
-import RuntimeThesisProof from './components/RuntimeThesisProof'
-import VisualPolicyEditor from './components/VisualPolicyEditor'
-import { LiveAttestationInspector } from './components/LiveAttestationInspector'
 import EnterpriseDesignPartnerSection from './components/EnterpriseDesignPartnerSection'
 import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
 import Founder from './components/Founder'
-import SDK from './components/SDK'
-import LiveAPI from './components/LiveAPI'
 import Footer from './components/Footer'
 
 function ScrollToHash() {
@@ -44,21 +38,11 @@ function HomeView() {
       <EnterpriseEcosystemBanner />
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
-      <InteractiveAgentSandbox />
       <SwarmArbitrationArena />
       <UniversalCookbookExplorer />
       <EnterpriseDesignPartnerSection />
-      <RuntimeThesisProof />
-      <div id="policy-editor">
-        <VisualPolicyEditor />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <LiveAttestationInspector />
-      </div>
       <ContinuousComplianceTimeline />
       <Founder />
-      <SDK />
-      <LiveAPI />
     </>
   )
 }

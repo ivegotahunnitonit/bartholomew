@@ -195,7 +195,7 @@ export default function SwarmArbitrationArena() {
     crewai: `from framework_adapters.crewai import BTPCrewAITaskGuard\nguard = BTPCrewAITaskGuard(tenant_id="${activeTenant.id}")\ncrew = Crew(agents=[...], tasks=[...], task_callback=guard.intercept_task_execution)`,
     langgraph: `from framework_adapters.langgraph import BTPLangGraphGuard\nguard = BTPLangGraphGuard(tenant_id="${activeTenant.id}")\napp = guard.wrap_graph(workflow.compile())`,
     autogen: `from framework_adapters.autogen import BTPAutoGenInterceptor\ninterceptor = BTPAutoGenInterceptor(tenant_id="${activeTenant.id}")\nassistant.register_hook("process_message", interceptor.verify_message)`,
-    openai: `from src.mcp_gateway import MCPProxyGateway\ngateway = MCPProxyGateway()\n# Intercepts raw tool calls in <35µs before reaching OS`
+    openai: `from src.mcp_gateway import MCPProxyGateway\ngateway = MCPProxyGateway()\n# Intercepts raw tool calls instantly in local memory before reaching OS`
   }
 
   const handleGenerateInvoice = () => {
@@ -464,7 +464,7 @@ export default function SwarmArbitrationArena() {
             Multi-Tenant Gating, Swarm Slashing & Zero-Knowledge Proofs
           </h2>
           <p className="mt-3 text-base text-zinc-400">
-            Guaranteed isolation across <strong className="text-white">Acme Corp, Bartholomew Core, and Novartis</strong>. Scoped API keys prevent cross-tenant leakage, while sub-35µs AST rules drop destructive actions before execution.
+            Guaranteed isolation across <strong className="text-white">Acme Corp, Bartholomew Core, and Novartis</strong>. Scoped API keys prevent cross-tenant leakage, while the fastest and most reliable local AST safety rules drop destructive actions before execution.
           </p>
 
           {/* Live Telemetry Streaming Ribbon */}

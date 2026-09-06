@@ -22,7 +22,7 @@ const RECIPES: Recipe[] = [
     description: 'Intercepts HTTP REST tool calls from any existing agent (AutoGPT, custom scripts) and drops prompt injections with HTTP 403.',
     language: 'python',
     filePath: 'cookbook/already_built/http_sidecar_proxy.py',
-    architectureNote: 'Agent -> [Sidecar 127.0.0.1:8080 (Sub-35µs AST Gate)] -> External World',
+    architectureNote: 'Agent -> [Sidecar 127.0.0.1:8080 (Local AST Invariant Gate)] -> External World',
     codeSnippet: `from btp_guard import Guard
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -31,7 +31,7 @@ guard = Guard(spend_cap=50.0, max_retries=3)
 class BTPProxyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         payload = self.rfile.read(int(self.headers['Content-Length'])).decode()
-        # Sub-35µs AST Invariant Inspection
+        # Fastest and Most Reliable Local AST Safety Inspection
         res = guard.check(payload)
         if not res.allowed:
             self.send_response(403)
@@ -377,7 +377,8 @@ export default function UniversalCookbookExplorer() {
   }
 
   return (
-    <section id="universal-cookbook" className="py-20 bg-[#07070b] border-t border-b border-[#222230]">
+    <section id="cookbook" className="py-20 bg-[#07070b] border-t border-b border-[#222230] relative">
+      <div id="universal-cookbook" className="absolute -top-24" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">

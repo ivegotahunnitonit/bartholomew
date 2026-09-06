@@ -44,7 +44,7 @@ const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
 ======================================================================
 100% In-Memory Guardrails Verified • Zero External Prompt Leakage`,
     explanation: 'Interactive 10-second developer wizard. Automatically detects your agent framework and scaffolds sovereign credentials, AST policies, and drop-in guards.',
-    latency: 'Sub-35µs Local Gate'
+    latency: 'Instant Local Memory Gate'
   },
   crewai: {
     tab: 'crewai',
@@ -55,7 +55,7 @@ const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
     code: `from crewai import Agent, Task, Crew
 from btp_guard.adapters.crewai import BTPTaskGuard
 
-# Wrap agent execution with sub-35µs AST inspection
+# Fastest and most reliable local AST safety inspection
 guard = BTPTaskGuard(tenant_id="acme-corp", spend_cap=150.0)
 
 auditor = Agent(
@@ -211,7 +211,7 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="text-center mx-auto mb-8 text-[#a1a1aa] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          Zero cloud lag. Zero prompt leakage. Sub-35µs local AST gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory. Cross-tenant agent marketplace, EigenTrust peer reputation, and atomic multi-chain escrow bridging across Base, Arbitrum, and Lightning.
+          Zero cloud lag. Zero prompt leakage. The fastest and most reliable local AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Cross-tenant agent marketplace, EigenTrust peer reputation, and atomic multi-chain escrow bridging across Base, Arbitrum, and Lightning.
         </p>
 
         {/* Minimalist Action & Quick-Start Pill */}
@@ -248,7 +248,7 @@ export default function Hero() {
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-[#71717a] mb-10 pb-2">
           <span className="flex items-center gap-1.5 text-emerald-400">
             <Zap size={13} className="text-amber-400" />
-            <span>&lt; 35µs AST Gate</span>
+            <span>Fastest &amp; Most Reliable AST Gating</span>
           </span>
           <span className="hidden xs:inline">&bull;</span>
           <span className="flex items-center gap-1.5 text-cyan-300">

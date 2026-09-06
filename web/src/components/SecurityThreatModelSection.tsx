@@ -211,7 +211,7 @@ export default function SecurityThreatModelSection() {
                     Bartholomew Trust Protocol — Online Architecture &amp; Threat Model Spec
                   </h3>
                   <p className="text-xs font-mono text-[#a1a1aa]">
-                    Protocol Version: BTP/2.8.0 &bull; RFC 9591 FROST &bull; RFC 8785 JCS &bull; FIPS 186-5 Ed25519 &bull; DOI: 10.5281/zenodo.22076539
+                    Protocol Version: BTP/5.4.0 &bull; Sovereign Trust &amp; Settlement Protocol &bull; FIPS 186-5 Ed25519 &bull; RFC 8785 JCS
                   </p>
                 </div>
               </div>
@@ -328,7 +328,7 @@ export default function SecurityThreatModelSection() {
                   </p>
                   <pre className="p-4 bg-[#050505] border border-[#222222] rounded-xl font-mono text-xs text-[#10b981] overflow-x-auto">
 {`{
-  "protocol": "BTP/2.8.0",
+  "protocol": "BTP/5.4.0",
   "timestamp": "2026-09-04T02:00:00Z",
   "agent_id": "swe-bench-agent-01",
   "action_type": "POSTGRES_EXECUTE",
@@ -342,7 +342,7 @@ export default function SecurityThreatModelSection() {
 }`}
                   </pre>
                   <p className="text-xs text-[#a1a1aa]">
-                    Any downstream database gateway or MCP server can verify this signature independently in under 20 microseconds with zero cloud dependencies.
+                    Any downstream database gateway or MCP server can verify this signature independently in local memory with zero cloud dependencies.
                   </p>
                 </div>
               )}
@@ -421,8 +421,8 @@ export default function SecurityThreatModelSection() {
                         <p className="text-[#71717a]">NeMo / LlamaGuard handles conversational tone, user sentiment, and high-level dialogue rules.</p>
                       </div>
                       <div className="p-3 bg-[#050505] border border-[#10b981]/40 rounded-lg">
-                        <span className="text-[#10b981] font-bold block mb-1">Layer 2: In-Process Invariant</span>
-                        <p className="text-[#a1a1aa]">Bartholomew gates destructive commands (rm -rf, DROP TABLE), API keys, and loops in &lt;35µs.</p>
+                        <span className="text-[#10b981] font-bold block mb-1">Layer 2: Local Memory Invariant Gate</span>
+                        <p className="text-[#a1a1aa]">Bartholomew provides the fastest and most reliable local AST safety gating against destructive commands (rm -rf, DROP TABLE), API keys, and loops.</p>
                       </div>
                       <div className="p-3 bg-[#050505] border border-[#1a1a24] rounded-lg">
                         <span className="text-[#a855f7] font-bold block mb-1">Layer 3: OS Container</span>

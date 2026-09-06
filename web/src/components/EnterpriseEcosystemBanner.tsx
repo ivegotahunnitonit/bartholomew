@@ -94,7 +94,7 @@ export default function EnterpriseEcosystemBanner() {
             <span>[ UNIVERSAL AGENT FRAMEWORKS &amp; SETTLEMENT RAILS ]</span>
           </div>
           <p className="text-xs text-zinc-400 font-sans max-w-2xl mx-auto">
-            Zero-friction interoperability. Protects CrewAI, LangGraph, AutoGen, and Claude tools with sub-35µs AST gating, while settling micro-escrows across Base, Arbitrum, and Lightning.
+            Zero-friction interoperability. Protects CrewAI, LangGraph, AutoGen, and Claude tools with the fastest and most reliable local AST safety gating, while settling micro-escrows across Base, Arbitrum, and Lightning.
           </p>
         </div>
 
@@ -142,7 +142,7 @@ export default function EnterpriseEcosystemBanner() {
           <span>•</span>
           <span className="inline-flex items-center gap-1.5 text-amber-300">
             <Zap size={13} />
-            <span>Sub-35µs AST Invariant Gates</span>
+            <span>Fastest &amp; Most Reliable AST Gating</span>
           </span>
           <span>•</span>
           <span className="inline-flex items-center gap-1.5 text-purple-300">

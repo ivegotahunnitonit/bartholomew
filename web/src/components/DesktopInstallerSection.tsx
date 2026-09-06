@@ -33,7 +33,8 @@ export default function DesktopInstallerSection() {
   }
 
   return (
-    <section id="download" className="py-24 bg-gradient-to-b from-[#040406] via-[#08080c] to-[#040406] border-t border-[#1f1f23] text-white relative overflow-hidden">
+    <section id="quickstart" className="py-24 bg-gradient-to-b from-[#040406] via-[#08080c] to-[#040406] border-t border-[#1f1f23] text-white relative overflow-hidden">
+      <div id="download" className="absolute -top-24" />
       {/* Ambient background glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#10b981]/5 blur-[140px] pointer-events-none" />
 
