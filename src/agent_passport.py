@@ -158,6 +158,46 @@ class SovereignAgentPassport:
         current_score = self.reputation_vector.get("trust_score", 1.0)
         self.reputation_vector["trust_score"] = min(1.0, current_score + 0.01)
 
+    def record_action(self, reason: str = "", volume_usd: float = 0.0):
+        """Convenience alias for recording verified task completion."""
+        self.record_successful_action(value_usd=volume_usd)
+
+    @property
+    def verified_action_count(self) -> int:
+        return self.reputation_vector.get("verified_actions", 0)
+
+    @property
+    def total_settled_volume_usd(self) -> float:
+        return self.reputation_vector.get("settled_value_usd", 0.0)
+
+    @property
+    def violation_count(self) -> int:
+        return self.reputation_vector.get("violation_count", 0)
+
+    @classmethod
+    def issue(
+        cls,
+        agent_id: str,
+        model_family: str = "claude-3-5-sonnet",
+        authorized_capabilities: Optional[List[str]] = None,
+        bonded_warranty_usd: float = 0.0,
+        ttl_seconds: int = 86400,
+        private_key: Optional[ed25519.Ed25519PrivateKey] = None
+    ) -> "SovereignAgentPassport":
+        """Convenience factory to generate and sign a new sovereign passport."""
+        priv = private_key or ed25519.Ed25519PrivateKey.generate()
+        pubkey_hex = priv.public_key().public_bytes_raw().hex()
+        passport = cls(
+            agent_id=agent_id,
+            worker_model=model_family,
+            owner_pubkey=pubkey_hex,
+            granted_capabilities=authorized_capabilities,
+            bonded_warranty_balance_usd=bonded_warranty_usd,
+            ttl_seconds=ttl_seconds
+        )
+        passport.sign(priv)
+        return passport
+
     def to_dict(self) -> Dict[str, Any]:
         """Serializes passport to dict with signature."""
         data = self.get_canonical_payload()

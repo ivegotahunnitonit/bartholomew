@@ -92,11 +92,12 @@
     "ACTIVATED Milestone 3.3 Enterprise Production Daemons & Kubernetes DaemonSet Helm charts with Prometheus metrics and /healthz probe endpoints.",
     "ESTABLISHED BTP v4.0 Autonomous Micro-Escrow & Automated Slashing Pool with cryptographically proven regression penalties and L402 Lightning settlement.",
     "LAUNCHED Universal Global Cookbook spanning all 3 Autonomous Horizons (Already Built Sidecar Proxies & CLI Gates, Direct LLM Tool-Calling & Polyglot SDKs, Future Sovereign Passport Swarms & L402 Escrows) and 6 Premier AI IDEs (Cursor, VS Code, Windsurf, Cline, Zed, Antigravity).",
-    "STANDARDIZED CLI interfaces for BTP v4.0 Micro-Escrows (btp-guard escrow lock/slash/status) and BTP v3.5 Recursive ZK-Rollups (btp-guard rollup create/verify/anchor)."
+    "STANDARDIZED CLI interfaces for BTP v4.0 Micro-Escrows (btp-guard escrow lock/slash/status) and BTP v3.5 Recursive ZK-Rollups (btp-guard rollup create/verify/anchor).",
+    "ACTIVATED Milestone 4.0 RFC L402 Lightning Protocol & EIP-712 Multi-Chain Smart Escrows with SHA-256 preimage verification, SECP256K1 ECDSA typed data claims, and native @guard.escrow_collateral execution decorators."
   ],
   "last_verified_state": {
-    "opp_id": "BTP_UNIVERSAL_GLOBAL_COOKBOOK_AND_ESCROW",
-    "target": "acn/universal_agent_mesh_and_escrow",
+    "opp_id": "BTP_V40_L402_AND_EVM_ESCROW_GATEWAY",
+    "target": "acn/l402_and_evm_multi_rail_settlement",
     "verified": true
   },
   "known_file_hashes": {},
