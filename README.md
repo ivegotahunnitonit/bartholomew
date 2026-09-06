@@ -1,20 +1,21 @@
 <div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; line-height: 1.6;">
 
-# **Bartholomew AI &bull; BTP v3.0 Standards Track**
+# **Bartholomew AI &bull; BTP v4.1 Standards Track**
 ### **The AI Agent Execution Gateway &bull; Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; SOC 2 Type II Merkle Receipts**
 
 <div align="center">
 
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v3.0.0-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v4.1.0-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![Tests](https://img.shields.io/badge/Tests-2%2C723%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Universal Cookbook](https://img.shields.io/badge/Cookbook-All%203%20Horizons%20%2B%20IDEs-orange.svg?style=for-the-badge)](COOKBOOK.md)
 [![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://acn-26670.web.app/#universal-cookbook)
-[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v3.0.0-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v4.1.0-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
 [![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
 [![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
 [![SOC 2 Type II](https://img.shields.io/badge/SOC%202%20Type%20II-CC7.1%20%2F%20CC7.2%20Ready-success.svg?style=for-the-badge)](scripts/generate_soc2_compliance_evidence.py)
+[![AutoGen Recipe](https://img.shields.io/badge/Microsoft%20AutoGen-Security%20Recipe-0078D4.svg?style=for-the-badge&logo=microsoft&logoColor=white)](examples/autogen_btp_security_recipe.py)
 
 </div>
 
@@ -24,8 +25,8 @@
 
 Traditional AI guardrails operate **outside** the local runtime process—acting as conversational prompt filters or external cloud proxy LLM classifiers (80ms to 2,500ms latency). While critical for dialog safety, they are completely **blind** to what happens when an autonomous agent invokes real-world tools, dispatches SQL mutations, runs shell scripts, or interacts with the operating system.
 
-> **Bartholomew (BTP v3.0)** is the open-source **In-Process AI Agent Execution Gateway**.  
-> It acts as a real-time runtime boundary layer inside the agent’s memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases.
+> **Bartholomew (BTP v4.1)** is the open-source **In-Process AI Agent Execution Gateway**.  
+> It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases.
 
 ---
 
@@ -41,7 +42,7 @@ Bartholomew does not replace dialog filters or microVM sandboxes; it closes the 
                                       │
                                       ▼
 +===============================================================================+
-|  LAYER 2: BARTHOLOMEW IN-PROCESS EXECUTION GATEWAY (BTP v3.0)                 |
+|  LAYER 2: BARTHOLOMEW IN-PROCESS EXECUTION GATEWAY (BTP v4.1)                 |
 |  - Latency: <35µs | In-Memory AST Gating, Secret Scrubbing, Loop Damping     |
 |  - Offline Ed25519 & Zero-Knowledge Invariant Compliance Proofs (zk-ICP)      |
 |  - Immutable SOC 2 Type II & ISO 27001 Merkle Audit Receipt Ledger           |
@@ -58,7 +59,7 @@ Bartholomew does not replace dialog filters or microVM sandboxes; it closes the 
 
 ### **[COMPARATIVE_MATRIX] Where Bartholomew Stands**
 
-| Security Dimension | External Prompt Rails (NeMo / Guardrails AI) | OS Sandboxes (Docker / gVisor / E2B) | Bartholomew In-Process Gateway (BTP v3.0) |
+| Security Dimension | External Prompt Rails (NeMo / Guardrails AI) | OS Sandboxes (Docker / gVisor / E2B) | Bartholomew In-Process Gateway (BTP v4.1) |
 | :--- | :--- | :--- | :--- |
 | **Inspection Point** | Prompt & Completion Text | OS Syscalls / Kernel Boundary | **Raw Tool Arguments & Memory Before Dispatch** |
 | **Evaluation Latency**| 80ms – 2,500ms (LLM classifier) | Microsecond Syscall Filter | **<35 Microseconds (Deterministic In-Process AST)** |
@@ -127,7 +128,7 @@ Install directly in Cursor, VS Code, or VSCodium:
   cursor --install-extension Bartholomew.bartholomew-guard-vscode
   ```
 
-#### **3. Autonomous Micro-Escrow & Automated Slashing (`@guard.escrow_collateral`)**
+#### **6. Autonomous Micro-Escrow & Automated Slashing (`@guard.escrow_collateral`)**
 ```python
 # Stake micro-escrow collateral (L402 Lightning or EVM) before high-risk execution
 @guard.escrow_collateral(amount_usd=250.0, action_type="FINANCIAL_TRADE", rail="L402_LIGHTNING")
@@ -137,14 +138,69 @@ def execute_large_trade(trade_payload: dict):
     return broker.submit(trade_payload)
 ```
 
-#### **4. 1-Line GitHub Actions CI Security Gate**
+#### **7. 1-Line GitHub Actions CI Security Gate**
 Drop this into `.github/workflows/ci.yml` to automatically block prompt injection and unverified tool mutations on every pull request:
 ```yaml
 - name: "Bartholomew Autonomous AI Security Gate"
-  uses: ivegotahunnitonit/bartholomew@v3
+  uses: ivegotahunnitonit/bartholomew@v4
   with:
     fail-on-violation: "true"
     generate-compliance-pack: "true"
+```
+
+---
+
+### **[FRAMEWORK_ADAPTERS] Production-Ready Framework Middleware**
+
+BTP v4.1 ships identical `BTPViolationError` semantics across **all three major agentic frameworks**, providing structured diagnostics, latency tracking, and optional `on_violation` callbacks — no try/except boilerplate required.
+
+| Framework | Adapter Location | Decorator / Class | Protection Mechanism |
+| :--- | :--- | :--- | :--- |
+| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `@btp_autogen_guard`, `AutoGenBTPInterceptor` | Multi-agent message interceptor; structured `BTPViolationError` with `to_diagnostics()` |
+| **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `LangGraphBTPGuard` | AST gating of tool args + kwargs; `BTPViolationError` with escrow slash |
+| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds; `BTPViolationError` anti-confused deputy isolation |
+| **LlamaIndex** | [`framework_adapters/llamaindex/`](framework_adapters/llamaindex/) | `@btp_llamaindex_tool`, `BartholomewLlamaIndexTool` | Sub-35µs AST inspection blocking indirect prompt injections |
+| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v4` | Continuous PR security gate & SOC 2 audit summary table generation |
+
+#### **Common BTPViolationError API (all adapters)**
+```python
+try:
+    result = guarded_tool("DROP TABLE users;")
+except BTPViolationError as e:
+    print(e)                  # Human-readable summary
+    print(e.to_diagnostics()) # Structured JSON for logs / telemetry
+    # → {
+    #     "status": "BLOCKED",
+    #     "rule_id": "BTP-AST-001",
+    #     "reason":  "Destructive SQL pattern detected",
+    #     "latency_us": 12.4,
+    #     ...
+    #   }
+```
+
+---
+
+### **[AUTOGEN_RECIPE] Microsoft AutoGen Security Recipe**
+
+Bartholomew's AutoGen integration is documented as an official security recipe for the Microsoft AutoGen multi-agent framework.  
+See: [`examples/autogen_btp_security_recipe.py`](examples/autogen_btp_security_recipe.py) &bull; [`examples/autogen_btp_security_recipe.ipynb`](examples/autogen_btp_security_recipe.ipynb)
+
+```python
+from framework_adapters.autogen import btp_autogen_guard, AutoGenBTPInterceptor, BTPViolationError
+
+# 1. Decorate any AutoGen tool with a single line
+@btp_autogen_guard
+def execute_sql(query: str) -> str:
+    return db.execute(query)
+
+# 2. Intercept in-flight agent messages before tool dispatch
+interceptor = AutoGenBTPInterceptor()
+safe_message = interceptor.intercept_message(inbound_message)
+
+# 3. Handle violations with full structured diagnostics
+@btp_autogen_guard(on_violation=lambda e: {"error": e.to_diagnostics()})
+def run_shell_command(cmd: str) -> dict:
+    return subprocess.run(cmd, shell=True, capture_output=True)
 ```
 
 ---
@@ -179,18 +235,6 @@ Drop-in invariant enforcement across all leading AI coding assistants:
 * **Cline / Roo Code**: [`cline_mcp_settings.json`](cookbook/ides/cline_roo_code/cline_mcp_settings.json)
 * **Zed**: [`zed_settings.json`](cookbook/ides/zed/zed_settings.json)
 * **Google Antigravity**: [`AGENTS.md`](cookbook/ides/antigravity/AGENTS.md)
-
----
-
-### **[FRAMEWORK_ADAPTERS] Pre-Bundled Framework Middleware**
-
-| Framework | Adapter Location | Decorator / Class | Protection Mechanism |
-| :--- | :--- | :--- | :--- |
-| **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `BartholomewLangChainTool` | AST syntax gating, spend caps, offline Merkle receipt verification |
-| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds, anti-confused deputy isolation |
-| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `@btp_autogen_guard`, `AutoGenBTPInterceptor` | Multi-agent conversation message interceptor & payload filter |
-| **LlamaIndex** | [`framework_adapters/llamaindex/`](framework_adapters/llamaindex/) | `@btp_llamaindex_tool`, `BartholomewLlamaIndexTool` | Sub-35µs AST inspection blocking indirect prompt injections |
-| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v3` | Continuous PR security gate & SOC 2 audit summary table generation |
 
 ---
 

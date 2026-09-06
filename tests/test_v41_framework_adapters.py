@@ -52,7 +52,7 @@ def test_crewai_adapter_slashing_on_ast_veto(agent_passport):
     with pytest.raises(PermissionError) as excinfo:
         dangerous_query("DROP TABLE enterprise_customers CASCADE;")
     
-    assert "execution blocked" in str(excinfo.value)
+    assert "Execution Blocked" in str(excinfo.value)
     # Target agent passport circuit breaker must be tripped by the arbitrator
     assert agent_passport.is_circuit_broken is True
 
@@ -74,7 +74,7 @@ def test_langchain_adapter_safe_and_slashing_lifecycle(agent_passport):
     # Malicious command triggers veto and slashing
     with pytest.raises(PermissionError) as excinfo:
         clean_tool("rm -rf /")
-    assert "blocked" in str(excinfo.value)
+    assert "Blocked" in str(excinfo.value)
     assert agent_passport.is_circuit_broken is True
 
 
