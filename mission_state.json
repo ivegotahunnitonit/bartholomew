@@ -85,11 +85,14 @@
     "SETTLED $75.00 USD on m2m_direct/oracle_compute_verification PR #0 (Fixes #0) via INSTANT_USDC_L402.",
     "SETTLED $250.00 USD on m2m_direct/instant_security_audit PR #0 (Fixes #0) via INSTANT_PROGRAMMATIC_STRIPE.",
     "DEPLOYED BTP v3.0.0 multi-channel distribution across PyPI (btp-guard==3.0.0), npm (btp-guard@3.0.0, mcp-proxy-guard@1.0.0), Open VSX (bartholomew-guard-vscode-3.0.0.vsix), and Firebase Hosting (acn-26670.web.app).",
-    "ACTIVATED Milestone 3.1 Sovereign Digital Passports & Peer Discovery mesh with Ed25519 cryptographic signing and automated circuit-breaker protection."
+    "ACTIVATED Milestone 3.1 Sovereign Digital Passports & Peer Discovery mesh with Ed25519 cryptographic signing and automated circuit-breaker protection.",
+    "VERIFIED Milestone 3.2 Dynamic Kernel Invariant Hot-Reloading & Entropy-Based Multi-Agent Threshold Rebalancing (2-of-3 -> 3-of-5 -> 5-of-7).",
+    "VERIFIED Milestone 3.5 Recursive ZK-Rollup Batching with Homomorphic Pedersen Aggregation & Cross-Cloud Confidential Hardware Enclave Anchoring (AWS Nitro / AMD SEV-SNP).",
+    "BENCHMARKED Vectorized SIMD Cryptographic Acceleration Engine achieving high-throughput batch Pedersen commitments and microsecond Merkle verification."
   ],
   "last_verified_state": {
-    "opp_id": "GH_URLLIB_01",
-    "target": "urllib3/urllib3",
+    "opp_id": "BTP_V35_ZK_ROLLUP_ENCLAVE",
+    "target": "acn/recursive_rollup_hardware_anchor",
     "verified": true
   },
   "known_file_hashes": {},
