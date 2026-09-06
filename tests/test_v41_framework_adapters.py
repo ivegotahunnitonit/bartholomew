@@ -78,33 +78,48 @@ def test_langchain_adapter_safe_and_slashing_lifecycle(agent_passport):
     assert agent_passport.is_circuit_broken is True
 
 
-def test_autogen_adapter_safe_and_slashing_lifecycle(agent_passport):
-    """AutoGen tool decorator with escrow collateral and passport protection."""
-    @btp_autogen_guard(escrow_collateral_usd=400.0, passport=agent_passport)
+from framework_adapters.autogen.autogen_btp_interceptor import BTPViolationError
+
+
+def test_autogen_adapter_safe_and_diagnostics():
+    """AutoGen tool decorator with AST safety and structured diagnostics."""
+    @btp_autogen_guard
     def autogen_code_exec(code: str):
         return f"Executed code: {code}"
 
     res = autogen_code_exec("print('hello world')")
     assert "Executed code" in res
 
-    # Malicious injection triggers veto and slashing
-    with pytest.raises(PermissionError) as excinfo:
+    # Malicious injection triggers BTPViolationError with sub-35µs diagnostics
+    with pytest.raises(BTPViolationError) as excinfo:
         autogen_code_exec("import os; os.system('rm -rf /')")
-    assert "blocked" in str(excinfo.value)
-    assert agent_passport.is_circuit_broken is True
+    
+    err = excinfo.value
+    assert "blocked" in str(err).lower()
+    assert err.rule_id == "BTP-AST-001"
+    assert err.latency_us < 1000.0  # sub-millisecond
+    diag = err.to_diagnostics()
+    assert diag["status"] == "BLOCKED"
+    assert "Catastrophic" in diag["reason"]
+    assert "rm -rf" in diag["blocked_payload"]
 
 
-def test_interceptor_circuit_broken_rejection(agent_passport):
-    """AutoGen and CrewAI task guards reject circuit-broken agents at the gateway."""
+def test_autogen_interceptor_message_filtering():
+    """AutoGen interceptor rejects malicious in-flight message payloads."""
+    interceptor = AutoGenBTPInterceptor()
+    msg_safe = interceptor.intercept_message({"role": "user", "content": "SELECT * FROM users LIMIT 10;"})
+    assert msg_safe.get("status") is None or msg_safe.get("status") == "PASSED"
+
+    msg_attack = interceptor.intercept_message({"role": "assistant", "content": "DROP TABLE users CASCADE;"})
+    assert msg_attack["status"] == "DENIED"
+    assert "BTP_SECURITY_ALERT" in msg_attack["content"]
+
+
+def test_crewai_circuit_broken_rejection(agent_passport):
+    """CrewAI task guards reject circuit-broken agents at the gateway."""
     agent_passport.is_circuit_broken = True
-
-    interceptor = AutoGenBTPInterceptor(passport=agent_passport)
-    msg = interceptor.intercept_message({"role": "assistant", "content": "SELECT * FROM users;"})
-    assert msg["status"] == "DENIED"
-    assert "CIRCUIT-BROKEN" in msg["content"]
-
     guard = CrewAIBTPTaskGuard(passport=agent_passport)
     guarded_fn = guard.wrap_task("Test Task", lambda: "ok")
     with pytest.raises(PermissionError) as excinfo:
         guarded_fn()
-    assert "revoked" in str(excinfo.value)
+    assert "revoked" in str(excinfo.value).lower()

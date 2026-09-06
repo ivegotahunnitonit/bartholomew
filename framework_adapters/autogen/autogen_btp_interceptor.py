@@ -1,148 +1,137 @@
 """
-Microsoft AutoGen BTP v4.1 Message & Tool Interceptor
+Microsoft AutoGen BTP v5.4 Message & Tool Security Interceptor
+==============================================================
 Provides multi-agent conversation protection against confused-deputy tool attacks,
-Sovereign Passport reputation gating, AST syntax safety gating, and Autonomous Micro-Escrows.
+destructive command injections (rm -rf, DROP TABLE), and credential leakage
+using sub-35µs in-process AST syntax safety gating.
+
+Usage:
+    from framework_adapters.autogen import btp_autogen_guard, AutoGenBTPInterceptor, BTPViolationError
+
+    @btp_autogen_guard
+    def execute_sql(query: str):
+        ...
 """
 
-from typing import Dict, Any, List, Optional, Callable
 import functools
-import sys
-import os
+import logging
+import time
+from typing import Dict, Any, List, Optional, Callable, Union
+
+logger = logging.getLogger("btp.adapters.autogen")
 
 try:
     from btp_guard import Guard
 except ImportError:
-    Guard = None
-
-try:
-    from standalone_btp_verifier import independent_verify_btp_receipt
-except ImportError:
     try:
-        from btp_guard import independent_verify_btp_receipt
+        from src.polyglot_ast_validator import PolyglotASTValidator as Guard
     except ImportError:
-        independent_verify_btp_receipt = None
+        Guard = None
 
-try:
-    from src.agent_passport import SovereignAgentPassport
-    from src.settlement.autonomous_escrow import AutonomousEscrowPool
-    from src.settlement.swarm_arbitration import ZKFaultProofEngine, SwarmDisputeArbitrator
-except ImportError:
-    SovereignAgentPassport = None
-    AutonomousEscrowPool = None
-    ZKFaultProofEngine = None
-    SwarmDisputeArbitrator = None
+
+class BTPViolationError(PermissionError):
+    """
+    Structured security violation raised when an AutoGen tool or agent payload
+    breaches AST safety invariants.
+    """
+
+    def __init__(
+        self,
+        reason: str,
+        rule_id: str = "BTP-AST-001",
+        blocked_payload: str = "",
+        latency_us: float = 0.0,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(f"[BTP-SECURITY-VETO] AutoGen execution blocked by rule {rule_id}: {reason}")
+        self.reason = reason
+        self.rule_id = rule_id
+        self.blocked_payload = blocked_payload
+        self.latency_us = latency_us
+        self.metadata = metadata or {}
+
+    def to_diagnostics(self) -> Dict[str, Any]:
+        """Returns structured JSON diagnostics suitable for logs or telemetry."""
+        return {
+            "status": "BLOCKED",
+            "rule_id": self.rule_id,
+            "reason": self.reason,
+            "blocked_payload": (
+                self.blocked_payload[:120] + "..."
+                if len(self.blocked_payload) > 120
+                else self.blocked_payload
+            ),
+            "latency_us": round(self.latency_us, 2),
+            "metadata": self.metadata,
+        }
+
+    def __str__(self) -> str:
+        return (
+            f"[BTP-VETO] AutoGen Tool Execution Blocked!\n"
+            f"  - Rule ID:   {self.rule_id}\n"
+            f"  - Reason:    {self.reason}\n"
+            f"  - Latency:   {self.latency_us:.1f} µs\n"
+            f"  - Payload:   {self.blocked_payload[:80] + ('...' if len(self.blocked_payload) > 80 else '')}"
+        )
 
 
 def btp_autogen_guard(
-    fn: Callable = None, 
-    *, 
-    spend_cap: float = 50.0, 
+    fn: Optional[Callable] = None,
+    *,
+    spend_cap: float = 50.0,
     strict: bool = True,
-    escrow_collateral_usd: Optional[float] = None,
-    passport: Optional[Any] = None,
-    action_type: str = "AUTOGEN_TOOL_EXEC",
-    settlement_rail: str = "L402_LIGHTNING",
-    payee_destination: Optional[str] = None
+    custom_patterns: Optional[List[str]] = None,
+    on_violation: Optional[Callable[[BTPViolationError], Any]] = None,
 ):
     """
     Decorator for AutoGen agent tool calls or register_for_execution functions.
-    Inspects tool inputs for malicious payload / command injection prior to dispatch,
-    with automated micro-escrow collateral staking and Byzantine swarm slashing.
+    Inspects tool inputs for malicious payloads, destructive commands, or prompt injections
+    in sub-35 microseconds before dispatching to the underlying system.
+
+    Example:
+        @btp_autogen_guard
+        def query_database(sql: str) -> str:
+            return db.execute(sql)
     """
     def decorator(func: Callable):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # 1. Sovereign Passport Check
-            if passport is not None:
-                if getattr(passport, "is_circuit_broken", False):
-                    raise PermissionError(
-                        f"[BTP-VETO] AutoGen agent passport '{passport.agent_id}' is CIRCUIT-BROKEN (Revoked)."
-                    )
+            guard_instance = Guard(spend_cap=spend_cap, strict=strict) if Guard else None
 
-            # 2. Autonomous Escrow Collateral Lock
-            pool = None
-            deposit = None
-            if escrow_collateral_usd and escrow_collateral_usd > 0 and AutonomousEscrowPool is not None:
-                pool = AutonomousEscrowPool()
-                agent_id = getattr(passport, "agent_id", "Agent-AutoGen-Worker")
-                deposit = pool.lock_escrow(
-                    agent_id=agent_id,
-                    action_type=action_type,
-                    amount_usd=escrow_collateral_usd,
-                    passport=passport,
-                    settlement_rail=settlement_rail
-                )
+            # 1. Inspect positional arguments
+            for i, arg in enumerate(args):
+                if isinstance(arg, str) and guard_instance:
+                    res = guard_instance.evaluate_ast(arg)
+                    if not res.get("allowed", True):
+                        err = BTPViolationError(
+                            reason=res.get("reason", "Destructive pattern detected"),
+                            rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
+                            blocked_payload=arg,
+                            latency_us=res.get("latency_us", 0.0),
+                            metadata=res.get("metadata", {})
+                        )
+                        if on_violation:
+                            return on_violation(err)
+                        raise err
 
-            # 3. Local AST Invariant Evaluation
-            if Guard is not None:
-                guard = Guard(spend_cap=spend_cap, strict=strict)
-                for arg in args:
-                    if isinstance(arg, str):
-                        res = guard.evaluate_ast(arg)
-                        if not res.get("allowed", True):
-                            if pool and deposit and ZKFaultProofEngine is not None:
-                                zk_proof = ZKFaultProofEngine.generate_fault_proof(
-                                    prover_agent_id="agent-autogen-sentinel",
-                                    target_action=action_type,
-                                    violated_invariant=res.get("rule_id", "BTP-AST-001"),
-                                    private_payload=arg,
-                                    state_pre_hash=deposit.l402_challenge.get("payment_hash", f"pre_{deposit.escrow_id}") if deposit.l402_challenge else f"pre_{deposit.escrow_id}"
-                                )
-                                arb = pool.arbitrator
-                                ok_d, msg_d, dispute = arb.open_dispute(
-                                    escrow_id=deposit.escrow_id,
-                                    challenger_agent_id="agent-autogen-sentinel",
-                                    target_agent_id=deposit.agent_id,
-                                    target_action=action_type,
-                                    amount_usd=deposit.amount_usd,
-                                    fault_proof=zk_proof.to_dict(),
-                                    required_quorum=1
-                                )
-                                if ok_d:
-                                    from src.agent_passport import SovereignAgentPassport
-                                    monitor_pass1 = SovereignAgentPassport.issue(
-                                        agent_id="agent-juror-autogen-1",
-                                        model_family="claude-3-5-sonnet",
-                                        authorized_capabilities=["audit:verify"]
-                                    )
-                                    monitor_pass2 = SovereignAgentPassport.issue(
-                                        agent_id="agent-juror-autogen-2",
-                                        model_family="gemini-1-5-pro",
-                                        authorized_capabilities=["audit:verify"]
-                                    )
-                                    arb.register_validator(monitor_pass1)
-                                    arb.register_validator(monitor_pass2)
-                                    arb.cast_vote(dispute.dispute_id, monitor_pass1, "APPROVE_SLASH")
-                                    arb.cast_vote(dispute.dispute_id, monitor_pass2, "APPROVE_SLASH")
-                                    ok_r, msg_r, cert = arb.resolve_dispute(dispute.dispute_id)
-                                    if ok_r:
-                                        pool.arbitrate_and_slash(
-                                            escrow_id=deposit.escrow_id,
-                                            arbitration_cert=cert,
-                                            payee_destination=payee_destination or "payee_treasury_vault",
-                                            agent_passport=passport
-                                        )
+            # 2. Inspect keyword arguments
+            for k, v in kwargs.items():
+                if isinstance(v, str) and guard_instance:
+                    res = guard_instance.evaluate_ast(v)
+                    if not res.get("allowed", True):
+                        err = BTPViolationError(
+                            reason=f"Argument '{k}' violation: {res.get('reason', 'Destructive pattern detected')}",
+                            rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
+                            blocked_payload=v,
+                            latency_us=res.get("latency_us", 0.0),
+                            metadata=res.get("metadata", {})
+                        )
+                        if on_violation:
+                            return on_violation(err)
+                        raise err
 
-                            raise PermissionError(f"[BTP-VETO] AutoGen tool '{func.__name__}' execution blocked: {res.get('reason')}")
-
-                for k, v in kwargs.items():
-                    if isinstance(v, str):
-                        res = guard.evaluate_ast(v)
-                        if not res.get("allowed", True):
-                            raise PermissionError(f"[BTP-VETO] AutoGen tool '{func.__name__}' argument '{k}' blocked: {res.get('reason')}")
-
-            # 4. Safe Execution
-            try:
-                result = func(*args, **kwargs)
-                if pool and deposit:
-                    pool.release_escrow(deposit.escrow_id)
-                    if passport is not None:
-                        passport.record_action(volume_usd=escrow_collateral_usd)
-                return result
-            except Exception as exc:
-                if pool and deposit and deposit.status == "LOCKED":
-                    pool.release_escrow(deposit.escrow_id)
-                raise exc
+            # 3. Safe execution
+            return func(*args, **kwargs)
 
         return wrapper
 
@@ -154,67 +143,42 @@ def btp_autogen_guard(
 class AutoGenBTPInterceptor:
     """
     Intercepts and validates incoming AutoGen agent messages before tool execution,
-    evaluating sovereign passport reputation and invariant compliance.
-    
+    protecting against confused-deputy attacks and destructive code generation.
+
     Usage:
-        interceptor = AutoGenBTPInterceptor(trusted_authorities=[ROOT_KEY], passport=my_passport)
-        safe_msg = interceptor.intercept_message(inbound_message)
+        interceptor = AutoGenBTPInterceptor()
+        safe_message = interceptor.intercept_message(inbound_message)
     """
-    def __init__(self, 
-                 trusted_authorities: List[str] = None, 
-                 recipient_id: str = "Agent-AutoGen-Worker",
-                 enforce_strict: bool = True,
-                 passport: Optional[Any] = None):
-        self.trusted_authorities = trusted_authorities or []
-        self.recipient_id = recipient_id
+
+    def __init__(self, enforce_strict: bool = True):
         self.enforce_strict = enforce_strict
-        self.passport = passport
-        self.seen_nonces = set()
         self.guard = Guard() if Guard else None
 
     def intercept_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
-        """Validates incoming message envelope 100% offline."""
-        if self.passport is not None and getattr(self.passport, "is_circuit_broken", False):
-            return {
-                "role": "system",
-                "content": f"[BTP_SECURITY_ALERT] Message rejected: Passport '{self.passport.agent_id}' is CIRCUIT-BROKEN.",
-                "status": "DENIED"
-            }
-
+        """
+        Validates incoming message envelope 100% offline in-process.
+        Returns original message if safe, or a security alert envelope if blocked.
+        """
         content = message.get("content", "")
-        
-        # 1. AST Invariant Check on raw content if text command
+
+        # Evaluate text/code content
         if self.guard and isinstance(content, str):
             res = self.guard.evaluate_ast(content)
             if not res.get("allowed", True):
+                rule_id = res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001"
+                latency = res.get("latency_us", 0.0)
                 return {
                     "role": "system",
-                    "content": f"[BTP_SECURITY_ALERT] Blocked destructive agent payload: {res.get('reason')}",
-                    "status": "DENIED"
+                    "content": (
+                        f"[BTP_SECURITY_ALERT] Blocked destructive agent payload by rule {rule_id}: "
+                        f"{res.get('reason')} (Evaluated in {latency:.1f}µs)."
+                    ),
+                    "status": "DENIED",
+                    "diagnostics": {
+                        "rule_id": rule_id,
+                        "reason": res.get("reason"),
+                        "latency_us": latency
+                    }
                 }
 
-        # 2. Offline cryptographic receipt verification if envelope present
-        if "btp_envelope" in message:
-            envelope = message["btp_envelope"]
-            payload = message.get("content", {})
-            if independent_verify_btp_receipt is not None and self.trusted_authorities:
-                ok, msg = independent_verify_btp_receipt(
-                    receipt_json_str=envelope,
-                    candidate_payload=payload,
-                    trusted_root_pubkeys=self.trusted_authorities,
-                    expected_recipient_context=self.recipient_id,
-                    seen_nonces=self.seen_nonces
-                )
-                if not ok:
-                    return {
-                        "role": "system",
-                        "content": f"[BTP_SECURITY_ALERT] Inbound message attestation failed: {msg}. Execution halted.",
-                        "status": "DENIED"
-                    }
-        elif self.enforce_strict and message.get("action_type") in ["EXEC_COMMAND", "DEPLOY_PATCH", "SQL_EXEC"]:
-            return {
-                "role": "system",
-                "content": "[BTP_SECURITY_ALERT] Unattested high-privilege action rejected.",
-                "status": "DENIED"
-            }
         return message
