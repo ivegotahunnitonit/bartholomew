@@ -192,10 +192,13 @@ class AgentPeerDiscoveryRegistry:
     def __init__(self):
         self._passports: Dict[str, SovereignAgentPassport] = {}
 
-    def register_passport(self, passport_data: Dict[str, Any]) -> Tuple[bool, str, Dict[str, Any]]:
+    def register_passport(self, passport_data: Any) -> Tuple[bool, str, Dict[str, Any]]:
         """Registers and validates an agent passport in the discovery mesh."""
         try:
-            passport = SovereignAgentPassport.from_dict(passport_data)
+            if isinstance(passport_data, SovereignAgentPassport):
+                passport = passport_data
+            else:
+                passport = SovereignAgentPassport.from_dict(passport_data)
             is_valid, msg = passport.verify_signature()
             if not is_valid:
                 return False, f"Registration rejected: {msg}", {}
