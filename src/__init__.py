@@ -191,4 +191,21 @@ def wrap_client(client, spend_cap: float = 100.0, guard: Guard = None):
     return WrappedClient(client, active_guard)
 
 
-__all__ = ["Guard", "wrap_client", "BartholomewTrustAuthority", "IndependentTrustVerifier"]
+from src.settlement.swarm_arbitration import (
+    ZKFaultProofEngine,
+    ZKFaultProof,
+    SwarmDisputeArbitrator,
+    ArbitrationResolutionCertificate
+)
+
+
+__all__ = [
+    "Guard",
+    "wrap_client",
+    "BartholomewTrustAuthority",
+    "IndependentTrustVerifier",
+    "ZKFaultProofEngine",
+    "ZKFaultProof",
+    "SwarmDisputeArbitrator",
+    "ArbitrationResolutionCertificate"
+]

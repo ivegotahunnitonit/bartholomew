@@ -59,8 +59,7 @@ def test_audit_ledger_integrity():
     print("\n" + "=" * 80)
     print("  MERKLE COMPLIANCE LEDGER TEST SUITE: 100% PASSED")
     print("=" * 80)
-    return True
 
 if __name__ == "__main__":
-    success = test_audit_ledger_integrity()
-    sys.exit(0 if success else 1)
+    test_audit_ledger_integrity()
+    sys.exit(0)

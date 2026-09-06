@@ -80,8 +80,7 @@ def test_mcp_server_protocol():
     print("\n" + "=" * 80)
     print("  MCP SERVER TEST SUITE: 100% PASSING")
     print("=" * 80)
-    return True
 
 if __name__ == "__main__":
-    success = test_mcp_server_protocol()
-    sys.exit(0 if success else 1)
+    test_mcp_server_protocol()
+    sys.exit(0)

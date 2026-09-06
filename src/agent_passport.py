@@ -174,6 +174,14 @@ class SovereignAgentPassport:
     def violation_count(self) -> int:
         return self.reputation_vector.get("violation_count", 0)
 
+    @property
+    def is_circuit_broken(self) -> bool:
+        return self.circuit_breaker_tripped
+
+    @property
+    def trust_score(self) -> float:
+        return self.reputation_vector.get("trust_score", 1.0)
+
     @classmethod
     def issue(
         cls,

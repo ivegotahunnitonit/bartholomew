@@ -24,6 +24,7 @@ from src.bonded_warranty import BondedExecutionWarranty
 from src.agent_passport import SovereignAgentPassport
 from src.settlement.l402_protocol import L402ProtocolEngine, L402Challenge
 from src.settlement.evm_escrow import EVMEscrowGateway, EscrowSlashingClaim, EIP712Domain
+from src.settlement.swarm_arbitration import SwarmDisputeArbitrator, ArbitrationResolutionCertificate, ZKFaultProof
 
 
 @dataclasses.dataclass
@@ -68,6 +69,7 @@ class AutonomousEscrowPool:
         )
         self.l402_engine = l402_engine or L402ProtocolEngine()
         self.evm_gateway = evm_gateway or EVMEscrowGateway()
+        self.arbitrator = SwarmDisputeArbitrator()
         self.active_escrows: Dict[str, EscrowDeposit] = {}
         self.settlement_ledger: List[Dict[str, Any]] = []
 
@@ -209,6 +211,67 @@ class AutonomousEscrowPool:
 
         self.settlement_ledger.append(settlement_receipt)
         return True, "Collateral slashed and liquidated indemnity disbursed successfully.", settlement_receipt
+
+    def arbitrate_and_slash(
+        self,
+        escrow_id: str,
+        arbitration_cert: ArbitrationResolutionCertificate,
+        payee_destination: str,
+        agent_passport: Optional[SovereignAgentPassport] = None
+    ) -> Tuple[bool, str, Dict[str, Any]]:
+        """
+        Executes collateral slashing based on a verified Byzantine Swarm Arbitration Resolution Certificate.
+        """
+        deposit = self.active_escrows.get(escrow_id)
+        if not deposit:
+            return False, f"Escrow ID '{escrow_id}' not found.", {}
+
+        if deposit.status != "LOCKED":
+            return False, f"Escrow ID '{escrow_id}' is already {deposit.status}.", {}
+
+        if arbitration_cert.escrow_id != escrow_id:
+            return False, f"Arbitration certificate escrow_id '{arbitration_cert.escrow_id}' does not match '{escrow_id}'.", {}
+
+        if arbitration_cert.verdict != "SLASH_COLLATERAL":
+            return False, f"Arbitration certificate verdict is '{arbitration_cert.verdict}', not 'SLASH_COLLATERAL'.", {}
+
+        if arbitration_cert.quorum_count < 2:
+            return False, f"Insufficient arbitration quorum ({arbitration_cert.quorum_count} votes).", {}
+
+        # Execute Slashing
+        deposit.status = "SLASHED"
+        deposit.slashed_at = time.time()
+        deposit.slash_reason = f"Swarm Byzantine Arbitration Quorum ({arbitration_cert.certificate_id})"
+        deposit.payee_destination = payee_destination
+
+        self.reserve_pool_usd -= deposit.amount_usd
+
+        # Penalize Agent Passport & Trip Circuit Breaker
+        passport_tripped = False
+        if agent_passport and agent_passport.agent_id == deposit.agent_id:
+            agent_passport.trip_circuit_breaker(f"Swarm Arbitration Slashing Verdict ({arbitration_cert.certificate_id})")
+            passport_tripped = True
+
+        settlement_receipt: Dict[str, Any] = {
+            "escrow_id": escrow_id,
+            "slashed_agent": deposit.agent_id,
+            "indemnity_amount_usd": deposit.amount_usd,
+            "settlement_rail": deposit.settlement_rail,
+            "payee_destination": payee_destination,
+            "slashed_at": deposit.slashed_at,
+            "slash_reason": deposit.slash_reason,
+            "arbitration_certificate_id": arbitration_cert.certificate_id,
+            "quorum_count": arbitration_cert.quorum_count,
+            "passport_tripped": passport_tripped,
+            "status": "ARBITRATED_AND_DISBURSED"
+        }
+
+        if "L402" in deposit.settlement_rail.upper() or "LIGHTNING" in deposit.settlement_rail.upper():
+            settlement_receipt["l402_preimage_revealed"] = deposit.l402_preimage
+
+        self.settlement_ledger.append(settlement_receipt)
+        return True, "Swarm arbitration verdict executed: collateral slashed and disbursed.", settlement_receipt
+
 
     def release_escrow(
         self,

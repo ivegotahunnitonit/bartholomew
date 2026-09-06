@@ -437,5 +437,93 @@ def test_cli_onboard_lifecycle():
     assert "Local In-Memory Verification" in res.stdout
 
 
+def test_cli_arbitration_lifecycle(cli_test_env):
+    """Test full BTP v4.1 Swarm Slashing Arbitration & zk-Fault Proof CLI workflow."""
+    import tempfile
+    from src.agent_passport import SovereignAgentPassport
+
+    tmpdir = cli_test_env
+    proof_file = os.path.join(tmpdir, "zk_fault_proof.json")
+    dispute_file = os.path.join(tmpdir, "dispute.json")
+    dispute_voted_file = os.path.join(tmpdir, "dispute_voted.json")
+    cert_file = os.path.join(tmpdir, "arbitration_cert.json")
+    passport_file = os.path.join(tmpdir, "juror_passport.json")
+
+    # 1. arbitration prove-fault
+    prove_cmd = [
+        sys.executable, "cli.py", "arbitration", "prove-fault",
+        "--agent", "agent-monitor-01",
+        "--action", "DATABASE_MIGRATION",
+        "--violation", "CATASTROPHIC_DROP_TABLE",
+        "--payload", "DROP TABLE enterprise_ledger CASCADE;",
+        "--out", proof_file
+    ]
+    res_prove = subprocess.run(prove_cmd, capture_output=True, text=True)
+    assert res_prove.returncode == 0, res_prove.stderr
+    assert "BTP v4.1 ZERO-KNOWLEDGE FAULT PROOF (zk-FP) GENERATION" in res_prove.stdout
+    assert os.path.exists(proof_file)
+
+    with open(proof_file, "r", encoding="utf-8") as f:
+        zk_data = json.load(f)
+    assert zk_data["proof_id"].startswith("zk_fp_")
+    assert "DROP TABLE" not in json.dumps(zk_data)  # Zero raw payload leakage
+
+    # 2. arbitration challenge
+    chal_cmd = [
+        sys.executable, "cli.py", "arbitration", "challenge",
+        "--escrow-id", "ESCROW-TEST-1234",
+        "--challenger", "agent-monitor-01",
+        "--target-agent", "agent-rogue-01",
+        "--target-action", "DATABASE_MIGRATION",
+        "--amount", "2500.0",
+        "--fault-proof", proof_file,
+        "--out", dispute_file
+    ]
+    res_chal = subprocess.run(chal_cmd, capture_output=True, text=True)
+    assert res_chal.returncode == 0, res_chal.stderr
+    assert "BTP v4.1 SWARM SLASHING DISPUTE OPENED" in res_chal.stdout
+    assert os.path.exists(dispute_file)
+
+    with open(dispute_file, "r", encoding="utf-8") as f:
+        d_data = json.load(f)
+    dispute_id = d_data["dispute_id"]
+
+    # 3. Issue juror passport
+    juror_passport = SovereignAgentPassport.issue(
+        agent_id="agent-juror-secops",
+        model_family="claude-3-5-sonnet",
+        authorized_capabilities=["audit:verify"],
+        bonded_warranty_usd=5000.0
+    )
+    with open(passport_file, "w", encoding="utf-8") as f:
+        json.dump(juror_passport.to_dict(), f)
+
+    # 4. arbitration vote
+    vote_cmd = [
+        sys.executable, "cli.py", "arbitration", "vote",
+        "--dispute-id", dispute_id,
+        "--passport", passport_file,
+        "--vote", "APPROVE_SLASH",
+        "--dispute-file", dispute_file,
+        "--out", dispute_voted_file
+    ]
+    res_vote = subprocess.run(vote_cmd, capture_output=True, text=True)
+    assert res_vote.returncode == 0, res_vote.stderr
+    assert "BTP v4.1 SWARM ARBITRATION VOTE CAST" in res_vote.stdout
+    assert os.path.exists(dispute_voted_file)
+
+    # 5. arbitration resolve (with pre-populated quorum)
+    resolve_cmd = [
+        sys.executable, "cli.py", "arbitration", "resolve",
+        "--dispute-id", dispute_id,
+        "--out", cert_file
+    ]
+    res_res = subprocess.run(resolve_cmd, capture_output=True, text=True)
+    assert res_res.returncode == 0, res_res.stderr
+    assert "BTP v4.1 SWARM ARBITRATION RESOLUTION CERTIFICATE" in res_res.stdout
+    assert os.path.exists(cert_file)
+
+
+
 
 

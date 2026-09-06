@@ -102,8 +102,7 @@ def test_btp_guard_framework_integration():
     print("\n" + "=" * 80)
     print("  BTP AGENT GUARD MIDDLEWARE TESTS: 100% PASSED")
     print("=" * 80)
-    return True
 
 if __name__ == "__main__":
-    success = test_btp_guard_framework_integration()
-    sys.exit(0 if success else 1)
+    test_btp_guard_framework_integration()
+    sys.exit(0)
