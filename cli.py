@@ -1712,6 +1712,68 @@ def cmd_marketplace_contract_fulfill(args):
         print(f"[!] Fulfillment Error: {msg}")
 
 
+def cmd_init(args):
+    from src.init_wizard import scaffold_project
+    target = os.path.abspath(getattr(args, "dir", "."))
+    res = scaffold_project(
+        target_dir=target,
+        framework=getattr(args, "framework", None),
+        org=getattr(args, "org", "my-org"),
+        project=getattr(args, "project", "my-agent-swarm"),
+        env=getattr(args, "env", "dev"),
+        non_interactive=True
+    )
+    print("=" * 70)
+    print("BTP ENTERPRISE DEVELOPER ONBOARDING: PROJECT INITIALIZED")
+    print("=" * 70)
+    print(f"[*] Framework Detected : {res['framework'].upper()}")
+    print(f"[*] Tenant Identifier  : {res['tenant_id']}")
+    print(f"[*] Scoped API Key     : {res['api_key']}")
+    print(f"[*] Configuration Path : {res['btp_dir']}")
+    print("-" * 70)
+    print("READY-TO-RUN INTEGRATION SNIPPET:")
+    print(res['snippet'].strip())
+    print("=" * 70)
+
+
+def cmd_billing_usage(args):
+    from src.billing.metering_engine import TenantUsageMeter
+    meter = TenantUsageMeter()
+    rec = meter.get_or_create(args.tenant)
+    print("=" * 70)
+    print(f"BTP METERED USAGE STATEMENT: {rec.tenant_id}")
+    print("=" * 70)
+    print(f"[*] Organization         : {rec.org_id}")
+    print(f"[*] Project Workspace    : {rec.project_id}")
+    print(f"[*] AST Scans Executed   : {rec.ast_scans:,} scans")
+    print(f"[*] Threats Intercepted  : {rec.threats_blocked:,} threats")
+    print(f"[*] Escrow Volume Cleared: ${rec.escrow_volume_usd:,.2f} USD")
+    print(f"[*] Webhook Dispatches   : {rec.webhooks_dispatched:,} events")
+    print("=" * 70)
+
+
+def cmd_billing_invoice(args):
+    from src.billing.metering_engine import TenantUsageMeter, MeteredInvoiceGenerator
+    meter = TenantUsageMeter()
+    rec = meter.get_or_create(args.tenant)
+    rail = getattr(args, "rail", "STRIPE_METERED")
+    inv = MeteredInvoiceGenerator.generate_invoice(rec, settlement_rail=rail)
+    print("=" * 70)
+    print(f"BTP ITEMIZED INVOICE: {inv.invoice_id}")
+    print("=" * 70)
+    print(f"[*] Tenant ID            : {inv.tenant_id} ({inv.org_id})")
+    print(f"[*] Base Subscription   : ${inv.base_subscription_usd:.2f} USD (Pro Tier)")
+    print(f"[*] AST Evaluations      : {inv.ast_scans_count} scans -> ${inv.ast_scans_cost_usd:.4f} USD")
+    print(f"[*] Threats Blocked      : {inv.threats_blocked_count} threats -> ${inv.threats_blocked_cost_usd:.4f} USD")
+    print(f"[*] Escrow Clearing Fee  : ${inv.escrow_fees_usd:.4f} USD (on ${inv.escrow_volume_cleared_usd:.2f} volume)")
+    print(f"[*] Webhook Dispatches   : {inv.webhooks_count} events -> ${inv.webhooks_cost_usd:.4f} USD")
+    print("-" * 70)
+    print(f"[*] TOTAL AMOUNT DUE     : ${inv.total_due_usd:.2f} USD")
+    print(f"[*] Settlement Rail      : {inv.settlement_rail}")
+    print(f"[*] Cryptographic Sig    : {inv.signature}")
+    print("=" * 70)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1804,8 +1866,13 @@ def main():
     act_p.add_argument("--key", "-k", type=str, default=None, help="License token received upon subscription checkout")
 
     # init
-    init_parser = subparsers.add_parser("init", help="Initialize sovereign cryptographic keypair & policy")
-    init_parser.add_argument("--pair", type=str, help="Framework target to pair with (e.g. claude-desktop, openai, langchain)")
+    init_parser = subparsers.add_parser("init", help="10-second interactive project initialization & framework detection")
+    init_parser.add_argument("--dir", "-d", default=".", help="Target project directory")
+    init_parser.add_argument("--framework", "-f", choices=["crewai", "langgraph", "autogen", "openai", "anthropic", "generic"], help="Explicitly specify agent framework")
+    init_parser.add_argument("--org", "-o", default="my-org", help="Organization / company name")
+    init_parser.add_argument("--project", "-p", default="my-agent-swarm", help="Project / swarm name")
+    init_parser.add_argument("--env", "-e", default="dev", choices=["dev", "staging", "prod"], help="Target environment")
+    init_parser.add_argument("--pair", type=str, help="Legacy framework target alias")
 
     # onboard
     onboard_parser = subparsers.add_parser("onboard", help="Interactive 30-second developer fast-onboarding wizard for Cursor, LangGraph, CrewAI, OpenAI, and Escrows")
@@ -2161,12 +2228,32 @@ def main():
     mkt_fulfill_p = mkt_sub.add_parser("contract-fulfill", help="Submit zk-TCP proof and settle cross-tenant SLA escrow")
     mkt_fulfill_p.add_argument("--contract-id", "-i", required=True, help="Contract ID to fulfill")
 
+    # billing (BTP Multi-Tenant Metered Billing & Usage Engine)
+    bill_p = subparsers.add_parser("billing", help="BTP Multi-Tenant Usage Metering & Invoicing")
+    bill_sub = bill_p.add_subparsers(dest="billing_cmd")
+
+    b_usage_p = bill_sub.add_parser("usage", help="Display metered usage consumption statement")
+    b_usage_p.add_argument("--tenant", "-t", required=True, help="Tenant workspace ID")
+
+    b_inv_p = bill_sub.add_parser("invoice", help="Generate itemized, cryptographically signed invoice")
+    b_inv_p.add_argument("--tenant", "-t", required=True, help="Tenant workspace ID")
+    b_inv_p.add_argument("--rail", default="STRIPE_METERED", choices=["STRIPE_METERED", "L402_LIGHTNING"], help="Settlement payment rail")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
     elif args.command == "activate":
         cmd_activate(args)
+    elif args.command == "init":
+        cmd_init(args)
+    elif args.command == "billing":
+        if args.billing_cmd == "usage":
+            cmd_billing_usage(args)
+        elif args.billing_cmd == "invoice":
+            cmd_billing_invoice(args)
+        else:
+            bill_p.print_help()
     elif args.command == "marketplace":
         if args.marketplace_cmd == "list":
             cmd_marketplace_list(args)
