@@ -64,10 +64,10 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono pt-1">
               <CheckCircle2 size={14} />
-              <span>[PROTOCOL ACTIVE: BTP v5.4.0 · SOVEREIGN TRUST &amp; SETTLEMENT RUNTIME]</span>
+              <span>[PROTOCOL ACTIVE: BTP v5.4.0 · SOVEREIGN AI AGENT SECURITY RUNTIME]</span>
             </div>
             <p className="text-xs text-zinc-400 max-w-md font-sans">
-              The fastest and most reliable local AST safety gating, zero prompt leakage, cryptographic agent passports, and trustless multi-chain escrow bridging for autonomous AI agents.
+              The fastest and most reliable local AST safety gating, zero prompt leakage, cryptographic agent passports, and deterministic runtime guardrails for autonomous AI agents.
             </p>
           </div>
 

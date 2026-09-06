@@ -10,7 +10,6 @@ import {
   ChevronUp, 
   Sparkles, 
   ArrowRight, 
-  ArrowRightLeft,
   ExternalLink 
 } from 'lucide-react'
 
@@ -199,12 +198,12 @@ export default function Hero() {
             letterSpacing: '-0.03em'
           }}
         >
-          The Sovereign Trust &amp; Settlement Protocol for AI Agents.
+          The Sovereign Security Runtime &amp; Firewall for AI Agents.
         </h1>
 
         {/* Subtitle */}
         <p className="text-center mx-auto mb-8 text-[#a1a1aa] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          Zero cloud lag. Zero prompt leakage. The fastest and most reliable local AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Cross-tenant agent marketplace, EigenTrust peer reputation, and atomic multi-chain escrow bridging across Base, Arbitrum, and Lightning.
+          Zero cloud lag. Zero prompt leakage. The fastest and most reliable local AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Multi-tenant workspace isolation, OWASP LLM02 credential scrubbing, and verifiable cryptographic execution audit receipts.
         </p>
 
         {/* Minimalist Action & Quick-Start Pill */}
@@ -250,8 +249,8 @@ export default function Hero() {
           </span>
           <span className="hidden xs:inline">&bull;</span>
           <span className="flex items-center gap-1.5 text-purple-300">
-            <ArrowRightLeft size={13} className="text-purple-400" />
-            <span>Base / Arb / Lightning Bridges</span>
+            <ShieldCheck size={13} className="text-purple-400" />
+            <span>Multi-Tenant AST Gating</span>
           </span>
           <span className="hidden xs:inline">&bull;</span>
           <span className="flex items-center gap-1.5 text-zinc-300">

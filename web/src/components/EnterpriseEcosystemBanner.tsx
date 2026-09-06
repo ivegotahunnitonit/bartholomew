@@ -1,4 +1,4 @@
-import { Globe, ShieldCheck, Zap, ArrowRightLeft, FileCheck } from 'lucide-react'
+import { Globe, ShieldCheck, Zap, FileCheck } from 'lucide-react'
 
 interface PartnerLogo {
   name: string
@@ -46,25 +46,25 @@ export default function EnterpriseEcosystemBanner() {
       color: '#10b981'
     },
     {
-      name: 'Base (Coinbase L2)',
-      label: 'BartholomewEscrowPool.sol & HTLC',
-      category: 'EVM SETTLEMENT',
-      badge: 'EIP-712 Verified',
-      color: '#0052ff'
+      name: 'Docker & Kubernetes',
+      label: 'In-Process Container & Pod Isolation',
+      category: 'CONTAINER DEFENSE',
+      badge: 'Defense-in-Depth',
+      color: '#2496ed'
     },
     {
-      name: 'Arbitrum One',
-      label: 'Sub-Cent Rollup Slashing Settlement',
-      category: 'EVM SETTLEMENT',
-      badge: 'EVM Bridge Relay',
-      color: '#28a0f0'
+      name: 'LlamaIndex Workflows',
+      label: 'Event-Driven Pipeline AST Guard',
+      category: 'RAG & WORKFLOWS',
+      badge: 'Pipeline Gate',
+      color: '#a855f7'
     },
     {
-      name: 'Bitcoin Lightning Network',
-      label: 'L402 HTTP Satoshis Settlement',
-      category: 'MICROPAYMENTS',
-      badge: 'L402 Protocol',
-      color: '#f7931a'
+      name: 'LiteLLM & Local Models',
+      label: 'Universal Model Wire Gateway',
+      category: 'MODEL GATEWAY',
+      badge: 'Zero Leakage',
+      color: '#ec4899'
     },
     {
       name: 'Google Gemini & Vertex AI',
@@ -74,10 +74,10 @@ export default function EnterpriseEcosystemBanner() {
       color: '#4285f4'
     },
     {
-      name: 'AWS Bedrock & Nitro',
-      label: 'Confidential Enclave Attestation',
+      name: 'AWS Bedrock & Containers',
+      label: 'Runtime Invariant Attestation',
       category: 'CLOUD RUNTIME',
-      badge: 'Nitro Attested',
+      badge: 'Enterprise Secured',
       color: '#ff9900'
     }
   ]
@@ -91,10 +91,10 @@ export default function EnterpriseEcosystemBanner() {
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold uppercase tracking-wider mb-2 rounded-full">
             <Globe size={12} className="text-cyan-400 animate-pulse" />
-            <span>[ UNIVERSAL AGENT FRAMEWORKS &amp; SETTLEMENT RAILS ]</span>
+            <span>[ UNIVERSAL AGENT FRAMEWORKS &amp; RUNTIMES ]</span>
           </div>
           <p className="text-xs text-zinc-400 font-sans max-w-2xl mx-auto">
-            Zero-friction interoperability. Protects CrewAI, LangGraph, AutoGen, and Claude tools with the fastest and most reliable local AST safety gating, while settling micro-escrows across Base, Arbitrum, and Lightning.
+            Zero-friction interoperability. Protects CrewAI, LangGraph, AutoGen, Claude, and OpenAI tool dispatches with deterministic in-process AST invariant gating before execution hits the operating system or database.
           </p>
         </div>
 
@@ -146,8 +146,8 @@ export default function EnterpriseEcosystemBanner() {
           </span>
           <span>•</span>
           <span className="inline-flex items-center gap-1.5 text-purple-300">
-            <ArrowRightLeft size={13} />
-            <span>Base / Arbitrum / Lightning HTLC</span>
+            <ShieldCheck size={13} />
+            <span>Docker &amp; Container In-Process Defense</span>
           </span>
         </div>
       </div>

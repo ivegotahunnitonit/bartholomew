@@ -252,31 +252,29 @@ is_valid, msg = enclave.verify_attestation(doc)
 assert is_valid, f"Hardware Enclave Compromised: {msg}"`
   },
   {
-    id: 'escrow_slashing',
-    title: 'Autonomous Micro-Escrow & Automated Slashing',
+    id: 'container_defense',
+    title: 'Docker & Container Sandboxing (Defense-in-Depth)',
     category: 'future_swarms',
-    badge: 'BTP v4.0 L402 / EVM',
-    description: 'Programmatic collateral lock with automated liquidation and indemnity disbursement upon cryptographic regression proofs.',
+    badge: 'BTP Container Gate',
+    description: 'Enforces in-process AST gating inside isolated Docker / gVisor containers, pairing Layer-7 semantic interception with OS-level namespace sandboxing.',
     language: 'python',
-    filePath: 'cookbook/future_swarms/l402_autonomous_escrow.py',
-    architectureNote: 'Mission Init -> Collateral Lock ($500) -> Execution -> [Regression Proof?] -> Auto-Slash to Payee',
-    codeSnippet: `from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    filePath: 'cookbook/container_defense/docker_agent_guard.py',
+    architectureNote: 'User Request -> Agent -> btp_guard AST Check -> [PASS] -> Docker Sandbox Isolation -> Execution',
+    codeSnippet: `from btp_guard import BTPGuard, InvariantPolicy
+from src.container_sandbox import DockerAgentSandbox
 
-pool = AutonomousEscrowPool()
-deposit = pool.lock_escrow(
-    agent_id="autonomous-trader-01",
-    action_type="HIGH_LEVERAGE_DISPATCH",
-    amount_usd=1000.0,
-    settlement_rail="L402_LIGHTNING"
-)
+guard = BTPGuard(policy=InvariantPolicy.strict())
+sandbox = DockerAgentSandbox(image="python:3.11-slim", read_only_root=True)
 
-# Automated Slashing if Invariant is Violated
-proof = {"violated_invariant": "MAX_DRAWDOWN_EXCEEDED", "proof_signature": "0xdeadbeef..."}
-ok, msg, receipt = pool.claim_and_slash(
-    escrow_id=deposit.escrow_id,
-    regression_proof=proof,
-    payee_destination="lnbc10u1p...liquidation_invoice"
-)`
+# 1. Evaluate tool call AST in-process before container execution
+tool_call = "rm -rf /app/data"
+is_safe, violation = guard.evaluate(tool_call)
+
+if not is_safe:
+    raise SecurityError(f"Blocked by BTP AST Gate: {violation.rule_id}")
+
+# 2. Execute safely inside container sandbox
+result = sandbox.run(tool_call)`
   },
 
   // AI IDEs
@@ -391,7 +389,7 @@ export default function UniversalCookbookExplorer() {
           </h2>
           <p className="mt-4 text-base text-zinc-400">
             Whether your agent is already built (zero code changes), being built right now (direct LLM APIs / polyglot), 
-            or an autonomous future swarm with sovereign passports and L402 escrows — copy and run in 60 seconds.
+            or an autonomous multi-agent swarm requiring cryptographically verified agent passports and least-privilege tool delegation — copy and run in 60 seconds.
           </p>
         </div>
 
@@ -401,7 +399,7 @@ export default function UniversalCookbookExplorer() {
             { id: 'all', label: 'All Recipes (14)' },
             { id: 'already_built', label: '1. Already Built (Sidecars & CLI)' },
             { id: 'being_built', label: '2. Being Built (OpenAI, Claude, Polyglot)' },
-            { id: 'future_swarms', label: '3. Future Swarms (Passports & Escrow)' },
+            { id: 'future_swarms', label: '3. Swarm Security & Passports' },
             { id: 'ides', label: 'AI IDEs (Cursor, Windsurf, VS Code)' }
           ].map((tab) => (
             <button

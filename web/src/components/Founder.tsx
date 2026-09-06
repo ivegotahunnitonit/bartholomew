@@ -17,7 +17,7 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
     title: 'Enterprise Workspaces & Cryptographic Isolation',
     highlights: [
       'Multi-tenant workspace isolation across enterprise boundaries with scoped API keys (btp_live / btp_test).',
-      'Cryptographic cross-tenant escrow slashing firewalls preventing unauthorized data or capital leakage.',
+      'Cryptographic cross-tenant boundary firewalls preventing unauthorized data or prompt leakage.',
       'Sovereign digital agent passports providing non-human workers with verified Ed25519 identity.',
       'Interactive dashboard project switcher supporting instantaneous live tenant context changes.'
     ]
@@ -48,38 +48,38 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
   },
   {
     version: 'BTP v5.3.0',
-    timeline: 'SLA MARKETPLACE',
+    timeline: 'AUDIT & COMPLIANCE',
     status: 'LIVE',
-    title: 'Cross-Tenant Agent Marketplace & Two-Sided SLA Escrows',
+    title: 'Continuous Cryptographic CI & Controls Audit Timeline',
     highlights: [
-      'Decentralized marketplace enabling enterprises to hire specialized autonomous agents across organizations.',
-      'Two-sided conditional micro-escrows simultaneously locking client budgets and provider performance bonds.',
-      'Zero-Knowledge Task Completion Proofs (zk-TCP) mathematically proving task success with 0 bytes of prompt leaked.',
-      'Trustless atomic settlement automatically disbursing payments and returning performance bonds upon verified completion.'
+      'Automated SOC 2 Type II and ISO 27001 control mapping for continuous agent runtime compliance.',
+      'RFC 8785 Canonical JSON hashing paired with FIPS 186-5 Ed25519 nonced digital receipts.',
+      'Cryptographic Merkle tree audit trail binding every AST rule evaluation to reproducible CI build logs.',
+      'Standalone offline verification tool validating telemetry evidence packs without cloud dependencies.'
     ]
   },
   {
     version: 'BTP v5.4.0',
     timeline: 'CURRENT RUNTIME',
     status: 'LIVE',
-    title: 'Decentralized P2P Reputation Gossip & Cross-Chain Bridge',
+    title: 'Multi-Framework Adapters & Container Defense-in-Depth',
     highlights: [
-      'Decentralized peer reputation gossip mesh with EigenTrust damping (alpha = 0.85) resisting Sybil collusion.',
-      'Fast-path slashing propagation across peer nodes immediately upon detected Byzantine fault or SLA breach.',
-      'HTLC-style hash-locked cross-chain bridge relay connecting Base (EVM), Arbitrum (EVM), and Bitcoin Lightning (L402).',
-      'Unified multi-framework protection supporting CrewAI, LangGraph, AutoGen, and Claude Desktop MCP.'
+      'Native drop-in framework adapters for CrewAI (BTPTaskGuard), LangGraph (StateGraph gates), and AutoGen.',
+      'Claude Desktop and AI IDE tool gate proxy supporting standard Model Context Protocol (MCP).',
+      'Defense-in-depth container sandboxing: pairs Layer-7 semantic AST gates with Docker and gVisor isolation.',
+      'Fastest and most reliable local AST safety gating with 100% clean test passes across 2,791 automated suites.'
     ]
   },
   {
     version: 'BTP v5.5.0',
     timeline: 'UPCOMING',
     status: 'IN DEVELOPMENT',
-    title: 'Global Autonomous Agent Clearinghouse & Liquidity Mesh',
+    title: 'Distributed Enterprise Policy Sync & Kubernetes Sidecars',
     highlights: [
-      'Autonomous high-frequency liquidity routing across decentralized exchanges and Lightning nodes.',
-      'Universal non-human identity federation standardizing cross-cloud agent authorization.',
-      'Self-reconciling decentralized credit facilities for autonomous corporate entities and DAOs.',
-      'Zero-human-intervention commercial operations delivering continuous 24/7 autonomous economic output.'
+      'GitOps-driven centralized policy sync propagating updated invariant sets across distributed agent clusters.',
+      'Lightweight Kubernetes sidecar daemon enforcing AST invariants across multi-pod agent deployments.',
+      'eBPF kernel-level syscall tracing correlating Layer-7 tool dispatch with operating system telemetry.',
+      'Fine-grained least-privilege delegation tokens for sub-agents and micro-service workers.'
     ]
   }
 ]
@@ -165,17 +165,17 @@ export default function Founder() {
                   <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30 font-mono font-bold">CURRENT PRODUCTION RUNTIME</span>
                 </span>
                 <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                  With <strong>BTP v5.4</strong>, we delivered a comprehensive sovereign trust protocol. We unified the fastest and most reliable in-memory local AST safety gating, zero prompt leakage, cryptographic agent passports, and cross-tenant SLA escrows with Zero-Knowledge Task Completion Proofs (zk-TCP). Autonomous agents can now collaborate across enterprise borders, build decentralized reputation via EigenTrust, and bridge capital atomically across Base, Arbitrum, and Bitcoin Lightning—with <strong>100% clean test passes across 2,791 automated regression suites</strong>.
+                  With <strong>BTP v5.4</strong>, we delivered the definitive sovereign security runtime for autonomous AI agents. We unified the fastest and most reliable in-memory local AST safety gating, zero prompt leakage, cryptographic agent passports, and native framework adapters for CrewAI, LangGraph, AutoGen, and Claude MCP—with <strong>100% clean test passes across 2,791 automated regression suites</strong>.
                 </p>
               </div>
 
               {/* Where We're Headed */}
               <div className="p-3.5 rounded-xl bg-black/60 border border-zinc-800">
                 <span className="text-[11px] font-mono font-bold text-cyan-400 block uppercase tracking-wider mb-1">
-                  [ 03 &middot; Where We're Headed &middot; Planetary Agent Economy ]
+                  [ 03 &middot; Where We're Headed &middot; Enterprise Multi-Agent Governance ]
                 </span>
                 <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  We are building the <strong>Autonomous Circularity Network (ACN)</strong>—a decentralized, self-healing substrate where millions of specialized AI agents discover peers, negotiate zero-knowledge tool delegations, and settle commercial tasks with mathematical finality and zero human friction.
+                  We are standardizing enterprise autonomous agent security—building the open foundation where agents across multi-cloud and multi-tenant environments collaborate with mathematical verification, least-privilege tool access, and zero human risk.
                 </p>
               </div>
 
