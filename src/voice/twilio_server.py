@@ -287,8 +287,8 @@ async def add_lead(request: Request):
 @app.get("/voice/test")
 @app.get("/voice")
 async def get_test_bench_html():
-    """Serves the standalone browser testing suite."""
-    html_file = Path(__file__).resolve().parent.parent.parent / "web" / "public" / "voice" / "index.html"
+    """Serves the standalone internal browser testing suite."""
+    html_file = Path(__file__).resolve().parent / "static" / "index.html"
     if html_file.exists():
         return HTMLResponse(content=html_file.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>Bartholomew Voice AI Server Running. Open /voice/index.html</h1>")
+    return HTMLResponse("<h1>Bartholomew Voice AI Server Running.</h1>")
