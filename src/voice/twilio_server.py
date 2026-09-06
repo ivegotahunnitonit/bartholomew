@@ -165,15 +165,41 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
         }
 
     try:
-        from twilio.rest import Client
-        client = Client(config.twilio_account_sid, config.twilio_auth_token)
-        
         twiml_url = f"{config.public_base_url.rstrip('/')}/voice/twiml"
-        call = client.calls.create(
-            to=target_phone,
-            from_=config.twilio_phone_number,
-            url=twiml_url
-        )
+        call_sid = None
+
+        try:
+            from twilio.rest import Client
+            client = Client(config.twilio_account_sid, config.twilio_auth_token)
+            call = client.calls.create(
+                to=target_phone,
+                from_=config.twilio_phone_number,
+                url=twiml_url
+            )
+            call_sid = call.sid
+        except ImportError:
+            # Zero-dependency fallback via Twilio REST API
+            import base64
+            import urllib.parse
+            import urllib.request
+
+            api_url = f"https://api.twilio.com/2010-04-01/Accounts/{config.twilio_account_sid}/Calls.json"
+            post_data = urllib.parse.urlencode({
+                "To": target_phone,
+                "From": config.twilio_phone_number,
+                "Url": twiml_url,
+            }).encode("utf-8")
+            auth_str = f"{config.twilio_account_sid}:{config.twilio_auth_token}"
+            auth_b64 = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
+
+            req = urllib.request.Request(
+                api_url,
+                data=post_data,
+                headers={"Authorization": f"Basic {auth_b64}"}
+            )
+            with urllib.request.urlopen(req) as response:
+                res_data = json.loads(response.read().decode("utf-8"))
+                call_sid = res_data.get("sid")
 
         if target_lead:
             target_lead.status = LeadStatus.CALLING
@@ -181,7 +207,7 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
 
         return {
             "status": "dialing",
-            "call_sid": call.sid,
+            "call_sid": call_sid,
             "target_phone": target_phone
         }
     except Exception as e:

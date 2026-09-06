@@ -8,6 +8,16 @@ from dataclasses import dataclass, field
 from typing import Optional
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+    _env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    if _env_path.exists():
+        load_dotenv(dotenv_path=_env_path)
+    else:
+        load_dotenv()
+except ImportError:
+    pass
+
 
 @dataclass
 class VoiceConfig:
