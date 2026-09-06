@@ -15,7 +15,10 @@ echo "==> Step 1: Get GKE credentials"
 gcloud container clusters get-credentials $CLUSTER_NAME --zone $ZONE
 
 echo "==> Step 2: Install Helm"
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+rm get_helm.sh
 
 echo "==> Step 3: Add Akash Helm repo"
 helm repo add akash https://akash-network.github.io/helm-charts

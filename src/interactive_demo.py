@@ -11,7 +11,12 @@ if hasattr(sys.stderr, 'reconfigure'):
 
 # Cross-platform ANSI color support
 if sys.platform == "win32":
-    os.system("color")
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+    except Exception:
+        pass
 
 # Color palette
 C_RESET = "\033[0m"

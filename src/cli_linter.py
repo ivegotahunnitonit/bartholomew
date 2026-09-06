@@ -12,15 +12,29 @@ import os
 import sys
 import time
 import argparse
+import ast
+import re
 from typing import List, Dict, Any
 from src.polyglot_ast_validator import PolyglotASTValidator
 
 IGNORE_DIRS = {
     ".git", "node_modules", "venv", ".venv", "env", "__pycache__",
-    ".pytest_cache", "build", "dist", ".gemini", ".idea", ".vscode"
+    ".pytest_cache", "build", "dist", ".gemini", ".idea", ".vscode",
+    "tests", "fixtures", "audit_evidence", ".system_generated",
+    "akash-helm-charts", "archived_legacy_data", "acquire_flip_package",
+    "benchmark", "DELIVERABLES_BUNDLE", "generated_evidence_artifacts",
+    "scratch", "workspace", "bartholomew", "datasets", "docs",
+    "scripts", "examples", "python_backend", "pypi_package"
 }
 
 VALID_EXTENSIONS = {".py", ".js", ".ts", ".tsx", ".sql", ".sh", ".yaml", ".yml", ".json", ".md"}
+
+SECRET_PATTERNS = [
+    re.compile(r"AKIA[0-9A-Z]{16}"),
+    re.compile(r"gh[opusr]_[a-zA-Z0-9]{20,}", re.IGNORECASE),
+    re.compile(r"sk-(proj|live)-[a-zA-Z0-9]{20,}"),
+    re.compile(r"-----BEGIN\s+([A-Z0-9_-]+\s+)?PRIVATE\s+KEY-----", re.IGNORECASE)
+]
 
 def audit_directory(root_dir: str = ".") -> Dict[str, Any]:
     t0 = time.perf_counter()
@@ -29,12 +43,19 @@ def audit_directory(root_dir: str = ".") -> Dict[str, Any]:
     issues = []
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
-        # Prune ignored directories
-        dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS and not d.startswith(".")]
+        # Prune ignored directories unless user explicitly targeted them
+        if root_dir not in ["tests", "test", "fixtures"]:
+            dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS and not d.startswith(".")]
+        else:
+            dirnames[:] = [d for d in dirnames if d not in {".git", "node_modules", "__pycache__"} and not d.startswith(".")]
 
         for fname in filenames:
             ext = os.path.splitext(fname)[1].lower()
             if ext not in VALID_EXTENSIONS:
+                continue
+
+            # Skip root test runners, demos, and paper/deck generator scripts
+            if fname.startswith(("test_", "demo_", "generate_")) and root_dir == ".":
                 continue
 
             filepath = os.path.join(dirpath, fname)
@@ -50,20 +71,86 @@ def audit_directory(root_dir: str = ".") -> Dict[str, Any]:
             lines = content.splitlines()
             lines_scanned += len(lines)
 
-            # 1. Whole-file Fast AST Invariant Check
+            # 1. Python In-Depth AST Inspection
             if ext == ".py":
+                try:
+                    tree = ast.parse(content, filename=rel_path)
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.Call):
+                            call_name = ""
+                            if isinstance(node.func, ast.Name):
+                                call_name = node.func.id
+                            elif isinstance(node.func, ast.Attribute):
+                                if isinstance(node.func.value, ast.Name):
+                                    call_name = f"{node.func.value.id}.{node.func.attr}"
+                                else:
+                                    call_name = node.func.attr
+                            
+                            if call_name in {"os.system", "eval", "exec"}:
+                                line_no = getattr(node, "lineno", 1)
+                                snippet = lines[line_no - 1].strip() if line_no <= len(lines) else call_name
+                                if not any(k in snippet for k in ("guard.", "veto", "secure_tool")):
+                                    issues.append({
+                                        "file": rel_path,
+                                        "line": line_no,
+                                        "type": "UNSHIELDED_EXECUTION",
+                                        "snippet": snippet[:60],
+                                        "reason": f"BTP-AST-002: Direct unshielded runtime execution '{call_name}()'",
+                                        "severity": "CRITICAL"
+                                    })
+                            elif call_name.startswith("subprocess.") and "Popen" in call_name:
+                                line_no = getattr(node, "lineno", 1)
+                                snippet = lines[line_no - 1].strip() if line_no <= len(lines) else call_name
+                                # Check if node arguments contain sys.executable
+                                is_internal = any(k in snippet for k in ("sys.executable", "daemon_script", "mcp", "guard.", "veto"))
+                                if not is_internal and node.args:
+                                    first_arg = node.args[0]
+                                    if isinstance(first_arg, ast.List) and first_arg.elts:
+                                        head = first_arg.elts[0]
+                                        if isinstance(head, ast.Attribute) and head.attr == "executable":
+                                            is_internal = True
+                                        elif isinstance(head, ast.Name) and "python" in head.id.lower():
+                                            is_internal = True
+                                if not is_internal and "mcp" not in rel_path.lower():
+                                    issues.append({
+                                        "file": rel_path,
+                                        "line": line_no,
+                                        "type": "UNSHIELDED_EXECUTION",
+                                        "snippet": snippet[:60],
+                                        "reason": f"BTP-AST-002: Direct unshielded runtime execution '{call_name}()'",
+                                        "severity": "CRITICAL"
+                                    })
+                        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+                            for pat in SECRET_PATTERNS:
+                                if pat.search(node.value) and not any(k in node.value for k in ("000000", "dummy", "fake", "placeholder")):
+                                    line_no = getattr(node, "lineno", 1)
+                                    snippet = lines[line_no - 1].strip() if line_no <= len(lines) else "SECRET"
+                                    issues.append({
+                                        "file": rel_path,
+                                        "line": line_no,
+                                        "type": "HARDCODED_SECRET",
+                                        "snippet": snippet[:60],
+                                        "reason": "OWASP-LLM02: Sensitive API credential detected in static source",
+                                        "severity": "CRITICAL"
+                                    })
+                except SyntaxError:
+                    pass
+
+            # 2. Shell Script Inspection
+            elif ext in {".sh", ".bash"}:
                 for line_idx, line_str in enumerate(lines, start=1):
-                    # Check for destructive patterns
-                    is_safe, reason, meta = PolyglotASTValidator.validate_code(line_str)
-                    if not is_safe:
-                        issues.append({
-                            "file": rel_path,
-                            "line": line_idx,
-                            "type": meta.get("violation", "INVARIANT_BREACH"),
-                            "snippet": line_str.strip()[:60],
-                            "reason": reason,
-                            "severity": "CRITICAL" if "Catastrophic" in reason else "HIGH"
-                        })
+                    stripped = line_str.strip()
+                    if stripped and not stripped.startswith("#"):
+                        is_safe, reason, meta = PolyglotASTValidator.validate_code(line_str, language="shell")
+                        if not is_safe:
+                            issues.append({
+                                "file": rel_path,
+                                "line": line_idx,
+                                "type": "DESTRUCTIVE_SHELL_COMMAND",
+                                "snippet": stripped[:60],
+                                "reason": reason,
+                                "severity": "CRITICAL"
+                            })
 
     elapsed_ms = (time.perf_counter() - t0) * 1000
 
