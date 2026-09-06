@@ -1561,6 +1561,59 @@ def cmd_webhook_test(args):
     print("=" * 70)
 
 
+def cmd_immune_run(args):
+    from src.immune.auto_immunity_engine import AutoImmunityCoordinator
+    coordinator = AutoImmunityCoordinator()
+    iterations = getattr(args, "iterations", 20)
+    auto_heal = getattr(args, "auto_heal", True)
+    
+    print("=" * 70)
+    print("BTP v5.2 AUTO-IMMUNITY ENGINE — CONTINUOUS ADVERSARIAL RED-TEAMING")
+    print("=" * 70)
+    print(f"[*] Iterations        : {iterations}")
+    print(f"[*] Auto-Healing Mode : {'ENABLED (Atomic Hot-Reload)' if auto_heal else 'DISABLED'}")
+    print("[*] Generating adversarial mutation vectors...")
+    
+    res = coordinator.run_immune_cycle(iterations=iterations, auto_heal=auto_heal)
+    print(f"[+] Mutations Fuzzed  : {res['mutations_tested']}")
+    print(f"[+] Initially Blocked : {res['initially_blocked']}")
+    print(f"[+] Gaps Discovered   : {res['gaps_detected']}")
+    print(f"[+] Rules Synthesized : {res['rules_synthesized']}")
+    print(f"[+] False Positive %  : {res['false_positive_rate']}% (Golden Corpus Verified)")
+    print(f"[+] Cycle Execution   : {res['elapsed_ms']}ms")
+    print("=" * 70)
+    if res['synthesized_rules']:
+        print("[+] Synthesized Auto-Immune Rules:")
+        for r in res['synthesized_rules']:
+            print(f"    - [{r['id']}] {r['description']} (Regex: `{r['regex']}`)")
+        if auto_heal:
+            reloaded = coordinator.hot_reload_into_policy_file()
+            print(f"[OK] Policy hot-reloaded into: {coordinator.policy_path} (Status: {reloaded})")
+
+
+def cmd_immune_status(args):
+    from src.immune.auto_immunity_engine import AutoImmunityCoordinator
+    coordinator = AutoImmunityCoordinator()
+    print("=" * 70)
+    print("BTP v5.2 AUTO-IMMUNITY ENGINE TELEMETRY")
+    print("=" * 70)
+    print(f"[*] Active Immune Invariants : {len(coordinator.synthesized_rules)}")
+    print(f"[*] Policy File Location     : {coordinator.policy_path}")
+    print(f"[*] Self-Healing Pipeline    : ACTIVE (Golden Corpus Regression Capable)")
+    print("=" * 70)
+
+
+def cmd_immune_rules(args):
+    from src.immune.auto_immunity_engine import PolicyAutoHealer
+    print("=" * 70)
+    print("BTP v5.2 IMMUNE HEURISTIC PATTERN MATRIX")
+    print("=" * 70)
+    for tech, spec in PolicyAutoHealer.HEURISTIC_PATTERNS.items():
+        print(f"  [{spec['id']}] Technique: {tech:<22} | Category: {spec['category']}")
+        print(f"       Regex: {spec['regex']}")
+    print("=" * 70)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1982,6 +2035,17 @@ def main():
     wh_test_p.add_argument("--tenant", "-t", default="*", help="Target tenant ID")
     wh_test_p.add_argument("--severity", choices=["LOW", "MEDIUM", "HIGH", "CRITICAL"], default="HIGH", help="Severity level for test event")
 
+    # immune (BTP v5.2 Auto-Immunity Engine & Self-Healing Invariant Synthesizer)
+    immune_p = subparsers.add_parser("immune", help="BTP v5.2 Auto-Immunity Engine & Self-Healing Invariant Synthesizer")
+    immune_sub = immune_p.add_subparsers(dest="immune_cmd")
+
+    im_run_p = immune_sub.add_parser("run", help="Execute adversarial red-teaming fuzz cycle and auto-heal gaps")
+    im_run_p.add_argument("--iterations", "-i", type=int, default=20, help="Number of adversarial mutations to generate (default: 20)")
+    im_run_p.add_argument("--no-auto-heal", dest="auto_heal", action="store_false", default=True, help="Disable atomic policy hot-reload")
+
+    im_stat_p = immune_sub.add_parser("status", help="Inspect auto-immunity engine telemetry and active synthesized invariants")
+    im_rules_p = immune_sub.add_parser("rules", help="Display immune heuristic pattern matrix and detection regexes")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -2006,6 +2070,15 @@ def main():
             cmd_webhook_test(args)
         else:
             wh_p.print_help()
+    elif args.command == "immune":
+        if args.immune_cmd == "run":
+            cmd_immune_run(args)
+        elif args.immune_cmd == "status":
+            cmd_immune_status(args)
+        elif args.immune_cmd == "rules":
+            cmd_immune_rules(args)
+        else:
+            immune_p.print_help()
     elif args.command == "benchmark":
         if args.benchmark_cmd == "swarm-chaos":
             cmd_benchmark_chaos(args)
