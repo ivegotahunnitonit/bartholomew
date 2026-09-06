@@ -352,3 +352,66 @@ class AutonomousEscrowPool:
             agent_passport.record_action(f"Escrow {escrow_id} released clean: {deposit.action_type}", volume_usd=deposit.amount_usd)
 
         return True, f"Escrow '{escrow_id}' released clean."
+
+    def lock_sla_escrow(
+        self,
+        contract: Any,
+        client_passport: Optional[Any] = None,
+        provider_passport: Optional[Any] = None,
+    ) -> Tuple[EscrowDeposit, EscrowDeposit]:
+        """
+        Locks two-sided collateral for a cross-tenant SLA:
+        1. Client payment escrow (held in trust for provider).
+        2. Provider performance bond (held in escrow as slashable indemnity).
+        """
+        client_deposit = self.lock_escrow(
+            agent_id=contract.client_agent_id,
+            action_type=f"SLA_PAYMENT:{contract.contract_id}",
+            amount_usd=contract.payment_budget_usd,
+            passport=client_passport,
+            settlement_rail=contract.settlement_rail
+        )
+        provider_deposit = self.lock_escrow(
+            agent_id=contract.provider_agent_id,
+            action_type=f"SLA_PERFORMANCE_BOND:{contract.contract_id}",
+            amount_usd=contract.provider_bond_usd,
+            passport=provider_passport,
+            settlement_rail=contract.settlement_rail
+        )
+        return client_deposit, provider_deposit
+
+    def settle_sla_completion(
+        self,
+        contract: Any,
+        completion_proof: Any,
+        provider_payee_destination: str
+    ) -> Tuple[bool, str, Dict[str, Any]]:
+        """
+        Settles fulfilled cross-tenant SLA:
+        1. Releases provider's staked performance bond back to provider.
+        2. Disburses client's payment deposit to provider_payee_destination.
+        """
+        if not getattr(completion_proof, "verified", False):
+            return False, "SLA settlement aborted: completion proof is unverified.", {}
+
+        client_dep = self.active_escrows.get(contract.client_escrow_id) if contract.client_escrow_id else None
+        prov_dep = self.active_escrows.get(contract.provider_escrow_id) if contract.provider_escrow_id else None
+
+        if client_dep and client_dep.status == "LOCKED":
+            client_dep.status = "SETTLED"
+            client_dep.payee_destination = provider_payee_destination
+
+        if prov_dep and prov_dep.status == "LOCKED":
+            prov_dep.status = "RELEASED"
+
+        receipt = {
+            "contract_id": contract.contract_id,
+            "proof_id": getattr(completion_proof, "proof_id", "zktcp_auto"),
+            "amount_disbursed_usd": contract.payment_budget_usd,
+            "bond_returned_usd": contract.provider_bond_usd,
+            "payee_destination": provider_payee_destination,
+            "settled_at": time.time(),
+            "status": "SLA_SETTLED_CLEAN"
+        }
+        self.settlement_ledger.append(receipt)
+        return True, "Cross-tenant SLA contract settled successfully.", receipt

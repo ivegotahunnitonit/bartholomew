@@ -39,6 +39,7 @@ MANIFEST
 env/
 venv/
 .btp_webhooks.json
+.btp_marketplace.json
 ENV/
 env.bak/
 venv.bak/

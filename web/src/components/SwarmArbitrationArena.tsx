@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ShieldAlert, Zap, CheckCircle2, Gavel, Award, RefreshCw, Copy, Check, Cpu, Bell, Send, Sparkles, Activity } from 'lucide-react'
+import { ShieldAlert, Zap, CheckCircle2, Gavel, Award, RefreshCw, Copy, Check, Cpu, Bell, Send, Sparkles, Activity, Store, Handshake, ShieldCheck } from 'lucide-react'
 
 interface AttackScenario {
   id: string
@@ -133,6 +133,47 @@ export default function SwarmArbitrationArena() {
       setIsFuzzingImmune(false)
       setImmuneHotReloaded(true)
     }, 750)
+  }
+
+  // Milestone 5.3: Cross-Tenant Marketplace & SLA Escrow State
+  const [selectedSpecialist, setSelectedSpecialist] = useState<string>('agent-code-auditor-99')
+  const [contractStage, setContractStage] = useState<'IDLE' | 'LOCKED' | 'SETTLED'>('IDLE')
+  const [contractId, setContractId] = useState<string>('SLA-390702F44CE8')
+  const [isProcessingContract, setIsProcessingContract] = useState<boolean>(false)
+  const [settlementReceipt, setSettlementReceipt] = useState<{
+    proofId: string
+    pedersen: string
+    fiatShamir: string
+    status: string
+    amountDisbursedUsd: number
+    bondReturnedUsd: number
+  } | null>(null)
+
+  const handleHireSpecialist = () => {
+    setIsProcessingContract(true)
+    setTimeout(() => {
+      const entropy = Math.random().toString(16).substring(2, 10).toUpperCase()
+      setContractId(`SLA-${entropy}7B4F`)
+      setContractStage('LOCKED')
+      setIsProcessingContract(false)
+      setSettlementReceipt(null)
+    }, 600)
+  }
+
+  const handleFulfillSLA = () => {
+    setIsProcessingContract(true)
+    setTimeout(() => {
+      setContractStage('SETTLED')
+      setIsProcessingContract(false)
+      setSettlementReceipt({
+        proofId: `zktcp_${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 6)}`,
+        pedersen: '0x' + Array.from({length: 48}, () => Math.floor(Math.random()*16).toString(16)).join(''),
+        fiatShamir: '0x' + Array.from({length: 32}, () => Math.floor(Math.random()*16).toString(16)).join(''),
+        status: 'SLA_SETTLED_CLEAN',
+        amountDisbursedUsd: selectedSpecialist === 'agent-risk-oracle-01' ? 250.0 : selectedSpecialist === 'agent-liquidity-arbiter-07' ? 180.0 : 100.0,
+        bondReturnedUsd: selectedSpecialist === 'agent-risk-oracle-01' ? 50.0 : selectedSpecialist === 'agent-liquidity-arbiter-07' ? 40.0 : 20.0,
+      })
+    }, 800)
   }
 
   const handleTriggerTestWebhook = () => {
@@ -689,6 +730,180 @@ export default function SwarmArbitrationArena() {
                   <span className="text-zinc-500">Regex: (?i)\b(dr/\*\*+/op|ta/\*\*+/ble|tr/\*\*+/uncate)\b</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Milestone 5.3: Cross-Tenant Autonomous Agent Marketplace & SLA Escrows */}
+          <div className="mt-6 p-5 rounded-xl bg-zinc-900/90 border border-amber-500/30 backdrop-blur-md shadow-2xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-zinc-800">
+              <div className="flex items-center gap-2.5">
+                <Store className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Milestone 5.3: Cross-Tenant Autonomous Agent Marketplace & SLA Escrows
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  zk-TCP Verified Settlement
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-zinc-400 font-mono">
+                  Current Tenant: <span className="text-amber-400 font-bold">{activeTenant.org}</span>
+                </span>
+                {contractStage === 'IDLE' && (
+                  <button
+                    onClick={handleHireSpecialist}
+                    disabled={isProcessingContract}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white transition-colors"
+                  >
+                    <Handshake className="w-3.5 h-3.5" />
+                    {isProcessingContract ? 'Locking Escrow...' : 'Hire Specialist & Lock Escrow'}
+                  </button>
+                )}
+                {contractStage === 'LOCKED' && (
+                  <button
+                    onClick={handleFulfillSLA}
+                    disabled={isProcessingContract}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    {isProcessingContract ? 'Verifying zk-TCP...' : 'Submit zk-TCP & Settle SLA'}
+                  </button>
+                )}
+                {contractStage === 'SETTLED' && (
+                  <button
+                    onClick={() => { setContractStage('IDLE'); setSettlementReceipt(null); }}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Reset SLA Demo
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Specialist Selection Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+              {[
+                {
+                  id: 'agent-risk-oracle-01',
+                  name: 'Novartis Clinical Verifier',
+                  tenant: 'ten_novartis_health_prod',
+                  org: 'Novartis Health',
+                  rate: 250,
+                  bond: 50,
+                  rep: '99.0%',
+                  jobs: 142,
+                  capabilities: ['clinical_data:verify', 'fhir_audit', 'hipaa_compliance']
+                },
+                {
+                  id: 'agent-code-auditor-99',
+                  name: 'Bartholomew Code Auditor',
+                  tenant: 'ten_bartholomew_core_dev',
+                  org: 'Bartholomew Core',
+                  rate: 100,
+                  bond: 20,
+                  rep: '98.0%',
+                  jobs: 289,
+                  capabilities: ['ast_gate:audit', 'solidity_verify', 'secret_scan']
+                },
+                {
+                  id: 'agent-liquidity-arbiter-07',
+                  name: 'Acme Liquidity Arbiter',
+                  tenant: 'ten_acme_corp_prod',
+                  org: 'Acme Corp',
+                  rate: 180,
+                  bond: 40,
+                  rep: '97.0%',
+                  jobs: 88,
+                  capabilities: ['dex_arbitrage', 'l402_settle', 'slippage_guard']
+                }
+              ].map(agent => {
+                const isSelected = selectedSpecialist === agent.id
+                return (
+                  <button
+                    key={agent.id}
+                    onClick={() => {
+                      if (contractStage === 'IDLE') setSelectedSpecialist(agent.id)
+                    }}
+                    disabled={contractStage !== 'IDLE'}
+                    className={`p-3 rounded-lg border text-left transition-all ${
+                      isSelected
+                        ? 'bg-amber-500/10 border-amber-500/50 shadow-lg shadow-amber-500/5'
+                        : 'bg-black/40 border-zinc-800 hover:border-zinc-700 opacity-70'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold text-white">{agent.name}</span>
+                      <span className="text-[10px] font-mono text-emerald-400 font-semibold">{agent.rep} ({agent.jobs})</span>
+                    </div>
+                    <div className="text-[11px] text-zinc-400 font-mono mb-2">
+                      Rate: <span className="text-white font-bold">${agent.rate}</span> | Bond: <span className="text-amber-400 font-bold">${agent.bond}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {agent.capabilities.map(c => (
+                        <span key={c} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* SLA Status & Escrow Pipeline */}
+            <div className="p-3.5 rounded-lg bg-black/60 border border-zinc-800 font-mono text-xs space-y-2">
+              <div className="flex items-center justify-between pb-1 border-b border-zinc-800">
+                <span className="text-zinc-400 text-[11px]">CROSS-TENANT SLA LIFECYCLE & TWO-SIDED ESCROW LEDGER</span>
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${
+                  contractStage === 'SETTLED'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                    : contractStage === 'LOCKED'
+                    ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                    : 'bg-zinc-800 text-zinc-400'
+                }`}>
+                  STATUS: {contractStage}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] py-1">
+                <div className="p-2 rounded bg-zinc-900/60 border border-zinc-800">
+                  <span className="text-zinc-500 block text-[10px] uppercase">Contract ID</span>
+                  <span className="text-white font-bold">{contractId}</span>
+                </div>
+                <div className="p-2 rounded bg-zinc-900/60 border border-zinc-800">
+                  <span className="text-zinc-500 block text-[10px] uppercase">Client Payment Escrow</span>
+                  <span className={contractStage !== 'IDLE' ? 'text-amber-400 font-bold' : 'text-zinc-500'}>
+                    {contractStage === 'IDLE' ? '$0.00' : selectedSpecialist === 'agent-risk-oracle-01' ? '$250.00 USD (LOCKED)' : selectedSpecialist === 'agent-liquidity-arbiter-07' ? '$180.00 USD (LOCKED)' : '$100.00 USD (LOCKED)'}
+                  </span>
+                </div>
+                <div className="p-2 rounded bg-zinc-900/60 border border-zinc-800">
+                  <span className="text-zinc-500 block text-[10px] uppercase">Provider Performance Bond</span>
+                  <span className={contractStage !== 'IDLE' ? 'text-blue-400 font-bold' : 'text-zinc-500'}>
+                    {contractStage === 'IDLE' ? '$0.00' : selectedSpecialist === 'agent-risk-oracle-01' ? '$50.00 USD (STAKED)' : selectedSpecialist === 'agent-liquidity-arbiter-07' ? '$40.00 USD (STAKED)' : '$20.00 USD (STAKED)'}
+                  </span>
+                </div>
+              </div>
+
+              {settlementReceipt && (
+                <div className="mt-2 p-2.5 rounded bg-emerald-950/20 border border-emerald-500/30 text-[10px] text-zinc-300 space-y-1">
+                  <div className="flex items-center justify-between text-emerald-400 font-bold">
+                    <span className="inline-flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> ZERO-KNOWLEDGE PROOF OF COMPLETION VERIFIED (zk-TCP)
+                    </span>
+                    <span>ATOMIC DISBURSEMENT EXECUTED</span>
+                  </div>
+                  <div className="text-zinc-400 flex items-center justify-between">
+                    <span>Proof ID: <span className="text-white font-mono">{settlementReceipt.proofId}</span></span>
+                    <span>Pedersen: <span className="text-amber-400 font-mono">{settlementReceipt.pedersen.substring(0, 20)}...</span></span>
+                  </div>
+                  <div className="text-zinc-400 flex items-center justify-between">
+                    <span>Fiat-Shamir: <span className="text-blue-400 font-mono">{settlementReceipt.fiatShamir.substring(0, 18)}...</span></span>
+                    <span>Payment Disbursed: <span className="text-emerald-400 font-bold">${settlementReceipt.amountDisbursedUsd.toFixed(2)} USD</span> | Bond Returned: <span className="text-blue-400 font-bold">${settlementReceipt.bondReturnedUsd.toFixed(2)} USD</span></span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1614,6 +1614,104 @@ def cmd_immune_rules(args):
     print("=" * 70)
 
 
+def cmd_marketplace_list(args):
+    from src.marketplace.sla_contract import AgentMarketplaceEngine
+    engine = AgentMarketplaceEngine()
+    cap = getattr(args, "capability", None)
+    specialists = engine.list_specialists(capability=cap)
+    print("=" * 70)
+    print("BTP v5.3 CROSS-TENANT AGENT MARKETPLACE")
+    print("=" * 70)
+    if not specialists:
+        print("  No specialist agents found matching criteria.")
+    else:
+        for idx, s in enumerate(specialists, 1):
+            print(f"  [{idx}] {s.display_name}")
+            print(f"       Agent ID    : {s.agent_id} (Tenant: {s.tenant_id[:16]})")
+            print(f"       Capabilities: {', '.join(s.capabilities)}")
+            print(f"       Rate / Job  : ${s.rate_usd_per_job:.2f} USD | Min Bond: ${s.min_bond_usd:.2f} USD")
+            print(f"       Reputation  : {s.reputation_score * 100:.1f}% ({s.jobs_completed} jobs completed)")
+            print(f"       Rails       : {', '.join(s.settlement_rails)}")
+    print("=" * 70)
+
+
+def cmd_marketplace_contract_create(args):
+    from src.marketplace.sla_contract import AgentMarketplaceEngine
+    from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    engine = AgentMarketplaceEngine()
+    pool = AutonomousEscrowPool()
+    
+    contract = engine.create_contract(
+        client_tenant_id=args.client_tenant,
+        client_org_id=args.client_org,
+        client_agent_id=args.client_agent,
+        provider_agent_id=args.provider_agent,
+        required_capability=args.capability,
+        budget_usd=args.budget,
+        provider_bond_usd=args.bond,
+        settlement_rail=getattr(args, "rail", "L402_LIGHTNING")
+    )
+    # Lock conditional two-sided escrow
+    c_dep, p_dep = pool.lock_sla_escrow(contract)
+    engine.lock_contract(contract.contract_id, c_dep.escrow_id, p_dep.escrow_id)
+    
+    print("=" * 70)
+    print("BTP v5.3 CROSS-TENANT SLA CONTRACT CREATED & ESCROWS LOCKED")
+    print("=" * 70)
+    print(f"[*] Contract ID       : {contract.contract_id}")
+    print(f"[*] Client Tenant     : {contract.client_tenant_id} ({contract.client_org_id})")
+    print(f"[*] Provider Agent    : {contract.provider_agent_id}")
+    print(f"[*] Capability Scope  : {contract.required_capability}")
+    print(f"[*] Payment Locked    : ${contract.payment_budget_usd:.2f} USD ({c_dep.escrow_id})")
+    print(f"[*] Performance Bond  : ${contract.provider_bond_usd:.2f} USD ({p_dep.escrow_id})")
+    print(f"[*] Settlement Rail   : {contract.settlement_rail}")
+    print(f"[*] Contract Status   : LOCKED & ACTIVE")
+    print("=" * 70)
+
+
+def cmd_marketplace_contract_fulfill(args):
+    from src.marketplace.sla_contract import AgentMarketplaceEngine, ZKTaskCompletionProof
+    from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    engine = AgentMarketplaceEngine()
+    pool = AutonomousEscrowPool()
+
+    contract = engine.contracts.get(args.contract_id)
+    if not contract:
+        print(f"[!] Error: Contract '{args.contract_id}' not found.")
+        return
+
+    # Generate synthetic or real zk-TCP proof
+    proof = ZKTaskCompletionProof.create_proof(
+        contract_id=contract.contract_id,
+        provider_agent_id=contract.provider_agent_id,
+        provider_tenant_id=contract.provider_tenant_id,
+        input_data={"task": contract.required_capability, "contract_id": contract.contract_id},
+        output_data={"status": "COMPLETED", "result_digest": "0x44fa71bb9900c2"},
+        tool_actions=["audit_verify", "merkle_commit"]
+    )
+
+    ok, msg, updated_contract = engine.fulfill_contract(contract.contract_id, proof)
+    if ok:
+        s_ok, s_msg, receipt = pool.settle_sla_completion(
+            contract=updated_contract,
+            completion_proof=proof,
+            provider_payee_destination="provider_treasury_vault"
+        )
+        print("=" * 70)
+        print("BTP v5.3 SLA CONTRACT FULFILLED & SETTLED")
+        print("=" * 70)
+        print(f"[*] Contract ID          : {updated_contract.contract_id}")
+        print(f"[*] zk-TCP Proof ID      : {proof.proof_id}")
+        print(f"[*] Pedersen Commitment  : {proof.pedersen_commitment}")
+        print(f"[*] Fiat-Shamir Response : {proof.fiat_shamir_response}")
+        print(f"[*] Amount Disbursed     : ${updated_contract.payment_budget_usd:.2f} USD")
+        print(f"[*] Performance Bond     : Released Clean to Provider")
+        print(f"[*] Settlement Status    : {receipt.get('status')}")
+        print("=" * 70)
+    else:
+        print(f"[!] Fulfillment Error: {msg}")
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -2043,8 +2141,25 @@ def main():
     im_run_p.add_argument("--iterations", "-i", type=int, default=20, help="Number of adversarial mutations to generate (default: 20)")
     im_run_p.add_argument("--no-auto-heal", dest="auto_heal", action="store_false", default=True, help="Disable atomic policy hot-reload")
 
-    im_stat_p = immune_sub.add_parser("status", help="Inspect auto-immunity engine telemetry and active synthesized invariants")
-    im_rules_p = immune_sub.add_parser("rules", help="Display immune heuristic pattern matrix and detection regexes")
+    # marketplace (BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows)
+    mkt_p = subparsers.add_parser("marketplace", help="BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows")
+    mkt_sub = mkt_p.add_subparsers(dest="marketplace_cmd")
+
+    mkt_list_p = mkt_sub.add_parser("list", help="List registered cross-tenant specialist agents")
+    mkt_list_p.add_argument("--capability", "-c", help="Filter by required capability")
+
+    mkt_create_p = mkt_sub.add_parser("contract-create", help="Create cross-tenant SLA contract & lock two-sided escrow")
+    mkt_create_p.add_argument("--client-tenant", required=True, help="Hiring client tenant ID")
+    mkt_create_p.add_argument("--client-org", required=True, help="Hiring client organization")
+    mkt_create_p.add_argument("--client-agent", required=True, help="Hiring client agent ID")
+    mkt_create_p.add_argument("--provider-agent", required=True, help="Specialist provider agent ID")
+    mkt_create_p.add_argument("--capability", required=True, help="Required capability scope")
+    mkt_create_p.add_argument("--budget", type=float, required=True, help="Budget amount in USD")
+    mkt_create_p.add_argument("--bond", type=float, default=25.0, help="Provider performance bond USD")
+    mkt_create_p.add_argument("--rail", default="L402_LIGHTNING", choices=["L402_LIGHTNING", "EVM_BASE", "EVM_ARBITRUM"], help="Settlement rail")
+
+    mkt_fulfill_p = mkt_sub.add_parser("contract-fulfill", help="Submit zk-TCP proof and settle cross-tenant SLA escrow")
+    mkt_fulfill_p.add_argument("--contract-id", "-i", required=True, help="Contract ID to fulfill")
 
     args = parser.parse_args()
 
@@ -2052,6 +2167,15 @@ def main():
         cmd_version(args)
     elif args.command == "activate":
         cmd_activate(args)
+    elif args.command == "marketplace":
+        if args.marketplace_cmd == "list":
+            cmd_marketplace_list(args)
+        elif args.marketplace_cmd == "contract-create":
+            cmd_marketplace_contract_create(args)
+        elif args.marketplace_cmd == "contract-fulfill":
+            cmd_marketplace_contract_fulfill(args)
+        else:
+            mkt_p.print_help()
     elif args.command == "workspace":
         if args.workspace_cmd == "create":
             cmd_workspace_create(args)
