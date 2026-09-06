@@ -221,24 +221,34 @@ class SwarmDisputeArbitrator:
         target_agent_id: str,
         target_action: str,
         amount_usd: float,
-        fault_proof: ZKFaultProof
+        fault_proof: Any,
+        required_quorum: Optional[int] = None
     ) -> Tuple[bool, str, Optional[SwarmDispute]]:
         """
         Opens a decentralized slashing dispute challenged by another agent or monitor.
         """
+        # Convert dict to ZKFaultProof if necessary
+        if isinstance(fault_proof, dict):
+            proof_obj = ZKFaultProof(**fault_proof)
+            fault_proof_dict = fault_proof
+        else:
+            proof_obj = fault_proof
+            fault_proof_dict = fault_proof.to_dict()
+
         # 1. Verify zk-Fault Proof validity before opening dispute
-        valid_zk, reason = ZKFaultProofEngine.verify_fault_proof(fault_proof)
+        valid_zk, reason = ZKFaultProofEngine.verify_fault_proof(proof_obj)
         if not valid_zk:
             return False, f"Invalid zk-Fault Proof: {reason}", None
 
         dispute_id = f"disp_{secrets.token_hex(6)}"
-        eligible_validators = [k for k in self.validators if k != target_agent_id]
-        n_eligible = max(len(eligible_validators), 2)
-        # Byzantine 2f + 1 quorum over non-conflicted eligible jurors
-        if n_eligible >= 3:
-            required_quorum = (2 * n_eligible) // 3 + 1
-        else:
-            required_quorum = n_eligible
+        if required_quorum is None:
+            eligible_validators = [k for k in self.validators if k != target_agent_id]
+            n_eligible = max(len(eligible_validators), 2)
+            # Byzantine 2f + 1 quorum over non-conflicted eligible jurors
+            if n_eligible >= 3:
+                required_quorum = (2 * n_eligible) // 3 + 1
+            else:
+                required_quorum = n_eligible
 
         dispute = SwarmDispute(
             dispute_id=dispute_id,
@@ -247,7 +257,7 @@ class SwarmDisputeArbitrator:
             target_agent_id=target_agent_id,
             target_action=target_action,
             amount_usd=amount_usd,
-            fault_proof=fault_proof.to_dict(),
+            fault_proof=fault_proof_dict,
             opened_at=time.time(),
             status="VOTING",
             required_quorum=required_quorum

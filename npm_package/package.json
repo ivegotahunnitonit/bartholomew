@@ -1,7 +1,7 @@
 {
   "name": "btp-guard",
-  "version": "3.0.0",
-  "description": "BTP v3.0 The AI Agent Execution Gateway — Sub-35µs In-Process Tool Gating, AST Invariants, Secret Scrubbing, Loop Damping & Offline Merkle Receipts",
+  "version": "4.1.0",
+  "description": "BTP v4.1 The AI Agent Execution Gateway — Sub-35µs In-Process Tool Gating, Byzantine Swarm Slashing & Zero-Knowledge Fault Proofs",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {

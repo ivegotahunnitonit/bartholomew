@@ -104,8 +104,11 @@ class EVMEscrowGateway:
     def __init__(
         self,
         domain: Optional[EIP712Domain] = None,
-        private_key: Optional[ec.EllipticCurvePrivateKey] = None
+        private_key: Optional[ec.EllipticCurvePrivateKey] = None,
+        chain_id: Optional[int] = None
     ):
+        if domain is None and chain_id is not None:
+            domain = EIP712Domain(chain_id=chain_id)
         self.domain = domain or EIP712Domain()
         self.private_key = private_key or ec.generate_private_key(ec.SECP256K1())
         self.public_key = self.private_key.public_key()
@@ -177,3 +180,16 @@ class EVMEscrowGateway:
             return True, "EIP-712 Slashing Claim signature verified valid."
         except Exception as e:
             return False, f"Signature verification failed: {str(e)}"
+
+    def verify_slashing_claim(self, signed_claim: Dict[str, Any]) -> Tuple[bool, str]:
+        """Convenience method to verify a signed claim dictionary."""
+        try:
+            claim_data = signed_claim.get("claim", {})
+            claim = EscrowSlashingClaim(**claim_data)
+            r_hex = signed_claim.get("r", "")
+            s_hex = signed_claim.get("s", "")
+            signer = signed_claim.get("signer_address", self.signer_address)
+            ok, msg = self.verify_claim_signature(claim, r_hex, s_hex, expected_signer=signer)
+            return ok, signer if ok else msg
+        except Exception as exc:
+            return False, f"Verification error: {str(exc)}"

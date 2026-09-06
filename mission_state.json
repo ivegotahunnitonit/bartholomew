@@ -1,8 +1,8 @@
 {
   "mandate": "Continuously discover authorized opportunities in connected worlds. Rank by expected owner value relative to compute cost. Investigate only opportunities supported by sufficient evidence.",
   "started_at_utc": "2026-08-14T20:46:44Z",
-  "last_cycle_timestamp_utc": "2026-09-06T04:47:00Z",
-  "cycle": 15,
+  "last_cycle_timestamp_utc": "2026-09-06T05:28:00Z",
+  "cycle": 16,
   "cash_spent_usd": 4.289999999999998,
   "confirmed_value_usd": 232050.09999999998,
   "pending_value_usd": 0.0,
@@ -95,11 +95,15 @@
     "STANDARDIZED CLI interfaces for BTP v4.0 Micro-Escrows (btp-guard escrow lock/slash/status) and BTP v3.5 Recursive ZK-Rollups (btp-guard rollup create/verify/anchor).",
     "ACTIVATED Milestone 4.0 RFC L402 Lightning Protocol & EIP-712 Multi-Chain Smart Escrows with SHA-256 preimage verification, SECP256K1 ECDSA typed data claims, and native @guard.escrow_collateral execution decorators.",
     "ACTIVATED Milestone 4.1 Decentralized Swarm Slashing Arbitration & Zero-Knowledge Fault Proofs (zk-FP) with non-interactive Schnorr-Pedersen argument of knowledge and Byzantine quorum peer slashing.",
-    "BENCHMARKED Enterprise Swarm Defense: 100% of adversarial penetration attack vectors dropped in sub-35µs local AST interception with zero remote prompt leakage."
+    "BENCHMARKED Enterprise Swarm Defense: 100% of adversarial penetration attack vectors dropped in sub-35µs local AST interception with zero remote prompt leakage.",
+    "UPGRADED Framework Adapters (CrewAI, LangChain/LangGraph, AutoGen) with BTP v4.1 Autonomous Micro-Escrow collateral staking, Byzantine slashing, and Sovereign Passport circuit breakers.",
+    "DEPLOYED Live Interactive Swarm Slashing & Zero-Knowledge Fault Proof Arena to Firebase Hosting (https://acn-26670.web.app).",
+    "ACTIVATED Milestone 4.2 Multi-Chain Settlement Gateway with live/simulated Lightning Network L402 invoice settlement and Base/Arbitrum BartholomewEscrowPool.sol EIP-712 smart contract.",
+    "RELEASED BTP v4.1.0 packages across PyPI (btp-guard==4.1.0) and npm (btp-guard@4.1.0) with 2,738 / 2,738 passing tests (100% clean)."
   ],
   "last_verified_state": {
-    "opp_id": "BTP_V41_SWARM_ARBITRATION_AND_ZK_FAULT_PROOFS",
-    "target": "acn/swarm_arbitration_and_zk_fault_proofs",
+    "opp_id": "BTP_V42_MULTI_CHAIN_SETTLEMENT_AND_SWARM_ARENA",
+    "target": "acn/framework_adapters_and_settlement_gateways",
     "verified": true
   },
   "known_file_hashes": {},

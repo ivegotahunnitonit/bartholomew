@@ -6,6 +6,7 @@ import EnterpriseEcosystemBanner from './components/EnterpriseEcosystemBanner'
 import DesktopInstallerSection from './components/DesktopInstallerSection'
 import SecurityThreatModelSection from './components/SecurityThreatModelSection'
 import InteractiveAgentSandbox from './components/InteractiveAgentSandbox'
+import SwarmArbitrationArena from './components/SwarmArbitrationArena'
 import UniversalCookbookExplorer from './components/UniversalCookbookExplorer'
 import RuntimeThesisProof from './components/RuntimeThesisProof'
 import VisualPolicyEditor from './components/VisualPolicyEditor'
@@ -44,6 +45,7 @@ function HomeView() {
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <InteractiveAgentSandbox />
+      <SwarmArbitrationArena />
       <UniversalCookbookExplorer />
       <EnterpriseDesignPartnerSection />
       <RuntimeThesisProof />

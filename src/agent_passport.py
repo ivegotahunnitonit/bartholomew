@@ -178,6 +178,13 @@ class SovereignAgentPassport:
     def is_circuit_broken(self) -> bool:
         return self.circuit_breaker_tripped
 
+    @is_circuit_broken.setter
+    def is_circuit_broken(self, value: bool):
+        if value:
+            self.trip_circuit_breaker("Administrative circuit breaker trip")
+        else:
+            self.circuit_breaker_tripped = False
+
     @property
     def trust_score(self) -> float:
         return self.reputation_vector.get("trust_score", 1.0)

@@ -197,6 +197,8 @@ from src.settlement.swarm_arbitration import (
     SwarmDisputeArbitrator,
     ArbitrationResolutionCertificate
 )
+from src.settlement.lightning_gateway import LightningGateway, LightningInvoice
+from src.settlement.evm_escrow import EVMEscrowGateway, EscrowSlashingClaim
 
 
 __all__ = [
@@ -207,5 +209,9 @@ __all__ = [
     "ZKFaultProofEngine",
     "ZKFaultProof",
     "SwarmDisputeArbitrator",
-    "ArbitrationResolutionCertificate"
+    "ArbitrationResolutionCertificate",
+    "LightningGateway",
+    "LightningInvoice",
+    "EVMEscrowGateway",
+    "EscrowSlashingClaim"
 ]
