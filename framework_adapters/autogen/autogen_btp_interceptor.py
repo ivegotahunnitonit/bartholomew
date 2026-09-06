@@ -28,6 +28,14 @@ except ImportError:
     except ImportError:
         Guard = None
 
+try:
+    from standalone_btp_verifier import independent_verify_btp_receipt
+except ImportError:
+    try:
+        from btp_guard import independent_verify_btp_receipt
+    except ImportError:
+        independent_verify_btp_receipt = None
+
 
 class BTPViolationError(PermissionError):
     """
@@ -143,25 +151,57 @@ def btp_autogen_guard(
 class AutoGenBTPInterceptor:
     """
     Intercepts and validates incoming AutoGen agent messages before tool execution,
-    protecting against confused-deputy attacks and destructive code generation.
+    protecting against confused-deputy attacks, destructive code generation, and forged envelopes.
 
     Usage:
-        interceptor = AutoGenBTPInterceptor()
+        interceptor = AutoGenBTPInterceptor(trusted_authorities=[root_pubkey], recipient_id="Agent-AutoGen-01")
         safe_message = interceptor.intercept_message(inbound_message)
     """
 
-    def __init__(self, enforce_strict: bool = True):
+    def __init__(
+        self,
+        trusted_authorities: Optional[List[str]] = None,
+        recipient_id: str = "Agent-AutoGen-01",
+        enforce_strict: bool = True,
+        **kwargs
+    ):
+        self.trusted_authorities = trusted_authorities or []
+        self.recipient_id = recipient_id
         self.enforce_strict = enforce_strict
         self.guard = Guard() if Guard else None
+        self.seen_nonces = set()
 
     def intercept_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
         """
         Validates incoming message envelope 100% offline in-process.
         Returns original message if safe, or a security alert envelope if blocked.
         """
-        content = message.get("content", "")
+        # 1. Verify BTP attestation envelope/receipt if present
+        envelope = message.get("btp_envelope") or message.get("btp_receipt")
+        if envelope and independent_verify_btp_receipt is not None and self.trusted_authorities:
+            content = message.get("content", {})
+            payload = content if isinstance(content, dict) else {"content": content}
+            ok, msg = independent_verify_btp_receipt(
+                receipt_json_str=envelope,
+                candidate_payload=payload,
+                trusted_root_pubkeys=self.trusted_authorities,
+                expected_recipient_context=self.recipient_id,
+                seen_nonces=self.seen_nonces,
+            )
+            if not ok:
+                return {
+                    "role": "system",
+                    "content": f"[BTP_SECURITY_ALERT] Invalid BTP attestation: {msg}",
+                    "status": "DENIED",
+                    "diagnostics": {
+                        "rule_id": "BTP-RECEIPT-INVALID",
+                        "reason": msg,
+                        "latency_us": 0.0,
+                    }
+                }
 
-        # Evaluate text/code content
+        # 2. Evaluate text/code content via AST Guard
+        content = message.get("content", "")
         if self.guard and isinstance(content, str):
             res = self.guard.evaluate_ast(content)
             if not res.get("allowed", True):

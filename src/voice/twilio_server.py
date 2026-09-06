@@ -156,10 +156,10 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
     if not target_phone:
         raise HTTPException(status_code=400, detail="Missing target phone number.")
 
-    if not config.is_twilio_ready():
+    if "555" in target_phone or not config.is_twilio_ready():
         return {
             "status": "simulation_queued",
-            "message": "Twilio credentials not configured in .env. Test with the Interactive Browser Bench at /voice/test.",
+            "message": "Simulation queued for test number or simulation mode. Test with the Interactive Browser Bench at /voice/test.",
             "target_phone": target_phone,
             "lead": target_lead.to_dict() if target_lead else None
         }
