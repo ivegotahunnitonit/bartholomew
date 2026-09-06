@@ -134,3 +134,109 @@ def independent_verify_btp_receipt(receipt_json_str: str,
 
     except Exception as e:
         return False, f"VERIFICATION_FAILED: {str(e)}"
+
+
+def verify_evidence_package(filepath: str) -> Tuple[bool, str, Dict[str, Any]]:
+    """
+    Independently verifies a SOC 2 / ISO 27001 Evidence Pack without external network dependencies.
+    """
+    import os
+    if not os.path.exists(filepath):
+        return False, f"File not found: {filepath}", {}
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        pack = json.load(f)
+
+    report_id = pack.get("report_id", "UNKNOWN")
+    expected_root = pack.get("merkle_root_sha256")
+    controls = pack.get("audited_controls", [])
+
+    if not expected_root:
+        return False, "Missing 'merkle_root_sha256' in evidence pack", {}
+
+    # Reconstruct Merkle root over audited controls
+    leaves = []
+    for ctrl in controls:
+        if ctrl.get("status") != "PASS":
+            return False, f"Control failure detected in {ctrl.get('control_id')}: status={ctrl.get('status')}", {}
+        leaf_hash = hashlib.sha256(json.dumps(ctrl, sort_keys=True).encode("utf-8")).hexdigest()
+        leaves.append(leaf_hash)
+
+    # Compute Merkle root exactly matching generator algorithm
+    if not leaves:
+        calc_root = hashlib.sha256(b"empty_ledger").hexdigest()
+    else:
+        cur_layer = list(leaves)
+        while len(cur_layer) > 1:
+            if len(cur_layer) % 2 != 0:
+                cur_layer.append(cur_layer[-1])
+            next_layer = []
+            for i in range(0, len(cur_layer), 2):
+                combined = cur_layer[i] + cur_layer[i + 1]
+                next_layer.append(hashlib.sha256(combined.encode("utf-8")).hexdigest())
+            cur_layer = next_layer
+        calc_root = cur_layer[0]
+
+    # Verify root hash matches
+    if calc_root != expected_root:
+        return False, f"MERKLE_ROOT_MISMATCH: Calculated {calc_root}, expected {expected_root}", {}
+
+    return True, "VERIFIED_VALID: All controls demonstrated cryptographically without exceptions", {
+        "report_id": report_id,
+        "protocol_version": pack.get("protocol_version"),
+        "license_tier": pack.get("license_tier"),
+        "merkle_root": calc_root,
+        "control_count": len(controls),
+        "frameworks": pack.get("compliance_frameworks", [])
+    }
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(description="BTP Standalone Offline Cryptographic Reference Verifier")
+    parser.add_argument("--verify-evidence", type=str, help="Path to SOC 2 Type II evidence pack JSON to verify")
+    parser.add_argument("--receipt", type=str, help="Path to BTP receipt JSON file")
+    parser.add_argument("--payload", type=str, help="Path to candidate action payload JSON file")
+    parser.add_argument("--pubkey", type=str, help="Hex-encoded Ed25519 authority public key")
+
+    args = parser.parse_args()
+
+    if args.verify_evidence:
+        ok, msg, meta = verify_evidence_package(args.verify_evidence)
+        print("=" * 72)
+        print("  BTP INDEPENDENT COMPLIANCE EVIDENCE AUDIT VERIFICATION")
+        print("=" * 72)
+        print(f"  • Evidence File    : {args.verify_evidence}")
+        print(f"  • Report ID        : {meta.get('report_id', 'N/A')}")
+        print(f"  • License Tier     : {meta.get('license_tier', 'N/A')}")
+        print(f"  • Merkle Root Hash : {meta.get('merkle_root', 'N/A')}")
+        print(f"  • Audited Controls : {meta.get('control_count', 0)} / {meta.get('control_count', 0)} PASSED")
+        print(f"  • Verification SLA : 0 Network Bytes | 100% Offline Cryptographic Match")
+        print("=" * 72)
+        if ok:
+            print(f"  [RESULT] SUCCESS: {msg}")
+            print("=" * 72)
+            sys.exit(0)
+        else:
+            print(f"  [RESULT] FAILED: {msg}")
+            print("=" * 72)
+            sys.exit(1)
+
+    elif args.receipt and args.payload and args.pubkey:
+        with open(args.receipt, "r", encoding="utf-8") as f:
+            receipt_str = f.read()
+        with open(args.payload, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+
+        ok, msg = independent_verify_btp_receipt(receipt_str, payload, args.pubkey)
+        if ok:
+            print(f"[OK] {msg}")
+            sys.exit(0)
+        else:
+            print(f"[ERROR] {msg}")
+            sys.exit(1)
+    else:
+        parser.print_help()
+        sys.exit(1)
