@@ -2,42 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew Protocol v3.0 — Pricing &amp; Commercial Licensing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Bartholomew (BTP v5.4) — Commercial Licensing &amp; Enterprise Security Plans</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z' fill='%2310b981'/><path d='M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z' fill='%23000000'/><path d='M13 10.5H18.8C20.8 10.5 22.3 11.6 22.3 13.2C22.3 14.4 21.4 15.3 20.1 15.7C21.7 16.1 22.8 17.2 22.8 18.9C22.8 20.8 21.1 22.2 18.8 22.2H13V10.5ZM16.2 12.6V15.1H18.4C19.3 15.1 20 14.5 20 13.8C20 13.1 19.3 12.6 18.4 12.6H16.2ZM16.2 17.2V20.1H18.6C19.7 20.1 20.5 19.4 20.5 18.6C20.5 17.8 19.7 17.2 18.6 17.2H16.2Z' fill='%23ffffff'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #030305;
-      --card-bg: #08080c;
-      --card-popular: #090c12;
-      --border: #181820;
-      --border-popular: rgba(16, 185, 129, 0.4);
-      --text: #f4f4f7;
-      --text-muted: #9ca3af;
+      --bg: #030306;
+      --card-bg: rgba(13, 13, 18, 0.75);
+      --card-popular: rgba(16, 20, 28, 0.85);
+      --border: rgba(39, 39, 42, 0.7);
+      --border-hover: rgba(16, 185, 129, 0.4);
+      --border-popular: rgba(16, 185, 129, 0.5);
+      --text: #f4f4f8;
+      --text-muted: #94a3b8;
       --primary: #10b981;
       --primary-hover: #34d399;
       --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --amber: #f59e0b;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.5;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 450px;
+      background: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.12) 0%, rgba(56, 189, 248, 0.05) 50%, transparent 75%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1160px;
       margin: 0 auto;
       padding: 0 24px;
+      position: relative;
+      z-index: 10;
     }
 
     /* Navigation Bar */
@@ -45,8 +69,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 0 20px;
-      margin-bottom: 56px;
+      padding: 22px 0;
+      margin-bottom: 48px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
     .brand {
@@ -57,22 +81,39 @@
       color: #fff;
     }
     .brand-title {
-      font-weight: 700;
+      font-weight: 800;
       font-size: 15px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+    }
+    .version-tag {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--primary);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      margin-left: 4px;
     }
     .back-link {
       font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color 0.15s ease, transform 0.15s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .back-link:hover {
       color: #fff;
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateX(-2px);
     }
 
     /* Hero Header */
@@ -83,38 +124,44 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.3);
       color: var(--primary);
       font-size: 11px;
       font-weight: 700;
-      padding: 5px 14px;
+      padding: 6px 16px;
       border-radius: 9999px;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 18px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
     }
     .pulse-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--primary);
-      box-shadow: 0 0 8px var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
     }
     h1 {
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 14px;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      margin-bottom: 16px;
       color: #fff;
-      line-height: 1.2;
+      line-height: 1.15;
     }
     p.subtitle {
-      color: #a1a1aa;
-      font-size: 15px;
-      max-width: 620px;
+      color: #94a3b8;
+      font-size: 16px;
+      max-width: 660px;
       margin: 0 auto;
       line-height: 1.6;
     }
@@ -124,10 +171,10 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 24px;
-      margin-bottom: 56px;
+      margin-bottom: 64px;
       align-items: stretch;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .grid-plans {
         grid-template-columns: 1fr;
       }
@@ -135,37 +182,46 @@
 
     .card {
       background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 24px;
+      border-radius: 20px;
+      padding: 36px 28px;
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      height: 100%;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
     }
     .card:hover {
-      border-color: #282836;
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 30px 60px -20px rgba(16, 185, 129, 0.15);
     }
     .card.popular {
       background: var(--card-popular);
       border-color: var(--border-popular);
-      box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.12);
+      box-shadow: 0 25px 60px -20px rgba(16, 185, 129, 0.2);
+    }
+    .card.popular:hover {
+      border-color: var(--primary);
+      box-shadow: 0 35px 70px -20px rgba(16, 185, 129, 0.3);
     }
     .tag-popular {
       position: absolute;
-      top: -11px;
+      top: -12px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--primary);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #000;
       font-size: 10px;
       font-weight: 800;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      padding: 3px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 4px 14px;
       border-radius: 9999px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
     }
 
     .card-top {
@@ -173,61 +229,82 @@
       display: flex;
       flex-direction: column;
     }
-    .plan-title {
-      font-size: 19px;
+    .plan-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .plan-title {
+      font-size: 22px;
+      font-weight: 800;
       color: #fff;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
     }
     .plan-desc {
       font-size: 13px;
       color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 22px;
-      min-height: 40px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+      min-height: 42px;
     }
 
     .plan-price-row {
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: baseline;
     }
     .price-num {
-      font-size: 38px;
-      font-weight: 800;
+      font-size: 44px;
+      font-weight: 900;
       color: #fff;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       line-height: 1;
     }
     .price-term {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      margin-left: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: 10px;
     }
 
     .feature-list {
       list-style: none;
-      margin-bottom: 32px;
+      margin-bottom: 36px;
       flex: 1;
     }
     .feature-list li {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 12px;
       font-size: 13px;
-      color: #d1d1db;
-      margin-bottom: 12px;
-      line-height: 1.45;
+      color: #e2e8f0;
+      margin-bottom: 14px;
+      line-height: 1.5;
     }
     .chk {
       color: var(--primary);
-      font-weight: 700;
-      font-size: 13px;
+      font-weight: 800;
+      font-size: 14px;
       flex-shrink: 0;
       margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.12);
+    }
+    .card.popular .chk {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.2);
     }
 
     .card-bottom {
@@ -235,169 +312,192 @@
     }
 
     .btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
-      height: 44px;
-      line-height: 44px;
-      padding: 0 16px;
-      border-radius: 8px;
+      height: 48px;
+      padding: 0 20px;
+      border-radius: 12px;
       font-size: 13px;
-      font-weight: 700;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
       text-align: center;
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       border: none;
       box-sizing: border-box;
     }
     .btn-pro {
-      background: var(--primary);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #000;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
     }
     .btn-pro:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);
     }
     .btn-subtle {
-      background: #111117;
+      background: rgba(255, 255, 255, 0.04);
       color: #fff;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
     .btn-subtle:hover {
-      background: #181822;
-      border-color: #343444;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
     }
     .btn-ent {
-      background: #0d141e;
+      background: rgba(56, 189, 248, 0.08);
       color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2);
     }
     .btn-ent:hover {
-      background: #121c2a;
+      background: rgba(56, 189, 248, 0.16);
       border-color: var(--accent);
-      transform: translateY(-1px);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(56, 189, 248, 0.35);
     }
 
-    /* Clean, Concise Fulfillment Flow Strip */
+    /* Enterprise Feature Highlights Strip */
     .flow-strip {
-      background: #07070b;
+      background: rgba(13, 13, 18, 0.6);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 56px;
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 64px;
     }
     .flow-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
       color: #fff;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 20px;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
     }
     .flow-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
+      gap: 24px;
       align-items: stretch;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       .flow-grid {
         grid-template-columns: 1fr;
       }
     }
     .flow-step {
-      background: #0a0a10;
-      border: 1px solid #161622;
-      border-radius: 10px;
-      padding: 18px;
+      background: rgba(8, 8, 12, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       height: 100%;
+      transition: border-color 0.2s;
+    }
+    .flow-step:hover {
+      border-color: rgba(16, 185, 129, 0.3);
     }
     .step-num {
       font-size: 11px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: 'JetBrains Mono', monospace;
       color: var(--primary);
-      font-weight: 700;
-      margin-bottom: 6px;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
     .step-title {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       color: #fff;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
     }
     .step-desc {
-      font-size: 12px;
-      color: #a1a1aa;
-      line-height: 1.5;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.55;
+    }
+    .feature-list li .f-text {
+      flex: 1;
     }
     .step-code {
-      margin-top: 10px;
+      margin-top: 14px;
       background: #020204;
-      border: 1px solid #1c1c28;
-      border-radius: 6px;
-      padding: 8px 10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
       color: #34d399;
       overflow-x: auto;
-      white-space: nowrap;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .step-code::-webkit-scrollbar {
+      display: none;
     }
 
     /* Balanced 2x2 FAQ Grid */
     .faq-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 56px;
+      gap: 20px;
+      margin-bottom: 64px;
       align-items: stretch;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       .faq-grid {
         grid-template-columns: 1fr;
       }
     }
     .faq-item {
-      background: #07070b;
+      background: rgba(13, 13, 18, 0.6);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px;
+      border-radius: 16px;
+      padding: 26px;
       display: flex;
       flex-direction: column;
       height: 100%;
     }
     .faq-q {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
     }
     .faq-a {
       font-size: 13px;
-      color: #a1a1aa;
-      line-height: 1.55;
+      color: #94a3b8;
+      line-height: 1.6;
     }
 
     /* Footer */
     .footer {
       text-align: center;
       font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-family: 'JetBrains Mono', monospace;
       color: #64748b;
-      padding: 32px 0 48px;
+      padding: 40px 0 56px;
       border-top: 1px solid rgba(255, 255, 255, 0.07);
     }
     .footer a {
       color: var(--text-muted);
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 12px;
       transition: color 0.15s ease;
     }
     .footer a:hover {
@@ -407,12 +507,14 @@
 </head>
 <body>
 
+  <div class="ambient-glow"></div>
+
   <div class="container">
 
     <!-- Top Navigation Bar with Official Shield Logo -->
     <header class="nav-bar">
       <a href="/" class="brand">
-        <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="shieldOledGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#f59e0b" />
@@ -427,11 +529,12 @@
           <path d="M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z" fill="#000000" stroke="#222222" stroke-width="1" />
           <path d="M13 10.5H18.8C20.8 10.5 22.3 11.6 22.3 13.2C22.3 14.4 21.4 15.3 20.1 15.7C21.7 16.1 22.8 17.2 22.8 18.9C22.8 20.8 21.1 22.2 18.8 22.2H13V10.5ZM16.2 12.6V15.1H18.4C19.3 15.1 20 14.5 20 13.8C20 13.1 19.3 12.6 18.4 12.6H16.2ZM16.2 17.2V20.1H18.6C19.7 20.1 20.5 19.4 20.5 18.6C20.5 17.8 19.7 17.2 18.6 17.2H16.2Z" fill="#ffffff" />
         </svg>
-        <span class="brand-title">Bartholomew Protocol v3.0</span>
+        <span class="brand-title">Bartholomew</span>
+        <span class="version-tag">BTP v5.4 ACTIVE</span>
       </a>
       <a href="/" class="back-link">
         <span>&larr;</span>
-        <span>Back to Runtime</span>
+        <span>Back to Security Runtime</span>
       </a>
     </header>
 
@@ -439,11 +542,11 @@
     <div class="header">
       <div class="badge">
         <span class="pulse-dot"></span>
-        <span>Deterministic Security Licensing</span>
+        <span>Deterministic Security &amp; Compliance Licensing</span>
       </div>
-      <h1>Simple, transparent security pricing.</h1>
+      <h1>Simple, Transparent Agent Security.</h1>
       <p class="subtitle">
-        Sub-50 microsecond in-process safety, cryptographic attestation, and enterprise compliance for autonomous AI agents.
+        The fastest and most reliable local AST safety gating, multi-tenant isolation, and verifiable SOC 2 cryptographic compliance receipts for autonomous AI agents.
       </p>
     </div>
 
@@ -453,23 +556,25 @@
       <!-- Community Tier ($0) -->
       <div class="card">
         <div class="card-top">
-          <div class="plan-title">Community (Pro Bono)</div>
-          <p class="plan-desc">100% pro bono in-process AST safety gate for open-source developers, researchers, and students.</p>
+          <span class="plan-badge">[ OPEN SOURCE CORE ]</span>
+          <div class="plan-title">Community Core</div>
+          <p class="plan-desc">100% free forever in-process AST safety gate for open-source developers, researchers, and engineers.</p>
           <div class="plan-price-row">
             <span class="price-num">$0</span>
-            <span class="price-term">Free forever &bull; Pro Bono &bull; Apache 2.0</span>
+            <span class="price-term">Free forever &bull; Apache 2.0</span>
           </div>
           <ul class="feature-list">
-            <li><span class="chk">&#10003;</span> In-process AST command interception</li>
-            <li><span class="chk">&#10003;</span> 2.3µs Copy-on-Write micro-rollback</li>
-            <li><span class="chk">&#10003;</span> In-flight secret &amp; credential scrubbing</li>
-            <li><span class="chk">&#10003;</span> Standard Model Context Protocol (MCP) proxy</li>
-            <li><span class="chk">&#10003;</span> Python, Node.js, and Go SDKs</li>
+            <li><span class="chk">&#10003;</span><span class="f-text">In-process AST command interception (<code>rm -rf</code>, <code>DROP TABLE</code>)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Sub-millisecond in-memory syntax evaluation</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">OWASP LLM02 secret &amp; credential scrubbing</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Standard Model Context Protocol (MCP) proxy</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Native CrewAI, LangGraph, &amp; AutoGen adapters</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Python distribution via PyPI (<code>pip install btp-guard</code>)</span></li>
           </ul>
         </div>
         <div class="card-bottom">
           <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer" class="btn btn-subtle">
-            View on GitHub
+            View on GitHub &rarr;
           </a>
         </div>
       </div>
@@ -478,20 +583,21 @@
       <div class="card popular">
         <span class="tag-popular">Most Popular</span>
         <div class="card-top">
+          <span class="plan-badge" style="color: #10b981;">[ CLOUD &amp; TEAM SECOPS ]</span>
           <div class="plan-title">Pro Developer</div>
-          <p class="plan-desc">Cloud attestation sync, automated compliance packs, and loop breakers for AI teams.</p>
+          <p class="plan-desc">Multi-tenant workspace isolation, SecOps webhook alerts, and automated compliance evidence packs.</p>
           <div class="plan-price-row">
             <span class="price-num">$49</span>
             <span class="price-term">/ month &bull; via Stripe</span>
           </div>
           <ul class="feature-list">
-            <li><span class="chk">&#10003;</span> <strong>Everything in Community</strong></li>
-            <li><span class="chk">&#10003;</span> <strong>Cloud Attestation Stream</strong> (Hosted Merkle proof ledger)</li>
-            <li><span class="chk">&#10003;</span> <strong>Automated SOC 2 &amp; ISO 27001 Evidence Packs</strong></li>
-            <li><span class="chk">&#10003;</span> <strong>LDMU Loop Damper</strong> (Halts runaway token loops)</li>
-            <li><span class="chk">&#10003;</span> Priority Claude Desktop &amp; Cursor MCP Proxy</li>
-            <li><span class="chk">&#10003;</span> Live SIEM Export (Datadog, Splunk, CloudWatch)</li>
-            <li><span class="chk">&#10003;</span> Signed Ed25519 Production License Key</li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Everything in Community Core</strong></span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Multi-Tenant Workspace Scoping</strong> (org &amp; project keys)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Real-Time SecOps Webhooks</strong> (Slack, Discord, PagerDuty)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Automated SOC 2 &amp; ISO 27001 Evidence Packs</strong></span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Exponential Loop Damper</strong> (Halts runaway API spend)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">FIPS 186-5 Ed25519 Signed Production License Key</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Priority Developer Support &amp; Updates</span></li>
           </ul>
         </div>
         <div class="card-bottom">
@@ -504,20 +610,21 @@
       <!-- Enterprise Fleet Tier ($199/mo) -->
       <div class="card">
         <div class="card-top">
+          <span class="plan-badge" style="color: #38bdf8;">[ SCALE &amp; COMPLIANCE ]</span>
           <div class="plan-title">Enterprise Fleet</div>
-          <p class="plan-desc">Hardware enclaves, multi-agent threshold consensus, and air-gapped SLAs.</p>
+          <p class="plan-desc">Defense-in-depth container sandboxing, self-healing auto-immunity, and dedicated SLAs.</p>
           <div class="plan-price-row">
             <span class="price-num">$199</span>
             <span class="price-term">/ month &bull; via Stripe</span>
           </div>
           <ul class="feature-list">
-            <li><span class="chk">&#10003;</span> <strong>Everything in Pro</strong></li>
-            <li><span class="chk">&#10003;</span> <strong>Zero-Knowledge Compliance Proofs (zk-ICP)</strong></li>
-            <li><span class="chk">&#10003;</span> <strong>FROST RFC 9591 &amp; BIP 327</strong> Swarm Consensus</li>
-            <li><span class="chk">&#10003;</span> <strong>AWS Nitro &amp; Intel SGX</strong> Hardware Enclaves</li>
-            <li><span class="chk">&#10003;</span> Ring-0 eBPF syscall kernel traps</li>
-            <li><span class="chk">&#10003;</span> Air-gapped on-premise Kubernetes support</li>
-            <li><span class="chk">&#10003;</span> 99.99% Availability SLA &amp; Direct Channel</li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Everything in Pro Developer</strong></span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Self-Healing Auto-Immunity Engine</strong> (Adversarial Fuzzer)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>Docker &amp; gVisor Container Defense</strong> (Defense-in-Depth)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text"><strong>SIEM Integration</strong> (Splunk, Datadog, CloudWatch)</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Air-gapped on-premise Kubernetes cluster support</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Custom Invariant Rule Synthesis Assistance</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">99.99% Runtime SLA &amp; Direct Engineer Slack Channel</span></li>
           </ul>
         </div>
         <div class="card-bottom">
@@ -529,60 +636,60 @@
 
     </div>
 
-    <!-- Crisp 3-Step Instant Fulfillment Flow -->
+    <!-- 3-Step Instant Fulfillment Flow -->
     <div class="flow-strip">
       <div class="flow-header">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-        <span>Instant Fleet Fulfillment Flow</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>Instant License Fulfillment &amp; Deployment Flow</span>
       </div>
       <div class="flow-grid">
         <div class="flow-step">
           <div class="step-num">Step 01</div>
           <div class="step-title">Cryptographic License Key</div>
-          <p class="step-desc">Upon checkout, an Ed25519-signed production license key (<code>btp_live_lic_...</code>) is generated and emailed immediately.</p>
+          <p class="step-desc">Upon checkout via Stripe, an Ed25519-signed production license key (<code>btp_live_lic_...</code>) is generated and emailed immediately.</p>
         </div>
         <div class="flow-step">
           <div class="step-num">Step 02</div>
           <div class="step-title">Single-Command Activation</div>
-          <p class="step-desc">Inject into host memory, Docker, or Kubernetes with zero downtime and zero phone-home delay:</p>
-          <div class="step-code">btp-guard activate &lt;key&gt;</div>
+          <p class="step-desc">Activate in-memory, inside Docker containers, or across Kubernetes pods with zero downtime:</p>
+          <div class="step-code">btp-guard activate &lt;your_license_key&gt;</div>
         </div>
         <div class="flow-step">
           <div class="step-num">Step 03</div>
-          <div class="step-title">Audit Readiness Unlocked</div>
-          <p class="step-desc">Continuous Merkle proofs stream to your SIEM with instant 1-click export of ready-to-file SOC 2 evidence packages.</p>
+          <div class="step-title">SOC 2 Audit Telemetry Unlocked</div>
+          <p class="step-desc">Deterministic RFC 8785 receipts stream to your logging pipeline with 1-click export of auditor-ready evidence packs.</p>
         </div>
       </div>
     </div>
 
-    <!-- Balanced 2x2 FAQ Strip -->
+    <!-- 2x2 FAQ Strip -->
     <div class="faq-grid">
       <div class="faq-item">
-        <div class="faq-q">Is the local runtime 100% pro bono &amp; free?</div>
-        <div class="faq-a">Yes! Bartholomew's local execution gateway, AST syntax gating, in-flight secret scrubbing, rollback sandbox, and MCP proxy are 100% free and open-source forever (pro bono publico). Subscriptions ($49/mo Pro, $199/mo Enterprise) are strictly for commercial team cloud policy sync, SIEM ingestion, and certified auditor-signed SOC 2 Type II &amp; ISO 27001 compliance evidence generation.</div>
+        <div class="faq-q">Is the local core runtime really 100% free forever?</div>
+        <div class="faq-a">Yes. Bartholomew's in-process AST gating, in-flight secret scrubbing, and local framework adapters are 100% open-source (Apache 2.0) and free forever. Paid plans ($49/mo Pro, $199/mo Enterprise) are strictly for multi-tenant workspace management, real-time SecOps alerting webhooks, self-healing rule synthesis, and certified auditor-signed SOC 2 Type II evidence generation.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Does verification cause latency?</div>
-        <div class="faq-a">No. All licenses are signed with Ed25519 and verified locally in CPU memory in under 0.2µs. The software never "phones home" during agent tool execution.</div>
+        <div class="faq-q">Does license verification introduce execution latency?</div>
+        <div class="faq-a">No. All licenses are signed with Ed25519 asymmetric cryptography and verified locally in CPU memory in under 0.2µs. Bartholomew never "phones home" synchronously during agent tool execution, ensuring zero cloud lag.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Can I deploy in air-gapped environments?</div>
-        <div class="faq-a">Yes. Enterprise Fleet includes full offline deployment rights for isolated VPCs, secure enclaves (Nitro/SGX), and air-gapped Kubernetes clusters.</div>
+        <div class="faq-q">Can Bartholomew run in isolated / air-gapped VPCs?</div>
+        <div class="faq-a">Yes. The core architecture runs 100% in-process as an embedded library with zero background daemons and zero open network sockets. It is fully deployable in air-gapped Kubernetes clusters and isolated enterprise VPCs.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Can I cancel or upgrade anytime?</div>
-        <div class="faq-a">Yes. All subscriptions are managed directly through the self-service Stripe Customer Portal. Cancel or switch tiers with one click.</div>
+        <div class="faq-q">Can I cancel, upgrade, or switch tiers anytime?</div>
+        <div class="faq-a">Yes. All billing is handled securely through the self-service Stripe Customer Portal. You can upgrade, downgrade, or cancel your subscription at any time with a single click.</div>
       </div>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-      <span>&copy; 2026 Bartholomew Autonomous Systems. All rights reserved.</span>
-      <div style="margin-top: 10px;">
-        <a href="/">Runtime</a> &bull;
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer">GitHub</a> &bull;
-        <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank">Security Whitepaper</a> &bull;
-        <a href="mailto:security@bartholomew.info">Contact</a>
+      <span>&copy; 2026 Bartholomew Trust Protocol &middot; Sovereign Agent Security Runtime</span>
+      <div style="margin-top: 14px;">
+        <a href="/">Runtime Home</a> &bull;
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer">GitHub Source</a> &bull;
+        <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank">Security Architecture Spec</a> &bull;
+        <a href="mailto:security@bartholomew.info">Enterprise Contact</a>
       </div>
     </footer>
 
