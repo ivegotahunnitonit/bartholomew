@@ -10,11 +10,12 @@ import {
   ChevronUp, 
   Sparkles, 
   ArrowRight, 
-  ArrowRightLeft 
+  ArrowRightLeft,
+  ExternalLink 
 } from 'lucide-react'
 
 
-type ConsoleTab = 'quickstart' | 'crewai' | 'langgraph' | 'autogen' | 'marketplace' | 'bridge'
+type ConsoleTab = 'quickstart' | 'crewai' | 'langgraph' | 'autogen' | 'openai' | 'docker'
 
 interface ConsoleItem {
   tab: ConsoleTab
@@ -115,54 +116,45 @@ agent.initiate_chat(recipient, message="Deploy k8s cluster")`,
     explanation: 'Wire-level interceptor for Microsoft AutoGen agents. Guarantees zero sensitive prompt exfiltration and drops adversarial syscalls in caller memory.',
     latency: 'Zero Syscall Wire Gate'
   },
-  marketplace: {
-    tab: 'marketplace',
-    label: 'zk-TCP Escrow',
-    pill: 'Cross-Tenant SLA',
-    filename: 'sla_escrow_settle.py',
-    command: 'python cli.py marketplace contract-create',
-    code: `from btp_guard.marketplace import SLAMarketplace, ZKTaskCompletionProof
+  openai: {
+    tab: 'openai',
+    label: 'OpenAI Tools',
+    pill: 'Function Calling',
+    filename: 'openai_tool_guard.py',
+    command: 'pip install btp-guard',
+    code: `from btp_guard import BTPGuard
 
-mkt = SLAMarketplace()
+guard = BTPGuard(workspace_id="prod-finance", spend_cap=250.0)
 
-# 1. Lock two-sided escrow (client budget + provider performance bond)
-contract = mkt.create_contract(
-    client_tenant="novartis-clinical",
-    provider_agent="agent-code-auditor-99",
-    budget_usd=2500.0,
-    provider_bond_usd=250.0,
-    rail="L402_LIGHTNING"
-)
-
-# 2. Settle atomically with a Zero-Knowledge Task Completion Proof (zk-TCP)
-zk_proof = ZKTaskCompletionProof.generate(contract.id, result_hash)
-mkt.fulfill_contract(contract.id, zk_proof)  # Funds disbursed trustlessly`,
-    explanation: 'Cross-tenant agent hiring and two-sided SLA micro-escrows settled via Zero-Knowledge Task Completion Proofs (zk-TCP) with zero prompt disclosure.',
-    latency: 'zk-TCP Verified'
+# Pre-execution validation for OpenAI function / tool calling
+def dispatch_safe_tool(tool_call):
+    decision = guard.verify_tool_call(
+        tool_name=tool_call.function.name,
+        arguments_json=tool_call.function.arguments
+    )
+    if not decision.allowed:
+        raise PermissionError(f"BTP Veto: {decision.violations}")
+    return execute_internal_tool(tool_call)`,
+    explanation: 'Pre-dispatch validation for OpenAI function calling. Verifies JSON arguments and drops destructive SQL, shell, or file mutations in memory.',
+    latency: 'In-Process Gate'
   },
-  bridge: {
-    tab: 'bridge',
-    label: 'Cross-Chain Bridge',
-    pill: 'Base / Lightning',
-    filename: 'cross_chain_bridge.py',
-    command: 'python cli.py bridge transfer',
-    code: `from btp_guard.settlement import CrossChainBridgeRelay
+  docker: {
+    tab: 'docker',
+    label: 'Sandbox Defense',
+    pill: 'Defense-in-Depth',
+    filename: 'container_defense.py',
+    command: 'pip install btp-guard',
+    code: `from btp_guard.sandbox import ContainerGuardPolicy
 
-bridge = CrossChainBridgeRelay()
-
-# Lock collateral on Base (EVM L2) and issue hash-locked bridge voucher
-ok, msg, voucher = bridge.lock_source_escrow(
-    source_chain="EVM_BASE",
-    target_chain="L402_LIGHTNING",
-    depositor="0xAliceBaseVault",
-    recipient="bob@btp.lightning.node",
-    amount_usd=500.0
+# Layer-7 Invariant Gating paired with OS Container Sandboxing
+policy = ContainerGuardPolicy(
+    container_runtime="docker",
+    block_dynamic_exec=True,        # Vetoes eval, exec, base64 decoding sinks
+    allowed_egress_domains=["api.github.com", "pypi.org"]
 )
-
-# Redeem instantly on Lightning via cryptographic preimage revelation
-bridge.claim_target_escrow(voucher.voucher_id, voucher.preimage)`,
-    explanation: 'HTLC hash-locked cross-rail escrow bridge. Relays collateral atomically across Base (EVM), Arbitrum (EVM), and Bitcoin Lightning Network (L402).',
-    latency: 'Atomic HTLC Relay'
+# AST gating intercepts tool dispatches inside isolated container namespaces`,
+    explanation: 'Production defense-in-depth model. Pairs Layer-7 semantic AST invariant gating with OS-level Docker / gVisor container sandboxing.',
+    latency: 'Container Safe'
   }
 }
 
@@ -335,25 +327,44 @@ export default function Hero() {
               <span>{current.explanation}</span>
             </div>
 
-            <button
-              onClick={() => setShowChecksums(!showChecksums)}
-              className="font-mono text-[11px] text-[#71717a] hover:text-emerald-400 transition flex items-center gap-1 shrink-0 self-end sm:self-auto"
-            >
-              <span>{showChecksums ? 'Hide Checksum' : 'Verify Checksum'}</span>
-              {showChecksums ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-            </button>
+            <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+              <button
+                onClick={() => setShowChecksums(!showChecksums)}
+                className="font-mono text-[11px] text-[#71717a] hover:text-emerald-400 transition flex items-center gap-1 cursor-pointer"
+              >
+                <span>{showChecksums ? 'Hide Release Digest' : 'View Release Digest'}</span>
+                {showChecksums ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              </button>
+              <a
+                href="https://pypi.org/project/btp-guard/#files"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[11px] text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded"
+              >
+                <span>PyPI Hashes</span>
+                <ExternalLink size={10} />
+              </a>
+            </div>
           </div>
 
           {/* Checksum Drawer */}
           {showChecksums && (
             <div className="p-3 bg-[#020204] border-t border-[#1a1a22] font-mono text-[11px] text-[#71717a] grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <span className="text-[#52525b] block text-[10px] uppercase">Ed25519 Signer &amp; Release</span>
-                <span className="text-emerald-400">BTP v5.4.0 Sovereign Release</span>
+                <span className="text-[#52525b] block text-[10px] uppercase">Official Package Channel</span>
+                <span className="text-emerald-400">btp-guard on PyPI (FIPS 186-5 Ed25519)</span>
               </div>
               <div>
-                <span className="text-[#52525b] block text-[10px] uppercase">RFC 8785 Canonical Digest</span>
-                <span className="text-amber-400 break-all">2d1c42be7a807f7f90be092b3a985e5ebad6b0c20188efee31e7c98b67cc1d89fa3</span>
+                <span className="text-[#52525b] block text-[10px] uppercase">Verifiable Checksums</span>
+                <a
+                  href="https://pypi.org/project/btp-guard/#files"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Verify SHA-256 hashes on PyPI</span>
+                  <ExternalLink size={10} />
+                </a>
               </div>
             </div>
           )}

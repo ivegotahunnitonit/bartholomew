@@ -144,10 +144,12 @@ export default function DesktopInstallerSection() {
                 </p>
               </div>
               <a
-                href="#sdk"
-                className="px-3.5 py-1.5 bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#10b981] border border-[#10b981]/40 rounded-lg transition shrink-0 font-bold"
+                href="https://pypi.org/project/btp-guard/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#10b981] border border-[#10b981]/40 rounded-lg transition shrink-0 font-bold flex items-center gap-1.5"
               >
-                [VIEW 1-LINE CODE]
+                <span>[VIEW ON PYPI ↗]</span>
               </a>
             </div>
 

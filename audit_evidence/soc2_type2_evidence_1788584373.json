@@ -1,0 +1,61 @@
+{
+  "report_id": "BTP-EVID-1788584373",
+  "protocol_version": "BTP v3.0",
+  "generated_at_utc": "2026-09-05T04:59:33.643896+00:00",
+  "environment": {
+    "os": "Windows",
+    "python_version": "3.14.6",
+    "architecture": "AMD64"
+  },
+  "merkle_root_sha256": "a92ee8fd1906ad17edbcfc2ccf95205f21938baafa0cb4e6acefa2b8a53613cd",
+  "leaf_count": 6,
+  "compliance_frameworks": [
+    "AICPA Trust Services Criteria SOC 2 Type II",
+    "ISO/IEC 27001:2022 Annex A Controls"
+  ],
+  "overall_conclusion": "EFFECTIVE - ALL CONTROLS VALIDATED WITHOUT EXCEPTIONS",
+  "audited_controls": [
+    {
+      "control_id": "SOC2-CC6.1",
+      "name": "Logical Access Restriction & Tool Capability Bounds",
+      "invariant_enforced": "Only pre-authorized tools within spend and scope boundaries are dispatched.",
+      "test_procedure": "Automated AST decorator validation on all registered agent tool functions.",
+      "status": "PASS"
+    },
+    {
+      "control_id": "SOC2-CC6.6",
+      "name": "Boundary Protection & Zero Egress Isolation",
+      "invariant_enforced": "Destructive shell commands (rm -rf, DROP TABLE, mkfs) blocked in <35 microseconds.",
+      "test_procedure": "In-process syntax tree tokenizer interception prior to OS/DB runtime dispatch.",
+      "status": "PASS"
+    },
+    {
+      "control_id": "SOC2-CC7.1",
+      "name": "Vulnerability Detection & Secret Exfiltration Prevention",
+      "invariant_enforced": "API keys, JWTs, private keys, and secrets scrubbed in-flight from agent memory/logs.",
+      "test_procedure": "Entropy and regex heuristic screening on arguments and LLM returned payloads.",
+      "status": "PASS"
+    },
+    {
+      "control_id": "SOC2-CC7.2",
+      "name": "Continuous Security Monitoring & Immutable Merkle Receipt Ledger",
+      "invariant_enforced": "Every execution produces an RFC 8785 canonical hash and Ed25519 signature receipt.",
+      "test_procedure": "Independent off-chain verification via standalone_btp_verifier.py without third-party vendor calls.",
+      "status": "PASS"
+    },
+    {
+      "control_id": "ISO-27001-A.8.8",
+      "name": "Management of Technical Vulnerabilities",
+      "invariant_enforced": "Automated 18-suite security gate blocks CI/CD pipelines on invariant regression.",
+      "test_procedure": "Pre-commit and pull-request cryptographic gate (action.yml).",
+      "status": "PASS"
+    },
+    {
+      "control_id": "ISO-27001-A.8.30",
+      "name": "Continuous Logging and Security Monitoring",
+      "invariant_enforced": "Tamper-evident rolling SHA-256 Merkle tree logged across multi-agent turns.",
+      "test_procedure": "Append-only JSONL event storage with cryptographic sequence nonces.",
+      "status": "PASS"
+    }
+  ]
+}

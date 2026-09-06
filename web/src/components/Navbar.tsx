@@ -39,24 +39,24 @@ export default function Navbar() {
 
         {/* Monospace Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-5 text-xs font-mono font-semibold text-[#a1a1aa]">
+          <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>[QUICKSTART]</span>
+          </a>
+          <a href="#threat-model" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [THREAT MODEL]
+          </a>
           <a href="#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [ARENA]
-          </a>
-          <a href="#marketplace" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [MARKETPLACE]
-          </a>
-          <a href="#p2p-mesh" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
-            <span>[P2P MESH &amp; BRIDGE]</span>
-          </a>
-          <a href="#compliance" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [COMPLIANCE]
+            [SWARM ARENA]
           </a>
           <a href="#universal-cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COOKBOOK]
           </a>
-          <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>[QUICKSTART]</span>
+          <a href="#compliance-timeline" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [COMPLIANCE]
+          </a>
+          <a href="#founder" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [ROADMAP]
           </a>
         </nav>
 
@@ -132,6 +132,20 @@ export default function Navbar() {
             <span className="text-[#a1a1aa]">{BTP_ENGINE_LABEL}</span>
           </div>
           <a
+            href="#quickstart"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-mono text-emerald-400 hover:text-emerald-300"
+          >
+            [10-SECOND QUICKSTART]
+          </a>
+          <a
+            href="#threat-model"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+          >
+            [THREAT MODEL &amp; FAQ]
+          </a>
+          <a
             href="#swarm-arena"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
@@ -139,32 +153,25 @@ export default function Navbar() {
             [SWARM ARENA &amp; ARBITRATION]
           </a>
           <a
-            href="#marketplace"
+            href="#universal-cookbook"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [AGENT MARKETPLACE &amp; ESCROWS]
+            [UNIVERSAL COOKBOOK]
           </a>
           <a
-            href="#p2p-mesh"
-            onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-cyan-400 hover:text-cyan-300"
-          >
-            [P2P GOSSIP MESH &amp; BRIDGE]
-          </a>
-          <a
-            href="#compliance"
+            href="#compliance-timeline"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [COMPLIANCE DOSSIER]
+            [COMPLIANCE TIMELINE]
           </a>
           <a
-            href="#quickstart"
+            href="#founder"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-emerald-400 hover:text-emerald-300"
+            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [10-SECOND QUICKSTART]
+            [FOUNDER ROADMAP]
           </a>
           <a
             href="/store/"

@@ -64,7 +64,7 @@ export default function ContinuousComplianceTimeline() {
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#14141a] hover:bg-[#1f1f28] border border-[#27272a] hover:border-[#10b981] text-xs font-mono text-[#d4d4d8] hover:text-[#ffffff] rounded-xl transition shadow-lg"
             >
               <FileCode className="w-4 h-4 text-[#10b981]" />
-              <span>[RAW AUDIT ARCHIVE]</span>
+              <span>[GITHUB CI AUDIT ARTIFACTS]</span>
               <ExternalLink className="w-3 h-3 text-[#71717a]" />
             </a>
           </div>

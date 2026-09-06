@@ -78,28 +78,33 @@ export default function Footer() {
             </div>
             <ul className="space-y-2.5 text-xs font-mono">
               <li>
+                <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition">
+                  [10s QUICKSTART]
+                </a>
+              </li>
+              <li>
+                <a href="#threat-model" className="hover:text-white transition">
+                  [THREAT MODEL &amp; FAQ]
+                </a>
+              </li>
+              <li>
                 <a href="#swarm-arena" className="hover:text-white transition">
                   [SWARM ARENA]
                 </a>
               </li>
               <li>
-                <a href="#marketplace" className="hover:text-white transition">
-                  [AGENT MARKETPLACE]
+                <a href="#universal-cookbook" className="hover:text-white transition">
+                  [UNIVERSAL COOKBOOK]
                 </a>
               </li>
               <li>
-                <a href="#p2p-mesh" className="text-cyan-400 hover:text-cyan-300 transition">
-                  [P2P MESH &amp; BRIDGE]
+                <a href="#compliance-timeline" className="hover:text-white transition">
+                  [COMPLIANCE TIMELINE]
                 </a>
               </li>
               <li>
-                <a href="#compliance" className="hover:text-white transition">
-                  [COMPLIANCE DOSSIER]
-                </a>
-              </li>
-              <li>
-                <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition">
-                  [10s QUICKSTART]
+                <a href="#founder" className="hover:text-white transition">
+                  [FOUNDER ROADMAP]
                 </a>
               </li>
             </ul>
