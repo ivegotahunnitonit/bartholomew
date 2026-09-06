@@ -7,6 +7,7 @@ Bartholomew sovereign trust roots, local daemons, and MCP servers.
 
 import sys
 import os
+import time
 import argparse
 import subprocess
 import json
@@ -912,6 +913,194 @@ def cmd_enclave_status(args):
     print(f"[*] Host Zero-Knowledge: Hypervisor cannot read memory pages")
     print("=" * 70)
 
+
+def cmd_escrow_lock(args):
+    from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    from src.agent_passport import SovereignAgentPassport
+
+    pool = AutonomousEscrowPool()
+    passport = None
+    if getattr(args, "passport", None) and os.path.exists(args.passport):
+        with open(args.passport, "r", encoding="utf-8") as f:
+            passport = SovereignAgentPassport.from_dict(json.load(f))
+
+    deposit = pool.lock_escrow(
+        agent_id=args.agent,
+        action_type=args.action,
+        amount_usd=float(args.amount),
+        passport=passport,
+        settlement_rail=getattr(args, "rail", "L402_LIGHTNING")
+    )
+    d_dict = deposit.to_dict()
+
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(d_dict, f, indent=2)
+        print(f"[+] Escrow deposit receipt written to: {args.out}")
+
+    print("=" * 70)
+    print("BTP v4.0 AUTONOMOUS MICRO-ESCROW COLLATERAL LOCK")
+    print("=" * 70)
+    print(f"[*] Escrow ID     : {d_dict['escrow_id']}")
+    print(f"[*] Agent ID      : {d_dict['agent_id']}")
+    print(f"[*] Action Type   : {d_dict['action_type']}")
+    print(f"[*] Collateral USD: ${d_dict['amount_usd']:,.2f} USD")
+    print(f"[*] Status        : {d_dict['status']}")
+    print(f"[*] Rail          : {d_dict['settlement_rail']}")
+    print("=" * 70)
+
+
+def cmd_escrow_slash(args):
+    from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    from src.agent_passport import SovereignAgentPassport
+
+    pool = AutonomousEscrowPool()
+    if not os.path.exists(args.proof):
+        print(f"[ERROR] Regression proof file not found: {args.proof}")
+        sys.exit(1)
+
+    with open(args.proof, "r", encoding="utf-8") as f:
+        proof = json.load(f)
+
+    passport = None
+    if getattr(args, "passport", None) and os.path.exists(args.passport):
+        with open(args.passport, "r", encoding="utf-8") as f:
+            passport = SovereignAgentPassport.from_dict(json.load(f))
+
+    if args.escrow_id not in pool.active_escrows:
+        from src.settlement.autonomous_escrow import EscrowDeposit
+        deposit = EscrowDeposit(
+            escrow_id=args.escrow_id,
+            agent_id=getattr(args, "agent", "Target-Agent"),
+            passport_id=passport.passport_id if passport else None,
+            action_type=proof.get("target_action", "DEFAULT_ACTION"),
+            amount_usd=float(getattr(args, "amount", 1000.0)),
+            locked_at=time.time(),
+            status="LOCKED",
+            settlement_rail="L402_LIGHTNING"
+        )
+        pool.active_escrows[args.escrow_id] = deposit
+
+    ok, msg, receipt = pool.claim_and_slash(
+        escrow_id=args.escrow_id,
+        regression_proof=proof,
+        payee_destination=args.payee,
+        agent_passport=passport
+    )
+
+    print("=" * 70)
+    print("BTP v4.0 AUTONOMOUS ESCROW LIQUIDATED SLASHING")
+    print("=" * 70)
+    print(f"[*] Escrow ID     : {args.escrow_id}")
+    print(f"[*] Verdict       : {'SLASHED & DISBURSED' if ok else 'SLASHING REJECTED'}")
+    print(f"[*] Reason        : {msg}")
+    if ok:
+        print(f"[*] Disbursed To  : {receipt['payee_destination']}")
+        print(f"[*] Amount USD    : ${receipt['indemnity_amount_usd']:,.2f}")
+        print(f"[*] Passport Trip : {receipt['passport_tripped']}")
+    print("=" * 70)
+    if not ok:
+        sys.exit(1)
+
+
+def cmd_escrow_status(args):
+    from src.settlement.autonomous_escrow import AutonomousEscrowPool
+    pool = AutonomousEscrowPool()
+    print("=" * 70)
+    print("BTP v4.0 AUTONOMOUS ESCROW POOL TELEMETRY")
+    print("=" * 70)
+    print(f"[*] Reserve Pool Liquidity : ${pool.reserve_pool_usd:,.2f} USD")
+    print(f"[*] Max Escrow Per-Action  : ${pool.max_escrow_per_action_usd:,.2f} USD")
+    print(f"[*] Active Escrows Tracked : {len(pool.active_escrows)}")
+    print(f"[*] Settled Slashing Volume: {len(pool.settlement_ledger)} events")
+    print("=" * 70)
+
+
+def cmd_rollup_create(args):
+    from src.zk_compliance_proof_engine import ZKComplianceProof
+    from src.zk_rollup_batcher import ZKRollupBatcher
+
+    batcher = ZKRollupBatcher()
+    for p_file in args.proofs:
+        if os.path.exists(p_file):
+            with open(p_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                proof = ZKComplianceProof.from_receipt(data)
+                batcher.add_proof(proof)
+
+    rollup = batcher.seal()
+    r_dict = rollup.to_dict()
+
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(r_dict, f, indent=2)
+        print(f"[+] Sealed ZK-Rollup written to: {args.out}")
+
+    print("=" * 70)
+    print("BTP v3.5 RECURSIVE ZERO-KNOWLEDGE ROLLUP BATCH SEALED")
+    print("=" * 70)
+    print(f"[*] Batch ID      : {r_dict['batch_id']}")
+    print(f"[*] Sessions      : {r_dict['session_count']}")
+    print(f"[*] Total Tools   : {r_dict['total_tool_calls']}")
+    print(f"[*] Merkle Root   : {r_dict['merkle_root']}")
+    print(f"[*] Aggregate C   : {r_dict['aggregate_commitment'][:24]}...")
+    print(f"[*] Challenge     : {r_dict['batch_challenge'][:24]}...")
+    print("=" * 70)
+
+
+def cmd_rollup_verify(args):
+    from src.zk_rollup_batcher import ZKRollupBatch, ZKRollupBatcher
+
+    if not os.path.exists(args.rollup):
+        print(f"[ERROR] Rollup file not found: {args.rollup}")
+        sys.exit(1)
+
+    with open(args.rollup, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    rollup = ZKRollupBatch.from_dict(data)
+    is_valid, msg = ZKRollupBatcher.verify_rollup(rollup)
+
+    print("=" * 70)
+    print("BTP v3.5 RECURSIVE ZERO-KNOWLEDGE ROLLUP VERIFICATION")
+    print("=" * 70)
+    print(f"[*] Batch ID      : {rollup.batch_id}")
+    print(f"[*] Merkle Root   : {rollup.merkle_root}")
+    print(f"[*] Status        : {'PASS (RECURSIVELY VERIFIED)' if is_valid else 'FAIL (VERIFICATION FAILED)'}")
+    print(f"[*] Reason        : {msg}")
+    print("=" * 70)
+    if not is_valid:
+        sys.exit(1)
+
+
+def cmd_rollup_anchor(args):
+    from src.zk_rollup_batcher import ZKRollupBatch, EnclaveZKRollupAnchor
+
+    if not os.path.exists(args.rollup):
+        print(f"[ERROR] Rollup file not found: {args.rollup}")
+        sys.exit(1)
+
+    with open(args.rollup, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    rollup = ZKRollupBatch.from_dict(data)
+    anchor = EnclaveZKRollupAnchor.create_hardware_anchor(rollup)
+
+    if getattr(args, "out", None):
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(anchor, f, indent=2)
+        print(f"[+] Hardware Enclave Anchor written to: {args.out}")
+
+    print("=" * 70)
+    print("BTP v3.5 CONFIDENTIAL HARDWARE ENCLAVE ROLLUP ANCHOR")
+    print("=" * 70)
+    print(f"[*] Batch ID      : {anchor['rollup_batch_id']}")
+    print(f"[*] Status        : {anchor['status']}")
+    print(f"[*] Merkle Root   : {anchor['merkle_root']}")
+    print(f"[*] PCR0 Baseline : {anchor['hardware_enclave_attestation']['measurements']['pcr0'][:24]}...")
+    print("=" * 70)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1203,12 +1392,67 @@ def main():
     pr_disc_p.add_argument("--min-bond", type=float, help="Minimum staked warranty bond in USD")
     pr_disc_p.add_argument("--model", help="Filter by model family (e.g. claude, gpt, gemini)")
 
+    # escrow (BTP v4.0 Autonomous Micro-Escrow & Slashing Pool)
+    escrow_p = subparsers.add_parser("escrow", help="BTP v4.0 Autonomous Micro-Escrow & Automated Slashing Pool")
+    escrow_sub = escrow_p.add_subparsers(dest="escrow_cmd")
+
+    esc_lock_p = escrow_sub.add_parser("lock", help="Lock collateral into autonomous micro-escrow before high-risk execution")
+    esc_lock_p.add_argument("--agent", "-a", required=True, help="Agent identifier")
+    esc_lock_p.add_argument("--action", required=True, help="Action type or operation being guarded")
+    esc_lock_p.add_argument("--amount", type=float, default=100.0, help="Collateral amount in USD")
+    esc_lock_p.add_argument("--passport", "-p", help="Path to sovereign agent passport JSON")
+    esc_lock_p.add_argument("--rail", default="L402_LIGHTNING", help="Settlement rail (e.g. L402_LIGHTNING, SMART_CONTRACT)")
+    esc_lock_p.add_argument("--out", "-o", help="Output deposit receipt JSON file path")
+
+    esc_slash_p = escrow_sub.add_parser("slash", help="Liquidate and slash locked micro-escrow upon cryptographic regression proof")
+    esc_slash_p.add_argument("--escrow-id", "-e", required=True, help="Escrow deposit ID to slash")
+    esc_slash_p.add_argument("--proof", "-p", required=True, help="Path to cryptographic regression proof JSON")
+    esc_slash_p.add_argument("--payee", required=True, help="Payee destination (Lightning invoice, wallet, or account)")
+    esc_slash_p.add_argument("--passport", help="Path to sovereign agent passport JSON to trip circuit breaker")
+    esc_slash_p.add_argument("--agent", default="Target-Agent", help="Target agent name if escrow not in active pool")
+    esc_slash_p.add_argument("--amount", type=float, default=1000.0, help="Fallback indemnity amount if creating ad-hoc deposit")
+
+    esc_stat_p = escrow_sub.add_parser("status", help="Display autonomous escrow liquidity and settlement telemetry")
+
+    # rollup (BTP v3.5 Recursive Zero-Knowledge Rollup Batching & Enclave Anchoring)
+    rollup_p = subparsers.add_parser("rollup", help="BTP v3.5 Recursive Zero-Knowledge Rollup Batching & Enclave Anchoring")
+    rollup_sub = rollup_p.add_subparsers(dest="rollup_cmd")
+
+    r_create_p = rollup_sub.add_parser("create", help="Batch multiple ZK-compliance proofs into a single recursive rollup")
+    r_create_p.add_argument("--proofs", "-p", nargs="+", required=True, help="One or more ZK compliance receipt JSON files")
+    r_create_p.add_argument("--out", "-o", help="Output sealed rollup batch JSON file path")
+
+    r_verify_p = rollup_sub.add_parser("verify", help="Recursively verify a sealed ZK-Rollup batch")
+    r_verify_p.add_argument("--rollup", "-r", required=True, help="Path to sealed rollup JSON file")
+
+    r_anchor_p = rollup_sub.add_parser("anchor", help="Anchor a sealed ZK-Rollup to a confidential hardware enclave")
+    r_anchor_p.add_argument("--rollup", "-r", required=True, help="Path to sealed rollup JSON file")
+    r_anchor_p.add_argument("--out", "-o", help="Output hardware enclave anchor JSON file path")
+
     args = parser.parse_args()
 
     if args.command == "version":
         cmd_version(args)
     elif args.command == "activate":
         cmd_activate(args)
+    elif args.command == "escrow":
+        if args.escrow_cmd == "lock":
+            cmd_escrow_lock(args)
+        elif args.escrow_cmd == "slash":
+            cmd_escrow_slash(args)
+        elif args.escrow_cmd == "status":
+            cmd_escrow_status(args)
+        else:
+            escrow_p.print_help()
+    elif args.command == "rollup":
+        if args.rollup_cmd == "create":
+            cmd_rollup_create(args)
+        elif args.rollup_cmd == "verify":
+            cmd_rollup_verify(args)
+        elif args.rollup_cmd == "anchor":
+            cmd_rollup_anchor(args)
+        else:
+            rollup_p.print_help()
     elif args.command == "enclave":
         if args.enclave_cmd == "attest":
             cmd_enclave_attest(args)

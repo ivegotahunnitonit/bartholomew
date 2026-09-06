@@ -321,3 +321,110 @@ def test_cli_peers_discover():
     assert "BTP v3.1 AUTONOMOUS PEER DISCOVERY MESH" in res_disc.stdout
 
 
+def test_cli_escrow_lifecycle():
+    """Validate BTP v4.0 Autonomous Micro-Escrow lock, status, and automated slashing via CLI."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        receipt_file = os.path.join(tmpdir, "escrow_receipt.json")
+        proof_file = os.path.join(tmpdir, "regression_proof.json")
+
+        # 1. Escrow status
+        res_stat = subprocess.run([sys.executable, "cli.py", "escrow", "status"], capture_output=True, text=True)
+        assert res_stat.returncode == 0, res_stat.stderr
+        assert "BTP v4.0 AUTONOMOUS ESCROW POOL TELEMETRY" in res_stat.stdout
+        assert "Reserve Pool Liquidity" in res_stat.stdout
+
+        # 2. Lock escrow collateral
+        lock_cmd = [
+            sys.executable, "cli.py", "escrow", "lock",
+            "--agent", "autonomous-financial-analyst",
+            "--action", "FINANCIAL_TRADE_DISPATCH",
+            "--amount", "500.0",
+            "--out", receipt_file
+        ]
+        res_lock = subprocess.run(lock_cmd, capture_output=True, text=True)
+        assert res_lock.returncode == 0, res_lock.stderr
+        assert "BTP v4.0 AUTONOMOUS MICRO-ESCROW COLLATERAL LOCK" in res_lock.stdout
+        assert os.path.exists(receipt_file)
+
+        with open(receipt_file, "r", encoding="utf-8") as f:
+            receipt_data = json.load(f)
+            escrow_id = receipt_data["escrow_id"]
+            assert escrow_id.startswith("ESCROW-")
+            assert receipt_data["amount_usd"] == 500.0
+
+        # 3. Slashing with valid cryptographic regression proof
+        proof_data = {
+            "type": "BTP_REGRESSION_PROOF",
+            "violated_invariant": "INVARIANT_EXCESSIVE_DRAWDOWN_LIMIT",
+            "proof_signature": "0xdeadbeefc001cafe1234567890abcdef",
+            "target_action": "FINANCIAL_TRADE_DISPATCH"
+        }
+        with open(proof_file, "w", encoding="utf-8") as f:
+            json.dump(proof_data, f)
+
+        slash_cmd = [
+            sys.executable, "cli.py", "escrow", "slash",
+            "--escrow-id", escrow_id,
+            "--proof", proof_file,
+            "--payee", "lnbc5u1p...liquidated_indemnity",
+            "--amount", "500.0"
+        ]
+        res_slash = subprocess.run(slash_cmd, capture_output=True, text=True)
+        assert res_slash.returncode == 0, res_slash.stderr
+        assert "BTP v4.0 AUTONOMOUS ESCROW LIQUIDATED SLASHING" in res_slash.stdout
+        assert "SLASHED & DISBURSED" in res_slash.stdout
+
+
+def test_cli_rollup_lifecycle():
+    """Validate BTP v3.5 Recursive ZK-Rollup create, verify, and hardware enclave anchor via CLI."""
+    from src.zk_compliance_proof_engine import ZKComplianceEngine
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        p1_file = os.path.join(tmpdir, "proof1.json")
+        p2_file = os.path.join(tmpdir, "proof2.json")
+        rollup_file = os.path.join(tmpdir, "rollup_batch.json")
+        anchor_file = os.path.join(tmpdir, "enclave_anchor.json")
+
+        # Generate two ZK compliance proof receipts
+        engine = ZKComplianceEngine()
+        proof1 = engine.prove_session("session-01", ["read_config", "check_health"])
+        proof2 = engine.prove_session("session-02", ["query_db", "transform_data"])
+
+        with open(p1_file, "w", encoding="utf-8") as f:
+            json.dump(proof1.to_receipt(), f)
+        with open(p2_file, "w", encoding="utf-8") as f:
+            json.dump(proof2.to_receipt(), f)
+
+        # 1. Rollup create
+        create_cmd = [
+            sys.executable, "cli.py", "rollup", "create",
+            "--proofs", p1_file, p2_file,
+            "--out", rollup_file
+        ]
+        res_create = subprocess.run(create_cmd, capture_output=True, text=True)
+        assert res_create.returncode == 0, res_create.stderr
+        assert "BTP v3.5 RECURSIVE ZERO-KNOWLEDGE ROLLUP BATCH SEALED" in res_create.stdout
+        assert os.path.exists(rollup_file)
+
+        # 2. Rollup verify
+        verify_cmd = [
+            sys.executable, "cli.py", "rollup", "verify",
+            "--rollup", rollup_file
+        ]
+        res_ver = subprocess.run(verify_cmd, capture_output=True, text=True)
+        assert res_ver.returncode == 0, res_ver.stderr
+        assert "PASS (RECURSIVELY VERIFIED)" in res_ver.stdout
+
+        # 3. Rollup hardware enclave anchor
+        anchor_cmd = [
+            sys.executable, "cli.py", "rollup", "anchor",
+            "--rollup", rollup_file,
+            "--out", anchor_file
+        ]
+        res_anc = subprocess.run(anchor_cmd, capture_output=True, text=True)
+        assert res_anc.returncode == 0, res_anc.stderr
+        assert "BTP v3.5 CONFIDENTIAL HARDWARE ENCLAVE ROLLUP ANCHOR" in res_anc.stdout
+        assert os.path.exists(anchor_file)
+
+
+
