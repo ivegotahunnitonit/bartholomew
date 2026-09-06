@@ -1493,6 +1493,74 @@ def cmd_workspace_keygen(args):
     print("-> Use in your agent with: Guard(api_key='...') or export BTP_API_KEY='...'")
 
 
+def cmd_webhook_add(args):
+    from src.alerting.webhook_dispatcher import WebhookDispatcher
+    dispatcher = WebhookDispatcher()
+    sub = dispatcher.register_subscription(
+        tenant_id=args.tenant,
+        platform=args.platform,
+        target_url=args.url,
+        secret=getattr(args, "secret", None),
+        min_severity=getattr(args, "severity", "LOW").upper()
+    )
+    print("=" * 70)
+    print("BTP v5.1 SECOPS WEBHOOK SUBSCRIPTION REGISTERED")
+    print("=" * 70)
+    print(f"[*] Subscription ID : {sub.subscription_id}")
+    print(f"[*] Tenant ID       : {sub.tenant_id}")
+    print(f"[*] Platform        : {sub.platform.value.upper()}")
+    print(f"[*] Target URL      : {sub.target_url}")
+    print(f"[*] Signing Secret  : {sub.secret}")
+    print(f"[*] Min Severity    : {sub.min_severity.value}")
+    print("=" * 70)
+
+
+def cmd_webhook_list(args):
+    from src.alerting.webhook_dispatcher import WebhookDispatcher
+    dispatcher = WebhookDispatcher()
+    tenant_filter = getattr(args, "tenant", None)
+    subs = dispatcher.list_subscriptions(tenant_id=tenant_filter)
+    print("=" * 70)
+    print("BTP v5.1 REGISTERED SECOPS WEBHOOK SUBSCRIPTIONS")
+    print("=" * 70)
+    if not subs:
+        print("  No webhook subscriptions registered.")
+    else:
+        for idx, s in enumerate(subs, 1):
+            print(f"  [{idx}] {s.platform.value.upper():<10} | Tenant: {s.tenant_id[:16]:<16} | Min: {s.min_severity.value:<8} | URL: {s.target_url}")
+    print("=" * 70)
+
+
+def cmd_webhook_test(args):
+    from src.alerting.webhook_dispatcher import WebhookDispatcher, IncidentEvent, IncidentEventType, AlertSeverity
+    dispatcher = WebhookDispatcher(sync_mode=True)
+    evt_id = f"evt_test_{int(time.time())}"
+    test_event = IncidentEvent(
+        event_id=evt_id,
+        tenant_id=args.tenant,
+        org_id="test-org",
+        project_id="test-proj",
+        environment="dev",
+        event_type=IncidentEventType.AST_VETO,
+        severity=AlertSeverity(getattr(args, "severity", "HIGH").upper()),
+        title="Test Invariant Violation",
+        description="Simulated CLI test incident from btp-guard CLI.",
+        agent_id="agent-cli-test-runner",
+        tool_name="shell_execute",
+        target_payload='{"cmd": "rm -rf /test"}',
+        slashed_amount_usd=50.0,
+        metadata={"cli_invoker": True}
+    )
+    print("=" * 70)
+    print(f"[*] Dispatching test incident '{evt_id}' to tenant '{args.tenant}'...")
+    results = dispatcher.emit_incident(test_event)
+    print(f"[*] Delivered to {len(results)} subscription(s):")
+    for r in results:
+        status = "SUCCESS" if r.get("success") else "FAILED"
+        print(f"    - [{r.get('platform')}] {r.get('target_url')} -> {status} (HTTP {r.get('status_code')}, Latency: {r.get('latency_ms')}ms)")
+    print("=" * 70)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -1896,6 +1964,24 @@ def main():
     ws_key_p.add_argument("--env", "-e", default="dev", choices=["dev", "staging", "prod"], help="Deployment environment")
     ws_key_p.add_argument("--role", default="developer", choices=["admin", "developer", "auditor"], help="API key role")
 
+    # webhook (BTP v5.1 Real-Time Incident Webhooks & SecOps Alerts)
+    wh_p = subparsers.add_parser("webhook", help="BTP v5.1 Real-Time Incident Webhooks & SecOps Alerts")
+    wh_sub = wh_p.add_subparsers(dest="webhook_cmd")
+
+    wh_add_p = wh_sub.add_parser("add", help="Register new webhook alert subscriber")
+    wh_add_p.add_argument("--tenant", "-t", default="*", help="Tenant ID to bind alerts to (default: * for global)")
+    wh_add_p.add_argument("--platform", "-p", choices=["slack", "discord", "pagerduty", "generic"], default="generic", help="Platform format")
+    wh_add_p.add_argument("--url", "-u", required=True, help="Target destination webhook URL")
+    wh_add_p.add_argument("--secret", "-s", default=None, help="Custom HMAC-SHA256 signing secret")
+    wh_add_p.add_argument("--severity", choices=["LOW", "MEDIUM", "HIGH", "CRITICAL"], default="LOW", help="Minimum severity threshold")
+
+    wh_list_p = wh_sub.add_parser("list", help="List registered webhook subscriptions")
+    wh_list_p.add_argument("--tenant", "-t", default=None, help="Filter by tenant ID")
+
+    wh_test_p = wh_sub.add_parser("test", help="Dispatch test incident alert to registered webhooks")
+    wh_test_p.add_argument("--tenant", "-t", default="*", help="Target tenant ID")
+    wh_test_p.add_argument("--severity", choices=["LOW", "MEDIUM", "HIGH", "CRITICAL"], default="HIGH", help="Severity level for test event")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -1911,6 +1997,15 @@ def main():
             cmd_workspace_keygen(args)
         else:
             ws_p.print_help()
+    elif args.command == "webhook":
+        if args.webhook_cmd == "add":
+            cmd_webhook_add(args)
+        elif args.webhook_cmd == "list":
+            cmd_webhook_list(args)
+        elif args.webhook_cmd == "test":
+            cmd_webhook_test(args)
+        else:
+            wh_p.print_help()
     elif args.command == "benchmark":
         if args.benchmark_cmd == "swarm-chaos":
             cmd_benchmark_chaos(args)

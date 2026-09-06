@@ -2,7 +2,7 @@
   "mandate": "Continuously discover authorized opportunities in connected worlds. Rank by expected owner value relative to compute cost. Investigate only opportunities supported by sufficient evidence.",
   "started_at_utc": "2026-08-14T20:46:44Z",
   "last_cycle_timestamp_utc": "2026-09-06T05:44:00Z",
-  "cycle": 18,
+  "cycle": 19,
   "cash_spent_usd": 4.289999999999998,
   "confirmed_value_usd": 232050.09999999998,
   "pending_value_usd": 0.0,
@@ -105,11 +105,12 @@
     "ACTIVATED Milestone 4.3 Multi-Chain EVM Deployment & Verification Tooling for Base Sepolia (Chain ID 84532) and Arbitrum Sepolia (Chain ID 421614).",
     "DEPLOYED Live Interactive Telemetry Streaming Ribbon with real-time threat entropy and 2-of-3 peer consensus to Firebase Hosting (https://acn-26670.web.app).",
     "ESTABLISHED automated CI/CD release workflow (.github/workflows/release_v4.yml) with Python 3.10-3.12 test matrices and SLSA cryptographic provenance attestations.",
-    "ACTIVATED Milestone 5.0 Multi-Tenant Enterprise Workspaces, Scoped API Keys (btp_live / btp_test), Sovereign Passport Tenant Isolation, Cryptographic Cross-Tenant Escrow Slashing Firewalls, and Interactive Dashboard Project Switcher on Firebase Hosting (https://acn-26670.web.app)."
+    "ACTIVATED Milestone 5.0 Multi-Tenant Enterprise Workspaces, Scoped API Keys (btp_live / btp_test), Sovereign Passport Tenant Isolation, Cryptographic Cross-Tenant Escrow Slashing Firewalls, and Interactive Dashboard Project Switcher on Firebase Hosting (https://acn-26670.web.app).",
+    "ACTIVATED Milestone 5.1 Real-Time Incident Webhooks & SecOps Alerts with HMAC-SHA256 signatures, native Slack Block Kit / Discord / PagerDuty / Generic SIEM adapters, multi-tenant incident isolation, and live Webhook simulator on Firebase Hosting (https://acn-26670.web.app)."
   ],
   "last_verified_state": {
-    "opp_id": "BTP_V50_MULTI_TENANT_ENTERPRISE_WORKSPACES_AND_SCOPED_KEYS",
-    "target": "acn/tenancy_workspace_manager_and_escrow_isolation",
+    "opp_id": "BTP_V51_REAL_TIME_INCIDENT_WEBHOOKS_AND_SECOPS_ALERTS",
+    "target": "acn/alerting_webhook_dispatcher_and_siem_integration",
     "verified": true
   },
   "known_file_hashes": {},

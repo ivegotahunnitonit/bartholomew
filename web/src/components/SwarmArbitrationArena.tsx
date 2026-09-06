@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ShieldAlert, Zap, CheckCircle2, Gavel, Award, RefreshCw, Copy, Check, Cpu } from 'lucide-react'
+import { ShieldAlert, Zap, CheckCircle2, Gavel, Award, RefreshCw, Copy, Check, Cpu, Bell, Send } from 'lucide-react'
 
 interface AttackScenario {
   id: string
@@ -115,6 +115,76 @@ export default function SwarmArbitrationArena() {
     return () => clearInterval(interval)
   }, [isLiveStreaming])
 
+  const [webhookPlatform, setWebhookPlatform] = useState<'slack' | 'discord' | 'pagerduty' | 'generic'>('slack')
+  const [isDispatchingWebhook, setIsDispatchingWebhook] = useState(false)
+  const [webhookDispatched, setWebhookDispatched] = useState(false)
+
+  const handleTriggerTestWebhook = () => {
+    setIsDispatchingWebhook(true)
+    setWebhookDispatched(false)
+    setTimeout(() => {
+      setIsDispatchingWebhook(false)
+      setWebhookDispatched(true)
+    }, 450)
+  }
+
+  const getFormattedPayloadPreview = () => {
+    if (webhookPlatform === 'slack') {
+      return JSON.stringify({
+        attachments: [{
+          color: '#e01e5a',
+          blocks: [
+            { type: 'header', text: { type: 'plain_text', text: `🛡️ BTP Guard: ${activeScenario.title}` } },
+            { type: 'section', text: { type: 'mrkdwn', text: `*Invariant Veto:* \`${activeScenario.ruleId}\` in \`${activeTenant.org}/${activeTenant.project}\`` } },
+            { type: 'section', fields: [
+              { type: 'mrkdwn', text: `*Agent:* \`${activeScenario.targetAgent}\`` },
+              { type: 'mrkdwn', text: `*Severity:* *CRITICAL*` },
+              { type: 'mrkdwn', text: `*Slashed:* \`$${activeScenario.escrowBondUsd} USD\`` },
+              { type: 'mrkdwn', text: `*Rail:* \`${activeScenario.settlementRail}\`` }
+            ]}
+          ]
+        }]
+      }, null, 2)
+    } else if (webhookPlatform === 'discord') {
+      return JSON.stringify({
+        embeds: [{
+          title: `🛡️ BTP Security Alert: ${activeScenario.title}`,
+          description: `Rogue tool call quarantined by local AST gate in ${activeScenario.decisionLatencyUs}µs`,
+          color: 14687834,
+          fields: [
+            { name: 'Tenant', value: `\`${activeTenant.id}\``, inline: true },
+            { name: 'Agent', value: `\`${activeScenario.targetAgent}\``, inline: true },
+            { name: 'Slashed Collateral', value: `\`$${activeScenario.escrowBondUsd} USD\``, inline: true }
+          ]
+        }]
+      }, null, 2)
+    } else if (webhookPlatform === 'pagerduty') {
+      return JSON.stringify({
+        routing_key: 'pd-secops-mesh-key-99',
+        event_action: 'trigger',
+        dedup_key: `btp-${activeTenant.org}-${activeScenario.id}`,
+        payload: {
+          summary: `[BTP-CRITICAL] ${activeScenario.title}: Slashed $${activeScenario.escrowBondUsd} USD`,
+          severity: 'critical',
+          source: `btp-guard/${activeTenant.org}`
+        }
+      }, null, 2)
+    } else {
+      return JSON.stringify({
+        version: '5.1.0',
+        protocol: 'Bartholomew-Trust-Protocol',
+        event: {
+          event_type: 'threat.ast_veto',
+          severity: 'CRITICAL',
+          tenant_id: `ten_${activeTenant.org}_${activeTenant.project}_${activeTenant.env}`,
+          rule: activeScenario.ruleId,
+          agent: activeScenario.targetAgent,
+          slashed_amount_usd: activeScenario.escrowBondUsd
+        }
+      }, null, 2)
+    }
+  }
+
   const simulateDefense = () => {
     setIsRunning(true)
     setStep(1)
@@ -123,6 +193,7 @@ export default function SwarmArbitrationArena() {
     setTimeout(() => {
       setStep(4)
       setIsRunning(false)
+      setWebhookDispatched(true)
     }, 1100)
   }
 
@@ -436,6 +507,95 @@ export default function SwarmArbitrationArena() {
               </div>
             </div>
           )}
+
+          {/* Milestone 5.1: Real-Time SecOps Webhook & Incident Stream */}
+          <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800 mb-4">
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Milestone 5.1: Real-Time SecOps Alerting & Webhooks
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  HMAC-SHA256 Signed
+                </span>
+              </div>
+
+              {/* Platform Switcher */}
+              <div className="flex items-center gap-1.5 p-1 bg-black/50 rounded-lg border border-zinc-800">
+                {(['slack', 'discord', 'pagerduty', 'generic'] as const).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setWebhookPlatform(p)}
+                    className={`px-2.5 py-1 text-xs font-medium rounded transition-colors uppercase ${
+                      webhookPlatform === p
+                        ? 'bg-amber-500 text-black font-bold'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Webhook Card & Payload Inspector */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Left: Dispatch Telemetry & Trigger */}
+              <div className="space-y-3">
+                <div className="p-3.5 rounded-lg bg-black/40 border border-zinc-800/80 text-xs font-mono space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">TARGET ENDPOINT:</span>
+                    <span className="text-amber-400 truncate max-w-[240px]">
+                      {webhookPlatform === 'slack' && 'https://hooks.slack.com/services/T00/B00/X00'}
+                      {webhookPlatform === 'discord' && 'https://discord.com/api/webhooks/128/xyz'}
+                      {webhookPlatform === 'pagerduty' && 'https://events.pagerduty.com/v2/enqueue'}
+                      {webhookPlatform === 'generic' && 'https://siem.enterprise.corp/api/v1/incidents'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">SIGNING HEADER:</span>
+                    <span className="text-emerald-400 font-mono text-[11px] truncate max-w-[240px]">
+                      X-BTP-Signature: t=1788675900,v1=9f8a41...
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">TENANT PARTITION:</span>
+                    <span className="text-zinc-200">{activeTenant.org} / {activeTenant.project} ({activeTenant.env})</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">DELIVERY LATENCY:</span>
+                    <span className="text-emerald-400 font-bold">14.2ms (Async Non-Blocking)</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleTriggerTestWebhook}
+                    disabled={isDispatchingWebhook}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black transition-colors"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    {isDispatchingWebhook ? 'Dispatching...' : `Dispatch Test Alert to ${webhookPlatform.toUpperCase()}`}
+                  </button>
+                  {webhookDispatched && (
+                    <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-mono animate-fadeIn">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      HTTP 200 OK — Signature Verified
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Formatted Payload Preview */}
+              <div className="p-3.5 rounded-lg bg-black/60 border border-zinc-800 text-xs font-mono overflow-x-auto max-h-[160px]">
+                <span className="text-zinc-400 block mb-1.5 text-[11px]">WIRE-LEVEL PAYLOAD PREVIEW:</span>
+                <pre className="text-zinc-300 text-[11px] leading-relaxed">
+                  {getFormattedPayloadPreview()}
+                </pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

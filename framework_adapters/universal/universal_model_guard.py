@@ -25,11 +25,21 @@ try:
     from src.agent_passport import SovereignAgentPassport
     from src.settlement.autonomous_escrow import AutonomousEscrowPool
     from src.settlement.swarm_arbitration import ZKFaultProofEngine, SwarmDisputeArbitrator
+    from src.alerting.webhook_dispatcher import (
+        WebhookDispatcher,
+        IncidentEvent,
+        IncidentEventType,
+        AlertSeverity,
+    )
 except ImportError:
     SovereignAgentPassport = None
     AutonomousEscrowPool = None
     ZKFaultProofEngine = None
     SwarmDisputeArbitrator = None
+    WebhookDispatcher = None
+    IncidentEvent = None
+    IncidentEventType = None
+    AlertSeverity = None
 
 
 class ModelProvider:
@@ -60,6 +70,7 @@ class UniversalBTPModelGuard:
         org_id: str = "default_org",
         project_id: str = "default_project",
         environment: str = "dev",
+        webhook_dispatcher: Optional[Any] = None,
     ):
         self.spend_cap = spend_cap
         self.strict = strict
@@ -75,6 +86,7 @@ class UniversalBTPModelGuard:
         self._escrow_pool = AutonomousEscrowPool() if AutonomousEscrowPool is not None else None
         self._zk_engine = ZKFaultProofEngine() if ZKFaultProofEngine is not None else None
         self._arbitrator = SwarmDisputeArbitrator() if SwarmDisputeArbitrator is not None else None
+        self.webhook_dispatcher = webhook_dispatcher or (WebhookDispatcher() if WebhookDispatcher is not None else None)
 
     def normalize_tool_call(
         self, 
@@ -272,6 +284,35 @@ class UniversalBTPModelGuard:
                 self.passport.is_circuit_broken = True
                 if hasattr(self.passport, "violations_count"):
                     self.passport.violations_count += 1
+
+            # Milestone 5.1: Emit Incident Event to SecOps Webhooks
+            if self.webhook_dispatcher is not None and IncidentEvent is not None:
+                try:
+                    evt_id = f"evt_{hashlib.sha256(f'{self.tenant_id}:{time.time_ns()}'.encode()).hexdigest()[:16]}"
+                    incident = IncidentEvent(
+                        event_id=evt_id,
+                        tenant_id=self.tenant_id,
+                        org_id=self.org_id,
+                        project_id=self.project_id,
+                        environment=self.environment,
+                        event_type=IncidentEventType.AST_VETO,
+                        severity=AlertSeverity.CRITICAL if deposit is not None else AlertSeverity.HIGH,
+                        title=f"Invariant Veto: {violation_rule}",
+                        description=f"Rogue tool call '{tool_name}' blocked under invariant rule '{violation_rule}'.",
+                        agent_id=getattr(self.passport, "agent_id", f"agent-{provider}-universal"),
+                        tool_name=tool_name,
+                        target_payload=json.dumps(arguments) if isinstance(arguments, dict) else str(arguments),
+                        slashed_amount_usd=self.escrow_collateral_usd if deposit else None,
+                        metadata={
+                            "provider": provider,
+                            "latency_us": latency_us,
+                            "dispute_id": dispute_id,
+                            "rule": violation_rule
+                        }
+                    )
+                    self.webhook_dispatcher.emit_incident(incident)
+                except Exception:
+                    pass
 
             err_msg = (
                 f"BTP Universal Guard VETO [{provider.upper()}]: Tool call '{tool_name}' violated invariant "

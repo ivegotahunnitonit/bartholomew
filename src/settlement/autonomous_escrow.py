@@ -26,6 +26,19 @@ from src.settlement.l402_protocol import L402ProtocolEngine, L402Challenge
 from src.settlement.evm_escrow import EVMEscrowGateway, EscrowSlashingClaim, EIP712Domain
 from src.settlement.swarm_arbitration import SwarmDisputeArbitrator, ArbitrationResolutionCertificate, ZKFaultProof
 
+try:
+    from src.alerting.webhook_dispatcher import (
+        WebhookDispatcher,
+        IncidentEvent,
+        IncidentEventType,
+        AlertSeverity,
+    )
+except ImportError:
+    WebhookDispatcher = None
+    IncidentEvent = None
+    IncidentEventType = None
+    AlertSeverity = None
+
 
 @dataclasses.dataclass
 class EscrowDeposit:
@@ -61,7 +74,8 @@ class AutonomousEscrowPool:
         reserve_pool_usd: float = 100_000.0,
         max_escrow_per_action_usd: float = 10_000.0,
         l402_engine: Optional[L402ProtocolEngine] = None,
-        evm_gateway: Optional[EVMEscrowGateway] = None
+        evm_gateway: Optional[EVMEscrowGateway] = None,
+        webhook_dispatcher: Optional[Any] = None
     ):
         self.reserve_pool_usd = reserve_pool_usd
         self.max_escrow_per_action_usd = max_escrow_per_action_usd
@@ -72,6 +86,7 @@ class AutonomousEscrowPool:
         self.l402_engine = l402_engine or L402ProtocolEngine()
         self.evm_gateway = evm_gateway or EVMEscrowGateway()
         self.arbitrator = SwarmDisputeArbitrator()
+        self.webhook_dispatcher = webhook_dispatcher or (WebhookDispatcher() if WebhookDispatcher is not None else None)
         self.active_escrows: Dict[str, EscrowDeposit] = {}
         self.settlement_ledger: List[Dict[str, Any]] = []
 
@@ -280,6 +295,35 @@ class AutonomousEscrowPool:
 
         if "L402" in deposit.settlement_rail.upper() or "LIGHTNING" in deposit.settlement_rail.upper():
             settlement_receipt["l402_preimage_revealed"] = deposit.l402_preimage
+
+        # Milestone 5.1: Emit Incident Event to SecOps Webhooks
+        if self.webhook_dispatcher is not None and IncidentEvent is not None:
+            try:
+                evt_id = f"evt_slash_{hashlib.sha256(f'{escrow_id}:{time.time_ns()}'.encode()).hexdigest()[:16]}"
+                incident = IncidentEvent(
+                    event_id=evt_id,
+                    tenant_id=deposit.tenant_id or "ten_default",
+                    org_id=deposit.org_id or "default_org",
+                    project_id="escrow_subsystem",
+                    environment="prod" if "live" in (deposit.tenant_id or "") else "dev",
+                    event_type=IncidentEventType.ESCROW_SLASHED,
+                    severity=AlertSeverity.CRITICAL,
+                    title=f"Autonomous Escrow Slashed: {escrow_id}",
+                    description=f"Collateral of ${deposit.amount_usd:.2f} USD slashed for agent '{deposit.agent_id}'. Reason: {deposit.slash_reason}",
+                    agent_id=deposit.agent_id,
+                    tool_name=deposit.action_type,
+                    slashed_amount_usd=deposit.amount_usd,
+                    metadata={
+                        "escrow_id": escrow_id,
+                        "certificate_id": arbitration_cert.certificate_id,
+                        "quorum_count": arbitration_cert.quorum_count,
+                        "payee_destination": payee_destination,
+                        "settlement_rail": deposit.settlement_rail
+                    }
+                )
+                self.webhook_dispatcher.emit_incident(incident)
+            except Exception:
+                pass
 
         self.settlement_ledger.append(settlement_receipt)
         return True, "Swarm arbitration verdict executed: collateral slashed and disbursed.", settlement_receipt
