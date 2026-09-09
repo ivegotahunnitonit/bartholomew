@@ -10,12 +10,14 @@ Features:
   - Generates signed cryptographic receipts for every action.
 """
 
+import os
 from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
 from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.marginal_utility_engine import MarginalUtilityTracker
 from src.decorator import secure_tool, SecurityVetoException
 from src.polyglot_ast_validator import PolyglotASTValidator
 from src.usage_tracker import record_evaluation, load_license, save_license
+from src.cloud_telemetry import CloudTelemetryDispatcher
 
 
 def guard(code_str: str, language: str = None):
@@ -28,13 +30,28 @@ class Guard:
     """
     Dead-simple developer guard for AI tools and agent functions.
     """
-    def __init__(self, spend_cap: float = 500.0, max_retries: int = 6, policy_file: str = None, strict: bool = True):
+    def __init__(
+        self,
+        spend_cap: float = 500.0,
+        max_retries: int = 6,
+        policy_file: str = None,
+        strict: bool = True,
+        api_key: str = None,
+        sync_cloud: bool = False,
+        cloud_endpoint: str = None,
+        workspace_id: str = "default"
+    ):
         self.spend_cap = spend_cap
         self.max_retries = max_retries
         self.strict = strict
+        self.workspace_id = workspace_id or os.getenv("BTP_WORKSPACE_ID", "default")
         self.authority = BartholomewTrustAuthority()
         self.mu_tracker = MarginalUtilityTracker(decay_rate=0.35)
         self.total_spent = 0.0
+
+        # Non-blocking Bartholomew Cloud telemetry integration
+        self.sync_cloud = sync_cloud or bool(os.getenv("BTP_SYNC_CLOUD")) or bool(api_key) or bool(os.getenv("BTP_API_KEY"))
+        self.telemetry = CloudTelemetryDispatcher.get_default(api_key=api_key, endpoint=cloud_endpoint) if self.sync_cloud else None
 
     def evaluate_ast(self, code_str: str, language: str = None) -> dict:
         """Evaluates arbitrary code string with sub-35µs AST safety rules."""
@@ -76,6 +93,19 @@ class Guard:
         # Usage tracking & non-blocking quota reminder
         record_evaluation()
         lic = load_license()
+
+        # Non-blocking background dispatch to Bartholomew Cloud Control Plane
+        if self.telemetry:
+            self.telemetry.enqueue_event(
+                verdict=verdict,
+                reason=att.get("reason", "Approved"),
+                rule_id=att.get("policy_id", "RULE-AST-001"),
+                latency_us=att.get("evaluation_latency_us", 4.5),
+                agent_id=agent_id,
+                workspace_id=self.workspace_id,
+                action_type="EXECUTE",
+                receipt=receipt
+            )
 
         return {
             "allowed": allowed,

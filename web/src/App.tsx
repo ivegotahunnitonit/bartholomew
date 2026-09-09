@@ -9,6 +9,8 @@ import SwarmArbitrationArena from './components/SwarmArbitrationArena'
 import UniversalCookbookExplorer from './components/UniversalCookbookExplorer'
 import EnterpriseDesignPartnerSection from './components/EnterpriseDesignPartnerSection'
 import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
+import BartholomewCloudDashboard from './components/BartholomewCloudDashboard'
+import Pricing from './components/Pricing'
 import Founder from './components/Founder'
 import Footer from './components/Footer'
 
@@ -39,9 +41,11 @@ function HomeView() {
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <SwarmArbitrationArena />
+      <BartholomewCloudDashboard />
       <UniversalCookbookExplorer />
       <EnterpriseDesignPartnerSection />
       <ContinuousComplianceTimeline />
+      <Pricing />
       <Founder />
     </>
   )
@@ -56,6 +60,8 @@ export default function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomeView />} />
+            <Route path="/cloud" element={<div className="pt-20"><BartholomewCloudDashboard /></div>} />
+            <Route path="/pricing" element={<div className="pt-20"><Pricing /></div>} />
             <Route path="*" element={<HomeView />} />
           </Routes>
         </main>

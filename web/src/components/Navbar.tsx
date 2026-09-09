@@ -49,11 +49,18 @@ export default function Navbar() {
           <a href="#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [SWARM ARENA]
           </a>
+          <a href="#cloud-control-plane" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            <span>[CLOUD SAAS]</span>
+          </a>
           <a href="#universal-cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COOKBOOK]
           </a>
           <a href="#compliance-timeline" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COMPLIANCE]
+          </a>
+          <a href="#pricing" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [PRICING]
           </a>
           <a href="#founder" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [ROADMAP]

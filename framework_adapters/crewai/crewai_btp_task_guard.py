@@ -2,7 +2,7 @@
 CrewAI BTP v4.1 Task & Tool Execution Guard
 ============================================
 Provides pre-flight in-process AST gating, secret scrubbing, Sovereign Passport
-verification, and Autonomous Micro-Escrow collateral protection for CrewAI
+verification, and multi-tenant authorization protection for CrewAI
 agent swarms.
 
 Usage:

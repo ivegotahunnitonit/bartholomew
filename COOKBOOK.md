@@ -3,7 +3,7 @@
 > **The invariant, attestation, and financialized trust layer for every autonomous AI agent:**
 > 1. **Already Built**: Black-box, proprietary, or legacy agents protected with *zero code modifications*.
 > 2. **Being Built Right Now**: Direct SDK integrations across OpenAI, Anthropic Claude, Google Gemini, TypeScript, Go, and Rust.
-> 3. **Agents of the Future**: Sovereign Digital Passports, Zero-Knowledge proofs, Hardware Enclaves (AWS Nitro / AMD SEV-SNP), and L402 automated micro-escrow slashing.
+> 3. **Swarm Security & Passports**: Sovereign Digital Passports, Zero-Knowledge proofs, Hardware Enclaves (AWS Nitro / AMD SEV-SNP), and Docker & Container Defense-in-Depth.
 
 ---
 
@@ -24,10 +24,10 @@
 | **Frameworks** | LangGraph State Graphs | `LangGraphBTPGuard` | [`examples/langgraph_financial_analyst/run_workflow.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/examples/langgraph_financial_analyst/run_workflow.py) |
 | **Frameworks** | AutoGen GroupChats | `AutoGenBTPInterceptor` + Entropy Rebalancer | [`examples/autogen_multiagent_defense/run_groupchat.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/examples/autogen_multiagent_defense/run_groupchat.py) |
 | **Frameworks** | LlamaIndex RAG Engines | `@btp_llamaindex_tool` + AST Interceptor | [`examples/llamaindex_rag_guard/run_rag.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/examples/llamaindex_rag_guard/run_rag.py) |
-| **Future Mesh** | Multi-Agent Swarms & DAOs | Sovereign Passports & Peer Discovery | [`cookbook/future_swarms/sovereign_agent_passport_mesh.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/future_swarms/sovereign_agent_passport_mesh.py) |
+| **Future Mesh** | Multi-Agent Swarms & Workspaces | Sovereign Passports & Peer Discovery | [`cookbook/future_swarms/sovereign_agent_passport_mesh.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/future_swarms/sovereign_agent_passport_mesh.py) |
 | **Future Mesh** | Enterprise Auditing & Regulators | Zero-Knowledge Session Proofs | [`cookbook/future_swarms/zk_privacy_auditing.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/future_swarms/zk_privacy_auditing.py) |
 | **Future Mesh** | Cloud Confidential Computing | AWS Nitro / AMD SEV-SNP Enclave Anchor | [`cookbook/future_swarms/confidential_enclave_anchor.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/future_swarms/confidential_enclave_anchor.py) |
-| **Future Mesh** | Autonomous Financial Settlements | L402 / EVM Automated Micro-Escrow Slashing | [`cookbook/future_swarms/l402_autonomous_escrow.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/future_swarms/l402_autonomous_escrow.py) |
+| **Swarm Defense** | Container & Pod Isolation | Docker & Container Sandboxing (Defense-in-Depth) | [`cookbook/container_defense/docker_agent_guard.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/cookbook/container_defense/docker_agent_guard.py) |
 
 ---
 
@@ -148,14 +148,20 @@ receipt = proof.to_receipt()  # Contains zero plaintext; 100% mathematically ver
 is_valid = engine.verify_proof(proof)  # True
 ```
 
-### Autonomous L402 Micro-Escrow & Automated Slashing
-Lock collateral before high-risk tasks and enable trustless, automated indemnity payouts upon attested failure:
+### Docker & Container Sandboxing (Defense-in-Depth)
+Enforce in-process AST gating inside isolated Docker / container runtimes, pairing Layer-7 semantic interception with OS-level namespace sandboxing:
 ```python
-from src.settlement.autonomous_escrow import AutonomousEscrowPool
+from btp_guard import Guard
+from cookbook.container_defense.docker_agent_guard import DockerAgentSandbox
 
-pool = AutonomousEscrowPool()
-deposit = pool.lock_escrow(agent_id="Agent-01", action_type="TRANSACTION", amount_usd=1000.0)
+guard = Guard(strict=True)
+sandbox = DockerAgentSandbox(image="python:3.11-slim", read_only_root=True)
 
-# If regression proof is submitted, collateral is slashed instantly to claimant Lightning invoice
-pool.claim_and_slash(deposit.escrow_id, regression_proof, payee_destination="lnbc...")
+# 1. In-process sub-millisecond AST evaluation
+res = guard.check("rm -rf /app/data")
+if not res.get("allowed"):
+    raise PermissionError(f"Blocked by BTP AST Gate: {res.get('reason')}")
+
+# 2. Execute safely inside isolated container sandbox
+result = sandbox.run("cat /app/config.json")
 ```

@@ -12,12 +12,12 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response, Form, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .voice_config import config, VoiceConfig
 from .audio_codec import AudioCodec
-from .sales_persona import OBJECTIONS
+from .sales_persona import OBJECTIONS, generate_session_instructions
 from .lead_manager import LeadManager, Lead, LeadStatus
 from .realtime_session import RealtimeVoiceSession
 
@@ -37,11 +37,153 @@ app.add_middleware(
 
 lead_mgr = LeadManager()
 active_sessions: Dict[str, RealtimeVoiceSession] = {}
+conversation_histories: Dict[str, List[Dict[str, Any]]] = {}
+
+
+def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
+    """Queries Gemini Flash in real-time with multi-model fallback and conversational developer persona."""
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        return "Hey man, I hear you, but my API key is not configured in .env."
+
+    if call_sid not in conversation_histories:
+        conversation_histories[call_sid] = []
+
+    history = conversation_histories[call_sid]
+    history.append({"role": "user", "parts": [{"text": user_speech}]})
+
+    prompt = generate_session_instructions("there")
+    payload = {
+        "contents": history,
+        "systemInstruction": {"parts": [{"text": prompt}]}
+    }
+
+    import urllib.request
+    models_to_try = [
+        "gemini-3.1-flash-lite-preview",
+        "gemini-2.5-flash",
+        "gemini-flash-latest",
+        "gemini-3-flash-preview",
+    ]
+
+    for model_name in models_to_try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=6) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                reply = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                history.append({"role": "model", "parts": [{"text": reply}]})
+                return reply
+        except Exception as e:
+            logger.warning(f"Model {model_name} failed: {e}. Trying next fallback...")
+
+    return "Haha yeah, totally hear you man. Are you guys giving your agents raw shell tools right now, or keeping humans in the loop?"
 
 
 # ---------------------------------------------------------------------------
-# 1. Twilio Inbound & Outbound Voice Webhooks
+# 1. Twilio Inbound & Outbound Voice Webhooks & Media Streams
 # ---------------------------------------------------------------------------
+
+@app.post("/voice/live_stream")
+@app.get("/voice/live_stream")
+async def voice_live_stream_entrypoint(request: Request):
+    """
+    TwiML entrypoint that connects Twilio call directly to Gemini Live full-duplex WebSocket stream.
+    """
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
+    proto = request.headers.get("x-forwarded-proto", "http")
+    ws_scheme = "wss" if (proto == "https" or "loca.lt" in host) else "ws"
+    stream_url = f"{ws_scheme}://{host}/voice/stream"
+    logger.info(f"Connecting Twilio call to stream URL: {stream_url}")
+
+    twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Connect>
+        <Stream url="{stream_url}" />
+    </Connect>
+</Response>"""
+    return Response(content=twiml, media_type="application/xml")
+
+
+@app.websocket("/voice/stream")
+async def websocket_voice_stream(websocket: WebSocket):
+    from src.voice.gemini_live_bridge import handle_twilio_gemini_stream
+    await handle_twilio_gemini_stream(websocket)
+
+
+@app.get("/voice/audio/{filename}")
+async def get_voice_audio(filename: str):
+    """
+    Serves generated 24kHz Gemini native audio WAV files to Twilio.
+    """
+    file_path = Path("scratch") / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Audio file not found")
+    return FileResponse(file_path, media_type="audio/wav")
+
+
+@app.post("/voice/interactive")
+@app.get("/voice/interactive")
+async def voice_interactive_start(request: Request):
+    """
+    Initial entrypoint for conversational outbound phone calls.
+    Plays Gemini's native voice product pitch greeting and gathers user speech.
+    """
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
+    base_url = f"https://{host}"
+    respond_url = f"{base_url}/voice/respond"
+    audio_url = f"{base_url}/voice/audio/gemini_alex_pitch_greeting.wav"
+
+    twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
+        <Play>{audio_url}</Play>
+    </Gather>
+    <Redirect method="POST">{respond_url}</Redirect>
+</Response>"""
+    return Response(content=twiml, media_type="application/xml")
+
+
+@app.post("/voice/respond")
+async def voice_interactive_respond(request: Request):
+    """
+    Processes the user's spoken response with Gemini Live native audio and returns the next turn.
+    """
+    import urllib.parse
+    raw_body = await request.body()
+    params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
+    user_speech = params.get("SpeechResult", [""])[0].strip()
+    call_sid = params.get("CallSid", ["default"])[0]
+    logger.info(f"User spoken input [{call_sid}]: '{user_speech}'")
+
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
+    base_url = f"https://{host}"
+    respond_url = f"{base_url}/voice/respond"
+
+    if not user_speech:
+        prompt = "Hey, you still there? No worries if you're swamped, I can let you get back to it."
+    else:
+        prompt = user_speech
+
+    from src.voice.gemini_audio_gen import generate_gemini_conversational_reply_wav
+    wav_path = await generate_gemini_conversational_reply_wav(prompt, call_sid)
+    filename = wav_path.name
+    audio_url = f"{base_url}/voice/audio/{filename}"
+
+    twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
+        <Play>{audio_url}</Play>
+    </Gather>
+    <Redirect method="POST">{respond_url}</Redirect>
+</Response>"""
+    return Response(content=twiml, media_type="application/xml")
+
 
 @app.post("/voice/twiml")
 @app.get("/voice/twiml")

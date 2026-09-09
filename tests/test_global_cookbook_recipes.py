@@ -21,6 +21,7 @@ from cookbook.future_swarms.sovereign_agent_passport_mesh import main as run_pas
 from cookbook.future_swarms.zk_privacy_auditing import main as run_zk_auditing
 from cookbook.future_swarms.confidential_enclave_anchor import main as run_enclave_anchor
 from cookbook.future_swarms.l402_autonomous_escrow import main as run_l402_escrow
+from cookbook.container_defense.docker_agent_guard import main as run_docker_defense
 
 
 def test_category_1_already_built_recipes():
@@ -42,3 +43,4 @@ def test_category_3_future_swarms_recipes():
     assert run_zk_auditing() is True
     assert run_enclave_anchor() is True
     assert run_l402_escrow() is True
+    assert run_docker_defense() is True
