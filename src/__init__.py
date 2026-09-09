@@ -118,15 +118,19 @@ class Guard:
 
     def protect(self, func):
         """
-        Decorator to automatically protect any Python function or tool.
+        Decorator to automatically protect any Python function, tool, or execution callable
+        at the runtime execution dispatch seam. Intercepts fully materialized runtime arguments
+        (*args, **kwargs), lists, shlex command arrays, and nested structures in sub-15µs.
         """
-        def wrapper(*args, **kwargs):
-            first_arg = str(args[0]) if args else str(kwargs)
-            res = self.check(first_arg)
-            if not res["allowed"]:
-                raise PermissionError(f"[Bartholomew Blocked Action] {res['reason']}")
-            return func(*args, **kwargs)
-        return wrapper
+        from src.dispatch_seam import DispatchSeamInterceptor
+        interceptor = DispatchSeamInterceptor(
+            guard=self,
+            agent_id="guard-protect-seam",
+            workspace_id=self.workspace_id,
+            strict=self.strict,
+            sync_cloud=(self.telemetry is not None),
+        )
+        return interceptor.protect(func)
 
     def escrow_collateral(
         self,
@@ -231,9 +235,20 @@ from src.settlement.lightning_gateway import LightningGateway, LightningInvoice
 from src.settlement.evm_escrow import EVMEscrowGateway, EscrowSlashingClaim
 
 
+from src.dispatch_seam import (
+    dispatch_seam_guard,
+    DispatchSeamInterceptor,
+    DispatchViolationError,
+    extract_evaluated_payloads,
+)
+
 __all__ = [
     "Guard",
     "wrap_client",
+    "dispatch_seam_guard",
+    "DispatchSeamInterceptor",
+    "DispatchViolationError",
+    "extract_evaluated_payloads",
     "BartholomewTrustAuthority",
     "IndependentTrustVerifier",
     "ZKFaultProofEngine",

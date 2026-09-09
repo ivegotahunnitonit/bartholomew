@@ -261,17 +261,19 @@ def btp_langchain_tool(
                     raise err
                 return None
 
-            # 2. Inspect positional arguments
+            from src.dispatch_seam import extract_evaluated_payloads
+
+            # 2. Inspect positional arguments (unpacks lists, command arrays, dicts, shlex)
             for i, arg in enumerate(args):
-                if isinstance(arg, str):
-                    result = _check(arg, f"arg[{i}]")
+                for p in extract_evaluated_payloads(arg):
+                    result = _check(p, f"arg[{i}]")
                     if result is not None:
                         return result
 
             # 3. Inspect keyword arguments
             for k, v in kwargs.items():
-                if isinstance(v, str):
-                    result = _check(v, f"kwarg '{k}'")
+                for p in extract_evaluated_payloads(v):
+                    result = _check(p, f"kwarg '{k}'")
                     if result is not None:
                         return result
 

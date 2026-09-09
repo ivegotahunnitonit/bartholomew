@@ -106,37 +106,41 @@ def btp_autogen_guard(
         def wrapper(*args, **kwargs):
             guard_instance = Guard(spend_cap=spend_cap, strict=strict) if Guard else None
 
-            # 1. Inspect positional arguments
+            from src.dispatch_seam import extract_evaluated_payloads
+
+            # 1. Inspect positional arguments (unpacks lists, command arrays, dicts, shlex)
             for i, arg in enumerate(args):
-                if isinstance(arg, str) and guard_instance:
-                    res = guard_instance.evaluate_ast(arg)
-                    if not res.get("allowed", True):
-                        err = BTPViolationError(
-                            reason=res.get("reason", "Destructive pattern detected"),
-                            rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
-                            blocked_payload=arg,
-                            latency_us=res.get("latency_us", 0.0),
-                            metadata=res.get("metadata", {})
-                        )
-                        if on_violation:
-                            return on_violation(err)
-                        raise err
+                if guard_instance:
+                    for payload in extract_evaluated_payloads(arg):
+                        res = guard_instance.evaluate_ast(payload)
+                        if not res.get("allowed", True):
+                            err = BTPViolationError(
+                                reason=res.get("reason", "Destructive pattern detected"),
+                                rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
+                                blocked_payload=payload,
+                                latency_us=res.get("latency_us", 0.0),
+                                metadata=res.get("metadata", {})
+                            )
+                            if on_violation:
+                                return on_violation(err)
+                            raise err
 
             # 2. Inspect keyword arguments
             for k, v in kwargs.items():
-                if isinstance(v, str) and guard_instance:
-                    res = guard_instance.evaluate_ast(v)
-                    if not res.get("allowed", True):
-                        err = BTPViolationError(
-                            reason=f"Argument '{k}' violation: {res.get('reason', 'Destructive pattern detected')}",
-                            rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
-                            blocked_payload=v,
-                            latency_us=res.get("latency_us", 0.0),
-                            metadata=res.get("metadata", {})
-                        )
-                        if on_violation:
-                            return on_violation(err)
-                        raise err
+                if guard_instance:
+                    for payload in extract_evaluated_payloads(v):
+                        res = guard_instance.evaluate_ast(payload)
+                        if not res.get("allowed", True):
+                            err = BTPViolationError(
+                                reason=f"Argument '{k}' violation: {res.get('reason', 'Destructive pattern detected')}",
+                                rule_id=res.get("violations", ["BTP-AST-001"])[0].split(":")[0] if res.get("violations") else "BTP-AST-001",
+                                blocked_payload=payload,
+                                latency_us=res.get("latency_us", 0.0),
+                                metadata=res.get("metadata", {})
+                            )
+                            if on_violation:
+                                return on_violation(err)
+                            raise err
 
             # 3. Safe execution
             return func(*args, **kwargs)

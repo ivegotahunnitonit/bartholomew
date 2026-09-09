@@ -23,7 +23,10 @@ from typing import Dict, Any, Optional, List
 
 logger = logging.getLogger("btp.cloud_telemetry")
 
-DEFAULT_CLOUD_ENDPOINT = os.getenv("BTP_CLOUD_ENDPOINT", "https://cloud.bartholomew.info/api/v1/telemetry/ingest")
+DEFAULT_CLOUD_ENDPOINT = os.getenv(
+    "BTP_CLOUD_ENDPOINT",
+    "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/ingest"
+)
 
 
 class CloudTelemetryDispatcher:

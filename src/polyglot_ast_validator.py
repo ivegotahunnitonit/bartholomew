@@ -84,6 +84,10 @@ class PolyglotASTValidator:
             return "typescript"
         if any(tok in code_str for tok in ["#!/bin/bash", "#!/bin/sh", "echo ", "export "]):
             return "shell"
+        # CLI command detection
+        first_token = code_str.strip().split()[0].lower() if code_str.strip() else ""
+        if first_token in {"git", "docker", "kubectl", "curl", "wget", "npm", "pip", "cat", "ls", "cd", "mv", "cp", "rm", "find", "grep", "chmod", "chown", "tar", "zip"}:
+            return "shell"
 
         return "python"
 
