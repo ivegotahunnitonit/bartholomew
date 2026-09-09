@@ -11,6 +11,20 @@
       ],
       "rewrites": [
         {
+          "source": "/api/v1/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/cloud-health",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
           "source": "/api/**",
           "run": {
             "serviceId": "acn-fastapi-backend",
@@ -23,6 +37,10 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
         }
       ],
       "headers": [
@@ -48,6 +66,20 @@
       ],
       "rewrites": [
         {
+          "source": "/api/v1/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/cloud-health",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
           "source": "/api/**",
           "run": {
             "serviceId": "acn-fastapi-backend",
@@ -60,6 +92,10 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
         }
       ],
       "headers": [
