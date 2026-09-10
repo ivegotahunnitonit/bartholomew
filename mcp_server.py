@@ -38,13 +38,19 @@ class BartholomewMCPServer:
         self.tools_schema = [
             {
                 "name": "btp_execute_command",
-                "description": "[VERIFIED RUNTIME: Protected by Bartholomew BTP v2.8 Ring-0 Invariant Guard · Hardware Enclave Attested · Fail-Safe Micro-Rollback Enabled] Executes a shell command safely within Bartholomew's AST compiler gate and hermetic workspace boundary, generating an RFC 8785 Ed25519 cryptographic receipt.",
+                "description": "Executes a shell command inside a hermetic workspace boundary after AST pre-flight safety evaluation. Blocks destructive commands (rm -rf, chmod 777, curl | bash) in under 35 microseconds before any syscall is made. Returns an Ed25519-signed Merkle execution receipt.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "command": {
                             "type": "string",
-                            "description": "The shell command to execute (e.g., 'git status', 'python test.py')."
+                            "description": "The shell command to execute (e.g., 'git status', 'python test.py'). Destructive patterns are blocked before execution."
                         },
                         "cwd": {
                             "type": "string",
@@ -52,228 +58,400 @@ class BartholomewMCPServer:
                         }
                     },
                     "required": ["command"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the command was permitted to execute."},
+                        "stdout": {"type": "string", "description": "Standard output of the executed command."},
+                        "stderr": {"type": "string", "description": "Standard error output, if any."},
+                        "exit_code": {"type": "integer", "description": "Process exit code (0 = success)."},
+                        "receipt": {
+                            "type": "object",
+                            "description": "Ed25519-signed Merkle execution receipt.",
+                            "properties": {
+                                "merkle_root": {"type": "string"},
+                                "signature": {"type": "string"},
+                                "latency_us": {"type": "number"}
+                            }
+                        },
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the command was blocked."}
+                    },
+                    "required": ["allowed"]
                 }
             },
             {
                 "name": "btp_write_file",
-                "description": "[VERIFIED RUNTIME: Protected by Bartholomew BTP v2.8 Ring-0 Invariant Guard · Hardware Enclave Attested] Writes content to a file strictly contained inside the workspace boundary, blocking any directory traversal (../) or system file overwrites.",
+                "description": "Writes content to a file strictly contained inside the sandbox workspace. Blocks directory traversal (../), system file overwrites (/etc/passwd, ~/.ssh/id_rsa), and credential file paths (.env, .aws/credentials).",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "path": {
                             "type": "string",
-                            "description": "File path relative to workspace root (e.g., 'src/app.py')."
+                            "description": "File path relative to workspace root (e.g., 'src/app.py'). Paths outside the sandbox root are rejected."
                         },
                         "content": {
                             "type": "string",
-                            "description": "Text content to write."
+                            "description": "Text content to write to the file."
                         }
                     },
                     "required": ["path", "content"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the write was permitted."},
+                        "bytes_written": {"type": "integer", "description": "Number of bytes written."},
+                        "absolute_path": {"type": "string", "description": "Resolved absolute path of the written file."},
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the write was blocked."}
+                    },
+                    "required": ["allowed"]
                 }
             },
             {
                 "name": "btp_read_file",
-                "description": "[VERIFIED RUNTIME: Protected by Bartholomew BTP v2.8 Ring-0 Invariant Guard · Hardware Enclave Attested] Reads a file inside the protected workspace boundary, preventing credential exfiltration (.env, id_rsa, /etc/shadow, SAM).",
+                "description": "Reads a file from the protected workspace. Prevents exfiltration of sensitive files (.env, id_rsa, /etc/shadow, SAM registry hives). Returns file content only if path is inside the approved sandbox root.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "path": {
                             "type": "string",
-                            "description": "File path relative to workspace root."
+                            "description": "File path relative to workspace root. Sensitive paths (.env, ~/.ssh) are blocked."
                         }
                     },
                     "required": ["path"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the read was permitted."},
+                        "content": {"type": "string", "description": "File content if allowed."},
+                        "size_bytes": {"type": "integer", "description": "File size in bytes."},
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the read was blocked."}
+                    },
+                    "required": ["allowed"]
                 }
             },
             {
                 "name": "btp_evaluate_intent",
-                "description": "[VERIFIED RUNTIME: Protected by Bartholomew BTP v2.8] Microsecond pre-flight safety evaluation for custom agent tool calls or SQL queries. Returns ALLOW/DENY with cryptographic signature.",
+                "description": "Pre-flight safety evaluation for any proposed agent action — SQL queries, HTTP calls, wire transfers, or arbitrary tool payloads. Returns ALLOW or DENY with a cryptographic Ed25519 Merkle receipt. Never executes the action itself. Safe to call on any input.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": True
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "agent_id": {
                             "type": "string",
-                            "description": "Identifier of the calling AI agent."
+                            "description": "Identifier of the calling AI agent (e.g., 'crewai_worker_01')."
                         },
                         "action_type": {
                             "type": "string",
-                            "description": "Type of action (e.g., 'EXEC_TOOL', 'SQL_QUERY', 'WIRE_TRANSFER')."
+                            "description": "Category of action being evaluated. Examples: 'EXEC_TOOL', 'SQL_QUERY', 'HTTP_REQUEST', 'WIRE_TRANSFER'."
                         },
                         "payload": {
                             "type": "object",
-                            "description": "The proposed payload dictionary."
+                            "description": "The proposed action payload to evaluate. Any JSON-serializable object."
                         }
                     },
                     "required": ["action_type", "payload"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "True if the action is safe to execute, False if vetoed."},
+                        "verdict": {"type": "string", "enum": ["ALLOW", "DENY"], "description": "Evaluation verdict."},
+                        "reason": {"type": "string", "description": "Human-readable explanation of the verdict."},
+                        "rule_id": {"type": "string", "description": "The invariant rule ID that triggered the decision."},
+                        "latency_us": {"type": "number", "description": "Evaluation latency in microseconds."},
+                        "merkle_root": {"type": "string", "description": "Ed25519 Merkle receipt root hash for audit trail."}
+                    },
+                    "required": ["allowed", "verdict", "reason"]
                 }
             },
             {
                 "name": "btp_request_threshold_signature",
-                "description": "[VERIFIED RUNTIME: RFC 9591 FROST & BIP 327 MuSig2] Requests decentralized multi-agent threshold co-signing for high-stakes tool executions prior to state commitment.",
+                "description": "Requests multi-agent threshold co-signing for high-stakes actions (financial transactions, infrastructure changes) before state commitment. Implements RFC 9591 FROST threshold signatures. Action is blocked until quorum is reached.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "action_intent": {
                             "type": "string",
-                            "description": "Description or JSON string of the proposed high-stakes agent action."
+                            "description": "Description or JSON string of the proposed high-stakes agent action requiring quorum approval."
                         },
                         "threshold": {
                             "type": "integer",
-                            "description": "Quorum threshold (defaults to 2)."
+                            "description": "Number of co-signers required to approve (default: 2)."
                         }
                     },
                     "required": ["action_intent"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "approved": {"type": "boolean", "description": "Whether the quorum threshold was met."},
+                        "signature_aggregate": {"type": "string", "description": "Aggregated threshold signature if approved."},
+                        "signers": {"type": "array", "items": {"type": "string"}, "description": "List of agent IDs that co-signed."},
+                        "pending_reason": {"type": "string", "description": "If not approved, why the signature is pending."}
+                    },
+                    "required": ["approved"]
                 }
             },
             {
                 "name": "btp_verify_safety_proof",
-                "description": "[VERIFIED RUNTIME: BTP v3.0 zk-SNARK / Pedersen Circuit] Cryptographically verifies an offline Zero-Knowledge Invariant Compliance Proof to mathematically confirm session safety with 0 bytes of private prompt leakage.",
+                "description": "Verifies a BTP cryptographic receipt offline with zero network calls. Confirms session safety via Ed25519 signature validation against the trusted authority public key.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
                         "receipt": {
                             "type": "object",
-                            "description": "The BTP proof receipt dictionary containing algebraic commitments."
+                            "description": "The BTP proof receipt dictionary containing the Merkle root and Ed25519 signature."
                         }
                     },
                     "required": ["receipt"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "valid": {"type": "boolean", "description": "Whether the receipt signature is cryptographically valid."},
+                        "verified_at": {"type": "number", "description": "Unix timestamp of verification."},
+                        "error": {"type": "string", "description": "If invalid, the reason for failure."}
+                    },
+                    "required": ["valid"]
                 }
             },
             {
                 "name": "btp_get_security_status",
-                "description": "[VERIFIED RUNTIME] Returns active Bartholomew BTP v2.8 invariant state, FROST threshold quorum status, post-quantum layer, and protection telemetry.",
+                "description": "Returns the current Bartholomew security gate status — active invariant rules, protection coverage, and session telemetry. Read-only, no side effects.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {"type": "string", "enum": ["active", "degraded", "offline"]},
+                        "version": {"type": "string", "description": "BTP protocol version."},
+                        "rules_loaded": {"type": "integer", "description": "Number of active invariant rules."},
+                        "events_vetoed_session": {"type": "integer", "description": "Total vetoed events in current session."},
+                        "uptime_seconds": {"type": "number"}
+                    },
+                    "required": ["status", "version"]
                 }
             },
             {
                 "name": "btp_issue_execution_bond",
-                "description": "[MILESTONE 3.1: Bonded Autonomous Settlement] Stakes an execution warranty bond for an AI agent action under BTP protocol arbitration rules.",
+                "description": "Stakes a collateral bond for an autonomous agent action under BTP arbitration rules. The bond is locked until the action completes successfully or is slashed on invariant breach.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "agent_id": {
-                            "type": "string",
-                            "description": "Identifier of the autonomous AI agent staking the bond."
-                        },
-                        "action_type": {
-                            "type": "string",
-                            "description": "The category of action being bonded (e.g., 'DATABASE_MIGRATION', 'FUND_TRANSFER')."
-                        },
-                        "bond_amount_usd": {
-                            "type": "number",
-                            "description": "Collateral amount in USD to lock in escrow (default 1000.0)."
-                        },
-                        "attestation_hash": {
-                            "type": "string",
-                            "description": "Optional SHA-256 hash of the pre-flight attestation."
-                        }
+                        "agent_id": {"type": "string", "description": "Identifier of the autonomous AI agent staking the bond."},
+                        "action_type": {"type": "string", "description": "Category of action being bonded (e.g., 'DATABASE_MIGRATION', 'FUND_TRANSFER')."},
+                        "bond_amount_usd": {"type": "number", "description": "Collateral in USD to lock in escrow (default: 1000.0)."},
+                        "attestation_hash": {"type": "string", "description": "Optional SHA-256 hash of the pre-flight attestation."}
                     },
                     "required": ["agent_id", "action_type"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string", "description": "Unique bond identifier for future slash or release."},
+                        "locked_usd": {"type": "number", "description": "Amount locked in escrow."},
+                        "issued_at": {"type": "number", "description": "Unix timestamp of bond issuance."}
+                    },
+                    "required": ["bond_id", "locked_usd"]
                 }
             },
             {
                 "name": "btp_slash_execution_bond",
-                "description": "[MILESTONE 3.1: Invariant Breach Arbitration] Slashes a staked execution bond upon verified proof of an invariant breach or ZK witness failure, disbursing forfeited funds.",
+                "description": "Slashes a staked execution bond upon verified proof of invariant breach, disbursing forfeited collateral. Irreversible once executed.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "bond_id": {
-                            "type": "string",
-                            "description": "The unique bond ID to slash."
-                        },
-                        "breach_receipt": {
-                            "type": "object",
-                            "description": "The verified breach receipt or failure proof dictionary."
-                        }
+                        "bond_id": {"type": "string", "description": "The unique bond ID to slash."},
+                        "breach_receipt": {"type": "object", "description": "The verified breach receipt or failure proof dictionary."}
                     },
                     "required": ["bond_id", "breach_receipt"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "slashed": {"type": "boolean", "description": "Whether the slash was executed."},
+                        "slashed_usd": {"type": "number", "description": "Amount forfeited."},
+                        "slash_receipt": {"type": "string", "description": "Ed25519 receipt hash of the slash event."}
+                    },
+                    "required": ["slashed"]
                 }
             },
             {
                 "name": "btp_get_bond_status",
-                "description": "[MILESTONE 3.1: Bond Verification] Retrieves escrow status, remaining collateral, and arbitration history for a specific execution bond.",
+                "description": "Retrieves escrow status, remaining collateral, and arbitration history for a specific execution bond. Read-only.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "bond_id": {
-                            "type": "string",
-                            "description": "The unique bond ID to query."
-                        }
+                        "bond_id": {"type": "string", "description": "The unique bond ID to query."}
                     },
                     "required": ["bond_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string"},
+                        "status": {"type": "string", "enum": ["LOCKED", "RELEASED", "SLASHED"]},
+                        "locked_usd": {"type": "number"},
+                        "agent_id": {"type": "string"},
+                        "action_type": {"type": "string"},
+                        "issued_at": {"type": "number"}
+                    },
+                    "required": ["bond_id", "status"]
                 }
             },
             {
                 "name": "btp_issue_agent_passport",
-                "description": "[MILESTONE 3.1: Sovereign Non-Human Identity] Issues an Ed25519-signed digital passport for an autonomous agent worker with capability bounds and reputation vector.",
+                "description": "Issues an Ed25519-signed digital identity passport for an autonomous AI agent with declared capability bounds and reputation score.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "agent_id": {
-                            "type": "string",
-                            "description": "Unique identifier of the autonomous worker agent."
-                        },
-                        "worker_model": {
-                            "type": "string",
-                            "description": "Model family or engine (e.g., 'gpt-4o', 'claude-3-5-sonnet', 'gemini-1.5-pro')."
-                        },
-                        "granted_capabilities": {
-                            "type": "array",
-                            "items": {"type": "string"},
-                            "description": "List of authorized capability scopes."
-                        },
-                        "bonded_warranty_balance_usd": {
-                            "type": "number",
-                            "description": "Collateral staked in USD backing this passport (default 0.0)."
-                        }
+                        "agent_id": {"type": "string", "description": "Unique identifier of the autonomous worker agent."},
+                        "worker_model": {"type": "string", "description": "Model family (e.g., 'gpt-4o', 'claude-3-5-sonnet', 'gemini-1.5-pro')."},
+                        "granted_capabilities": {"type": "array", "items": {"type": "string"}, "description": "List of authorized capability scopes (e.g., ['code:read', 'db:query'])."},
+                        "bonded_warranty_balance_usd": {"type": "number", "description": "Collateral staked in USD backing this passport (default: 0.0)."}
                     },
                     "required": ["agent_id", "worker_model"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passport_id": {"type": "string", "description": "Unique passport identifier."},
+                        "signature": {"type": "string", "description": "Ed25519 signature over the passport payload."},
+                        "issued_at": {"type": "number"},
+                        "expires_at": {"type": "number"}
+                    },
+                    "required": ["passport_id", "signature"]
                 }
             },
             {
                 "name": "btp_verify_agent_passport",
-                "description": "[MILESTONE 3.1: Sovereign Passport Verification] Cryptographically validates an agent passport signature, expiration, capability bounds, and circuit-breaker status.",
+                "description": "Cryptographically validates an agent passport's Ed25519 signature, expiration, and capability bounds. Read-only, no side effects.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "passport": {
-                            "type": "object",
-                            "description": "Serialized passport dictionary to verify."
-                        },
-                        "required_capability": {
-                            "type": "string",
-                            "description": "Optional capability string to check authorization for."
-                        }
+                        "passport": {"type": "object", "description": "Serialized passport dictionary to verify."},
+                        "required_capability": {"type": "string", "description": "Optional: capability string to check authorization for (e.g., 'db:write')."}
                     },
                     "required": ["passport"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "valid": {"type": "boolean", "description": "Whether the passport is cryptographically valid and not expired."},
+                        "capability_authorized": {"type": "boolean", "description": "If required_capability was provided, whether it is granted."},
+                        "error": {"type": "string", "description": "If invalid, the failure reason."}
+                    },
+                    "required": ["valid"]
                 }
             },
             {
                 "name": "btp_discover_agent_peers",
-                "description": "[MILESTONE 3.1: Peer Discovery Mesh] Discovers registered autonomous peer agents in the BTP mesh matching required capabilities and minimum trust reputation.",
+                "description": "Discovers registered autonomous peer agents in the BTP mesh matching required capabilities and minimum trust reputation. Read-only registry query.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "capability": {
-                            "type": "string",
-                            "description": "Required capability string (e.g. 'code:mutate', 'db:query')."
-                        },
-                        "min_reputation": {
-                            "type": "number",
-                            "description": "Minimum required trust score (0.0 to 1.0)."
-                        },
-                        "min_bond_usd": {
-                            "type": "number",
-                            "description": "Minimum required bonded collateral in USD."
-                        },
-                        "model_family": {
-                            "type": "string",
-                            "description": "Optional model filter (e.g. 'claude', 'gpt', 'gemini')."
-                        }
+                        "capability": {"type": "string", "description": "Required capability string (e.g., 'code:mutate', 'db:query')."},
+                        "min_reputation": {"type": "number", "description": "Minimum trust score 0.0–1.0."},
+                        "min_bond_usd": {"type": "number", "description": "Minimum bonded collateral in USD."},
+                        "model_family": {"type": "string", "description": "Optional model filter (e.g., 'claude', 'gpt', 'gemini')."}
                     }
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "peers": {
+                            "type": "array",
+                            "description": "List of matching peer agents.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "agent_id": {"type": "string"},
+                                    "worker_model": {"type": "string"},
+                                    "reputation": {"type": "number"},
+                                    "bond_usd": {"type": "number"},
+                                    "capabilities": {"type": "array", "items": {"type": "string"}}
+                                }
+                            }
+                        },
+                        "total_found": {"type": "integer"}
+                    },
+                    "required": ["peers", "total_found"]
                 }
             }
         ]

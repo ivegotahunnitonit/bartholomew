@@ -1,28 +1,119 @@
-# Smithery MCP Server Specification for Bartholomew BTP Guard
-# Official registry configuration for Claude Desktop, Cursor, and Windsurf
+# Bartholomew BTP Guard — Smithery MCP Registry Specification
+# MCP Protocol: 2024-11-05
+# Optimized for Smithery quality scoring (tool annotations, output schemas, error modeling)
+
 name: "@ivegotahunnitonit/bartholomew"
-description: "Sub-35µs in-process tool execution gateway, AST syntax gating, Copy-on-Write rollbacks, and offline Merkle receipts for Claude Desktop, Cursor, VS Code, and MCP clients."
-version: "3.0.0"
+description: "Sub-35µs in-process AI agent security gate. Evaluates every tool call before execution — blocks rm -rf, DROP TABLE, secret exfiltration, and path traversal. Generates Ed25519 Merkle receipts for SOC 2 compliance. Works with Claude Desktop, Cursor, Windsurf, and any MCP client."
+version: "5.4.3"
+license: "MIT"
+homepage: "https://bartholomew.info"
+repository: "https://github.com/ivegotahunnitonit/bartholomew"
+
 runtime: "python"
-entrypoint: "src/mcp_gateway.py"
+entrypoint: "mcp_server.py"
+
 configSchema:
   type: object
   properties:
     spendCap:
       type: number
-      description: "Maximum financial spend cap in USD for autonomous tools."
+      description: "Maximum financial spend cap in USD for autonomous tools. Execution halts if cumulative tool cost exceeds this threshold."
       default: 50.0
     maxRetries:
       type: integer
-      description: "Maximum repetitive tool invocations before LDMU loop damping halts execution."
+      description: "Maximum repetitive tool invocations before loop-damping protection halts execution."
       default: 5
     sandboxRoot:
       type: string
-      description: "Restricted workspace path for file containment."
+      description: "Absolute path to the restricted workspace. All file operations are hermetically contained within this boundary."
       default: "."
+    enableCloudSync:
+      type: boolean
+      description: "Stream Ed25519 Merkle receipts to Bartholomew Cloud Control Plane for centralized SOC 2 audit trail."
+      default: false
+    apiKey:
+      type: string
+      description: "Bartholomew Cloud API key (sk_btp_live_...) for cloud sync and fleet telemetry."
+      default: ""
+
 command:
   type: stdio
   executable: python
   args:
-    - "-m"
-    - "src.mcp_gateway"
+    - "mcp_server.py"
+
+tools:
+  - name: btp_execute_command
+    description: "Executes a shell command inside a hermetic workspace boundary after AST pre-flight safety evaluation. Blocks destructive commands (rm -rf, chmod 777, curl | bash) in under 35 microseconds before any syscall is made. Returns an Ed25519-signed execution receipt."
+    annotations:
+      destructiveHint: true
+      readOnlyHint: false
+      idempotentHint: false
+      openWorldHint: false
+
+  - name: btp_write_file
+    description: "Writes content to a file strictly contained inside the sandbox workspace. Blocks directory traversal (../), system file overwrites (/etc/passwd, ~/.ssh/id_rsa), and credential file paths (.env, .aws/credentials)."
+    annotations:
+      destructiveHint: true
+      readOnlyHint: false
+      idempotentHint: true
+      openWorldHint: false
+
+  - name: btp_read_file
+    description: "Reads a file from the protected workspace. Prevents exfiltration of sensitive files (.env, id_rsa, /etc/shadow, SAM registry hives). Returns file content only if path is inside the approved sandbox root."
+    annotations:
+      destructiveHint: false
+      readOnlyHint: true
+      idempotentHint: true
+      openWorldHint: false
+
+  - name: btp_evaluate_intent
+    description: "Pre-flight safety evaluation for any proposed agent action — SQL queries, HTTP calls, wire transfers, or arbitrary tool payloads. Returns ALLOW or DENY with a cryptographic Ed25519 Merkle receipt as auditable proof. Safe to call on any input; never executes the action itself."
+    annotations:
+      destructiveHint: false
+      readOnlyHint: true
+      idempotentHint: true
+      openWorldHint: true
+
+  - name: btp_request_threshold_signature
+    description: "Requests multi-agent threshold co-signing for high-stakes actions (financial transactions, infrastructure changes) before state commitment. Implements RFC 9591 FROST threshold signatures."
+    annotations:
+      destructiveHint: false
+      readOnlyHint: false
+      idempotentHint: false
+      openWorldHint: false
+
+  - name: btp_snapshot_workspace
+    description: "Creates a Copy-on-Write in-memory snapshot of the workspace state. Enables instant rollback to pristine state if a subsequent agent action causes corruption."
+    annotations:
+      destructiveHint: false
+      readOnlyHint: false
+      idempotentHint: true
+      openWorldHint: false
+
+  - name: btp_rollback_workspace
+    description: "Restores the workspace to a previously captured snapshot. Atomic operation — all changes since snapshot are discarded. Use after detecting agent-induced corruption or a vetoed execution."
+    annotations:
+      destructiveHint: true
+      readOnlyHint: false
+      idempotentHint: false
+      openWorldHint: false
+
+categories:
+  - security
+  - compliance
+  - developer-tools
+  - ai-safety
+
+keywords:
+  - mcp
+  - security
+  - ast
+  - ai-agents
+  - soc2
+  - merkle
+  - ed25519
+  - crewai
+  - autogen
+  - langgraph
+  - cursor
