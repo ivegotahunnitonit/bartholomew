@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "5.4.0"
-description = "Bartholomew Autonomous Trust Protocol (BTP v5.4) — The AI Agent Execution Gateway: Sub-35µs In-Process AST Gating, Sub-25µs Runtime Dispatch Seam, Cloud Run Telemetry, and ZK Fault Proofs."
+version = "5.4.4"
+description = "Bartholomew Autonomous Trust Protocol (BTP v5.4.4) — The AI Agent Execution Gateway: Sub-35µs In-Process AST Gating, Sub-25µs Runtime Dispatch Seam, Cloud Run Telemetry, and ZK Fault Proofs."
 readme = "README.md"
 authors = [
     { name = "Itsub Alemayehu", email = "security@bartholomew.info" }
