@@ -96,7 +96,8 @@ class CampaignDispatcher:
 
     def prepare_campaign_batch(self, limit: int = 20) -> List[Dict[str, Any]]:
         """Generates the full dual-channel outbound campaign package for pending leads."""
-        pending_leads = [l for l in self.lead_manager.get_all() if l.status == LeadStatus.PENDING][:limit]
+        all_leads = self.lead_manager.get_all()
+        pending_leads = [l for l in all_leads if str(getattr(l, "status", "")).upper() in ("PENDING", "CONNECTED", "ACTIVE")][:limit]
         campaign_records = []
 
         for lead in pending_leads:

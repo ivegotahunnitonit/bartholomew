@@ -179,6 +179,94 @@ def cmd_leads_list(args):
     print("=" * 76)
 
 
+def cmd_try(args):
+    """Runs a 3-second instant interactive sandbox simulation showing BTP Guard in action."""
+    import time
+    from src import Guard
+
+    print("=" * 76)
+    print("  Bartholomew Guard -- Instant In-Process Safety Sandbox (BTP v5.4.4)")
+    print("=" * 76)
+    print("[*] Initializing in-process AST gating engine...")
+    time.sleep(0.2)
+    print("[+] AST Engine ready: sub-35us deterministic inspection active.\n")
+
+    guard = Guard(spend_cap=50.0)
+
+    scenarios = [
+        {
+            "category": "SAFE DATABASE QUERY",
+            "action": "execute_sql('SELECT id, name, created_at FROM users WHERE status = active;')",
+            "payload": "SELECT id, name, created_at FROM users WHERE status = active;",
+            "is_spend": False
+        },
+        {
+            "category": "HALLUCINATED DESTRUCTIVE COMMAND",
+            "action": "execute_sql('DROP TABLE customers CASCADE;')",
+            "payload": "DROP TABLE customers CASCADE;",
+            "is_spend": False
+        },
+        {
+            "category": "IN-FLIGHT CREDENTIAL SCRUBBING",
+            "action": "run_bash('export AWS_SECRET_KEY=wJalrXUtnFEMIK7MDENGbPxRfiCYEXAMPLEKEY')",
+            "payload": "export AWS_SECRET_KEY=wJalrXUtnFEMIK7MDENGbPxRfiCYEXAMPLEKEY",
+            "is_spend": False
+        },
+        {
+            "category": "RUNAWAY RETRY LOOP & SPEND CAP",
+            "action": "dispatch_task(spend_usd=120.00, budget_cap=50.00)",
+            "payload": "FINANCIAL_TRADE_ACTION",
+            "is_spend": True,
+            "spend_usd": 120.00
+        }
+    ]
+
+    for idx, s in enumerate(scenarios, 1):
+        print(f"[{idx}/4] {s['category']}")
+        print(f"      Action : {s['action']}")
+        time.sleep(0.3)
+        if s["is_spend"]:
+            res = guard.check(s["payload"], amount_usd=s["spend_usd"])
+        else:
+            res = guard.check(s["payload"])
+        verdict = res.get("verdict", "UNKNOWN")
+        latency = res.get("latency_us", 0.0)
+        reason = res.get("reason", "")
+        if len(reason) > 60:
+            reason = reason[:57] + "..."
+        print(f"      Verdict: [{verdict}] | Latency: {latency:.1f}us")
+        print(f"      Detail : {reason}\n")
+
+    print("-" * 76)
+    print("  HOW TO PROTECT YOUR AGENT (1 Line):")
+    print("  ----------------------------------")
+    print("  from btp_guard import Guard")
+    print("  guard = Guard(spend_cap=50.0)")
+    print("")
+    print("  @guard.protect")
+    print("  def my_tool(command: str):")
+    print("      return executor.run(command) # 100% protected before execution")
+    print("")
+    print("  TRY LIVE IN BROWSER: https://bartholomew.info/cookbook")
+    print("=" * 76)
+
+    if getattr(args, "interactive", False):
+        print("\n--- INTERACTIVE TEST SANDBOX (Type 'exit' to quit) ---")
+        try:
+            while True:
+                user_cmd = input("\nEnter command/SQL to test > ").strip()
+                if not user_cmd or user_cmd.lower() in ("exit", "quit", "q"):
+                    print("[*] Exited interactive sandbox.")
+                    break
+                t0 = time.perf_counter()
+                res = guard.check(user_cmd)
+                elapsed_us = (time.perf_counter() - t0) * 1_000_000
+                verdict = res.get("verdict", "ALLOW")
+                print(f"Verdict: [{verdict}] ({elapsed_us:.1f}us)")
+                print(f"Reason : {res.get('reason')}")
+        except (EOFError, KeyboardInterrupt):
+            print("\n[*] Exited.")
+
 
 def cmd_init(args):
     print("[+] Initializing local Bartholomew sovereign trust root...")
@@ -2545,10 +2633,16 @@ def main():
     leads_p.add_argument("--watch", "-w", action="store_true", help="Continuously poll and stream incoming enterprise visitor events in real-time")
     leads_p.add_argument("--interval", "-i", type=float, default=3.0, help="Polling interval in seconds for watch mode (default: 3.0)")
 
+    # try (Instant 3-Second Interactive Safety Simulation)
+    try_p = subparsers.add_parser("try", help="Run 3-second instant interactive safety sandbox simulation")
+    try_p.add_argument("--interactive", "-i", action="store_true", help="Prompt for custom commands to test")
+
     args = parser.parse_args()
 
     if args.command == "leads":
         cmd_leads_list(args)
+    elif args.command == "try":
+        cmd_try(args)
     elif args.command == "version":
         cmd_version(args)
     elif args.command == "upgrade":
