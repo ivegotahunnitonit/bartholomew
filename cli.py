@@ -2251,6 +2251,16 @@ def cmd_daemon_ledger(args):
     print("=" * 75)
 
 
+def cmd_observe(args):
+    """Observes public Bartholomew M2M telemetry and Merkle ledger updates in real-time."""
+    from src.daemon.m2m_observer import M2MTelemetryObserver
+    observer = M2MTelemetryObserver(gateway_url=getattr(args, "gateway", None))
+    if getattr(args, "once", False):
+        observer.render_snapshot()
+    else:
+        observer.monitor_live(poll_interval_sec=getattr(args, "interval", 2.0))
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -2827,10 +2837,18 @@ def main():
     comp_p.add_argument("--simulate", "-s", choices=["drop", "delete", "secret", "loop"], help="Simulate a specific frontier threat scenario")
     comp_p.add_argument("--non-interactive", action="store_true", help="Run in non-interactive verification mode")
 
+    # observe (BTP Real-Time M2M Telemetry & Merkle Ledger Observer)
+    obs_p = subparsers.add_parser("observe", help="Real-time M2M telemetry and public Merkle ledger observer")
+    obs_p.add_argument("--once", action="store_true", help="Print a single telemetry snapshot and exit")
+    obs_p.add_argument("--interval", "-i", type=float, default=2.0, help="Polling interval in seconds (default: 2.0)")
+    obs_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
+
     args = parser.parse_args()
 
     if args.command in ("whoami", "bartholomew"):
         cmd_whoami(args)
+    elif args.command == "observe":
+        cmd_observe(args)
     elif args.command == "companion":
         cmd_companion(args)
     elif args.command == "models":

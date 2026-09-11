@@ -2,11 +2,11 @@ from setuptools import setup
 
 setup(
     name="btp-guard",
-    version="5.4.5",
-    description="Bartholomew Protocol (BTP v5.4.5) -- Sovereign Sentinel Companion & Autonomous AI Agent Execution Gateway. Sub-35us AST safety gating, in-flight secret scrubbing, and multi-model defense for GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1, CrewAI, LangGraph, AutoGen, and LlamaIndex.",
+    version="5.4.6",
+    description="Bartholomew Protocol (BTP v5.4.6) -- Sovereign Sentinel Companion & Autonomous AI Agent Execution Gateway. Sub-35us AST safety gating, in-flight secret scrubbing, and multi-model defense for GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1, CrewAI, LangGraph, AutoGen, and LlamaIndex.",
     author="Bartholomew Protocol Team",
+    py_modules=["btp_guard"],
     packages=[
-        "btp_guard",
         "framework_adapters",
         "framework_adapters.crewai",
         "framework_adapters.langgraph",
