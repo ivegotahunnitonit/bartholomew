@@ -178,15 +178,32 @@ export default function Hero() {
 
       <div className="max-w-4xl mx-auto w-full relative z-10 text-center">
         
-        {/* Protocol Version Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a0f] border border-[#1f1f26] mb-6 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
-          <span className="text-xs font-mono font-bold tracking-wider text-white">
-            Bartholomew Trust Protocol v5.4.0
-          </span>
-          <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
-            SOVEREIGN AGENT PROTOCOL
-          </span>
+        {/* Protocol Version & Product Hunt Badges */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a0f] border border-[#1f1f26] shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
+            <span className="text-xs font-mono font-bold tracking-wider text-white">
+              Bartholomew Trust Protocol v5.4.4
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+              SOVEREIGN AGENT PROTOCOL
+            </span>
+          </div>
+
+          <a
+            href="https://www.producthunt.com/products/bartholomew-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View Bartholomew on Product Hunt"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff6154]/10 border border-[#ff6154]/30 hover:border-[#ff6154] text-[#ff6154] text-xs font-mono font-bold hover:bg-[#ff6154]/20 transition-all shadow-sm hover:shadow-[0_0_12px_rgba(255,97,84,0.3)] group"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#ff6154] animate-pulse shadow-[0_0_6px_#ff6154]" />
+            <svg className="w-3.5 h-3.5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="12" fill="#ff6154" />
+              <path d="M13.6 13.2h-2.8V8.4h2.8c1.325 0 2.4 1.075 2.4 2.4s-1.075 2.4-2.4 2.4zm0-6.8H8.8v11.2h2v-2.4h2.8c2.43 0 4.4-1.97 4.4-4.4s-1.97-4.4-4.4-4.4z" fill="#ffffff" />
+            </svg>
+            <span>[PRODUCT HUNT LAUNCH]</span>
+          </a>
         </div>
 
         {/* Impactful Headline */}

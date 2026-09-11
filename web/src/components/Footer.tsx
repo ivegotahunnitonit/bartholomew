@@ -64,7 +64,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono pt-1">
               <CheckCircle2 size={14} />
-              <span>[PROTOCOL ACTIVE: BTP v5.4.0 · SOVEREIGN AI AGENT SECURITY RUNTIME]</span>
+              <span>[PROTOCOL ACTIVE: BTP v5.4.4 · SOVEREIGN AI AGENT SECURITY RUNTIME]</span>
             </div>
             <p className="text-xs text-zinc-400 max-w-md font-sans">
               The fastest and most reliable local AST safety gating, zero prompt leakage, cryptographic agent passports, and deterministic runtime guardrails for autonomous AI agents.
@@ -116,6 +116,17 @@ export default function Footer() {
               [SPECIFICATIONS]
             </div>
             <ul className="space-y-2.5 text-xs font-mono">
+              <li>
+                <a
+                  href="https://www.producthunt.com/products/bartholomew-2"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#ff6154] hover:text-[#ff7a70] transition inline-flex items-center gap-1 font-bold"
+                >
+                  <span>PRODUCT HUNT LAUNCH</span>
+                  <ExternalLink size={10} className="text-[#ff6154]" />
+                </a>
+              </li>
               <li>
                 <a
                   href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html"
