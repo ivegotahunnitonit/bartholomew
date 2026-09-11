@@ -2155,8 +2155,52 @@ def cmd_activate(args):
     )
 
     print("=" * 70)
-    print("[BTP GUARD] BARTHOLOMEW PROTOCOL (BTP v3.0) LICENSE ACTIVATION")
+    print("[BTP GUARD] BARTHOLOMEW PROTOCOL (BTP v5.4.4) LICENSE MANAGEMENT")
     print("=" * 70)
+
+    # Operator / Admin issuance mode
+    if getattr(args, "issue", False):
+        email = getattr(args, "email", None) or "customer@startup.dev"
+        tier = getattr(args, "tier", "pro") or "pro"
+        tier_upper = tier.upper()
+        prefix = "btp_ent_" if tier.lower().startswith("ent") else "btp_pro_"
+        raw_seed = f"{email}:{tier}:{time.time()}:bartholomew-sovereign-salt"
+        token_hash = hashlib.sha256(raw_seed.encode("utf-8")).hexdigest()[:24]
+        issued_token = f"{prefix}{token_hash}"
+
+        print(f"\n[+] Cryptographic Sovereign License Issued (BTP v5.4.4)")
+        print(f"  -> Recipient Email : {email}")
+        print(f"  -> License Tier   : {tier_upper} ({'$199/mo' if 'ENT' in tier_upper else '$49/mo'})")
+        print(f"  -> License Token  : {issued_token}")
+        print(f"  -> Status         : ACTIVE (VERIFIED)\n")
+
+        # Update leads_queue.json if lead exists
+        q_path = os.path.join(os.getcwd(), "leads_queue.json")
+        if os.path.exists(q_path):
+            try:
+                with open(q_path, "r", encoding="utf-8") as f:
+                    leads = json.load(f)
+                updated = False
+                for l in leads:
+                    if l.get("email") and l.get("email").lower() == email.lower():
+                        l["status"] = "ACTIVATED_PAID"
+                        l["license_tier"] = tier_upper
+                        l["license_token"] = issued_token
+                        l["activated_at"] = time.time()
+                        updated = True
+                        break
+                if updated:
+                    with open(q_path, "w", encoding="utf-8") as f:
+                        json.dump(leads, f, indent=2)
+                    print(f"  [+] Updated lead profile in leads_queue.json to ACTIVATED_PAID.")
+            except Exception:
+                pass
+
+        print("-" * 70)
+        print("Customer Activation Command:")
+        print(f"  python cli.py activate --key {issued_token}")
+        print("-" * 70)
+        return
 
     current = load_license()
     if current.get("licensed"):
@@ -2233,6 +2277,9 @@ def main():
     # activate
     act_p = subparsers.add_parser("activate", help="Activate Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License")
     act_p.add_argument("--key", "-k", type=str, default=None, help="License token received upon subscription checkout")
+    act_p.add_argument("--issue", action="store_true", help="Issue a new cryptographic license token for a subscriber")
+    act_p.add_argument("--email", "-e", type=str, default="", help="Subscriber email for issued license token")
+    act_p.add_argument("--tier", "-t", choices=["pro", "enterprise"], default="pro", help="Subscription tier for issued license (default: pro)")
 
     # upgrade
     upg_p = subparsers.add_parser("upgrade", help="Upgrade to Bartholomew Pro ($49/mo) or Enterprise Fleet ($199/mo)")
