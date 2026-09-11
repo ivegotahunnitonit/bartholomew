@@ -67,8 +67,8 @@ export function activate(context: ExtensionContext) {
       ? `Bartholomew Autonomous AI Guard (BTP v5.4)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
       : `Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
 
-    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($19/mo)', 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
-      if (selection === 'Upgrade to Pro ($19/mo)') {
+    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($49/mo)', 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
+      if (selection === 'Upgrade to Pro ($49/mo)') {
         vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
       } else if (selection === 'Open Web Dashboard') {
         vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info'));
@@ -80,7 +80,7 @@ export function activate(context: ExtensionContext) {
 
   const upgradeProCmd = vscode.commands.registerCommand('bartholomew.upgradePro', () => {
     vscode.window.showInformationMessage(
-      'Bartholomew Pro ($19/mo): Unlock real-time Cloud Telemetry, team CISO dashboard, and Slack/Discord security webhooks.',
+      'Bartholomew Pro ($49/mo): Unlock real-time Cloud Telemetry, team CISO dashboard, and Slack/Discord security webhooks.',
       'Subscribe Now',
       'View Plans'
     ).then((selection: any) => {

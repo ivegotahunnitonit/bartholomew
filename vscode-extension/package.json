@@ -2,7 +2,7 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Autonomous AI Guard (BTP v5.4)",
   "description": "Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
-  "version": "5.4.2",
+  "version": "5.4.3",
   "publisher": "Bartholomew",
   "repository": {
     "type": "git",
