@@ -21,8 +21,8 @@ export function activate(context: ExtensionContext) {
   // 1. Status Bar Indicator
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'bartholomew.viewStatus';
-  statusBarItem.text = `$(shield) BTP: ACTIVE (<35µs)`;
-  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v3.0.0) - Click for details`;
+  statusBarItem.text = `$(shield) BTP: ACTIVE (<25µs)`;
+  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4) - Free Tier | Click to View Status or Upgrade to Pro`;
   context.subscriptions.push(statusBarItem);
   statusBarItem.show();
 
@@ -64,14 +64,30 @@ export function activate(context: ExtensionContext) {
     const isConfigured = fs.existsSync(btpDir);
 
     const message = isConfigured
-      ? `Bartholomew Autonomous AI Guard (BTP v3.0.0)\n\n• Status: ACTIVE\n• In-Process AST Gating: Sub-35 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED`
-      : `Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'python cli.py init' in terminal to generate keys & policy.`;
+      ? `Bartholomew Autonomous AI Guard (BTP v5.4)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
+      : `Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
 
-    vscode.window.showInformationMessage(message, 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
-      if (selection === 'Open Web Dashboard') {
+    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($19/mo)', 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
+      if (selection === 'Upgrade to Pro ($19/mo)') {
+        vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
+      } else if (selection === 'Open Web Dashboard') {
         vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info'));
       } else if (selection === 'Validate Policy') {
         vscode.commands.executeCommand('bartholomew.validatePolicy');
+      }
+    });
+  });
+
+  const upgradeProCmd = vscode.commands.registerCommand('bartholomew.upgradePro', () => {
+    vscode.window.showInformationMessage(
+      'Bartholomew Pro ($19/mo): Unlock real-time Cloud Telemetry, team CISO dashboard, and Slack/Discord security webhooks.',
+      'Subscribe Now',
+      'View Plans'
+    ).then((selection: any) => {
+      if (selection === 'Subscribe Now') {
+        vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
+      } else if (selection === 'View Plans') {
+        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info#pricing'));
       }
     });
   });
@@ -81,11 +97,19 @@ export function activate(context: ExtensionContext) {
   });
 
   const dryRunTraceCmd = vscode.commands.registerCommand('bartholomew.dryRunTrace', () => {
-    vscode.window.showInformationMessage('BTP Policy Simulator: Executed synthetic trace dry-run. Verdict: ALLOW (0 violations, 28.4 µs latency).');
+    vscode.window.showInformationMessage('BTP Policy Simulator: Executed synthetic trace dry-run. Verdict: ALLOW (0 violations, 24.2 µs latency).');
   });
 
   const generateComplianceEvidenceCmd = vscode.commands.registerCommand('bartholomew.generateComplianceEvidence', () => {
-    vscode.window.showInformationMessage('BTP Compliance: Generating SOC 2 Type II & ISO 27001 Merkle evidence pack...');
+    vscode.window.showInformationMessage(
+      'BTP Compliance (Community Edition): Generated local Merkle evidence. Need auditor-signed SOC 2 Type II or EU AI Act certificates?',
+      'Upgrade to Enterprise',
+      'Open Dossier'
+    ).then((selection: any) => {
+      if (selection === 'Upgrade to Enterprise') {
+        vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601'));
+      }
+    });
     const terminal = vscode.window.createTerminal('BTP Compliance Evidence');
     terminal.show();
     terminal.sendText('python scripts/generate_soc2_compliance_evidence.py');
@@ -104,6 +128,7 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(
     viewStatusCmd,
+    upgradeProCmd,
     validatePolicyCmd,
     dryRunTraceCmd,
     generateComplianceEvidenceCmd,
