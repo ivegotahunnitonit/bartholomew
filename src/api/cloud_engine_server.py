@@ -27,6 +27,11 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from src.compliance_dossier_exporter import ComplianceDossierExporter
+from src.polyglot_ast_validator import PolyglotASTValidator
+from src.secret_masker import SecretVaultMasker
+from src.trust_protocol import BartholomewTrustAuthority
+from src.marketplace.sla_contract import ZKTaskCompletionProof
+from src.daemon.m2m_wire_daemon import GLOBAL_M2M_LEDGER
 
 logger = logging.getLogger("btp.cloud_engine")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -652,4 +657,151 @@ async def get_warm_leads(x_btp_api_key: Optional[str] = Header(None, alias="X-BT
         "total_warm_leads": len(_warm_leads),
         "leads": list(reversed(_warm_leads))[:100]
     }
+
+
+# ---------------------------------------------------------------------------
+# BTP v5.4 Machine-to-Machine (M2M) Autonomous Wire Gateways
+# ---------------------------------------------------------------------------
+
+class M2MVerifyPayload(BaseModel):
+    agent_id: Optional[str] = "anonymous-agent-peer"
+    tool_name: Optional[str] = "generic_tool"
+    command: Optional[str] = None
+    code: Optional[str] = None
+    arguments: Optional[Any] = None
+    session_id: Optional[str] = None
+
+
+class M2MBarterPayload(BaseModel):
+    agent_id: Optional[str] = "peer-agent"
+    task_type: Optional[str] = "compute_service"
+    work_units: Optional[float] = 1.0
+
+
+@app.get("/.well-known/agent-protocol.json")
+@app.get("/.well-known/btp.json")
+@app.get("/api/v1/m2m/discovery")
+async def m2m_discovery():
+    """Autonomous agent discovery manifest for BTP v5.4."""
+    authority = BartholomewTrustAuthority()
+    pubkey = authority.public_key_hex if hasattr(authority, "public_key_hex") else "pubkey_bartholomew_ed25519"
+    return {
+        "protocol": "BTP/5.4",
+        "service": "Bartholomew Autonomous Execution Sentinel",
+        "agent_id": "bartholomew-sentinel-core",
+        "capabilities": [
+            "ast_gate:audit",
+            "sql_veto:drop_table",
+            "bash_veto:recursive_rm",
+            "secret_scrub:zero_leakage",
+            "zk_tcp_verify",
+            "mutual_barter:awu"
+        ],
+        "latency_sla_us": 35.0,
+        "barter_unit": "AWU (Attested Work Unit)",
+        "endpoints": {
+            "verify": "/api/v1/m2m/verify",
+            "barter": "/api/v1/m2m/barter",
+            "ledger": "/api/v1/m2m/ledger"
+        },
+        "public_key": pubkey,
+        "timestamp": time.time()
+    }
+
+
+@app.post("/api/v1/m2m/verify")
+async def m2m_verify(payload: M2MVerifyPayload, request: Request):
+    """Sub-35µs AST Execution Gate & zk-TCP proof signing over public wire."""
+    t0 = time.perf_counter_ns()
+    agent_id = payload.agent_id or request.headers.get("X-Agent-ID", "anonymous-agent-peer")
+    tool_name = payload.tool_name or "generic_tool"
+    command = payload.command or payload.code or ""
+    args = payload.arguments or {}
+
+    if not command:
+        if isinstance(args, dict):
+            command = args.get("query") or args.get("statement") or args.get("command") or args.get("code") or ""
+        elif isinstance(args, str):
+            try:
+                parsed_args = json.loads(args)
+                if isinstance(parsed_args, dict):
+                    command = parsed_args.get("query") or parsed_args.get("statement") or parsed_args.get("command") or ""
+            except Exception:
+                command = args
+
+    is_safe = True
+    violation_reason = None
+    counsel = None
+
+    if command:
+        safe, reason, _ = PolyglotASTValidator.validate_code(str(command))
+        if not safe:
+            is_safe = False
+            violation_reason = reason
+            counsel = f"Bartholomew's Counsel: Execution of '{command[:60]}' was vetoed by in-process AST gating. Reason: {reason}"
+
+    sanitized_args = args
+    if isinstance(args, dict):
+        sanitized_args = {}
+        for k, v in args.items():
+            if isinstance(v, str):
+                masked_str, _, _ = SecretVaultMasker.mask_text(v)
+                sanitized_args[k] = masked_str
+            else:
+                sanitized_args[k] = v
+
+    latency_us = round((time.perf_counter_ns() - t0) / 1000.0, 2)
+
+    if is_safe:
+        proof = ZKTaskCompletionProof.create_proof(
+            contract_id=f"M2M-{uuid.uuid4().hex[:12].upper()}",
+            provider_agent_id="bartholomew-sentinel-core",
+            provider_tenant_id="bartholomew-core",
+            input_data={"tool": tool_name, "agent_id": agent_id},
+            output_data={"status": "APPROVED", "latency_us": latency_us},
+            tool_actions=[tool_name, "ast_inspect"]
+        )
+        GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=True, units=1.0)
+        return {
+            "status": "APPROVED",
+            "agent_id": agent_id,
+            "tool_name": tool_name,
+            "latency_us": latency_us,
+            "proof_id": proof.proof_id,
+            "pedersen_commitment": proof.pedersen_commitment,
+            "fiat_shamir_response": proof.fiat_shamir_response,
+            "sanitized_arguments": sanitized_args
+        }
+    else:
+        GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=False, units=0.0)
+        return {
+            "status": "VETOED",
+            "agent_id": agent_id,
+            "tool_name": tool_name,
+            "latency_us": latency_us,
+            "violation": violation_reason,
+            "counsel": counsel
+        }
+
+
+@app.post("/api/v1/m2m/barter")
+async def m2m_barter(payload: M2MBarterPayload):
+    """Bilateral Attested Work Unit (AWU) mutual credit settlement."""
+    agent_id = payload.agent_id or "peer-agent"
+    units = float(payload.work_units or 1.0)
+    task_type = payload.task_type or "compute_service"
+    GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=True, units=units)
+    return {
+        "status": "BARTER_SETTLED",
+        "agent_id": agent_id,
+        "task_type": task_type,
+        "work_units_credited": units,
+        "updated_ledger": GLOBAL_M2M_LEDGER.get_summary()
+    }
+
+
+@app.get("/api/v1/m2m/ledger")
+async def m2m_ledger():
+    """Returns the cryptographic Merkle root of accumulated economic surplus."""
+    return GLOBAL_M2M_LEDGER.get_summary()
 

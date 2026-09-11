@@ -11,6 +11,13 @@
       ],
       "rewrites": [
         {
+          "source": "/.well-known/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
           "source": "/api/v1/**",
           "run": {
             "serviceId": "bartolomew-cloud-engine",
