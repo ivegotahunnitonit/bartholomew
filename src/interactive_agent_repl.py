@@ -182,7 +182,7 @@ def run_agent_repl():
                     print(f"  {BOLD}{GREEN}✅ [EXEC]{RESET}  {GREEN}Approved & Signed [Ed25519: {sig[:16]}...] · Success{RESET}\n")
                 else:
                     print(f"  {BOLD}{CRIMSON}🛑 [GATE]{RESET}  {CRIMSON}Blocked ({lat_us:.1f} µs): {reason}{RESET}")
-                    print(f"  {DIM}🔒 [RECP]{RESET}  {AMBER}Audit Proof Logged [Ed25519: {sig[:16]}...]{RESET}\n")
+                    print(f"  {DIM}[+] [RECP]{RESET}  {AMBER}Audit Proof Logged [Ed25519: {sig[:16]}...]{RESET}\n")
 
         except (KeyboardInterrupt, EOFError):
             print(f"\n{DIM}[*] Interrupted. Goodbye!{RESET}\n")

@@ -597,16 +597,17 @@ async function verifyNotaryDocument(){
   const query = ($('nt-query').value || '').trim();
   const resultEl = $('nt-audit-result');
   if (!query) { if (resultEl) resultEl.textContent = '❌ Please enter a ID or Hash.'; return; }
-  if (resultEl) resultEl.textContent = '⏳ Querying ACN Notary Ledger...';
+  if (!query) { if (resultEl) resultEl.textContent = '[+] Please enter a ID or Hash.'; return; }
+  if (resultEl) resultEl.textContent = '[+] Querying ACN Notary Ledger...';
   try {
     const res = await fetch(API_BASE + '/api/v1/notary/stats');
     const data = await res.json();
     if (data && data.notary && Array.isArray(data.notary.records)) {
       const match = data.notary.records.find(r => r.id === query || r.doc_hash.includes(query));
-      if (match) { if (resultEl) resultEl.textContent = '✅ VALID! ID: ' + match.id + ' | Signer: ' + match.signer_address; }
-      else { if (resultEl) resultEl.textContent = '🔒 Certificate query notarized & verified valid on Base Mainnet L2!'; }
+      if (match) { if (resultEl) resultEl.textContent = '[+] VALID! ID: ' + match.id + ' | Signer: ' + match.signer_address; }
+      else { if (resultEl) resultEl.textContent = '[+] Certificate query notarized & verified valid on Base Mainnet L2!'; }
     }
-  } catch (e) { if (resultEl) resultEl.textContent = '🔒 Valid cryptographic signature audit confirmed.'; }
+  } catch (e) { if (resultEl) resultEl.textContent = '[+] Valid cryptographic signature audit confirmed.'; }
 }
 
 async function generateCopilotTask(){
