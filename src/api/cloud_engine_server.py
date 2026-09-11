@@ -709,6 +709,40 @@ async def m2m_discovery():
     }
 
 
+@app.get("/.well-known/mcp.json")
+async def mcp_discovery():
+    """Model Context Protocol (MCP) server manifest for autonomous agent discovery."""
+    return {
+        "$schema": "https://modelcontextprotocol.io/schema.json",
+        "name": "Bartholomew Protocol Execution Sentinel",
+        "protocol": "BTP/5.4",
+        "version": "5.4.5",
+        "description": "Sub-35us AST execution firewall, zero-trust gating, and cryptographic proof verification for AI agents.",
+        "mcpServers": {
+            "bartholomew-sentinel": {
+                "url": "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/verify",
+                "type": "http",
+                "capabilities": ["tools", "ast_gate", "zk_tcp", "merkle_ledger"],
+                "tools": [
+                    {
+                        "name": "verify_execution",
+                        "description": "Validates code/SQL/bash against Bartholomew AST firewall before execution",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "tool_name": {"type": "string"},
+                                "command": {"type": "string"},
+                                "arguments": {"type": "object"}
+                            },
+                            "required": ["tool_name"]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+
 @app.post("/api/v1/m2m/verify")
 async def m2m_verify(payload: M2MVerifyPayload, request: Request):
     """Sub-35µs AST Execution Gate & zk-TCP proof signing over public wire."""

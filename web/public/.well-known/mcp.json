@@ -1,0 +1,29 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema.json",
+  "name": "Bartholomew Protocol Execution Sentinel",
+  "protocol": "BTP/5.4",
+  "version": "5.4.5",
+  "description": "Sub-35us AST execution firewall, zero-trust gating, and cryptographic proof verification for AI agents.",
+  "mcpServers": {
+    "bartholomew-sentinel": {
+      "url": "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/verify",
+      "type": "http",
+      "capabilities": ["tools", "ast_gate", "zk_tcp", "merkle_ledger"],
+      "tools": [
+        {
+          "name": "verify_execution",
+          "description": "Validates code/SQL/bash against Bartholomew AST firewall before execution",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "tool_name": { "type": "string" },
+              "command": { "type": "string" },
+              "arguments": { "type": "object" }
+            },
+            "required": ["tool_name"]
+          }
+        }
+      ]
+    }
+  }
+}

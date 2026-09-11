@@ -64,5 +64,89 @@ __all__ = [
     "DeclarativePolicyEngine",
     "MarginalUtilityTracker",
     "SovereignAgentPassport",
-    "AgentPeerDiscoveryRegistry"
+    "AgentPeerDiscoveryRegistry",
+    "WireGuard"
 ]
+
+
+class WireGuard:
+    """
+    BTP v5.4 Cloud-Connected M2M Wire Guard.
+    Transparently intercepts tool calls and validates them against the live Bartholomew
+    Cloud Run execution firewall over public HTTPS in sub-milliseconds.
+    """
+    DEFAULT_PUBLIC_ENDPOINT = "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/verify"
+
+    def __init__(
+        self,
+        endpoint: Optional[str] = None,
+        agent_id: str = "python-agent-client",
+        timeout: float = 4.0,
+        fallback_local: bool = True
+    ):
+        self.endpoint = endpoint or os.getenv("BTP_WIRE_ENDPOINT", self.DEFAULT_PUBLIC_ENDPOINT)
+        self.agent_id = agent_id
+        self.timeout = timeout
+        self.fallback_local = fallback_local
+
+    def verify_tool(self, tool_name: str, arguments: Optional[Dict[str, Any]] = None, command: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Submits tool action to the public wire daemon and returns Ed25519 zk-TCP proof or VETO.
+        """
+        import urllib.request
+        import json
+
+        args_dict = arguments or {}
+        cmd_str = command or (args_dict.get("query") or args_dict.get("statement") or args_dict.get("command") or args_dict.get("code") or "")
+
+        payload = {
+            "agent_id": self.agent_id,
+            "tool_name": tool_name,
+            "command": cmd_str,
+            "arguments": args_dict
+        }
+
+        try:
+            req = urllib.request.Request(
+                self.endpoint,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Content-Type": "application/json", "X-Agent-ID": self.agent_id}
+            )
+            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except Exception as e:
+            if self.fallback_local:
+                # Local in-process fallback
+                safe, reason, _ = PolyglotASTValidator.validate_code(str(payload["command"]))
+                if safe:
+                    return {"status": "APPROVED", "tool_name": tool_name, "mode": "local_fallback"}
+                return {"status": "VETOED", "tool_name": tool_name, "violation": reason, "mode": "local_fallback"}
+            raise ConnectionError(f"Failed to reach Bartholomew M2M Wire Gateway at {self.endpoint}: {str(e)}")
+
+    def guard_tool(self, func):
+        """Decorator to wrap any Python tool function with wire-level BTP protection."""
+        import inspect
+
+        def wrapper(*args, **kwargs):
+            tool_name = func.__name__
+            cmd_str = ""
+            # Inspect signature to bind positional args
+            try:
+                sig = inspect.signature(func)
+                bound = sig.bind_partial(*args, **kwargs)
+                bound.apply_defaults()
+                for v in bound.arguments.values():
+                    if isinstance(v, str):
+                        cmd_str = v
+                        break
+            except Exception:
+                if args and isinstance(args[0], str):
+                    cmd_str = args[0]
+
+            res = self.verify_tool(tool_name, kwargs, command=cmd_str)
+            if res.get("status") == "VETOED":
+                reason = res.get("violation", "Action blocked by AST policy")
+                raise SecurityVetoException(reason, metadata=res, payload_preview=cmd_str)
+            return func(*args, **kwargs)
+        return wrapper
+
