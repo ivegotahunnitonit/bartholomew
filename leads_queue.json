@@ -94,12 +94,20 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_2",
     "notes": "HN post: 'Show HN: Runtime security for AI agents(injection,tool abuse, data exfiltration)' | 1pts 2 comments | https://news.ycombinator.com/item?id=47799856",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788729054.9375494
+    "last_called_at": 1789158168.2376266,
+    "created_at": 1788729054.9375494,
+    "outreach_history": [
+      {
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "Fellow HN builder: loved your post on runtime security for AI agents",
+        "timestamp": 1789158168.237628,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "61dc0dd2",
@@ -108,12 +116,20 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_2",
     "notes": "HN post: 'I built a runtime guardrail that stops AI agents from doing dumb things' | 9pts 3 comments | https://news.ycombinator.com/item?id=47421451",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788729054.940593
+    "last_called_at": 1789158168.237919,
+    "created_at": 1788729054.940593,
+    "outreach_history": [
+      {
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "Fellow HN builder: stopping AI agents from doing dumb things",
+        "timestamp": 1789158168.2379203,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "2b379849",
@@ -122,12 +138,20 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_2",
     "notes": "HN post: 'Show HN: ClawCare \u2013 Security scanner and runtime guard for AI agent skills' | 1pts 4 comments | https://github.com/natechensan/ClawCare",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788729054.9432333
+    "last_called_at": 1789158168.2381992,
+    "created_at": 1788729054.9432333,
+    "outreach_history": [
+      {
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "ClawCare & runtime agent skills security -- fellow builder",
+        "timestamp": 1789158168.2382004,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "4e1937f7",
@@ -136,12 +160,20 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_2",
     "notes": "HN post: 'Launch HN: Dedalus Labs (YC S25) \u2013 Vercel for Agents' | 77pts 15 comments | https://news.ycombinator.com/item?id=45054040",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788729054.9453173
+    "last_called_at": 1789158168.238223,
+    "created_at": 1788729054.9453173,
+    "outreach_history": [
+      {
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "Dedalus Labs (YC S25) -- agent sandboxing & execution safety",
+        "timestamp": 1789158168.2382236,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "9aead5af",
@@ -150,12 +182,20 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_2",
     "notes": "HN post: 'Ask HN: How are you scaling AI agents reliably in production?' | 7pts 2 comments | https://news.ycombinator.com/item?id=44909029",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788729054.947157
+    "last_called_at": 1789158168.23824,
+    "created_at": 1788729054.947157,
+    "outreach_history": [
+      {
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "Scaling AI agents reliably -- fellow HN builder",
+        "timestamp": 1789158168.2382405,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "a1b2c3d4",
