@@ -119,7 +119,7 @@ async def generate_gemini_conversational_reply_wav(user_speech: str, call_sid: s
 
     audio_bytes = bytearray()
     model_reply_text = ""
-    model = "gemini-2.5-flash-native-audio-latest"
+    model = os.getenv("GEMINI_LIVE_MODEL", "gemini-2.0-flash-exp")
 
     try:
         async with client.aio.live.connect(model=model, config=config) as session:

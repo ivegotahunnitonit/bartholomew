@@ -55,7 +55,7 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
         )
     )
 
-    model = "gemini-2.5-flash-native-audio-latest"
+    model = os.getenv("GEMINI_LIVE_MODEL", "gemini-2.0-flash-exp")
     stream_sid = None
 
     try:

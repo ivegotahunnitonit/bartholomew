@@ -112,3 +112,6 @@ Thumbs.db
 
 # Workspace Sandbox
 workspace/
+
+# VS Code extension binary builds
+vscode-extension/*.vsix
