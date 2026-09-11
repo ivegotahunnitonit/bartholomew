@@ -11,7 +11,8 @@
 [![Enterprise Tier](https://img.shields.io/badge/Enterprise-%24199%2Fmo-6366f1?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.4-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-750%2B%20Downloads-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Interactive Playground](https://img.shields.io/badge/Playground-Sub--35%C2%B5s%20AST-blueviolet.svg?style=for-the-badge)](https://bartholomew.info/cookbook)
 [![Tests](https://img.shields.io/badge/Tests-2%2C723%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Universal Cookbook](https://img.shields.io/badge/Cookbook-All%203%20Horizons%20%2B%20IDEs-orange.svg?style=for-the-badge)](COOKBOOK.md)
 [![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://bartholomew.info)
@@ -28,8 +29,8 @@
 
 Traditional AI guardrails operate **outside** the local runtime process—acting as conversational prompt filters or external cloud proxy LLM classifiers (80ms to 2,500ms latency). While critical for dialog safety, they are completely **blind** to what happens when an autonomous agent invokes real-world tools, dispatches SQL mutations, runs shell scripts, or interacts with the operating system.
 
-> **Bartholomew (BTP v4.1)** is the open-source **In-Process AI Agent Execution Gateway**.  
-> It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases.
+> **Bartholomew (BTP v5.4.4)** is the open-source **In-Process AI Agent Execution Gateway**.  
+> It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases. Test live in the [Interactive AST Playground](https://bartholomew.info/cookbook).
 
 ---
 
@@ -45,7 +46,7 @@ Bartholomew does not replace dialog filters or microVM sandboxes; it closes the 
                                       │
                                       ▼
 +===============================================================================+
-|  LAYER 2: BARTHOLOMEW IN-PROCESS EXECUTION GATEWAY (BTP v4.1)                 |
+|  LAYER 2: BARTHOLOMEW IN-PROCESS EXECUTION GATEWAY (BTP v5.4.4)               |
 |  - Latency: <35µs | In-Memory AST Gating, Secret Scrubbing, Loop Damping     |
 |  - Offline Ed25519 & Zero-Knowledge Invariant Compliance Proofs (zk-ICP)      |
 |  - Immutable SOC 2 Type II & ISO 27001 Merkle Audit Receipt Ledger           |
@@ -62,14 +63,14 @@ Bartholomew does not replace dialog filters or microVM sandboxes; it closes the 
 
 ### **[COMPARATIVE_MATRIX] Where Bartholomew Stands**
 
-| Security Dimension | External Prompt Rails (NeMo / Guardrails AI) | OS Sandboxes (Docker / gVisor / E2B) | Bartholomew In-Process Gateway (BTP v4.1) |
+| Security Dimension | External Prompt Rails (NeMo / Guardrails AI) | OS Sandboxes (Docker / gVisor / E2B) | Bartholomew In-Process Gateway (BTP v5.4.4) |
 | :--- | :--- | :--- | :--- |
 | **Inspection Point** | Prompt & Completion Text | OS Syscalls / Kernel Boundary | **Raw Tool Arguments & Memory Before Dispatch** |
 | **Evaluation Latency**| 80ms – 2,500ms (LLM classifier) | Microsecond Syscall Filter | **<35 Microseconds (Deterministic In-Process AST)** |
-| **Destructive Command Gating** | ❌ Blind to in-process tool args | ⚠️ Isolated inside container (still wipes data) | **🛡️ Hard-Blocks `rm -rf`, `DROP TABLE` in <35µs** |
-| **In-Flight Secret Scrubbing** | Text PII scrubbing | ❌ Blind to memory mutations | **🛡️ Scrubs API keys/JWTs across tool args & logs** |
-| **Runaway Spend & Loop Clamping**| ❌ No financial quota bounds | ❌ No semantic loop damping | **🛡️ Strict USD spend caps & LDMU retry damping** |
-| **Audit Compliance Trail** | External cloud logs | Container syslog | **🛡️ Tamper-Evident SHA-256 Merkle Receipts** |
+| **Destructive Command Gating** | [BLIND] Blind to in-process tool args | [WARNING] Isolated inside container (still wipes data) | **[BLOCK] Hard-Blocks `rm -rf`, `DROP TABLE` in <35µs** |
+| **In-Flight Secret Scrubbing** | Text PII scrubbing | [BLIND] Blind to memory mutations | **[PASS] Scrubs API keys/JWTs across tool args & logs** |
+| **Runaway Spend & Loop Clamping**| [NONE] No financial quota bounds | [NONE] No semantic loop damping | **[PASS] Strict USD spend caps & LDMU retry damping** |
+| **Audit Compliance Trail** | External cloud logs | Container syslog | **[VERIFIED] Tamper-Evident SHA-256 Merkle Receipts** |
 
 ---
 
@@ -145,7 +146,7 @@ def execute_large_trade(trade_payload: dict):
 Drop this into `.github/workflows/ci.yml` to automatically block prompt injection and unverified tool mutations on every pull request:
 ```yaml
 - name: "Bartholomew Autonomous AI Security Gate"
-  uses: ivegotahunnitonit/bartholomew@v4
+  uses: ivegotahunnitonit/bartholomew@v5.4.4
   with:
     fail-on-violation: "true"
     generate-compliance-pack: "true"
@@ -155,7 +156,7 @@ Drop this into `.github/workflows/ci.yml` to automatically block prompt injectio
 
 ### **[FRAMEWORK_ADAPTERS] Production-Ready Framework Middleware**
 
-BTP v4.1 ships identical `BTPViolationError` semantics across **all three major agentic frameworks**, providing structured diagnostics, latency tracking, and optional `on_violation` callbacks — no try/except boilerplate required.
+BTP v5.4.4 ships identical `BTPViolationError` semantics across **all major agentic frameworks**, providing structured diagnostics, latency tracking, and optional `on_violation` callbacks — no try/except boilerplate required.
 
 | Framework | Adapter Location | Decorator / Class | Protection Mechanism |
 | :--- | :--- | :--- | :--- |
@@ -163,7 +164,7 @@ BTP v4.1 ships identical `BTPViolationError` semantics across **all three major 
 | **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `LangGraphBTPGuard` | AST gating of tool args + kwargs; `BTPViolationError` with escrow slash |
 | **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds; `BTPViolationError` anti-confused deputy isolation |
 | **LlamaIndex** | [`framework_adapters/llamaindex/`](framework_adapters/llamaindex/) | `@btp_llamaindex_tool`, `BartholomewLlamaIndexTool` | Sub-35µs AST inspection blocking indirect prompt injections |
-| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v4` | Continuous PR security gate & SOC 2 audit summary table generation |
+| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v5.4.4` | Continuous PR security gate & SOC 2 audit summary table generation |
 
 #### **Common BTPViolationError API (all adapters)**
 ```python
@@ -210,16 +211,16 @@ def run_shell_command(cmd: str) -> dict:
 
 ### **[UNIVERSAL_COOKBOOK] Universal Cookbook for ALL Agents (Past, Present, & Future)**
 
-Full interactive documentation is available at **[`COOKBOOK.md`](COOKBOOK.md)** and the **[Live Interactive Web Explorer](https://acn-26670.web.app/#universal-cookbook)**.
+Full interactive documentation is available at **[`COOKBOOK.md`](COOKBOOK.md)** and the **[Live Interactive Web Explorer & Playground](https://bartholomew.info/cookbook)**.
 
 | Horizon | Recipe | Target Scenario | File Location |
 | :--- | :--- | :--- | :--- |
 | **Horizon 1** | **HTTP Sidecar Reverse Proxy** | Intercept existing legacy agent REST calls with zero code changes | [`cookbook/already_built/http_sidecar_proxy.py`](cookbook/already_built/http_sidecar_proxy.py) |
 | **Horizon 1** | **CLI Subprocess Gate** | Sandbox arbitrary agent binaries & CLI scripts at runtime | [`cookbook/already_built/cli_process_gate.py`](cookbook/already_built/cli_process_gate.py) |
-| **Horizon 2** | **OpenAI Tool-Calling Guard** | Pre-flight AST gating for raw `tools` calling loops | [`cookbook/being_built/openai_tool_calling_guard.py`](cookbook/being_built/openai_tool_calling_guard.py) |
-| **Horizon 2** | **Anthropic Computer Use Guard** | Guard Claude bash execution and OS computer actions | [`cookbook/being_built/anthropic_computer_use_guard.py`](cookbook/being_built/anthropic_computer_use_guard.py) |
-| **Horizon 2** | **Google Gemini Function Guard** | Ed25519-signed function execution receipts for Gemini | [`cookbook/being_built/gemini_function_calling_guard.py`](cookbook/being_built/gemini_function_calling_guard.py) |
-| **Horizon 2** | **TypeScript / Node.js Agent** | Native npm package integration for web agent backends | [`cookbook/being_built/typescript_node_agent.ts`](cookbook/being_built/typescript_node_agent.ts) |
+| **Horizon 2** | **OpenAI Tool-Calling Guard** | Pre-flight AST gating for raw `tools` calling loops | [`cookbook/already_built/openai_tool_calling_guard.py`](cookbook/already_built/openai_tool_calling_guard.py) |
+| **Horizon 2** | **Anthropic Computer Use Guard** | Guard Claude bash execution and OS computer actions | [`cookbook/already_built/anthropic_computer_use_guard.py`](cookbook/already_built/anthropic_computer_use_guard.py) |
+| **Horizon 2** | **Google Gemini Function Guard** | Ed25519-signed function execution receipts for Gemini | [`cookbook/already_built/gemini_function_calling_guard.py`](cookbook/already_built/gemini_function_calling_guard.py) |
+| **Horizon 2** | **TypeScript / Node.js Agent** | Native npm package integration for web agent backends | [`cookbook/already_built/typescript_node_agent.ts`](cookbook/already_built/typescript_node_agent.ts) |
 | **Horizon 2** | **Rust Sub-5µs Fast-Path** | Zero-copy SIMD invariant validation for high-frequency agents | [`cookbook/being_built/rust_fast_path_guard.rs`](cookbook/being_built/rust_fast_path_guard.rs) |
 | **Horizon 3** | **Sovereign Agent Passports** | Ed25519 digital passports & peer discovery mesh for swarms | [`cookbook/future_swarms/sovereign_agent_passport_mesh.py`](cookbook/future_swarms/sovereign_agent_passport_mesh.py) |
 | **Horizon 3** | **ZK Privacy Compliance** | Homomorphic Pedersen commitments proving compliance with 0 leaks | [`cookbook/future_swarms/zk_privacy_auditing.py`](cookbook/future_swarms/zk_privacy_auditing.py) |
