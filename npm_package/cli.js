@@ -283,6 +283,8 @@ function runActivate(key) {
 }
 
 switch (command) {
+  case 'upgrade':
+  case 'pricing':
   case 'activate':
     runActivate(args[1]);
     break;
