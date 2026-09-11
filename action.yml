@@ -1,4 +1,4 @@
-name: "Bartholomew Autonomous AI Security Gate & SOC 2 Auditor (BTP v3.0)"
+name: "Bartholomew Autonomous AI Security Gate & SOC 2 Auditor (BTP v5.4.4)"
 description: "Sub-35µs in-process AST invariant enforcement, secret scrubbing, and continuous SOC 2 / ISO 27001 Merkle proof generation for autonomous AI agents."
 author: "Bartholomew Autonomous Systems"
 
@@ -50,7 +50,7 @@ runs:
       id: run-audit
       shell: bash
       run: |
-        echo "=== Bartholomew Protocol v3.0 Security & Invariant Audit ==="
+        echo "=== Bartholomew Protocol v5.4.4 Security & Invariant Audit ==="
         python -c "
         import os, sys
         from btp_guard import Guard
@@ -63,15 +63,15 @@ runs:
         # Write clean step summary for GitHub PRs
         if [ -n "$GITHUB_STEP_SUMMARY" ]; then
           cat << 'EOF' >> "$GITHUB_STEP_SUMMARY"
-        ### 🛡️ Bartholomew Protocol (BTP v3.0) — Security & Compliance Audit
+        ### [Bartholomew Protocol v5.4.4] — Security & Compliance Audit Report
         
         | Security Control | Status | Protocol Specification |
         | :--- | :---: | :--- |
-        | **In-Process AST Command Gate** | ✅ PASSED | Intercepts destructive OS mutations (`rm -rf`, `DROP TABLE`) |
-        | **In-Flight Secret Redaction** | ✅ PASSED | Zero plain credential leaks to logging or telemetry |
-        | **LDMU Loop Entropy Damper** | ✅ PASSED | Halts recursive tool-call thrashing in <35µs |
-        | **RFC 8785 Merkle Attestation** | ✅ PASSED | Signed with Ed25519 sovereign keypair |
-        | **SOC 2 Type II Evidence Pack** | 📜 READY | Mapped to CC6.1, CC6.6, CC6.8, CC7.1, CC7.2 |
+        | **In-Process AST Command Gate** | [PASSED] | Intercepts destructive OS mutations (`rm -rf`, `DROP TABLE`) |
+        | **In-Flight Secret Redaction** | [PASSED] | Zero plain credential leaks to logging or telemetry |
+        | **LDMU Loop Entropy Damper** | [PASSED] | Halts recursive tool-call thrashing in <35µs |
+        | **RFC 8785 Merkle Attestation** | [PASSED] | Signed with Ed25519 sovereign keypair |
+        | **SOC 2 Type II Evidence Pack** | [READY] | Mapped to CC6.1, CC6.6, CC6.8, CC7.1, CC7.2 |
         
         *Deterministic Safety Verified &bull; Sub-35µs Local Latency &bull; 0 Remote Bytes Leaked*
         EOF
