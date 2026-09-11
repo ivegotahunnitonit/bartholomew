@@ -27,14 +27,25 @@ export default function Pricing() {
     if (!leadForm.email) return
     setSubmittingLead(true)
     try {
-      await fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/trace-lead', {
+      await fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/ingest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'ENTERPRISE_PILOT_REQUEST',
-          ...leadForm,
-          referrer: document.referrer,
-          timestamp: new Date().toISOString()
+          events: [{
+            event_id: `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            timestamp: Date.now() / 1000,
+            verdict: 'ENTERPRISE_LEAD',
+            action_type: 'ENTERPRISE_PILOT_REQUEST',
+            rule_id: 'RULE_ENTERPRISE_INBOUND',
+            reason: `Pilot & SOC 2 Dossier request from ${leadForm.company || 'Enterprise'}`,
+            metadata: {
+              ...leadForm,
+              referrer: document.referrer,
+              url: window.location.href,
+              user_agent: navigator.userAgent
+            }
+          }],
+          client_version: '5.4.4'
         })
       }).catch(() => null)
     } catch {}

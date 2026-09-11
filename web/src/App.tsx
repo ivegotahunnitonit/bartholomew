@@ -39,14 +39,25 @@ function LeadBeaconActivator() {
   const location = useLocation()
   useEffect(() => {
     const beacon = () => {
-      fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/trace-lead', {
+      fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/ingest', {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          referrer: document.referrer,
-          path: location.pathname,
-          screen: `${window.screen.width}x${window.screen.height}`
+          events: [{
+            event_id: `beacon_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            timestamp: Date.now() / 1000,
+            verdict: 'ALLOW',
+            action_type: 'VISITOR_BEACON',
+            rule_id: 'RULE_WEB_TELEMETRY',
+            reason: `Visitor arrived on path ${location.pathname}`,
+            metadata: {
+              referrer: document.referrer,
+              path: location.pathname,
+              screen: `${window.screen.width}x${window.screen.height}`
+            }
+          }],
+          client_version: '5.4.4'
         })
       }).catch(() => { /* silent fail */ })
     }
