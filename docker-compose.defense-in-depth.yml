@@ -1,4 +1,4 @@
-# Bartholomew BTP v3.0 Defense-in-Depth Multi-Layer Stack
+# Bartholomew BTP v5.4.4 Defense-in-Depth Multi-Layer Stack
 # Bundles Layer 2 (Bartholomew In-Process Tool Execution Gateway) with Layer 3 (gVisor / MicroVM Sandbox Isolation)
 #
 # Architecture:
@@ -42,7 +42,7 @@ services:
 
   # --- Layer 2: Bartholomew Offline Merkle Audit Ledger & Compliance Sidecar ---
   btp-compliance-sidecar:
-    image: bartholomew/btp-authority:3.0.0
+    image: ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.4
     build:
       context: .
       dockerfile: docker/Dockerfile.enclave

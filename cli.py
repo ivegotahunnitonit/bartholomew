@@ -72,6 +72,68 @@ def cmd_upgrade(args):
         pass
 
 
+def cmd_leads_list(args):
+    """Fetches and displays live inbound enterprise leads, visitor telemetry, and pilot requests."""
+    print("=" * 76)
+    print("  BTP Enterprise Visitor Intelligence & Inbound Leads")
+    print("=" * 76)
+
+    limit = getattr(args, "limit", 25) or 25
+    source = getattr(args, "source", "all") or "all"
+
+    cloud_leads = []
+    if source in ("cloud", "all"):
+        try:
+            import urllib.request
+            url = f"https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/events?limit={limit}&workspace_id=all"
+            req = urllib.request.Request(url, headers={"User-Agent": "BTP-CLI/5.4.4"})
+            with urllib.request.urlopen(req, timeout=5.0) as res:
+                if res.status == 200:
+                    data = json.loads(res.read().decode("utf-8"))
+                    cloud_leads = data.get("events", [])
+        except Exception as e:
+            print(f"[!] Warning: Unable to fetch live Cloud Run telemetry: {e}")
+
+    local_leads = []
+    if source in ("local", "all"):
+        q_path = os.path.join(os.getcwd(), "leads_queue.json")
+        if os.path.exists(q_path):
+            try:
+                with open(q_path, "r", encoding="utf-8") as f:
+                    local_leads = json.load(f)
+            except Exception:
+                pass
+
+    print(f"[+] Query complete: {len(cloud_leads)} live cloud events, {len(local_leads)} queue leads.\n")
+
+    # Render Local Inbound Pilot Submissions
+    if local_leads:
+        print("--- INBOUND PILOT & DOSSIER REQUESTS ---")
+        for i, lead in enumerate(local_leads[:10], 1):
+            name = lead.get("name") or lead.get("company", "Enterprise Lead")
+            email = lead.get("email") or "[Confidential Email]"
+            status = lead.get("status", "ACTIVE")
+            notes = lead.get("notes", "")
+            print(f"[{i:02d}] {name} <{email}> | Status: {status}")
+            if notes:
+                print(f"     Notes: {notes[:80]}")
+        print()
+
+    # Render Live Telemetry Events
+    if cloud_leads:
+        print("--- RECENT LIVE CLOUD RUN TELEMETRY ---")
+        for i, ev in enumerate(cloud_leads[:limit], 1):
+            action = ev.get("action_type", "EVENT")
+            verdict = ev.get("verdict", "ALLOW")
+            rule = ev.get("rule_id", "N/A")
+            meta = ev.get("metadata") or {}
+            company = meta.get("company") or meta.get("email") or meta.get("client") or ""
+            company_str = f" | Org: {company}" if company else ""
+            print(f"[{i:02d}] {action:<24} | {verdict:<6} | {rule:<12}{company_str}")
+    print("=" * 76)
+
+
+
 def cmd_init(args):
     print("[+] Initializing local Bartholomew sovereign trust root...")
     authority = BartholomewTrustAuthority()
@@ -2430,9 +2492,16 @@ def main():
     b_claim_p.add_argument("--voucher", "-v", required=True, help="Bridge voucher ID")
     b_claim_p.add_argument("--preimage", "-p", required=True, help="Secret preimage to unlock voucher")
 
+    # leads (BTP Inbound Enterprise Leads & Visitor Intelligence)
+    leads_p = subparsers.add_parser("leads", help="Inspect live inbound enterprise leads, visitor telemetry, and pilot requests")
+    leads_p.add_argument("--limit", "-n", type=int, default=25, help="Number of records to display (default: 25)")
+    leads_p.add_argument("--source", choices=["cloud", "local", "all"], default="all", help="Data source to query")
+
     args = parser.parse_args()
 
-    if args.command == "version":
+    if args.command == "leads":
+        cmd_leads_list(args)
+    elif args.command == "version":
         cmd_version(args)
     elif args.command == "upgrade":
         cmd_upgrade(args)
