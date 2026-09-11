@@ -7,7 +7,8 @@ import sys
 import os
 import time
 
-sys.path.insert(0, os.path.abspath("pypi_package"))
+if os.path.abspath("pypi_package") not in sys.path:
+    sys.path.append(os.path.abspath("pypi_package"))
 
 from bartholomew_eval.game_theoretic_engine import GameTheoreticStakeEngine, AgentToAgentGameSimulator
 from bartholomew_eval.agent_protocol import (

@@ -17,9 +17,10 @@ import hashlib
 from typing import Dict, Any, List, Optional, Tuple, Union
 
 try:
-    from btp_guard import Guard
+    from btp_guard import Guard, WireGuard
 except ImportError:
     Guard = None
+    WireGuard = None
 
 try:
     from src.agent_passport import SovereignAgentPassport
@@ -87,7 +88,10 @@ class UniversalBTPModelGuard:
         project_id: str = "default_project",
         environment: str = "dev",
         webhook_dispatcher: Optional[Any] = None,
+        use_wire: bool = False,
+        wire_endpoint: Optional[str] = None,
     ):
+        import os
         self.spend_cap = spend_cap
         self.strict = strict
         self.escrow_collateral_usd = escrow_collateral_usd
@@ -98,6 +102,8 @@ class UniversalBTPModelGuard:
         self.project_id = project_id.lower().strip()
         self.environment = environment.lower().strip()
         self.tenant_id = f"ten_{hashlib.sha256(f'{self.org_id}:{self.project_id}:{self.environment}'.encode()).hexdigest()[:24]}"
+        self.use_wire = use_wire or (os.getenv("BTP_USE_WIRE", "0") == "1")
+        self.wire_guard = WireGuard(endpoint=wire_endpoint) if (self.use_wire and WireGuard is not None) else None
         self._guard = Guard() if Guard is not None else None
         self._escrow_pool = AutonomousEscrowPool() if AutonomousEscrowPool is not None else None
         self._zk_engine = ZKFaultProofEngine() if ZKFaultProofEngine is not None else None
@@ -273,6 +279,13 @@ class UniversalBTPModelGuard:
                             is_safe = False
                             violation_rule = res.get("rule_id", "BTP-AST-001")
                             break
+
+        # 4. Optional Cloud Run Wire-Level Verification (BTP v5.4.6)
+        if is_safe and self.wire_guard is not None:
+            wire_res = self.wire_guard.verify_tool(tool_name, arguments)
+            if wire_res.get("status") == "VETOED":
+                is_safe = False
+                violation_rule = wire_res.get("violation", "BTP-WIRE-VETO")
 
         latency_us = (time.perf_counter_ns() - start_ns) / 1_000.0
 

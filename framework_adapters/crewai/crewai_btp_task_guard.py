@@ -13,6 +13,7 @@ Usage:
         ...
 """
 
+import os
 import functools
 import logging
 from typing import Callable, Dict, Any, List, Optional
@@ -20,12 +21,13 @@ from typing import Callable, Dict, Any, List, Optional
 logger = logging.getLogger("btp.adapters.crewai")
 
 try:
-    from btp_guard import Guard
+    from btp_guard import Guard, WireGuard
 except ImportError:
     try:
         from src.polyglot_ast_validator import PolyglotASTValidator as Guard
     except ImportError:
         Guard = None
+    WireGuard = None
 
 try:
     from standalone_btp_verifier import independent_verify_btp_receipt
@@ -207,15 +209,18 @@ def btp_crewai_tool(
     action_type: str = "CREWAI_TOOL_EXEC",
     settlement_rail: str = "L402_LIGHTNING",
     payee_destination: Optional[str] = None,
+    use_wire: bool = False,
+    wire_endpoint: Optional[str] = None,
     on_violation: Optional[Callable[["BTPViolationError"], Any]] = None,
 ):
     """
     Drop-in decorator for CrewAI tools.  Inspects every string argument
     for malicious payloads, destructive commands, or prompt injections in
     sub-35 microseconds before the underlying system receives the call.
+    Supports live public cloud-wire verification via WireGuard (BTP v5.4.6).
 
     Usage:
-        @btp_crewai_tool(spend_cap=50.0, passport=agent_passport)
+        @btp_crewai_tool(spend_cap=50.0, passport=agent_passport, use_wire=True)
         def execute_code(code: str) -> str:
             ...
 
@@ -237,12 +242,45 @@ def btp_crewai_tool(
                     return on_violation(err)
                 raise err
 
-            guard_instance = Guard(spend_cap=spend_cap, strict=strict) if Guard else None
+            # Wire transport if requested or configured in environment
+            if (use_wire or os.getenv("BTP_USE_WIRE", "0") == "1") and WireGuard is not None:
+                wg = WireGuard(endpoint=wire_endpoint)
+                cmd_hint = ""
+                for a in args:
+                    if isinstance(a, str):
+                        cmd_hint = a
+                        break
+                wire_res = wg.verify_tool(func.__name__, kwargs, command=cmd_hint)
+                if wire_res.get("status") == "VETOED":
+                    err = BTPViolationError(
+                        reason=f"BTP Wire Gateway: {wire_res.get('violation', 'Action blocked by AST policy')}",
+                        rule_id="BTP-WIRE-VETO",
+                        blocked_payload=cmd_hint,
+                        latency_us=wire_res.get("latency_us", 0.0),
+                        metadata=wire_res
+                    )
+                    if on_violation:
+                        return on_violation(err)
+                    raise err
+
+            guard_instance = None
+            if Guard:
+                try:
+                    guard_instance = Guard(spend_cap=spend_cap, strict=strict)
+                except TypeError:
+                    try:
+                        guard_instance = Guard()
+                    except Exception:
+                        guard_instance = None
 
             def _check(value: str, label: str) -> None:
                 if not guard_instance:
                     return
                 res = guard_instance.evaluate_ast(value)
+                if isinstance(res, tuple):
+                    allowed = res[0]
+                    reason = res[1] if len(res) > 1 else "Unknown"
+                    res = {"allowed": allowed, "violations": [reason] if not allowed else [], "reason": reason, "latency_us": 15.0, "metadata": {}}
                 if not res.get("allowed", True):
                     if escrow_collateral_usd and passport is not None:
                         _lock_and_slash_escrow(

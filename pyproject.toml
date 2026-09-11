@@ -51,5 +51,6 @@ include = ["src*", "btp_guard*", "daemon*", "framework_adapters*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*"]
+pythonpath = ["."]
+norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*", "pypi_package*"]
 
