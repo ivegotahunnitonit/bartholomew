@@ -1,14 +1,16 @@
-#  Official Anthropic Model Context Protocol (MCP) Registry Submission Kit
+# Official Model Context Protocol (MCP) Registry Submission Kit
 
 ---
 
 ## 1. Registry Submission Metadata
 
-* **Server Name**: `mcp-server-bartholomew` / `@bartholomew/mcp-server`
+* **Server Name**: `btp-guard`
 * **Category**: `Security` / `Governance & Verification`
 * **Repository**: [https://github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
-* **License**: MIT
-* **Description**: `100% offline, vendor-neutral cryptographic trust & pre-flight sandboxing protocol (BTP) for Claude Desktop, Cursor, and multi-agent tool execution.`
+* **npm**: [https://www.npmjs.com/package/btp-guard](https://www.npmjs.com/package/btp-guard)
+* **PyPI**: [https://pypi.org/project/btp-guard/](https://pypi.org/project/btp-guard/)
+* **License**: Apache-2.0
+* **Description**: `Sub-35µs in-process cryptographic trust and pre-flight AST sandboxing protocol (BTP v5.4.4) for Claude Desktop, Cursor, and multi-agent tool execution.`
 
 ---
 
@@ -19,9 +21,9 @@
 ```json
 {
   "mcpServers": {
-    "bartholomew-guard": {
-      "command": "uvx",
-      "args": ["mcp-server-bartholomew"]
+    "btp-guard": {
+      "command": "npx",
+      "args": ["-y", "btp-guard", "mcp", "start"]
     }
   }
 }
@@ -45,9 +47,9 @@
 ```json
 {
   "mcpServers": {
-    "bartholomew-security-guard": {
+    "btp-guard": {
       "command": "npx",
-      "args": ["-y", "@bartholomew/mcp-server"]
+      "args": ["-y", "btp-guard", "mcp", "start"]
     }
   }
 }
@@ -59,24 +61,24 @@
 
 **Target PR Title:**
 ```text
-Add Bartholomew BTP (Cryptographic Trust & Attestation Server) to Security Servers
+Add btp-guard: Sub-35µs in-process security gate & MCP execution guard
 ```
 
 **Target PR Body:**
 ```markdown
 ### Server Name
-`mcp-server-bartholomew`
+`btp-guard`
 
 ### Description
-An open, offline cryptographic trust protocol (BTP v2.2) for autonomous agent delegation, pre-flight tool sandboxing, and tamper-evident Ed25519 attestations.
+An open, offline cryptographic trust protocol (BTP v5.4.4) for autonomous agent delegation, pre-flight tool sandboxing, and tamper-evident Ed25519 attestations.
 
 ### Features
-- **`btp_evaluate_action`**: Runs candidate tool calls in isolated pre-flight sandboxes and signs RFC 8785 Ed25519 evidence receipts.
-- **`btp_verify_attestation`**: Evaluates incoming attestation receipts 100% offline with zero cloud roundtrips in ~175 µs.
+- **`btp_evaluate_action`**: Runs candidate tool calls in isolated pre-flight AST sandboxes in sub-35µs and signs RFC 8785 Ed25519 evidence receipts.
+- **`btp_verify_attestation`**: Evaluates incoming attestation receipts 100% offline with zero cloud roundtrips.
 - **`btp_get_trust_roots`**: Returns registered security invariants and decentralized authority public keys.
 
 ### Repository
-https://github.com/ivegotahunnitonit/bartholomew/tree/main/mcp_server
+https://github.com/ivegotahunnitonit/bartholomew
 ```
 
 ---

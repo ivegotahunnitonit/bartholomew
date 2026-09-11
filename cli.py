@@ -80,6 +80,52 @@ def cmd_leads_list(args):
 
     limit = getattr(args, "limit", 25) or 25
     source = getattr(args, "source", "all") or "all"
+    watch = getattr(args, "watch", False)
+    interval = getattr(args, "interval", 3.0) or 3.0
+
+    if watch:
+        print(f"[*] Starting live lead watch daemon (polling every {interval}s)...")
+        print("    Press Ctrl+C to stop.\n")
+        seen_event_ids = set()
+        try:
+            import urllib.request
+            url = "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/events?limit=25&workspace_id=all"
+            req = urllib.request.Request(url, headers={"User-Agent": "BTP-CLI/5.4.4"})
+            with urllib.request.urlopen(req, timeout=5.0) as res:
+                if res.status == 200:
+                    data = json.loads(res.read().decode("utf-8"))
+                    for ev in data.get("events", []):
+                        seen_event_ids.add(ev.get("event_id"))
+        except Exception:
+            pass
+
+        print(f"[+] Initialized stream with {len(seen_event_ids)} baseline events. Monitoring incoming traffic...")
+        try:
+            while True:
+                time.sleep(interval)
+                try:
+                    import urllib.request
+                    url = "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/events?limit=15&workspace_id=all"
+                    req = urllib.request.Request(url, headers={"User-Agent": "BTP-CLI/5.4.4"})
+                    with urllib.request.urlopen(req, timeout=5.0) as res:
+                        if res.status == 200:
+                            data = json.loads(res.read().decode("utf-8"))
+                            new_events = [e for e in data.get("events", []) if e.get("event_id") not in seen_event_ids]
+                            for ev in reversed(new_events):
+                                seen_event_ids.add(ev.get("event_id"))
+                                action = ev.get("action_type", "EVENT")
+                                verdict = ev.get("verdict", "ALLOW")
+                                rule = ev.get("rule_id", "N/A")
+                                meta = ev.get("metadata") or {}
+                                company = meta.get("company") or meta.get("email") or meta.get("client") or ""
+                                company_str = f" | Org: {company}" if company else ""
+                                ts = time.strftime("%H:%M:%S", time.localtime(ev.get("timestamp", time.time())))
+                                print(f"[{ts}] [STREAM ALERT] {action:<20} | {verdict:<6} | {rule:<12}{company_str}")
+                except Exception:
+                    pass
+        except KeyboardInterrupt:
+            print("\n[*] Lead watch daemon stopped.")
+            return
 
     cloud_leads = []
     if source in ("cloud", "all"):
@@ -2496,6 +2542,8 @@ def main():
     leads_p = subparsers.add_parser("leads", help="Inspect live inbound enterprise leads, visitor telemetry, and pilot requests")
     leads_p.add_argument("--limit", "-n", type=int, default=25, help="Number of records to display (default: 25)")
     leads_p.add_argument("--source", choices=["cloud", "local", "all"], default="all", help="Data source to query")
+    leads_p.add_argument("--watch", "-w", action="store_true", help="Continuously poll and stream incoming enterprise visitor events in real-time")
+    leads_p.add_argument("--interval", "-i", type=float, default=3.0, help="Polling interval in seconds for watch mode (default: 3.0)")
 
     args = parser.parse_args()
 
