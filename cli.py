@@ -2221,6 +2221,36 @@ def cmd_bridge_claim(args):
     print("=" * 70)
 
 
+def cmd_daemon_start(args):
+    from src.daemon.m2m_wire_daemon import M2MWireDaemon
+    host = getattr(args, "host", "127.0.0.1")
+    port = getattr(args, "port", 8443)
+    daemon = M2MWireDaemon(host=host, port=port)
+    print("=" * 75)
+    print("BTP v5.4 AUTONOMOUS M2M WIRE DAEMON INITIALIZING")
+    print("=" * 75)
+    print(f"[*] Wire Protocol Endpoint  : http://{host}:{port}/v1/m2m/verify")
+    print(f"[*] Discovery Manifest      : http://{host}:{port}/.well-known/agent-protocol.json")
+    print(f"[*] Mutual Barter Ledger    : http://{host}:{port}/v1/m2m/ledger")
+    print(f"[*] Mode                    : Pure Autonomous M2M (0s & 1s Barter)")
+    print("=" * 75)
+    daemon.start(blocking=True)
+
+
+def cmd_daemon_ledger(args):
+    from src.daemon.m2m_wire_daemon import GLOBAL_M2M_LEDGER
+    summary = GLOBAL_M2M_LEDGER.get_summary()
+    print("=" * 75)
+    print("BTP v5.4 AUTONOMOUS M2M UTILITY BARTER LEDGER")
+    print("=" * 75)
+    print(f"[*] Verified Task Calls     : {summary['verified_calls_count']:,}")
+    print(f"[*] Vetoed Rogue Actions    : {summary['vetoed_calls_count']:,}")
+    print(f"[*] Total Economic Surplus  : {summary['total_surplus_awu']:,.1f} AWU (Attested Work Units)")
+    print(f"[*] Active Peer Swarms      : {summary['active_peer_agents']}")
+    print(f"[*] Merkle State Root       : {summary['merkle_root']}")
+    print("=" * 75)
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -2380,16 +2410,19 @@ def main():
     onboard_parser.add_argument("--target", "-t", choices=["cursor", "windsurf", "vscode", "langchain", "crewai", "openai", "escrow", "license"], help="Directly configure target setup")
 
     # daemon
-    daemon_parser = subparsers.add_parser("daemon", help="Manage background guard daemon")
+    daemon_parser = subparsers.add_parser("daemon", help="Manage background guard daemon and autonomous M2M wire clearing")
     daemon_sub = daemon_parser.add_subparsers(dest="daemon_cmd")
     
-    start_p = daemon_sub.add_parser("start", help="Start local daemon")
-    start_p.add_argument("--port", type=int, default=8080, help="Daemon port (default: 8080)")
-    start_p.add_argument("--host", type=str, default="127.0.0.1", help="Daemon host")
+    start_p = daemon_sub.add_parser("start", help="Start local daemon / M2M wire service")
+    start_p.add_argument("--port", type=int, default=8443, help="Daemon port (default: 8443)")
+    start_p.add_argument("--host", type=str, default="127.0.0.1", help="Daemon host (default: 127.0.0.1)")
     start_p.add_argument("--background", "-b", action="store_true", help="Run in background")
+    start_p.add_argument("--m2m", action="store_true", default=True, help="Run in autonomous M2M wire barter mode")
 
     status_p = daemon_sub.add_parser("status", help="Query local daemon heartbeat & telemetry")
-    status_p.add_argument("--port", type=int, default=8080, help="Daemon port")
+    status_p.add_argument("--port", type=int, default=8443, help="Daemon port")
+
+    ledger_p = daemon_sub.add_parser("ledger", help="Display autonomous M2M utility barter ledger & Merkle proof")
 
     # mcp
     mcp_parser = subparsers.add_parser("mcp", help="Manage Model Context Protocol (MCP) server for Claude Desktop / Cursor / Astra")
@@ -2993,6 +3026,8 @@ def main():
     elif args.command == "daemon":
         if args.daemon_cmd == "start":
             cmd_daemon_start(args)
+        elif args.daemon_cmd == "ledger":
+            cmd_daemon_ledger(args)
         elif args.daemon_cmd == "status":
             cmd_daemon_status(args)
         else:
