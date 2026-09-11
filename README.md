@@ -2,26 +2,42 @@
 
 > **Need SOC 2 Type II Audit Trails & Multi-Agent Fleet Management?** [Try Bartholomew Cloud &rarr; https://bartholomew.info/cloud](https://bartholomew.info/cloud) (Pro: $49/mo &bull; Enterprise Fleet: $199/mo &bull; Centralized Fleet Control Plane).
 
-# **Bartholomew AI &bull; BTP v5.4 Standards Track**
-### **The AI Agent Execution Gateway &bull; Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; SOC 2 Type II Merkle Receipts**
+# **Bartholomew AI &bull; BTP v5.4.5 Standards Track**
+### **The Sovereign Sentinel Companion & AI Agent Execution Gateway**
+#### **Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; Multi-Model Defense &bull; SOC 2 Type II Merkle Receipts**
 
 <div align="center">
 
+[![PyPI version](https://img.shields.io/badge/PyPI-v5.4.5-blue?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/5.4.5/)
+[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-orange?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/posts/bartholomew)
+[![Frontier Benchmark](https://img.shields.io/badge/Benchmark-29.44%C2%B5s%20Avg-10b981?style=for-the-badge)](BENCHMARK_FRONTIER_MODELS.md)
 [![Pro Tier](https://img.shields.io/badge/Bartholomew%20Pro-%2449%2Fmo-10b981?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
 [![Enterprise Tier](https://img.shields.io/badge/Enterprise-%24199%2Fmo-6366f1?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
-[![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
-[![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-750%2B%20Downloads-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
-[![Interactive Playground](https://img.shields.io/badge/Playground-Sub--35%C2%B5s%20AST-blueviolet.svg?style=for-the-badge)](https://bartholomew.info/cookbook)
-[![Tests](https://img.shields.io/badge/Tests-2%2C723%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
-[![Universal Cookbook](https://img.shields.io/badge/Cookbook-All%203%20Horizons%20%2B%20IDEs-orange.svg?style=for-the-badge)](COOKBOOK.md)
+[![Tests](https://img.shields.io/badge/Tests-All%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Universal Cookbook](https://img.shields.io/badge/Cookbooks-Gemini%20%7C%20Claude%20%7C%20OpenAI-orange.svg?style=for-the-badge)](cookbook/)
 [![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://bartholomew.info)
-[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v5.4.4-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
-[![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
-[![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
-[![SOC 2 Type II](https://img.shields.io/badge/SOC%202%20Type%20II-CC7.1%20%2F%20CC7.2%20Ready-success.svg?style=for-the-badge)](scripts/generate_soc2_compliance_evidence.py)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v5.4.5-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
 
 </div>
+
+---
+
+### **[SENTINEL_COMPANION] Meet Bartholomew**
+
+Bartholomew is not an opaque barrier or cold `HTTP 403` error. He is your agent swarm's **steadfast digital steward, calm elder guardian, and protective companion**.
+
+When your agents dream boldly and build fast, Bartholomew stands watch between ambitious AI models and the real world (filesystems, databases, and credit cards). When an LLM hallucinates an accidental database wipe, unconstrained file deletion, or runaway token spend loop, Bartholomew holds the line in microsecond time (<35µs) and offers empathetic, constructive counsel so your startup stays safe and you can sleep soundly.
+
+```bash
+# 5-Second Interactive Sentinel Test Drive:
+pip install --upgrade btp-guard
+
+# Run a simulated runaway SQL drop:
+python -m cli companion --simulate drop
+
+# Or converse directly with Bartholomew in real time:
+python -m cli companion
+```
 
 ---
 
@@ -29,8 +45,8 @@
 
 Traditional AI guardrails operate **outside** the local runtime process—acting as conversational prompt filters or external cloud proxy LLM classifiers (80ms to 2,500ms latency). While critical for dialog safety, they are completely **blind** to what happens when an autonomous agent invokes real-world tools, dispatches SQL mutations, runs shell scripts, or interacts with the operating system.
 
-> **Bartholomew (BTP v5.4.4)** is the open-source **In-Process AI Agent Execution Gateway**.  
-> It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** before actions are dispatched to operating systems, cloud APIs, or production databases. Test live in the [Interactive AST Playground](https://bartholomew.info/cookbook).
+> **Bartholomew (BTP v5.4.5)** is the open-source **In-Process AI Agent Execution Gateway**.  
+> It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** (29.44µs average) before actions are dispatched to operating systems, cloud APIs, or production databases. Test live in the [Interactive AST Playground](https://bartholomew.info/cookbook).
 
 ---
 
@@ -96,7 +112,23 @@ print(result["allowed"]) # False
 print(result["reason"])  # "[BTP-VETO] Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
-#### **2. CrewAI, LangGraph, AutoGen & LlamaIndex**
+#### **2. Frontier AI Models (Gemini 3.8, Claude 3.7, GPT-Astra, DeepSeek-R1)**
+Universal wire protection separating reasoning scratchpads from external tool dispatches:
+- **Google Gemini 3.8**: Multimodal thought parts isolation & function declaration gating &mdash; see [Gemini 3.8 Quickstart](cookbook/gemini_38_quickstart.md)
+- **Anthropic Claude 3.7**: Hybrid reasoning `<thinking>` scratchpad protection &mdash; see [Claude 3.7 Quickstart](cookbook/claude_37_thinking_guard.md)
+- **OpenAI GPT-Astra & Agents SDK**: Multi-agent tool execution seam defense &mdash; see [GPT-Astra Quickstart](cookbook/gpt_astra_agents_sdk.md)
+
+```python
+from framework_adapters.universal import UniversalBTPModelGuard, ModelProvider
+
+guard = UniversalBTPModelGuard(strict=False)
+
+# Intercept and verify tool calls from any frontier model wire in <35us
+result = guard.intercept_and_verify(raw_tool_call, provider=ModelProvider.GEMINI_3_8)
+print(result["status"], result["latency_us"])
+```
+
+#### **3. Multi-Agent Frameworks (CrewAI, LangGraph, AutoGen, LlamaIndex)**
 Protect agent tool swarms against accidental drops, runaway spend loops, and shell escapes:
 - **CrewAI**: `from framework_adapters.crewai import btp_crewai_tool` &mdash; see [CrewAI Quickstart](cookbook/crewai_quickstart.md)
 - **LangGraph**: `from framework_adapters.langgraph import btp_langchain_tool` &mdash; see [LangGraph Quickstart](cookbook/langgraph_quickstart.md)
