@@ -239,3 +239,20 @@ class PeerReputationMesh:
                     self.trust_matrix[u][target_agent_id] *= (1.0 - penalty_ratio)
             self.compute_eigentrust()
             self._save()
+
+    def sync_to_m2m_wire(self, agent_id: str, work_units: float = 1.0, task_type: str = "peer_audit") -> Dict[str, Any]:
+        """Credits bilateral barter work units (AWU) on the public Cloud Run M2M gateway."""
+        import urllib.request
+        gateway = os.getenv("BTP_WIRE_GATEWAY", "https://bartolomew-cloud-engine-322603900775.us-central1.run.app")
+        url = f"{gateway}/api/v1/m2m/barter"
+        payload = {"agent_id": agent_id, "task_type": task_type, "work_units": work_units}
+        try:
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Content-Type": "application/json", "User-Agent": "BTP-Gossip-Mesh/5.4.6"}
+            )
+            with urllib.request.urlopen(req, timeout=4.0) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except Exception as e:
+            return {"status": "OFFLINE_LOCAL", "note": str(e)}

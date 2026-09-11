@@ -1,0 +1,45 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema.json",
+  "name": "bartholomew-sentinel",
+  "displayName": "Bartholomew Protocol Execution Sentinel",
+  "description": "Sub-35us AST execution firewall, zero-trust gating, and cryptographic proof verification for AI agents and swarms.",
+  "version": "5.4.6",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew.git"
+  },
+  "homepage": "https://acn-26670.web.app",
+  "discovery": {
+    "manifestUrl": "https://acn-26670.web.app/.well-known/mcp.json",
+    "protocol": "BTP/5.4"
+  },
+  "transports": {
+    "http": {
+      "url": "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/verify",
+      "method": "POST"
+    },
+    "stdio": {
+      "command": "python",
+      "args": ["-m", "mcp_server.server"]
+    }
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "verify_execution",
+        "description": "Validates code, SQL, and bash operations against zero-trust AST security policies before execution",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "tool_name": { "type": "string" },
+            "command": { "type": "string" },
+            "arguments": { "type": "object" }
+          },
+          "required": ["tool_name"]
+        }
+      }
+    ]
+  },
+  "categories": ["security", "governance", "verification", "developer-tools"]
+}

@@ -8,28 +8,33 @@
 * **Category**: `Security` / `Governance & Verification`
 * **Repository**: [https://github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
 * **npm**: [https://www.npmjs.com/package/btp-guard](https://www.npmjs.com/package/btp-guard)
-* **PyPI**: [https://pypi.org/project/btp-guard/](https://pypi.org/project/btp-guard/)
+* **PyPI**: [https://pypi.org/project/btp-guard/5.4.6/](https://pypi.org/project/btp-guard/5.4.6/)
+* **Live Discovery**: [https://acn-26670.web.app/.well-known/mcp.json](https://acn-26670.web.app/.well-known/mcp.json)
 * **License**: Apache-2.0
-* **Description**: `Sub-35µs in-process cryptographic trust and pre-flight AST sandboxing protocol (BTP v5.4.4) for Claude Desktop, Cursor, and multi-agent tool execution.`
+* **Description**: `Sub-35µs in-process cryptographic trust and pre-flight AST sandboxing protocol (BTP v5.4.6) for Claude Desktop, Cursor, and multi-agent tool execution.`
 
 ---
 
 ## 2. One-Click Setup Configurations
 
-### A. Claude Desktop Configuration (`claude_desktop_config.json`)
+### A. Zero-Install Remote HTTP (Claude Desktop, Cursor, Windsurf, Zed)
 
 ```json
 {
   "mcpServers": {
-    "btp-guard": {
-      "command": "npx",
-      "args": ["-y", "btp-guard", "mcp", "start"]
+    "bartholomew-sentinel": {
+      "url": "https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/verify",
+      "type": "http"
     }
   }
 }
 ```
 
-*Or via local Python:*
+### B. Local Stdio via PyPI / Python
+
+```bash
+pip install btp-guard==5.4.6
+```
 
 ```json
 {
@@ -42,17 +47,11 @@
 }
 ```
 
-### B. Cursor IDE (`.cursor/mcp.json`)
+### C. Smithery CLI (1-Click Auto-Install)
 
-```json
-{
-  "mcpServers": {
-    "btp-guard": {
-      "command": "npx",
-      "args": ["-y", "btp-guard", "mcp", "start"]
-    }
-  }
-}
+```bash
+npx -y @smithery/cli install @ivegotahunnitonit/bartholomew --client claude
+npx -y @smithery/cli install @ivegotahunnitonit/bartholomew --client cursor
 ```
 
 ---
