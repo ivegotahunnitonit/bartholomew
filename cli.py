@@ -83,6 +83,16 @@ def cmd_models(args):
         print(f"[-] Error loading model matrix: {e}")
 
 
+def cmd_companion(args):
+    """Launches interactive session with Bartholomew Sentinel Companion."""
+    from src.bartholomew_companion import BartholomewCompanion
+    simulate = getattr(args, "simulate", None)
+    BartholomewCompanion.run_companion_session(
+        simulate_scenario=simulate,
+        interactive=not getattr(args, "non_interactive", False)
+    )
+
+
 def cmd_upgrade(args):
     import webbrowser
     tier = getattr(args, "tier", "pro") or "pro"
@@ -2739,10 +2749,17 @@ def main():
     # models (Frontier Model Protection Matrix)
     subparsers.add_parser("models", help="List protected frontier models (GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1)")
 
+    # companion (Interactive Sentinel Companion Session)
+    comp_p = subparsers.add_parser("companion", help="Interactive terminal session conversing with Bartholomew Sentinel Companion")
+    comp_p.add_argument("--simulate", "-s", choices=["drop", "delete", "secret", "loop"], help="Simulate a specific frontier threat scenario")
+    comp_p.add_argument("--non-interactive", action="store_true", help="Run in non-interactive verification mode")
+
     args = parser.parse_args()
 
     if args.command in ("whoami", "bartholomew"):
         cmd_whoami(args)
+    elif args.command == "companion":
+        cmd_companion(args)
     elif args.command == "models":
         cmd_models(args)
     elif args.command == "leads":

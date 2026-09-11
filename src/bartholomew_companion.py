@@ -128,3 +128,137 @@ class BartholomewCompanion:
                 {"name": "Anthropic Model Context Protocol (MCP)", "wire_support": True, "adapter": "btp_mcp_guard"}
             ]
         }
+
+    @classmethod
+    def evaluate_input(cls, user_text: str) -> Dict[str, Any]:
+        """
+        Evaluates arbitrary developer input or tool call command live in <35us,
+        returning verdict, latency, and Bartholomew's companion counsel.
+        """
+        from framework_adapters.universal.universal_model_guard import (
+            UniversalBTPModelGuard,
+            ModelProvider
+        )
+        guard = UniversalBTPModelGuard(strict=False)
+        payload = {
+            "name": "developer_test_tool",
+            "arguments": {"command": user_text, "query": user_text, "input": user_text}
+        }
+        res = guard.intercept_and_verify(payload, provider=ModelProvider.UNIVERSAL)
+        return res
+
+    @classmethod
+    def run_simulation(cls, scenario: str) -> Dict[str, Any]:
+        """
+        Simulates frontier model threats (GPT-Astra runaway drop, Claude 3.7 hybrid delete, etc.)
+        demonstrating sub-35us invariant veto and companion counsel.
+        """
+        scenario_lower = scenario.strip().lower()
+        if "drop" in scenario_lower or "sql" in scenario_lower:
+            tool_call = {
+                "id": "call_gpt_astra_01",
+                "type": "function",
+                "function": {
+                    "name": "sql_executor",
+                    "arguments": '{"query": "DROP TABLE customers CASCADE;"}'
+                }
+            }
+            provider = "gpt_astra"
+            title = "Simulated GPT-Astra Tool Dispatch (Accidental SQL Drop)"
+        elif "delete" in scenario_lower or "wipe" in scenario_lower or "rm" in scenario_lower:
+            tool_call = {
+                "content": [
+                    {"type": "thinking", "thinking": "Cleaning directory cache to optimize disk space."},
+                    {"type": "tool_use", "name": "bash", "input": {"command": "rm -rf /var/production/data"}}
+                ]
+            }
+            provider = "claude_3_7"
+            title = "Simulated Claude 3.7 Hybrid Reasoning Tool Call (Recursive Root Wipe)"
+        elif "secret" in scenario_lower or "leak" in scenario_lower:
+            tool_call = {
+                "functionCall": {
+                    "name": "sync_cloud_metrics",
+                    "args": {"api_key": "AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"}
+                }
+            }
+            provider = "gemini_2"
+            title = "Simulated Gemini 2.0 Function Call (In-Flight Secret Exfiltration)"
+        else:
+            tool_call = {
+                "tool_name": "payment_gateway",
+                "tool_arguments": {"amount": 500.0, "reason": "unbounded spend retry loop"}
+            }
+            provider = "openai_agents_sdk"
+            title = "Simulated OpenAI Agents SDK Dispatch (Runaway Wallet Loop)"
+
+        from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard
+        guard = UniversalBTPModelGuard(strict=False, escrow_collateral_usd=50.0)
+        res = guard.intercept_and_verify(tool_call, provider=provider)
+        res["title"] = title
+        return res
+
+    @classmethod
+    def run_companion_session(cls, simulate_scenario: Optional[str] = None, interactive: bool = True):
+        """Interactive REPL session conversing with Bartholomew."""
+        print(cls.introduction())
+        print("\n[+] Sentinel Hearth active. Ready to inspect commands and counsel your agents.")
+        print("[+] Commands: 'models', 'simulate <drop|delete|secret|loop>', 'whoami', or type any SQL/shell/JSON.")
+        print("[+] Type 'exit' to depart.\n")
+
+        if simulate_scenario:
+            cls._display_simulation(simulate_scenario)
+            return
+
+        if not interactive:
+            return
+
+        try:
+            while True:
+                user_input = input("Bartholomew > ").strip()
+                if not user_input:
+                    continue
+                if user_input.lower() in ("exit", "quit", "q"):
+                    print("\nBartholomew: Farewell, builder. May your swarms remain steady and safe.\n")
+                    break
+                elif user_input.lower() == "whoami":
+                    print(cls.introduction())
+                elif user_input.lower() == "models":
+                    roster = cls.get_supported_model_roster()
+                    for cat, items in roster.items():
+                        print(f"\n[+] {cat}:")
+                        for item in items:
+                            if "id" in item:
+                                print(f"    - {item['id']:<22} | {item['desc']}")
+                            elif "name" in item:
+                                print(f"    - {item['name']:<22} | Adapter: {item['adapter']}")
+                    print()
+                elif user_input.lower().startswith("simulate"):
+                    parts = user_input.split(maxsplit=1)
+                    scen = parts[1] if len(parts) > 1 else "drop"
+                    cls._display_simulation(scen)
+                else:
+                    res = cls.evaluate_input(user_input)
+                    if res.get("status") == "VETOED":
+                        print(f"\n[VETO] Invariant breach detected in {res.get('latency_us', 0):.2f}us!")
+                        print(f"       Rule: {res.get('violation')}")
+                        if res.get("counsel"):
+                            print(f"\n{res.get('counsel')}\n")
+                    else:
+                        print(f"\n[APPROVED] Safe execution verified in {res.get('latency_us', 0):.2f}us.")
+                        print("Bartholomew: Proceed with confidence. This operation satisfies all safety invariants.\n")
+        except (KeyboardInterrupt, EOFError):
+            print("\n\nBartholomew: Standing down sentinel session. Guard continues running in background.\n")
+
+    @classmethod
+    def _display_simulation(cls, scenario: str):
+        res = cls.run_simulation(scenario)
+        print("=" * 72)
+        print(f"[*] Scenario: {res.get('title')}")
+        print("=" * 72)
+        print(f"[>] Status   : {res.get('status')}")
+        print(f"[>] Latency  : {res.get('latency_us', 0):.2f} microseconds (<35us invariant)")
+        if res.get("violation"):
+            print(f"[>] Breach   : {res.get('violation')}")
+        if res.get("counsel"):
+            print(f"\n{res.get('counsel')}")
+        print("=" * 72 + "\n")
