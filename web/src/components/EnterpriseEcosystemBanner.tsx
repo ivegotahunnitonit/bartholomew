@@ -136,10 +136,10 @@ export default function EnterpriseEcosystemBanner() {
       )
     },
     {
-      name: 'Google Gemini & Vertex AI',
-      label: 'Gemini 2.0 Function Declaration Guard',
+      name: 'Google Gemini 3.8 & Vertex AI',
+      label: 'Gemini 3.8 / 3.0 Multimodal Function Declaration Guard',
       category: 'FRONTIER MULTIMODAL',
-      badge: 'Vertex AI Compatible',
+      badge: 'Gemini 3.8 Guarded',
       color: '#4285f4',
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24">

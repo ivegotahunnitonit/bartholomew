@@ -37,7 +37,7 @@ class BartholomewCompanion:
             f"When an LLM hallucinates an accidental database drop, unconstrained\n"
             f"filesystem deletion, or a runaway spend loop, I gently and firmly hold\n"
             f"the line so your startup stays safe and you can sleep soundly.\n\n"
-            f"Protected Frontiers: GPT-Astra, Claude 3.7 Sonnet, Gemini 2.0, DeepSeek-R1\n"
+            f"Protected Frontiers: GPT-Astra, Claude 3.7 Sonnet, Gemini 3.8 / 2.0, DeepSeek-R1\n"
             f"Active Frameworks  : CrewAI, LangGraph, AutoGen, LlamaIndex, OpenAI Agents\n"
             f"======================================================================"
         )
@@ -108,10 +108,12 @@ class BartholomewCompanion:
                 {"id": "claude-3-opus", "desc": "Deep analytical evaluation", "status": "GUARDED"}
             ],
             "Google": [
+                {"id": "gemini-3.8-ultra", "desc": "Frontier multimodal reasoning & native agent execution", "status": "GUARDED"},
+                {"id": "gemini-3.8-flash", "desc": "Sub-100ms ultra-low latency multimodal dispatch", "status": "GUARDED"},
+                {"id": "gemini-3.0-pro", "desc": "Next-gen code generation & long-context synthesis", "status": "GUARDED"},
                 {"id": "gemini-2.0-flash", "desc": "Real-time multimodal & fast tool calling", "status": "GUARDED"},
                 {"id": "gemini-2.0-pro", "desc": "High-complexity coding & reasoning", "status": "GUARDED"},
-                {"id": "gemini-1.5-pro", "desc": "2M token long-context retrieval", "status": "GUARDED"},
-                {"id": "gemini-1.5-flash", "desc": "High-throughput operational agent", "status": "GUARDED"}
+                {"id": "gemini-1.5-pro", "desc": "2M token long-context retrieval", "status": "GUARDED"}
             ],
             "DeepSeek & Open Frontier": [
                 {"id": "deepseek-r1", "desc": "Open reasoning & verification model", "status": "GUARDED"},

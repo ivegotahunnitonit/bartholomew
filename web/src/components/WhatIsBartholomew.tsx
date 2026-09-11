@@ -90,7 +90,7 @@ export default function WhatIsBartholomew() {
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: '#94a3b8' }}>
                 Bartholomew is not a cold wall or robotic error. He stands watch with microsecond grace (&lt;35us)
-                between ambitious models (GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1) and your production assets,
+                between ambitious models (GPT-Astra, Claude 3.7, Gemini 3.8 / 2.0, DeepSeek-R1) and your production assets,
                 offering calm, constructive counsel whenever safety boundaries are approached.
               </p>
             </div>

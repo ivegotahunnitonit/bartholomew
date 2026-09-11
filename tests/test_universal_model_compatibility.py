@@ -173,6 +173,22 @@ def test_google_gemini_function_call_compatibility():
     assert res["status"] == "APPROVED"
     assert res["tool_name"] == "generate_report"
 
+    # Gemini 3.8 / 3.0 multimodal candidate format with thought part + functionCall part
+    gemini_38_payload = {
+        "parts": [
+            {"thought": "Evaluating analytics query before dispatching to the safe reporting tool."},
+            {
+                "functionCall": {
+                    "name": "generate_report",
+                    "args": {"period": "2026-Q4", "format": "CSV"}
+                }
+            }
+        ]
+    }
+    res_38 = guard.intercept_and_verify(gemini_38_payload, provider=ModelProvider.GEMINI_3_8)
+    assert res_38["status"] == "APPROVED"
+    assert res_38["tool_name"] == "generate_report"
+
     # Gemini destructive call
     gemini_bad_call = {
         "functionCall": {

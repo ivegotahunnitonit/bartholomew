@@ -56,6 +56,8 @@ class ModelProvider:
     CLAUDE_3_7 = "claude_3_7"
     GEMINI = "gemini"
     GEMINI_2 = "gemini_2"
+    GEMINI_3 = "gemini_3"
+    GEMINI_3_8 = "gemini_3_8"
     DEEPSEEK = "deepseek"
     DEEPSEEK_R1 = "deepseek_r1"
     KIMI = "kimi"
@@ -135,7 +137,17 @@ class UniversalBTPModelGuard:
             args = raw_input if isinstance(raw_input, dict) else {"payload": str(raw_input)}
             return tool_name, args
 
-        # 3. Google Gemini 2.0 / 1.5 FunctionCall: {"functionCall": {"name": "...", "args": {...}}}
+        # 3. Google Gemini 3.8 / 3.0 / 2.0 / 1.5 FunctionCall & Thought Part Structure:
+        # e.g., {"candidates": [{"content": {"parts": [{"thought": "..."}, {"functionCall": {"name": "...", "args": {...}}}]}}]}
+        if "parts" in data and isinstance(data["parts"], list):
+            for part in data["parts"]:
+                if isinstance(part, dict) and ("functionCall" in part or "function_call" in part):
+                    fc = part.get("functionCall") or part.get("function_call") or {}
+                    tool_name = fc.get("name", "")
+                    raw_args = fc.get("args") or fc.get("arguments") or {}
+                    args = raw_args if isinstance(raw_args, dict) else {"payload": str(raw_args)}
+                    return tool_name, args
+
         if "functionCall" in data or "function_call" in data:
             fc = data.get("functionCall") or data.get("function_call") or {}
             tool_name = fc.get("name", "")
