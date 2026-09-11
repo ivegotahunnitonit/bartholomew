@@ -96,11 +96,12 @@ print(result["allowed"]) # False
 print(result["reason"])  # "[BTP-VETO] Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
-#### **2. CrewAI, LangGraph & Multi-Agent Frameworks**
+#### **2. CrewAI, LangGraph, AutoGen & LlamaIndex**
 Protect agent tool swarms against accidental drops, runaway spend loops, and shell escapes:
 - **CrewAI**: `from framework_adapters.crewai import btp_crewai_tool` &mdash; see [CrewAI Quickstart](cookbook/crewai_quickstart.md)
 - **LangGraph**: `from framework_adapters.langgraph import btp_langchain_tool` &mdash; see [LangGraph Quickstart](cookbook/langgraph_quickstart.md)
 - **Microsoft AutoGen**: `from framework_adapters.autogen import btp_autogen_guard` &mdash; see [AutoGen Quickstart](cookbook/autogen_quickstart.md)
+- **LlamaIndex**: `from framework_adapters.llamaindex import btp_llamaindex_tool` &mdash; see [LlamaIndex Quickstart](cookbook/llamaindex_quickstart.md)
 
 ```python
 from framework_adapters.crewai import btp_crewai_tool
