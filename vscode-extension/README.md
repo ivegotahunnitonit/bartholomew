@@ -13,7 +13,7 @@ Sub-25µs in-process tool execution gateway, AST policy dry-run linter, and offl
 | :--- | :--- | :--- | :--- |
 | **Community** | Local in-process AST gating, offline Merkle receipts, CLI support | **Free** | Installed |
 | **Pro Plan** | Real-time Cloud Telemetry, Webhooks (Slack/Discord/PagerDuty), Visual Policy Editor | **$49/mo** | [Upgrade to Pro](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600) |
-| **Enterprise** | Auditor-signed SOC 2 Type II / EU AI Act dossiers, multi-tenant isolation, SLA | **$2,500/mo** | [Get Enterprise](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601) |
+| **Enterprise** | Auditor-signed SOC 2 Type II / EU AI Act dossiers, multi-tenant isolation, SLA | **$199/mo** | [Get Enterprise](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601) |
 
 ---
 

@@ -103,10 +103,10 @@ export function activate(context: ExtensionContext) {
   const generateComplianceEvidenceCmd = vscode.commands.registerCommand('bartholomew.generateComplianceEvidence', () => {
     vscode.window.showInformationMessage(
       'BTP Compliance (Community Edition): Generated local Merkle evidence. Need auditor-signed SOC 2 Type II or EU AI Act certificates?',
-      'Upgrade to Enterprise',
+      'Upgrade to Enterprise ($199/mo)',
       'Open Dossier'
     ).then((selection: any) => {
-      if (selection === 'Upgrade to Enterprise') {
+      if (selection === 'Upgrade to Enterprise ($199/mo)') {
         vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601'));
       }
     });
