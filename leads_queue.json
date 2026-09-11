@@ -6,12 +6,20 @@
     "phone": "+14155552671",
     "email": null,
     "role": "Head of AI Platform",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_1",
     "notes": "Deploys multi-agent CrewAI clusters with code execution tools.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788696910.6006384
+    "last_called_at": 1789157898.384459,
+    "created_at": 1788696910.6006384,
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "AI code execution safeguards for Synthetix AI",
+        "timestamp": 1789157898.3844602,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "46a509ad",
@@ -20,12 +28,20 @@
     "phone": "+12065558914",
     "email": null,
     "role": "Lead ML Infrastructure Engineer",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_1",
     "notes": "Scaling LangGraph pipelines for enterprise financial clients.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788696910.6006534
+    "last_called_at": 1789157898.3844912,
+    "created_at": 1788696910.6006534,
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "Preventing AI agent accidents at VectorFlow Dynamics",
+        "timestamp": 1789157898.3844924,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "132f5d0f",
@@ -34,12 +50,20 @@
     "phone": "+16505553190",
     "email": null,
     "role": "CTO",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_1",
     "notes": "Building autonomous database query agents with Postgres & BigQuery.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788696910.6006596
+    "last_called_at": 1789157898.3845103,
+    "created_at": 1788696910.6006596,
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "Quick question on AI database safety at HyperScale Agents",
+        "timestamp": 1789157898.3845136,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "d29494a6",
@@ -48,12 +72,20 @@
     "phone": "+13125557732",
     "email": null,
     "role": "VP of Engineering",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_1",
     "notes": "Needs SOC 2 Type II audit compliance for LLM tool executions.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788696910.6006641
+    "last_called_at": 1789157898.3845317,
+    "created_at": 1788696910.6006641,
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "Preventing AI agent accidents at Cognitive Corp",
+        "timestamp": 1789157898.384532,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "385d7775",
@@ -132,12 +164,20 @@
     "phone": "+14155554921",
     "email": "liam@nexusauto.io",
     "role": "Lead AI Architect",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_1",
     "notes": "Deploying autonomous AutoGen code migration agents; worried about filesystem escape and unconstrained bash execution.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268323
+    "last_called_at": 1789157898.3845458,
+    "created_at": 1788973667.8268323,
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "AI code execution safeguards for Nexus Automation",
+        "timestamp": 1789157898.384546,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "e5f6a7b8",

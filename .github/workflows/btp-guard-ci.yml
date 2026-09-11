@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Run Bartholomew Guard Action"
-        uses: ivegotahunnitonit/bartholomew@v3
+        uses: ivegotahunnitonit/bartholomew@v5.4.4
         with:
           audit-path: "."
           generate-compliance-pack: "true"
