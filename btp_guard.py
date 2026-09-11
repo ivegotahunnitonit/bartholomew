@@ -36,7 +36,7 @@ from src.cloud_identity import CloudKMSProvider, LocalEd25519Provider, OIDCPolic
 from src.usage_tracker import load_license, save_license, record_evaluation, STRIPE_PRO_URL, STRIPE_ENTERPRISE_URL
 from src.agent_passport import SovereignAgentPassport, AgentPeerDiscoveryRegistry
 
-__version__ = "3.1.0"
+__version__ = "5.4.0"
 __all__ = [
     "Guard",
     "wrap_client",

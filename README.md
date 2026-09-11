@@ -1,6 +1,8 @@
 <div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; line-height: 1.6;">
 
-# **Bartholomew AI &bull; BTP v4.1 Standards Track**
+> 🔒 **Need SOC 2 Type II Audit Trails & Multi-Agent Fleet Management?** [Try Bartholomew Cloud &rarr; https://bartholomew.info/cloud](https://bartholomew.info/cloud) (Pro: $49/mo &bull; Enterprise Fleet: $199/mo &bull; Centralized Fleet Control Plane).
+
+# **Bartholomew AI &bull; BTP v5.4 Standards Track**
 ### **The AI Agent Execution Gateway &bull; Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; SOC 2 Type II Merkle Receipts**
 
 <div align="center">

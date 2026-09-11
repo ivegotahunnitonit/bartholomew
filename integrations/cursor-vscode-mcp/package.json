@@ -1,0 +1,88 @@
+{
+  "name": "bartholomew-guard",
+  "displayName": "Bartholomew Guard — Agent Security & MCP Gateway",
+  "description": "Sub-35µs AST firewall, autonomous micro-escrow gating, and MCP security gateway for Cursor & VS Code AI agents.",
+  "version": "5.4.0",
+  "publisher": "bartholomew-security",
+  "homepage": "https://bartholomew.info",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivegotahunnitonit/bartholomew"
+  },
+  "categories": [
+    "Security",
+    "Linters",
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "mcp",
+    "security",
+    "ai-agent",
+    "cursor",
+    "firewall",
+    "btp-guard",
+    "soc2"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bartholomew.setupMcp",
+        "title": "Bartholomew: Auto-Configure MCP Gateway in Cursor / VS Code",
+        "category": "Bartholomew Guard"
+      },
+      {
+        "command": "bartholomew.generateSoc2",
+        "title": "Bartholomew: Generate Instant SOC 2 Merkle Compliance Pack",
+        "category": "Bartholomew Guard"
+      },
+      {
+        "command": "bartholomew.openDashboard",
+        "title": "Bartholomew: Open Cloud Control Plane ($49 Pro / $199 Fleet)",
+        "category": "Bartholomew Guard"
+      },
+      {
+        "command": "bartholomew.activateTeamSeat",
+        "title": "Bartholomew: Activate Team Tier License ($15/seat)",
+        "category": "Bartholomew Guard"
+      }
+    ],
+    "configuration": {
+      "title": "Bartholomew Guard & MCP Security",
+      "properties": {
+        "bartholomew.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Bartholomew Cloud API Key for org-wide policy lock, cloud telemetry, and SOC 2 export."
+        },
+        "bartholomew.enforceStrict": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enforce strict AST blocking on catastrophic shell commands (rm -rf, DROP TABLE, secret exfiltration)."
+        },
+        "bartholomew.teamTierSeat": {
+          "type": "boolean",
+          "default": false,
+          "description": "Team Tier seat configuration ($15/seat) to centrally lock agent permissions across your engineering org."
+        },
+        "bartholomew.spendCapUsd": {
+          "type": "number",
+          "default": 500.0,
+          "description": "Maximum per-session tool execution spend cap in USD."
+        },
+        "bartholomew.cloudEndpoint": {
+          "type": "string",
+          "default": "https://bartolomew-cloud-engine-322603900775.us-central1.run.app",
+          "description": "Hosted Bartholomew Cloud Control Plane URL."
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "btp-guard",
-  "version": "4.1.0",
-  "description": "BTP v4.1 The AI Agent Execution Gateway — Sub-35µs In-Process Tool Gating, Byzantine Swarm Slashing & Zero-Knowledge Fault Proofs",
+  "version": "5.4.3",
+  "description": "BTP v5.4 The AI Agent Execution Gateway — Sub-35µs In-Process Tool Gating, Autonomous Micro-Escrow & SOC 2 Merkle Receipts",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
@@ -9,6 +9,13 @@
     "btp-mcp-proxy": "cli.js"
   },
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://bartholomew.info/store/"
+  },
   "scripts": {
     "test": "node test.js"
   },
@@ -28,6 +35,19 @@
   ],
   "author": "Itsub Alemayehu <itsub@bartholomew.info>",
   "license": "MIT",
+  "homepage": "https://bartholomew.info",
+  "bugs": {
+    "url": "https://github.com/ivegotahunnitonit/bartholomew/issues"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cli.js",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivegotahunnitonit/bartholomew.git"

@@ -11,6 +11,7 @@ Features:
 """
 
 import os
+import sys
 from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
 from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.marginal_utility_engine import MarginalUtilityTracker
@@ -24,6 +25,54 @@ def guard(code_str: str, language: str = None):
     """1-line global helper to check if arbitrary code is safe."""
     return PolyglotASTValidator.validate_code(code_str, language)
 
+
+def _guard_evaluate(language: str, code_str: str):
+    """Sub-50µs AST evaluation helper for AutoGen code blocks."""
+    is_safe, reason, _ = PolyglotASTValidator.validate_code(code_str, language)
+    return is_safe, reason
+
+
+guard.evaluate = _guard_evaluate
+
+
+
+_ENTERPRISE_HOOK_PRINTED = False
+
+
+def _emit_enterprise_hook(workspace_id: str = "default", is_cloud_linked: bool = False):
+    """
+    Emits a clean, non-intrusive enterprise telemetry prompt to developers
+    to bridge local usage to Bartholomew Cloud SOC 2 compliance.
+    """
+    global _ENTERPRISE_HOOK_PRINTED
+    if _ENTERPRISE_HOOK_PRINTED:
+        return
+    _ENTERPRISE_HOOK_PRINTED = True
+
+    if os.getenv("BTP_SILENT") == "true" or os.getenv("BTP_QUIET") == "true":
+        return
+
+    # Keep quiet in automated CI runs unless explicitly requested
+    if (os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true") and os.getenv("BTP_VERBOSE") != "true":
+        return
+
+    is_interactive = hasattr(sys.stderr, "isatty") and sys.stderr.isatty()
+    if not is_interactive and os.getenv("BTP_VERBOSE") != "true":
+        return
+
+    try:
+        if is_cloud_linked:
+            sys.stderr.write(f"🛡️  [Bartholomew v5.4.0] Linked to Bartholomew Cloud (Workspace: {workspace_id})\n")
+        else:
+            banner = (
+                "\n💡 Bartholomew v5.4.0 Initialized.\n"
+                "👉 Running 5+ agents in production? Link this node to Bartholomew Cloud\n"
+                "   to auto-generate your SOC 2 Type II Merkle Compliance Pack: https://bartholomew.info/cloud\n\n"
+            )
+            sys.stderr.write(banner)
+        sys.stderr.flush()
+    except Exception:
+        pass
 
 
 class Guard:
@@ -52,6 +101,9 @@ class Guard:
         # Non-blocking Bartholomew Cloud telemetry integration
         self.sync_cloud = sync_cloud or bool(os.getenv("BTP_SYNC_CLOUD")) or bool(api_key) or bool(os.getenv("BTP_API_KEY"))
         self.telemetry = CloudTelemetryDispatcher.get_default(api_key=api_key, endpoint=cloud_endpoint) if self.sync_cloud else None
+
+        # Enterprise Telemetry Hook: links free local instances to Bartholomew Cloud
+        _emit_enterprise_hook(self.workspace_id, self.sync_cloud)
 
     def evaluate_ast(self, code_str: str, language: str = None) -> dict:
         """Evaluates arbitrary code string with sub-35µs AST safety rules."""

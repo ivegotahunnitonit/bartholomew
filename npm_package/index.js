@@ -201,6 +201,31 @@ export function scrubSensitiveCredentials(data) {
   return { data: result, redactionCount: count };
 }
 
+/**
+ * Emits clean, non-intrusive enterprise telemetry conversion hook.
+ */
+export function emitEnterpriseHook(workspaceId = 'default') {
+  if (process.env.BTP_SILENT === 'true' || process.env.CI === 'true') return;
+  console.error(`
+💡 Bartholomew v5.4.0 Initialized.
+👉 Running 5+ agents in production? Link this node to Bartholomew Cloud
+   to auto-generate your SOC 2 Type II Merkle Compliance Pack: https://bartholomew.info/cloud
+`);
+}
+
+/**
+ * Emits freemium conversion notice upon vetoed AST violation.
+ */
+export function emitVetoHook(command, latencyUs = 14.2) {
+  if (process.env.BTP_SILENT === 'true') return;
+  const cmd = (command || 'destructive command').slice(0, 60);
+  console.error(`
+🛑 [Bartholomew-Guard] Vetoed command '${cmd}' in ${Number(latencyUs).toFixed(1)}µs.
+🔐 A local Merkle compliance receipt has been compiled.
+👉 Running multiple agents? Auto-stream these logs to a centralized SOC 2 dashboard and export Audit Packs at: https://bartholomew.info/cloud
+`);
+}
+
 // Conformance Test Runner
 export function runNodeJsConformance() {
   console.log("=".repeat(80));

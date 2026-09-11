@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Terminal, Shield, Play, Cpu, Activity, Sparkles, Copy, Check, RotateCcw, Key, Database, RefreshCw } from 'lucide-react'
+import { Terminal, Shield, Play, Cpu, Activity, Sparkles, Copy, Check, RotateCcw, Key, Database, RefreshCw, Lock, ExternalLink } from 'lucide-react'
 
 interface SimulationPreset {
   id: string
@@ -693,6 +693,49 @@ export default function InteractiveAgentSandbox() {
                       {copied ? <Check size={12} /> : <Copy size={12} />}
                       <span>{copied ? 'COPIED' : 'COPY PROOF'}</span>
                     </button>
+                  </div>
+
+                  {/* Locked Enterprise Analytics Blurred Preview Pane */}
+                  <div className="mt-4 pt-4 border-t border-[#27272a]/80 relative overflow-hidden rounded-xl bg-[#09090d]/90 p-4">
+                    {/* Blurred content simulation */}
+                    <div className="filter blur-[3px] select-none opacity-40 pointer-events-none space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-mono text-[#a1a1aa]">FLEET NODES: 24 ACTIVE</span>
+                        <span className="font-mono text-[#10b981]">SIEM STREAM: SPLUNK / DATADOG</span>
+                      </div>
+                      <div className="h-10 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded border border-white/5 flex items-center justify-around font-mono text-[10px] text-zinc-400">
+                        <span>NODE-01: 99.98% SAFE</span>
+                        <span>NODE-02: 100% SAFE</span>
+                        <span>MERKLE ROOT: 0x8a9f...41e</span>
+                        <span>SOC 2 AUDIT: READY</span>
+                      </div>
+                    </div>
+
+                    {/* Overlay CTA */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 backdrop-blur-[2px] p-3 text-center">
+                      <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 mb-1">
+                        <Lock size={13} />
+                        <span>ENTERPRISE FLEET ANALYTICS &amp; SOC 2 EXPORT</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-300 max-w-sm mb-2.5">
+                        Centralize real-time telemetry across all developer agents, unlock SIEM streaming, and auto-generate compliance evidence packs.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href="https://bartholomew.info/store/"
+                          className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold text-xs rounded-lg transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] inline-flex items-center gap-1.5"
+                        >
+                          <span>Activate Subscription ($49 Pro / $199 Fleet)</span>
+                          <ExternalLink size={12} />
+                        </a>
+                        <a
+                          href="/cloud"
+                          className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-xs rounded-lg border border-zinc-700 transition-all"
+                        >
+                          Live Cloud
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

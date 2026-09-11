@@ -1,9 +1,9 @@
 """
-CrewAI BTP v4.1 Task & Tool Execution Guard
+CrewAI BTP v5.4 Task & Tool Execution Guard
 ============================================
-Provides pre-flight in-process AST gating, secret scrubbing, Sovereign Passport
-verification, and multi-tenant authorization protection for CrewAI
-agent swarms.
+Provides pre-flight in-process AST gating, runtime execution dispatch-seam defense,
+secret scrubbing, Sovereign Passport verification, and multi-tenant authorization
+protection for CrewAI agent swarms.
 
 Usage:
     from framework_adapters.crewai import btp_crewai_tool, CrewAIBTPTaskGuard, BTPViolationError
@@ -88,12 +88,12 @@ class BTPViolationError(PermissionError):
         }
 
     def __str__(self) -> str:
+        cmd_preview = self.blocked_payload[:60] if self.blocked_payload else "destructive operation"
         return (
-            f"[BTP-VETO] CrewAI Tool Execution Blocked!\n"
-            f"  - Rule ID:   {self.rule_id}\n"
-            f"  - Reason:    {self.reason}\n"
-            f"  - Latency:   {self.latency_us:.1f} µs\n"
-            f"  - Payload:   {self.blocked_payload[:80] + ('...' if len(self.blocked_payload) > 80 else '')}"
+            f"[BTP-VETO] CrewAI Tool Execution Blocked by {self.rule_id}: {self.reason}\n"
+            f"🛑 [Bartholomew-Guard] Vetoed command '{cmd_preview}' in {self.latency_us:.1f}µs.\n"
+            f"🔐 A local Merkle compliance receipt has been compiled.\n"
+            f"👉 Running multiple agents? Auto-stream these logs to a centralized SOC 2 dashboard and export Audit Packs at: https://bartholomew.info/cloud\n"
         )
 
 

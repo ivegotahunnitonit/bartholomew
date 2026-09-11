@@ -251,3 +251,6 @@ class PolyglotASTValidator:
         if re.search(r">\s*/dev/sd[a-z]", code_str):
             return False, "BTP-AST-006: Direct raw disk block write detected", {}
         return True, "Shell syntax verified safe", {}
+
+    # Backwards-compatible aliases
+    evaluate_ast = validate_code

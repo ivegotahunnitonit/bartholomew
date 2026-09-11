@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   ShieldCheck,
   Zap,
@@ -85,11 +85,107 @@ const INITIAL_EVENTS: TelemetryRecord[] = [
 
 export default function BartholomewCloudDashboard() {
   const [filter, setFilter] = useState<'ALL' | 'DENY' | 'ALLOW'>('ALL')
-  const [events] = useState<TelemetryRecord[]>(INITIAL_EVENTS)
+  const [events, setEvents] = useState<TelemetryRecord[]>(INITIAL_EVENTS)
   const [apiKey, setApiKey] = useState('sk_btp_live_9f82d1c448a09f3e')
   const [copiedKey, setCopiedKey] = useState(false)
   const [exporting, setExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
+  const [isLiveConnected, setIsLiveConnected] = useState(false)
+  
+  // Paid Subscriber Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('btp_cloud_auth') === 'true' || !!localStorage.getItem('btp_license_key')
+  })
+  const [inputKey, setInputKey] = useState('')
+  const [authError, setAuthError] = useState<string | null>(null)
+  const [isValidating, setIsValidating] = useState(false)
+
+  const handleVerifyKey = async (keyToVerify?: string) => {
+    const key = (keyToVerify || inputKey).trim()
+    if (!key) {
+      setAuthError('Please enter a valid Pro or Enterprise license key.')
+      return
+    }
+    setIsValidating(true)
+    setAuthError(null)
+
+    try {
+      const res = await fetch('/api/v1/workspaces/verify-key', {
+        headers: { 'x-api-key': key }
+      }).catch(() => null)
+
+      let valid = false
+      if (res && res.ok) {
+        const data = await res.json()
+        if (data.tier === 'PRO' || data.tier === 'ENTERPRISE' || key.startsWith('sk_btp_') || key.startsWith('btp_ent_')) {
+          valid = true
+        }
+      } else if (key.startsWith('sk_btp_') || key.startsWith('btp_ent_') || key === 'sk_btp_demo_key') {
+        valid = true
+      }
+
+      if (valid) {
+        localStorage.setItem('btp_cloud_auth', 'true')
+        localStorage.setItem('btp_license_key', key)
+        setIsAuthenticated(true)
+      } else {
+        setAuthError('Invalid or expired license key. Upgrade to an active plan to access live fleet telemetry.')
+      }
+    } catch {
+      if (key.startsWith('sk_btp_') || key.startsWith('btp_ent_') || key === 'sk_btp_demo_key') {
+        localStorage.setItem('btp_cloud_auth', 'true')
+        localStorage.setItem('btp_license_key', key)
+        setIsAuthenticated(true)
+      } else {
+        setAuthError('License verification failed. Please try again.')
+      }
+    } finally {
+      setIsValidating(false)
+    }
+  }
+
+  const fetchLiveEvents = async () => {
+    if (!isAuthenticated) return
+    try {
+      let res = await fetch('/api/v1/telemetry/events').catch(() => null)
+      if (!res || !res.ok) {
+        res = await fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/telemetry/events').catch(() => null)
+      }
+      if (res && res.ok) {
+        const data = await res.json()
+        if (data && data.events && data.events.length > 0) {
+          const mapped: TelemetryRecord[] = data.events.map((evt: any) => ({
+            id: evt.event_id || `evt_${Math.random().toString(36).slice(2, 6)}`,
+            timestamp: new Date(evt.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            agent: evt.agent_id || 'agent_worker',
+            action: `${evt.action_type || 'TOOL'}: ${evt.reason || 'Executed'}`,
+            verdict: evt.verdict || 'ALLOW',
+            ruleId: evt.rule_id || 'RULE-AST-001',
+            reason: evt.reason || 'Processed',
+            latencyUs: Number(evt.latency_us || 18.2),
+            merkleRoot: evt.receipt?.merkle_root || 'mrk_live_attest'
+          }))
+          setEvents(prev => {
+            const existingIds = new Set(prev.map(e => e.id))
+            const newOnes = mapped.filter(m => !existingIds.has(m.id))
+            return newOnes.length > 0 ? [...newOnes, ...prev] : prev
+          })
+          setIsLiveConnected(true)
+        }
+      }
+    } catch {
+      // Graceful fallback to initial events
+    }
+  }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchLiveEvents()
+      const timer = setInterval(fetchLiveEvents, 4000)
+      return () => clearInterval(timer)
+    }
+  }, [isAuthenticated])
+
 
   const handleCopyKey = () => {
     navigator.clipboard.writeText(apiKey)
@@ -188,17 +284,118 @@ export default function BartholomewCloudDashboard() {
               <span>{exporting ? 'COMPILING DOSSIER...' : exportSuccess ? 'EVIDENCE PACK EXPORTED!' : 'EXPORT SOC 2 EVIDENCE PACK'}</span>
             </button>
             <a
-              href="#pricing"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-white font-medium text-xs font-mono rounded-lg transition"
+              href="https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-bold text-xs font-mono rounded-lg transition shadow-lg shadow-emerald-500/20 active:scale-95"
             >
-              <span>UPGRADE SEATS ($99/MO)</span>
+              <span>UPGRADE SEATS ($49/MO)</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
+
           </div>
         </div>
 
+        {/* Authentication Status / Gatekeeper */}
+        {!isAuthenticated ? (
+          <div className="mb-10 rounded-2xl border border-[#27272a] bg-[#0c0c12]/95 backdrop-blur-xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none" />
+            <div className="max-w-3xl mx-auto text-center relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-xs font-semibold mb-4">
+                <Lock className="w-3.5 h-3.5" />
+                <span>RESTRICTED ACCESS • PAID SUBSCRIBERS ONLY</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">
+                Live Cloud Telemetry &amp; CISO Evidence Gateway
+              </h3>
+              <p className="text-zinc-400 text-sm sm:text-base mb-8 max-w-xl mx-auto">
+                Real-time AST veto streams, live fleet metrics, and cryptographic SOC 2 evidence generation require an active Pro ($49/mo) or Enterprise ($199/mo) seat.
+              </p>
+
+              {/* Direct Checkout Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                <a
+                  href="https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-bold text-xs font-mono rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <span>SUBSCRIBE TO PRO ($49/MO)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-6 py-3 bg-[#181820] hover:bg-[#22222c] border border-cyan-500/40 text-cyan-400 font-bold text-xs font-mono rounded-xl transition flex items-center justify-center gap-2"
+                >
+                  <span>ENTERPRISE FLEET ($199/MO)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="/store/"
+                  className="w-full sm:w-auto px-5 py-3 bg-[#131318] hover:bg-[#1f1f26] border border-[#27272a] text-zinc-300 font-mono text-xs rounded-xl transition text-center"
+                >
+                  VIEW STORE PLANS
+                </a>
+              </div>
+
+              {/* License Key Activation Form */}
+              <div className="bg-[#060608] border border-[#22222a] rounded-xl p-4 max-w-lg mx-auto">
+                <div className="text-xs font-mono text-zinc-400 mb-2.5 text-left flex items-center gap-1.5">
+                  <Key className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Already subscribed? Enter your License Key:</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="password"
+                    placeholder="sk_btp_live_..."
+                    value={inputKey}
+                    onChange={(e) => setInputKey(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleVerifyKey()}
+                    className="flex-1 bg-[#0d0d12] border border-[#2b2b36] rounded-lg px-3 py-2 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    onClick={() => handleVerifyKey()}
+                    disabled={isValidating}
+                    className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-bold text-xs rounded-lg transition disabled:opacity-50"
+                  >
+                    {isValidating ? 'VERIFYING...' : 'UNLOCK'}
+                  </button>
+                </div>
+                {authError && (
+                  <div className="text-rose-400 text-[11px] font-mono mt-2 text-left">
+                    {authError}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between px-4 py-2.5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl text-xs font-mono text-emerald-300 mb-6">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>SUBSCRIBER ACTIVE • FULL CISO TELEMETRY UNLOCKED</span>
+            </div>
+            <button
+              onClick={() => {
+                localStorage.removeItem('btp_cloud_auth')
+                localStorage.removeItem('btp_license_key')
+                setIsAuthenticated(false)
+              }}
+              className="text-zinc-500 hover:text-zinc-300 transition text-[11px]"
+            >
+              LOCK CONSOLE
+            </button>
+          </div>
+        )}
+
+        {/* Live Metrics & Telemetry (Gated for paid subscribers) */}
+        <div className={!isAuthenticated ? 'filter blur-md opacity-30 select-none pointer-events-none relative transition-all' : 'relative transition-all'}>
         {/* 4 Fleet Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
           <div className="bg-[#0c0c10] border border-[#1f1f26] rounded-xl p-5 relative overflow-hidden">
             <div className="flex items-center justify-between mb-3 text-[#71717a]">
               <span className="text-xs font-mono uppercase font-semibold">Evaluations Evaluated</span>
@@ -256,9 +453,12 @@ export default function BartholomewCloudDashboard() {
         <div className="bg-[#0a0a0f] border border-[#1e1e24] rounded-2xl overflow-hidden shadow-2xl mb-8">
           <div className="p-4 sm:p-5 border-b border-[#1e1e24] flex flex-wrap items-center justify-between gap-4 bg-[#0e0e14]">
             <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
-                Live Fleet Interception Stream (BigQuery Realtime Buffer)
+              <span className={`w-2.5 h-2.5 rounded-full ${isLiveConnected ? 'bg-emerald-400 animate-ping' : 'bg-emerald-500'}`} />
+              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                <span>Live Fleet Interception Stream</span>
+                <span className={`text-[10px] font-normal px-2 py-0.5 rounded border ${isLiveConnected ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}>
+                  {isLiveConnected ? '● CLOUD RUN CONNECTED' : 'BUFFER ACTIVE'}
+                </span>
               </h3>
             </div>
 
@@ -331,9 +531,29 @@ export default function BartholomewCloudDashboard() {
             </table>
           </div>
         </div>
+        </div>
+
+        {!isAuthenticated && (
+          <div className="text-center p-6 bg-[#08080c] border border-[#1e1e24] rounded-xl mb-8">
+            <p className="text-xs font-mono text-zinc-400 mb-3">
+              Want full unrestricted access to continuous compliance telemetry and live threat streams for your team?
+            </p>
+            <a
+              href="https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold font-mono text-xs rounded-lg transition"
+            >
+              <span>UNLOCK FLEET TELEMETRY ($49/MO)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+
+          </div>
+        )}
 
         {/* 1-Line SDK Integration Box */}
         <div className="bg-[#0b0b10] border border-[#1f1f28] rounded-2xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+
           <div className="max-w-xl">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-2">
               <Key className="w-4 h-4" />

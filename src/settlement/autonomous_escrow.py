@@ -14,6 +14,7 @@ Provides trustless cryptographic micro-escrows and automated warranty indemnific
 
 from __future__ import annotations
 
+import os
 import dataclasses
 import hashlib
 import json
@@ -75,10 +76,16 @@ class AutonomousEscrowPool:
         max_escrow_per_action_usd: float = 10_000.0,
         l402_engine: Optional[L402ProtocolEngine] = None,
         evm_gateway: Optional[EVMEscrowGateway] = None,
-        webhook_dispatcher: Optional[Any] = None
+        webhook_dispatcher: Optional[Any] = None,
+        api_key: Optional[str] = None,
+        cloud_clearinghouse: bool = False,
+        cloud_endpoint: Optional[str] = None
     ):
         self.reserve_pool_usd = reserve_pool_usd
         self.max_escrow_per_action_usd = max_escrow_per_action_usd
+        self.api_key = api_key or os.getenv("BTP_API_KEY")
+        self.cloud_clearinghouse = cloud_clearinghouse or bool(self.api_key) or (os.getenv("BTP_CLOUD_CLEARINGHOUSE") == "true")
+        self.cloud_endpoint = cloud_endpoint or os.getenv("BTP_CLOUD_ENDPOINT", "https://bartolomew-cloud-engine-322603900775.us-central1.run.app")
         self.warranty_engine = BondedExecutionWarranty(
             reserve_pool_usd=reserve_pool_usd,
             max_bond_per_action_usd=max_escrow_per_action_usd
@@ -106,6 +113,26 @@ class AutonomousEscrowPool:
 
         if amount_usd > self.reserve_pool_usd:
             raise ValueError("Insufficient liquidity in escrow reserve pool")
+
+        # Hosted Clearinghouse Gate check
+        if self.cloud_clearinghouse and not self.api_key:
+            raise PermissionError(
+                "[Bartholomew Clearinghouse Gate] Autonomous micro-escrow collateral liquidation requires an active Bartholomew Cloud API key. "
+                "Obtain your API key at https://bartholomew.info/cloud (or set BTP_API_KEY)."
+            )
+
+        if not self.api_key and not getattr(self, "_clearinghouse_notice_shown", False):
+            self._clearinghouse_notice_shown = True
+            if os.getenv("BTP_SILENT") != "true" and os.getenv("CI") != "true":
+                import sys
+                try:
+                    sys.stderr.write(
+                        "\n💡 [BTP Micro-Escrow] Running in local simulation mode.\n"
+                        "👉 Link to Bartholomew Cloud for live clearinghouse & multi-tenant attestation: https://bartholomew.info/cloud\n\n"
+                    )
+                    sys.stderr.flush()
+                except Exception:
+                    pass
 
         # Verify passport if supplied
         passport_id = None

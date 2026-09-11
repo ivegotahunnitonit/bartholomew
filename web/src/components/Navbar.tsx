@@ -26,45 +26,35 @@ export default function Navbar() {
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#10b981]/40 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo & Box Status Tag */}
+        {/* Brand Logo */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center no-underline" aria-label="Bartholomew Home">
             <Logo size={28} showText={true} />
           </Link>
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-mono text-emerald-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>v5.4.0 ACTIVE</span>
-          </div>
         </div>
 
         {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-5 text-xs font-mono font-semibold text-[#a1a1aa]">
-          <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-mono font-semibold text-[#a1a1aa]">
+          <a href="/#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>[QUICKSTART]</span>
           </a>
-          <a href="#threat-model" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+          <a href="/#threat-model" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [THREAT MODEL]
           </a>
-          <a href="#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+          <a href="/#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [SWARM ARENA]
           </a>
-          <a href="#cloud-control-plane" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
+          <Link to="/cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [COOKBOOK]
+          </Link>
+          <Link to="/compliance" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
+            [COMPLIANCE]
+          </Link>
+          <Link to="/cloud" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <span>[CLOUD SAAS]</span>
-          </a>
-          <a href="#universal-cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [COOKBOOK]
-          </a>
-          <a href="#compliance-timeline" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [COMPLIANCE]
-          </a>
-          <a href="#pricing" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [PRICING]
-          </a>
-          <a href="#founder" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [ROADMAP]
-          </a>
+          </Link>
         </nav>
 
         {/* Action Buttons */}
@@ -139,55 +129,47 @@ export default function Navbar() {
             <span className="text-[#a1a1aa]">{BTP_ENGINE_LABEL}</span>
           </div>
           <a
-            href="#quickstart"
+            href="/#quickstart"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-emerald-400 hover:text-emerald-300"
           >
             [10-SECOND QUICKSTART]
           </a>
           <a
-            href="#threat-model"
+            href="/#threat-model"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
             [THREAT MODEL &amp; FAQ]
           </a>
           <a
-            href="#swarm-arena"
+            href="/#swarm-arena"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
-            [SWARM ARENA &amp; ARBITRATION]
+            [SWARM ARENA]
           </a>
-          <a
-            href="#universal-cookbook"
+          <Link
+            to="/cookbook"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
             [UNIVERSAL COOKBOOK]
-          </a>
-          <a
-            href="#compliance-timeline"
+          </Link>
+          <Link
+            to="/compliance"
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
             [COMPLIANCE TIMELINE]
-          </a>
-          <a
-            href="#founder"
+          </Link>
+          <Link
+            to="/cloud"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-mono text-cyan-400 hover:text-cyan-300"
           >
-            [FOUNDER ROADMAP]
-          </a>
-          <a
-            href="/store/"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-sm font-mono text-[#38bdf8] hover:text-[#ffffff] transition"
-          >
-            <ShoppingBag size={14} />
-            <span>[STORE &amp; LICENSES]</span>
-          </a>
+            [CLOUD SAAS CONSOLE]
+          </Link>
           <div className="pt-3 border-t border-[#222222] flex flex-col gap-2.5">
             <a
               href="#download"

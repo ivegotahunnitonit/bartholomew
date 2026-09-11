@@ -35,10 +35,27 @@ def _get_authority():
             _GLOBAL_AUTHORITY = None
     return _GLOBAL_AUTHORITY
 
+def _safe_console_text(text: str) -> str:
+    """Ensures text doesn't crash non-UTF8 Windows terminals."""
+    import sys
+    try:
+        enc = getattr(sys.stderr, "encoding", None) or "utf-8"
+        text.encode(enc)
+        return text
+    except Exception:
+        return text.replace("🛑", "[BLOCKED]").replace("🔐", "[MERKLE]").replace("👉", "->").replace("µs", "us")
+
 class SecurityVetoException(Exception):
     """Raised when Bartholomew intercepts a dangerous tool call."""
-    def __init__(self, reason: str, metadata: dict):
-        super().__init__(f"[BARTHOLOMEW SECURITY VETO] {reason}")
+    def __init__(self, reason: str, metadata: dict, payload_preview: str = "", latency_us: float = 14.2):
+        cmd_preview = payload_preview[:60] if payload_preview else "destructive operation"
+        msg = _safe_console_text(
+            f"[BARTHOLOMEW SECURITY VETO] {reason}\n"
+            f"🛑 [Bartholomew-Guard] Vetoed command '{cmd_preview}' in {latency_us:.1f}µs.\n"
+            f"🔐 A local Merkle compliance receipt has been compiled.\n"
+            f"👉 Running multiple agents? Auto-stream these logs to a centralized SOC 2 dashboard and export Audit Packs at: https://bartholomew.info/cloud\n"
+        )
+        super().__init__(msg)
         self.reason = reason
         self.metadata = metadata
 
@@ -82,9 +99,13 @@ def secure_tool(
                         )
 
                     if strict_mode:
-                        raise SecurityVetoException(reason, meta)
+                        raise SecurityVetoException(reason, meta, payload_preview=candidate, latency_us=latency_us)
                     else:
-                        print(f"⚠️ [BARTHOLOMEW VETO] Blocked tool execution for '{target_fn.__name__}': {reason}")
+                        print(
+                            f"\n🛑 [Bartholomew-Guard] Vetoed command '{candidate[:60]}' in {latency_us:.1f}µs.\n"
+                            f"🔐 A local Merkle compliance receipt has been compiled.\n"
+                            f"👉 Running multiple agents? Auto-stream these logs to a centralized SOC 2 dashboard and export Audit Packs at: https://bartholomew.info/cloud\n"
+                        )
                         return f"TOOL_EXECUTION_BLOCKED: {reason}"
 
             # 3. Execute original function if 100% compliant
@@ -96,3 +117,16 @@ def secure_tool(
     if func is not None:
         return decorator(func)
     return decorator
+
+
+def _evaluate_code(language: str, code: str):
+    """
+    Sub-50µs AST evaluation helper for AutoGen, CrewAI, and custom code executors.
+    Returns: (is_safe: bool, reason: str)
+    """
+    file_hint = f"code.{language}" if language else None
+    is_safe, reason, _ = PolyglotASTValidator.evaluate_ast(code, file_hint=file_hint)
+    return is_safe, reason
+
+
+secure_tool.evaluate = _evaluate_code

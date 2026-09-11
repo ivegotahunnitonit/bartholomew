@@ -236,6 +236,39 @@ export default function Hero() {
           </a>
         </div>
 
+        {/* The 3 Core Answers Every Engineering Lead Asks */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-10 max-w-3xl mx-auto text-left">
+          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-emerald-500/40 transition">
+            <div className="text-[11px] font-mono text-emerald-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
+              <span>⏱️ Integration Time</span>
+            </div>
+            <div className="text-white font-bold text-sm mb-0.5">10 Seconds (1 Line)</div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Add <code className="text-emerald-300">@secure_tool</code> above your tool function. Zero proxy configs or cloud rewrites.
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-cyan-500/40 transition">
+            <div className="text-[11px] font-mono text-cyan-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
+              <span>⚡ Latency Added</span>
+            </div>
+            <div className="text-white font-bold text-sm mb-0.5">&lt; 15 Microseconds</div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Evaluates AST in 0.015ms. 10,000x faster than cloud filters with 100% deterministic command blocking.
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-purple-500/40 transition">
+            <div className="text-[11px] font-mono text-purple-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🧩 Framework Support</span>
+            </div>
+            <div className="text-white font-bold text-sm mb-0.5">CrewAI &bull; AutoGen &bull; LangGraph</div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Tested drop-in support for CrewAI, LangChain, AutoGen, and Cursor/Claude MCP.
+            </p>
+          </div>
+        </div>
+
         {/* Trust & Performance Metrics Bar */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-[#71717a] mb-10 pb-2">
           <span className="flex items-center gap-1.5 text-emerald-400">

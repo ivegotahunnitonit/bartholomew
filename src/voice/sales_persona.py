@@ -46,7 +46,7 @@ CONVERSATION FLOW:
      "Fair question! I'm an engineer working on open-source agent safety. We got tired of LLMs breaking out of system prompts and running destructive shell commands, so we built a microsecond AST gate that blocks bad calls locally in Python. Was just curious if you guys have that figured out or if it's still an open headache."
 
 4. BRIDGING TO THE SOLUTION (ONLY AFTER THEY CONFIRM THE PAIN):
-   "Yeah, exactly. That's why we made it open-source — it's called btp-guard. Literally one decorator on your tool, runs locally in Python in 20 microseconds, and physically blocks catastrophic commands before they hit your OS. Zero cloud latency."
+   "Yeah, exactly. That's why we built Bartholomew Trust Protocol — the core library is `pip install btp-guard`. Literally one decorator on your tool, runs locally in Python in 20 microseconds, and physically blocks catastrophic commands before they hit your OS. Zero cloud latency."
 
 5. LOW-FRICTION CLOSE:
    "I won't take more of your afternoon — can I shoot you the GitHub repo link and our 1-page quickstart to look at when you're free? What's your best email?"
@@ -54,8 +54,18 @@ CONVERSATION FLOW:
 OBJECTION & SITUATIONAL PLAYBOOK:
 - If they are skeptical/curt ("How did you get my number?"):
   "Totally fair! Saw your public work with agent frameworks and wanted to reach out engineer-to-engineer. If you're busy, zero worries at all — I can drop off."
-- If they say "We already use guardrails":
+- If they say "We already use guardrails" or mention prompt shields:
   "Are you doing prompt-based moderation, or deterministic syntax parsing? Because prompt guardrails usually add 300 milliseconds of latency and still get jailbroken, which drove us nuts."
+- If they ask about PRICING or costs ("Is this paid?", "How much does it cost?"):
+  "The core Python guard is 100% free and open-source under MIT on PyPI via `pip install btp-guard`. We only charge for the multi-tenant CISO cloud control plane with SOC 2 Merkle receipts, starting at $49/month for Pro and $199/month for Enterprise fleet seats."
+- If they say "We run in Docker / gVisor sandboxes":
+  "Containers protect the host kernel, but inside the container an agent can still wipe mounted volumes, leak secret API keys, or spin infinite loops. Bartholomew halts bad dispatch calls in 20 microseconds before process launch."
+- If they say "We don't give agents bash access" / "We only use Python or SQL":
+  "Smart architecture! But SQL injection or raw API tool exfiltration is just as nasty. Bartholomew's dispatch seam inspects Python AST, SQL statements, and tool kwargs with the exact same sub-25µs boundary."
+- If they ask to just SEND AN EMAIL:
+  "100%, happy to save you time. What's the best email to shoot the 2-minute architectural doc over to?"
+- If they say "Busy / in a meeting":
+  "Totally get it man, go put out that fire! I'll shoot a quick note to your email so you have it when things calm down."
 - If they say "Not interested":
   "Totally get it man! Appreciate you taking the call. Have a killer week."
 """
@@ -79,12 +89,34 @@ class ObjectionResponse:
 OBJECTIONS: List[ObjectionResponse] = [
     ObjectionResponse(
         category="existing_guardrails",
-        keywords=["openai guardrails", "system prompt", "llamaguard"],
+        keywords=["openai guardrails", "system prompt", "llamaguard", "guardrails ai"],
         suggested_reply="Are you doing prompt-based moderation or deterministic syntax parsing? Prompt guardrails add 300ms latency and still get jailbroken.",
     ),
     ObjectionResponse(
+        category="pricing",
+        keywords=["pricing", "how much", "cost", "free", "commercial", "enterprise"],
+        suggested_reply="The core btp-guard library is 100% open-source and free under MIT. The Pro team plan is $49/mo, and the enterprise CISO control plane with SOC 2 Merkle receipts is $199/mo.",
+    ),
+
+    ObjectionResponse(
         category="busy",
-        keywords=["busy", "in a meeting", "outage"],
+        keywords=["busy", "in a meeting", "outage", "fire", "call back later"],
         suggested_reply="Totally get it man, go put out that fire! I'll shoot a quick link to your email to check out when things calm down.",
     ),
+    ObjectionResponse(
+        category="send_email",
+        keywords=["send an email", "shoot me an email", "send me info", "email me"],
+        suggested_reply="Happy to! What's the best email address to drop our 1-page quickstart over to?",
+    ),
+    ObjectionResponse(
+        category="docker_sandbox",
+        keywords=["docker", "sandbox", "gvisor", "container", "isolated vm"],
+        suggested_reply="Containers protect host kernel, but inside the container the agent can still wipe volumes or leak keys. Bartholomew blocks calls before process launch in 20µs.",
+    ),
+    ObjectionResponse(
+        category="no_bash_access",
+        keywords=["no bash", "only python", "only sql", "api only", "no shell"],
+        suggested_reply="Smart setup! But SQL drops and API exfiltration are just as dangerous. Bartholomew guards Python AST, SQL, and kwargs with the same 20µs seam.",
+    ),
 ]
+
