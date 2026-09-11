@@ -91,10 +91,10 @@ interface WorkspaceTenantOption {
 }
 
 const WORKSPACE_TENANTS: WorkspaceTenantOption[] = [
-  { id: 'acme-prod', org: 'acme-corp', orgName: '🏢 Acme Corp', project: 'finance-mesh', projectName: '📦 finance-mesh', env: 'prod', keyPrefix: 'btp_live_7f8a...' },
-  { id: 'acme-stage', org: 'acme-corp', orgName: '🏢 Acme Corp', project: 'support-agent', projectName: '🎧 support-agent', env: 'staging', keyPrefix: 'btp_test_41b2...' },
-  { id: 'bartholomew-dev', org: 'bartholomew-core', orgName: '🏛️ Bartholomew Core', project: 'antigravity-dev', projectName: '🤖 antigravity-pair-programming', env: 'dev', keyPrefix: 'btp_test_90e1...' },
-  { id: 'novartis-prod', org: 'novartis-mesh', orgName: '🏥 Novartis Health', project: 'clinical-data', projectName: '🧬 clinical-data-lake', env: 'prod', keyPrefix: 'btp_live_cc32...' },
+  { id: 'acme-prod', org: 'acme-corp', orgName: 'Acme Corp', project: 'finance-mesh', projectName: 'finance-mesh', env: 'prod', keyPrefix: 'btp_live_7f8a...' },
+  { id: 'acme-stage', org: 'acme-corp', orgName: 'Acme Corp', project: 'support-agent', projectName: 'support-agent', env: 'staging', keyPrefix: 'btp_test_41b2...' },
+  { id: 'bartholomew-dev', org: 'bartholomew-core', orgName: 'Bartholomew Core', project: 'antigravity-dev', projectName: 'antigravity-pair-programming', env: 'dev', keyPrefix: 'btp_test_90e1...' },
+  { id: 'novartis-prod', org: 'novartis-mesh', orgName: 'Novartis Health', project: 'clinical-data', projectName: 'clinical-data-lake', env: 'prod', keyPrefix: 'btp_live_cc32...' },
 ]
 
 export default function SwarmArbitrationArena() {
@@ -140,7 +140,7 @@ export default function SwarmArbitrationArena() {
         attachments: [{
           color: '#e01e5a',
           blocks: [
-            { type: 'header', text: { type: 'plain_text', text: `🛡️ BTP Guard: ${activeScenario.title}` } },
+            { type: 'header', text: { type: 'plain_text', text: `BTP Guard: ${activeScenario.title}` } },
             { type: 'section', text: { type: 'mrkdwn', text: `*Invariant Veto:* \`${activeScenario.ruleId}\` in \`${activeTenant.org}/${activeTenant.project}\`` } },
             { type: 'section', fields: [
               { type: 'mrkdwn', text: `*Agent:* \`${activeScenario.targetAgent}\`` },
@@ -154,7 +154,7 @@ export default function SwarmArbitrationArena() {
     } else if (webhookPlatform === 'discord') {
       return JSON.stringify({
         embeds: [{
-          title: `🛡️ BTP Security Alert: ${activeScenario.title}`,
+          title: `BTP Security Alert: ${activeScenario.title}`,
           description: `Rogue tool call quarantined by local AST gate in ${activeScenario.decisionLatencyUs}µs`,
           color: 14687834,
           fields: [

@@ -10,6 +10,7 @@ import UniversalCookbookExplorer from './components/UniversalCookbookExplorer'
 import EnterpriseDesignPartnerSection from './components/EnterpriseDesignPartnerSection'
 import ContinuousComplianceTimeline from './components/ContinuousComplianceTimeline'
 import BartholomewCloudDashboard from './components/BartholomewCloudDashboard'
+import Pricing from './components/Pricing'
 import Founder from './components/Founder'
 import Footer from './components/Footer'
 
@@ -134,6 +135,7 @@ function HomeView() {
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
       <SwarmArbitrationArena />
+      <Pricing />
       <EnterpriseDesignPartnerSection />
       <EcosystemGatewayBanner />
       <Founder />
@@ -154,7 +156,7 @@ export default function App() {
             <Route path="/cloud" element={<div className="pt-16"><BartholomewCloudDashboard /></div>} />
             <Route path="/cookbook" element={<div className="pt-16"><UniversalCookbookExplorer /></div>} />
             <Route path="/compliance" element={<div className="pt-16"><ContinuousComplianceTimeline /></div>} />
-            <Route path="/pricing" element={<StoreRedirect />} />
+            <Route path="/pricing" element={<div className="pt-16"><Pricing /></div>} />
             <Route path="/store" element={<StoreRedirect />} />
             <Route path="*" element={<HomeView />} />
           </Routes>

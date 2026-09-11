@@ -240,7 +240,7 @@ export default function Hero() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-10 max-w-3xl mx-auto text-left">
           <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-emerald-500/40 transition">
             <div className="text-[11px] font-mono text-emerald-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>⏱️ Integration Time</span>
+              <span>[+] Integration Time</span>
             </div>
             <div className="text-white font-bold text-sm mb-0.5">10 Seconds (1 Line)</div>
             <p className="text-[11px] text-zinc-400 leading-normal">
@@ -250,7 +250,7 @@ export default function Hero() {
 
           <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-cyan-500/40 transition">
             <div className="text-[11px] font-mono text-cyan-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>⚡ Latency Added</span>
+              <span>[&gt;] Latency Added</span>
             </div>
             <div className="text-white font-bold text-sm mb-0.5">&lt; 15 Microseconds</div>
             <p className="text-[11px] text-zinc-400 leading-normal">
@@ -260,11 +260,11 @@ export default function Hero() {
 
           <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-purple-500/40 transition">
             <div className="text-[11px] font-mono text-purple-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🧩 Framework Support</span>
+              <span>[#] Framework Support</span>
             </div>
             <div className="text-white font-bold text-sm mb-0.5">CrewAI &bull; AutoGen &bull; LangGraph</div>
             <p className="text-[11px] text-zinc-400 leading-normal">
-              Tested drop-in support for CrewAI, LangChain, AutoGen, and Cursor/Claude MCP.
+              Tested drop-in support for CrewAI, LangChain, AutoGen, and Cursor/Claude
             </p>
           </div>
         </div>
