@@ -1,30 +1,32 @@
-# Product Hunt Launch Kit: Bartholomew v2.4
+# Product Hunt Launch Kit: Bartholomew v5.4.4
 
-Use this kit to schedule or launch Bartholomew on Product Hunt: [https://www.producthunt.com/posts/new](https://www.producthunt.com/posts/new)
+Use this kit to launch or schedule Bartholomew on Product Hunt: [https://www.producthunt.com/posts/new](https://www.producthunt.com/posts/new)
 
 ---
 
 ## 1. Core Listing Metadata
 
-* **Product Name**: Bartholomew
+* **Product Name**: Bartholomew (btp-guard)
 * **Tagline** (max 60 characters):
   ```text
-  The sub-5µs transactional execution harness for AI agents
+  Zero accidental wipes. Zero runaway bills for AI agents.
   ```
 * **Links**:
   * Website: `https://bartholomew.info`
+  * Interactive Playground: `https://bartholomew.info/cookbook`
   * GitHub: `https://github.com/ivegotahunnitonit/bartholomew`
-  * npm: `https://www.npmjs.com/package/btp-guard`
   * PyPI: `https://pypi.org/project/btp-guard/`
-* **Pricing**: Free / Open Source (Apache-2.0)
-* **Topics / Tags**: Developer Tools, Artificial Intelligence, Open Source, Security, Tech
+  * npm: `https://www.npmjs.com/package/btp-guard`
+  * VS Code / Cursor: `https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode`
+* **Pricing**: Free & Open-Source (Apache 2.0) / Pro: $49/mo / Fleet: $199/mo
+* **Topics / Tags**: Developer Tools, Artificial Intelligence, Open Source, Security, Startups
 
 ---
 
 ## 2. Short Description (max 260 characters)
 
 ```text
-Prompt guardrails fail when models get smart. Bartholomew is an inline execution harness for AI agents (Claude, Cursor) that provides atomic 2µs filesystem micro-rollbacks, in-flight secret scrubbing, and offline Merkle audit trails before your OS is touched.
+Stop worrying about AI agents hallucinating DROP TABLE, running rm -rf, or racking up 4-figure API bills. Bartholomew gives startups a 1-line in-process safety net (<35us) with zero setup and zero enterprise bloat.
 ```
 
 ---
@@ -34,31 +36,36 @@ Prompt guardrails fail when models get smart. Bartholomew is an inline execution
 ```text
 Hey Product Hunt community!
 
-We built Bartholomew because we were tired of watching coding agents (like Claude and Cursor) break development environments.
+We built Bartholomew because we kept seeing startup founders and engineering teams caught between two bad options:
+1. Babysitting AI agents manually, wasting hours clicking "Approve" buttons on routine tasks.
+2. Letting agents run hands-free and waking up to broken staging databases, wiped filesystems, or a $2,000 runaway cloud bill.
 
-Existing safety tools treat agent actions like web requests: they slap the model with a 403 Forbidden error. Because LLMs lack execution context, they interpret this as a puzzle to solve—panicking into infinite retry loops, attempting slightly obfuscated variants of the same command, or leaving half-written dirty files behind.
+Prompt-level guardrails don't work reliably when models hallucinate or retry. Bartholomew solves this directly inside process memory with sub-35 microsecond deterministic checks before any command or tool ever reaches your operating system or database.
 
-We approached this from database transaction theory: What if agent execution was treated like an atomic database transaction with BEGIN and ROLLBACK?
+What you get out of the box:
+- 30-Second Setup: Just one decorator (@guard.protect, @btp_crewai_tool, or @btp_langchain_tool) on your functions.
+- Accidental Wipe Defense: Catches and blocks destructive commands (DROP TABLE, TRUNCATE, rm -rf, disk wipes) before execution.
+- Hard Spend Caps: Set dollar budgets so runaway retry loops never spike your OpenAI or cloud invoices.
+- In-Flight Secret Masking: Automatically scrubs AWS, OpenAI, GitHub, and custom credentials before they hit prompt logs or traces.
+- Multi-Framework Ready: 1-line integration with CrewAI, LangGraph, AutoGen, LlamaIndex, Claude Desktop, and Cursor.
 
-Bartholomew operates directly between the model and your operating system:
-1. In-Memory Micro-Rollbacks (<2.3µs): Before any mutating tool runs, it captures an in-memory byte snapshot. If a boundary check or AST invariant trips, pristine disk state is restored in 2.3 microseconds with zero orphaned files.
-2. Constructive Diagnostics: Instead of an opaque crash, the harness returns structured JSON-RPC remediation hints so the model legitimately changes its plan instead of trying to hack around the gate.
-3. In-Flight Secret Scrubbing (0.82µs): Inbound tool args and outbound stdout streams are scrubbed in-flight for OpenAI, Anthropic, AWS, and GitHub keys before reaching context logs.
-4. Offline Merkle Receipts: Every action is chained and signed with Ed25519 (Hi = SHA256(Hi-1 || Receipt_i)), verifiable 100% offline.
+Test it right now in your terminal:
+$ pip install btp-guard && python -m btp_guard try
 
-You can inspect the entire simulation right now in your terminal without installing anything:
-$ npx btp-guard
+Or test attacks live in your browser in 5 seconds with zero installation:
+https://bartholomew.info/cookbook
 
-Or install via Python:
-$ pip install btp-guard
+The core engine is 100% open-source under Apache 2.0. For growing startups and teams, our Pro plan is $49/month with zero enterprise lock-in.
 
-Everything is 100% open source under Apache 2.0. We'd love to hear how you manage dirty workspace state and runaway agent loops in your workflows!
+We would love to hear your feedback on how your team manages agent tool safety and runaway loop boundaries!
 ```
 
 ---
 
 ## 4. Media & Asset Checklist
-* Thumbnail: `web/dist/favicon.svg` or `web/dist/founder_avatar.jpg`
-* Gallery Image 1: Hero Banner (`web/dist/assets/hero-banner.png` or screenshot of `https://bartholomew.info`)
-* Gallery Image 2: Terminal showcase running `npx btp-guard`
-* Gallery Image 3: Interactive Playground from `https://bartholomew.info#playground`
+
+* **Thumbnail**: `web/dist/favicon.svg`
+* **Gallery Image 1**: Hero banner showing "Zero Accidental Wipes. Zero Runaway Bills." from `https://bartholomew.info`
+* **Gallery Image 2**: Interactive In-Browser AST Invariant Playground at `https://bartholomew.info/cookbook`
+* **Gallery Image 3**: Terminal screenshot showing `python cli.py try` (sub-35us blocks)
+* **Gallery Image 4**: Framework Integrations diagram (CrewAI, LangGraph, AutoGen, Cursor, MCP)
