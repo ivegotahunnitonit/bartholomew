@@ -51,6 +51,10 @@ export default function Navbar() {
           <Link to="/compliance" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COMPLIANCE]
           </Link>
+          <a href="/#pricing" className="text-[#a855f7] hover:text-[#c084fc] transition flex items-center gap-1 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#a855f7] animate-pulse" />
+            <span>[PRICING &amp; PILOTS]</span>
+          </a>
           <Link to="/cloud" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <span>[CLOUD SAAS]</span>
@@ -163,6 +167,13 @@ export default function Navbar() {
           >
             [COMPLIANCE TIMELINE]
           </Link>
+          <a
+            href="/#pricing"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-mono text-[#c084fc] hover:text-[#ffffff] font-bold"
+          >
+            [PRICING &amp; ENTERPRISE PILOTS]
+          </a>
           <Link
             to="/cloud"
             onClick={() => setMobileOpen(false)}
