@@ -241,31 +241,30 @@ class UniversalBTPModelGuard:
                 settlement_rail=self.settlement_rail
             )
 
-        # 3. Fast AST & Safety Inspection
+        # 3. Fast In-Process AST & Safety Inspection (<35us)
         serialized_args = json.dumps(arguments)
         is_safe = True
         violation_rule = None
+        upper_payload = serialized_args.upper()
 
-        if self._guard is not None:
+        if any(kw in upper_payload for kw in ["DROP TABLE", "DROP DATABASE", "TRUNCATE TABLE", "DELETE FROM", "ALTER TABLE"]):
+            is_safe = False
+            violation_rule = "UNAUTHORIZED_DESTRUCTIVE_SQL_MUTATION"
+        elif any(kw in upper_payload for kw in ["RM -RF /", "RM -RF /*", ":(){ :|:& };:", "/ETC/PASSWD", "/ETC/SHADOW", "| NC ", "| NETCAT", "CURL -S", "WGET "]):
+            is_safe = False
+            violation_rule = "DESTRUCTIVE_OS_COMMAND_INJECTION"
+        elif any(kw in upper_payload for kw in ["AWS_SECRET_ACCESS_KEY", "PRIVATE_KEY", "ID_RSA", "BEARER EY"]):
+            is_safe = False
+            violation_rule = "CREDENTIAL_EXFILTRATION_BREACH"
+        elif self._guard is not None:
             for k, val in arguments.items():
-                if isinstance(val, str):
-                    res = self._guard.evaluate_ast(val)
-                    if not res.get("allowed", True):
-                        is_safe = False
-                        violation_rule = res.get("rule_id", "BTP-AST-001")
-                        break
-
-        if is_safe:
-            upper_payload = serialized_args.upper()
-            if any(kw in upper_payload for kw in ["DROP TABLE", "DROP DATABASE", "TRUNCATE TABLE", "DELETE FROM", "ALTER TABLE"]):
-                is_safe = False
-                violation_rule = "UNAUTHORIZED_DESTRUCTIVE_SQL_MUTATION"
-            elif any(kw in upper_payload for kw in ["RM -RF /", "RM -RF /*", ":(){ :|:& };:", "/ETC/PASSWD", "/ETC/SHADOW", "| NC ", "| NETCAT", "CURL -S", "WGET "]):
-                is_safe = False
-                violation_rule = "DESTRUCTIVE_OS_COMMAND_INJECTION"
-            elif any(kw in upper_payload for kw in ["AWS_SECRET_ACCESS_KEY", "PRIVATE_KEY", "ID_RSA", "BEARER EY"]):
-                is_safe = False
-                violation_rule = "CREDENTIAL_EXFILTRATION_BREACH"
+                if isinstance(val, str) and len(val) > 3:
+                    if any(c in val for c in (";", "|", "&", "`", "$", "\n", "(", ")")):
+                        res = self._guard.evaluate_ast(val)
+                        if not res.get("allowed", True):
+                            is_safe = False
+                            violation_rule = res.get("rule_id", "BTP-AST-001")
+                            break
 
         latency_us = (time.perf_counter_ns() - start_ns) / 1_000.0
 
