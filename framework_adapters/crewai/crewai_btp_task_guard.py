@@ -91,9 +91,9 @@ class BTPViolationError(PermissionError):
         cmd_preview = self.blocked_payload[:60] if self.blocked_payload else "destructive operation"
         return (
             f"[BTP-VETO] CrewAI Tool Execution Blocked by {self.rule_id}: {self.reason}\n"
-            f"🛑 [Bartholomew-Guard] Vetoed command '{cmd_preview}' in {self.latency_us:.1f}µs.\n"
-            f"🔐 A local Merkle compliance receipt has been compiled.\n"
-            f"👉 Running multiple agents? Auto-stream these logs to a centralized SOC 2 dashboard and export Audit Packs at: https://bartholomew.info/cloud\n"
+            f"[!] [Bartholomew-Guard] Vetoed command '{cmd_preview}' in {self.latency_us:.1f}µs.\n"
+            f"[+] A local Merkle compliance receipt has been compiled.\n"
+            f"[>] Running multiple agents? Centralized SOC 2 stream and audit packs at: https://bartholomew.info/cloud\n"
         )
 
 
