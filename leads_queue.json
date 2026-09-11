@@ -226,12 +226,20 @@
     "phone": "+14085556201",
     "email": "priya.nair@finledger.com",
     "role": "Staff Platform Engineer",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Using LangGraph to generate dynamic SQL on Snowflake & BigQuery; needs strict AST gating to prevent accidental DROP or TRUNCATE.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.826834
+    "last_called_at": 1789158229.133872,
+    "created_at": 1788973667.826834,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Accidental database drops with AI agents at FinLedger Systems",
+        "timestamp": 1789158229.1338732,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "c9d0e1f2",
@@ -240,12 +248,20 @@
     "phone": "+12125558319",
     "email": "arivera@cloudmorph.ai",
     "role": "VP of AI Engineering",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Autonomous cloud provisioning with Terraform & AWS CLI; needs tool dispatch inspection to stop destructive teardowns.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.826835
+    "last_called_at": 1789158229.133896,
+    "created_at": 1788973667.826835,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Preventing accidental cloud wipes at CloudMorph AI",
+        "timestamp": 1789158229.133897,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "b3c4d5e6",
@@ -254,12 +270,20 @@
     "phone": "+16175557743",
     "email": "dkowalski@meddataintel.org",
     "role": "Head of Security & Compliance",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Deploying HIPAA-compliant clinical summary agents; requires signed Merkle audit ledger of all agent tool dispatches.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268356
+    "last_called_at": 1789158229.133914,
+    "created_at": 1788973667.8268356,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Audit-ready agent safety for MedData Intelligence",
+        "timestamp": 1789158229.1339147,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "f7a8b9c0",
@@ -268,12 +292,20 @@
     "phone": "+16505559082",
     "email": "jordan@kubeagent.dev",
     "role": "Founder & CTO",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Deploying Kubernetes agent operators with kubectl access; worried about container escapes and cluster privilege escalation.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.826836
+    "last_called_at": 1789158229.1339295,
+    "created_at": 1788973667.826836,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Safe Kubernetes agent execution at KubeAgent Technologies",
+        "timestamp": 1789158229.13393,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "d1e2f3a4",
@@ -282,12 +314,20 @@
     "phone": "+15125553412",
     "email": "smartinez@cybersentry.io",
     "role": "Director of Machine Learning",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Autonomous penetration testing agents; needs deterministic containment so red team agents don't accidentally attack production subnets.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.826837
+    "last_called_at": 1789158229.1339498,
+    "created_at": 1788973667.826837,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "AI agent safety & budget guardrails for CyberSentry Labs",
+        "timestamp": 1789158229.13395,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "b5c6d7e8",
@@ -296,12 +336,20 @@
     "phone": "+13125554628",
     "email": "zthornton@apexlogistics.ai",
     "role": "Tech Lead - Agent Infrastructure",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Autonomous freight routing agents calling external carrier APIs; worried about secret API token leakage in logs.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268375
+    "last_called_at": 1789158229.1339648,
+    "created_at": 1788973667.8268375,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Preventing API credential leaks in Apex Logistics AI's AI agents",
+        "timestamp": 1789158229.133965,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "f9a0b1c2",
@@ -310,12 +358,20 @@
     "phone": "+12065551984",
     "email": "hkim@datameshscale.com",
     "role": "Senior SRE / AI Platform",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Managing 200+ autonomous agent cron workers; human-in-the-loop review fatigue is blocking autonomous release velocity.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268383
+    "last_called_at": 1789158229.1339798,
+    "created_at": 1788973667.8268383,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Killing approval fatigue on agent workers at DataMesh Scale",
+        "timestamp": 1789158229.1339803,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "d3e4f5a6",
@@ -324,12 +380,20 @@
     "phone": "+13055556810",
     "email": "carlos@omniretail.ai",
     "role": "Principal Software Engineer",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Building customer-facing returns & refund agents; preventing hallucinated unauthorized refund tool calls.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268387
+    "last_called_at": 1789158229.1339931,
+    "created_at": 1788973667.8268387,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Protecting customer-facing AI agents at OmniRetail AI",
+        "timestamp": 1789158229.1339934,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "b7c8d9e0",
@@ -338,12 +402,20 @@
     "phone": "+14155557293",
     "email": "emily@aurahealth.ai",
     "role": "CTO",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Diagnostic assistant agents interacting with FHIR APIs; needs signed Merkle receipts for FDA/HIPAA compliance.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268392
+    "last_called_at": 1789158229.1340055,
+    "created_at": 1788973667.8268392,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Audit-ready agent safety for Aura Health AI",
+        "timestamp": 1789158229.1340058,
+        "status": "SENT"
+      }
+    ]
   },
   {
     "id": "f1a2b3c4",
@@ -352,11 +424,19 @@
     "phone": "+16465558832",
     "email": "tmansour@quantumstream.io",
     "role": "Head of Data Engineering",
-    "status": "CONNECTED",
+    "status": "DISPATCHED_WAVE_3",
     "notes": "Autonomous ETL pipelines writing to production datalakes; requires sub-50\u00b5s gating for SQL and Python steps.",
     "call_duration_seconds": 0,
     "transcript": [],
-    "last_called_at": 1788990241.9831302,
-    "created_at": 1788973667.8268402
+    "last_called_at": 1789158229.1344948,
+    "created_at": 1788973667.8268402,
+    "outreach_history": [
+      {
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Accidental database drops with AI agents at QuantumStream Analytics",
+        "timestamp": 1789158229.134496,
+        "status": "SENT"
+      }
+    ]
   }
 ]
