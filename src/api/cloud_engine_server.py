@@ -541,20 +541,68 @@ _GENERIC_ISPS = ['comcast', 'verizon', 'att', 'charter', 'spectrum', 'bt ', 'tmo
 
 
 class TraceLeadRequest(BaseModel):
+    class Config:
+        extra = "allow"
     referrer: Optional[str] = ""
     path: Optional[str] = "/"
     screen: Optional[str] = ""
+    type: Optional[str] = None
+    email: Optional[str] = None
+    company: Optional[str] = None
+    framework: Optional[str] = None
+    scale: Optional[str] = None
+    notes: Optional[str] = None
+    timestamp: Optional[str] = None
 
 
 @app.post("/api/v1/telemetry/trace-lead")
 async def trace_enterprise_lead(request: Request, body: TraceLeadRequest, background_tasks: BackgroundTasks):
     """
-    Receives a beacon ping from the bartholomew.info frontend.
-    Reverse-looks up the client IP via ipinfo.io to identify corporate orgs.
-    Stores warm leads in memory and logs alerts for enterprise visitors.
+    Receives a beacon ping or explicit enterprise pilot request from bartholomew.info.
+    Reverse-looks up client IP to identify corporate orgs, logs incoming pilots,
+    and stores high-value leads for immediate follow-up.
     """
     x_forwarded = request.headers.get("X-Forwarded-For", "")
     client_ip = x_forwarded.split(",")[0].strip() if x_forwarded else (request.client.host if request.client else "unknown")
+
+    # If this is an explicit enterprise pilot submission
+    if body.type == "ENTERPRISE_PILOT_REQUEST" and body.email:
+        logger.info(f"[ENTERPRISE PILOT SUBMISSION] {body.company} <{body.email}> | framework={body.framework} | scale={body.scale} | ip={client_ip}")
+        direct_lead = {
+            "ip": client_ip,
+            "company": body.company or "Confidential Enterprise",
+            "email": body.email,
+            "framework": body.framework or "Standard AI Fleet",
+            "scale": body.scale or "1-5 Agents",
+            "notes": body.notes or "",
+            "detected_at": time.time(),
+            "source": "INBOUND_WEB_DOSSIER_REQUEST",
+            "is_direct_pilot": True
+        }
+        _warm_leads.insert(0, direct_lead)
+        try:
+            q_path = os.path.join(os.getcwd(), "leads_queue.json")
+            if os.path.exists(q_path):
+                with open(q_path, "r", encoding="utf-8") as f:
+                    q_data = json.load(f)
+                q_data.insert(0, {
+                    "id": uuid.uuid4().hex[:8],
+                    "name": body.company or "Enterprise Lead",
+                    "company": body.company or "Confidential Enterprise",
+                    "phone": None,
+                    "email": body.email,
+                    "role": "Security / Infrastructure Lead",
+                    "status": "INBOUND_PILOT_REQUEST",
+                    "notes": f"Framework: {body.framework}, Scale: {body.scale}. Notes: {body.notes}",
+                    "call_duration_seconds": 0,
+                    "transcript": [],
+                    "created_at": time.time()
+                })
+                with open(q_path, "w", encoding="utf-8") as f:
+                    json.dump(q_data, f, indent=2)
+        except Exception as err:
+            logger.warning(f"Failed to persist inbound lead: {err}")
+        return {"status": "received", "lead_type": "enterprise_pilot", "acknowledged": True}
 
     # Skip loopback
     if client_ip in ("127.0.0.1", "::1", "localhost", "unknown"):
