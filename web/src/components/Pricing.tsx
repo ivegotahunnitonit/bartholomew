@@ -80,13 +80,13 @@ export default function Pricing() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/30 rounded-full text-xs font-mono font-semibold text-[#10b981] mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>TRANSPARENT ENTERPRISE PRICING</span>
+            <span>TRANSPARENT PRICING FOR STARTUPS & TEAMS</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-            Deterministic Security for Every Agent Fleet
+            Zero Accidental Wipes. Zero Runaway Bills.
           </h2>
           <p className="text-[#a1a1aa] text-base sm:text-lg">
-            Zero per-token cloud penalties. Deploy in-memory on your host or route through our ultra-low latency gateway.
+            Stop babysitting AI agents with manual approvals. Protect your database, API keys, and cloud budget in under 35 microseconds.
           </p>
         </div>
 
@@ -96,31 +96,31 @@ export default function Pricing() {
           <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-8 flex flex-col justify-between hover:border-[#333333] transition-all relative">
             <div>
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#71717a] mb-2">
-                DEVELOPER / OSS
+                BUILDER / OSS
               </div>
               <div className="flex items-baseline gap-1 mb-4">
                 <span className="text-4xl font-extrabold">$0</span>
                 <span className="text-[#71717a] text-sm">/ forever</span>
               </div>
               <p className="text-sm text-[#a1a1aa] mb-6">
-                Open-source in-memory invariant kernel for single agents and local CLI testing.
+                Open-source safety kernel for solo developers, indie hackers, and local CLI testing.
               </p>
               <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Fastest &amp; Most Reliable AST Engine</span>
+                  <span>Sub-35µs In-Process AST Safety Engine</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Unlimited local evals (100% Pro Bono Forever)</span>
+                  <span>Unlimited local evaluations (Free Forever)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>LangChain & Cursor extension</span>
+                  <span>Cursor, VS Code & Windsurf Rules</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Community Discord support</span>
+                  <span>Community Discord & GitHub Support</span>
                 </li>
               </ul>
             </div>
@@ -136,18 +136,18 @@ export default function Pricing() {
           {/* Pro Builder */}
           <div className="bg-[#0c0c0e] border-2 border-[#10b981] rounded-2xl p-8 flex flex-col justify-between shadow-[0_0_40px_rgba(16,185,129,0.15)] relative scale-105 z-20">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-0.5 bg-[#10b981] text-black text-xs font-bold font-mono tracking-wider rounded-full uppercase">
-              MOST POPULAR
+              POPULAR FOR STARTUPS
             </div>
             <div>
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] mb-2">
-                PRO AGENT BUILDER
+                PRO STARTUP / BUILDER
               </div>
               <div className="flex items-baseline gap-1 mb-4">
                 <span className="text-4xl font-extrabold">$49</span>
                 <span className="text-[#71717a] text-sm">/ month</span>
               </div>
               <p className="text-sm text-[#a1a1aa] mb-6">
-                Hosted Tier-0 gateway with automated secret masking and Bedrock/Claude middleware.
+                For fast-moving startups and small teams shipping autonomous agents without fear of production breaks.
               </p>
               <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
                 <li className="flex items-center gap-2">
@@ -156,19 +156,19 @@ export default function Pricing() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Real-time Secret Vault Masker</span>
+                  <span>Real-time API Key &amp; Secret Scrubber</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>AWS Bedrock & OpenAI Interceptor</span>
+                  <span>Runaway Spend Caps ($ bounds on retry loops)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>FIPS 186-5 Ed25519 Signed Receipts</span>
+                  <span>CrewAI, LangGraph, AutoGen &amp; OpenAI Guards</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Priority Email & Slack Support</span>
+                  <span>Live Cloud Telemetry &amp; Slack Threat Alerts</span>
                 </li>
               </ul>
             </div>
@@ -176,7 +176,7 @@ export default function Pricing() {
               onClick={() => handleCheckout('Pro Agent Builder', '$49')}
               className="w-full py-3 px-4 bg-[#10b981] hover:bg-[#059669] text-black font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#10b981]/20"
             >
-              <span>Subscribe to Pro</span>
+              <span>Subscribe to Pro ($49/mo)</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -185,14 +185,14 @@ export default function Pricing() {
           <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-8 flex flex-col justify-between hover:border-[#333333] transition-all relative">
             <div>
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#a855f7] mb-2">
-                ENTERPRISE & WARRANTY
+                TEAM FLEET &amp; ENTERPRISE
               </div>
               <div className="flex items-baseline gap-1 mb-4">
                 <span className="text-4xl font-extrabold">$199</span>
                 <span className="text-[#71717a] text-sm">/ month</span>
               </div>
               <p className="text-sm text-[#a1a1aa] mb-6">
-                Multi-agent enterprise fleets with backed Bonded Warranty and SOC 2 Merkle compliance.
+                For scaling startups, agencies, and growing teams needing multi-tenant workspaces and SOC 2 audit evidence.
               </p>
               <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
                 <li className="flex items-center gap-2">
