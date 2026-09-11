@@ -96,7 +96,22 @@ print(result["allowed"]) # False
 print(result["reason"])  # "[BTP-VETO] Trajectory contained forbidden pattern 'rm -rf'"
 ```
 
-#### **2. TypeScript & Node.js (`npm install btp-guard`)**
+#### **2. CrewAI, LangGraph & Multi-Agent Frameworks**
+Protect agent tool swarms against accidental drops, runaway spend loops, and shell escapes:
+- **CrewAI**: `from framework_adapters.crewai import btp_crewai_tool` &mdash; see [CrewAI Quickstart](cookbook/crewai_quickstart.md)
+- **LangGraph**: `from framework_adapters.langgraph import btp_langchain_tool`
+- **Microsoft AutoGen**: `from framework_adapters.autogen import btp_autogen_guard`
+
+```python
+from framework_adapters.crewai import btp_crewai_tool
+
+@btp_crewai_tool(spend_cap=25.0)
+def execute_sql_query(query: str):
+    # Destructive operations (DROP TABLE, TRUNCATE) are blocked in <25us before execution
+    return db.query(query)
+```
+
+#### **3. TypeScript & Node.js (`npm install btp-guard`)**
 ```typescript
 import { BTPGuard } from 'btp-guard';
 

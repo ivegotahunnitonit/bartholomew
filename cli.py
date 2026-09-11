@@ -152,22 +152,40 @@ def cmd_leads_list(args):
 
     print(f"[+] Query complete: {len(cloud_leads)} live cloud events, {len(local_leads)} queue leads.\n")
 
-    # Render Local Inbound Pilot Submissions
+    # Render Outbound Waves and Inbound Pipeline
     if local_leads:
-        print("--- INBOUND PILOT & DOSSIER REQUESTS ---")
-        for i, lead in enumerate(local_leads[:10], 1):
-            name = lead.get("name") or lead.get("company", "Enterprise Lead")
-            email = lead.get("email") or "[Confidential Email]"
-            status = lead.get("status", "ACTIVE")
-            notes = lead.get("notes", "")
-            print(f"[{i:02d}] {name} <{email}> | Status: {status}")
-            if notes:
-                print(f"     Notes: {notes[:80]}")
+        w1 = [l for l in local_leads if l.get("status") == "DISPATCHED_WAVE_1"]
+        w2 = [l for l in local_leads if l.get("status") == "DISPATCHED_WAVE_2"]
+        w3 = [l for l in local_leads if l.get("status") == "DISPATCHED_WAVE_3"]
+        other = [l for l in local_leads if l not in w1 and l not in w2 and l not in w3]
+
+        print(f"--- OUTREACH & LEAD PIPELINE STATUS ---")
+        print(f"  [+] Wave 1 (Priority Founders)     : {len(w1)} dispatched")
+        print(f"  [+] Wave 2 (Community AI Builders) : {len(w2)} dispatched")
+        print(f"  [+] Wave 3 (Startup CTOs & Leads)  : {len(w3)} dispatched")
+        if other:
+            print(f"  [+] Pending / Incoming Leads       : {len(other)} queued")
         print()
 
-    # Render Live Telemetry Events
+        print("--- RECENT ENGAGEMENTS ---")
+        for i, lead in enumerate(local_leads, 1):
+            name = lead.get("name") or lead.get("company", "Enterprise Lead")
+            email = lead.get("email") or "[Confidential / Community Lead]"
+            status = lead.get("status", "ACTIVE")
+            comp = lead.get("company", "")
+            comp_str = f" ({comp})" if comp and comp != "Independent / HN" else ""
+            print(f"[{i:02d}] {name}{comp_str} <{email}> | Status: {status}")
+        print()
+
+    # Render Live Telemetry Events & Metrics
     if cloud_leads:
-        print("--- RECENT LIVE CLOUD RUN TELEMETRY ---")
+        allowed = sum(1 for e in cloud_leads if e.get("verdict") == "ALLOW")
+        denied = sum(1 for e in cloud_leads if e.get("verdict") == "DENY")
+        latencies = [e.get("latency_us", 0.0) for e in cloud_leads if "latency_us" in e]
+        avg_lat = sum(latencies) / len(latencies) if latencies else 0.0
+
+        print(f"--- RECENT LIVE CLOUD RUN TELEMETRY ({len(cloud_leads)} events) ---")
+        print(f"  Telemetry Metrics: {allowed} Allowed | {denied} Denied / Contained | Avg Gating Latency: {avg_lat:.1f} us\n")
         for i, ev in enumerate(cloud_leads[:limit], 1):
             action = ev.get("action_type", "EVENT")
             verdict = ev.get("verdict", "ALLOW")
@@ -175,7 +193,8 @@ def cmd_leads_list(args):
             meta = ev.get("metadata") or {}
             company = meta.get("company") or meta.get("email") or meta.get("client") or ""
             company_str = f" | Org: {company}" if company else ""
-            print(f"[{i:02d}] {action:<24} | {verdict:<6} | {rule:<12}{company_str}")
+            lat = f"{ev.get('latency_us', 0.0):.1f}us"
+            print(f"[{i:02d}] {action:<20} | {verdict:<6} | {rule:<12} | {lat:<7}{company_str}")
     print("=" * 76)
 
 
