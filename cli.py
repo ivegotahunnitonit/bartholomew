@@ -2078,22 +2078,61 @@ def cmd_billing_invoice(args):
     from src.billing.metering_engine import TenantUsageMeter, MeteredInvoiceGenerator
     meter = TenantUsageMeter()
     rec = meter.get_or_create(args.tenant)
-    rail = getattr(args, "rail", "STRIPE_METERED")
+    rail = getattr(args, "rail", "DIRECT_WIRE")
+    is_pilot = getattr(args, "pilot", False)
+
+    if is_pilot:
+        import hashlib, time
+        entropy = f"{args.tenant}:pilot:25000:{time.time()}"
+        inv_id = f"INV-BTP-ENT-{hashlib.sha256(entropy.encode()).hexdigest()[:10].upper()}"
+        print("=" * 75)
+        print(f"BARTHOLOMEW ENTERPRISE COMMERCIAL INVOICE: {inv_id}")
+        print("=" * 75)
+        print(f"[*] Client Tenant ID     : {args.tenant}")
+        print(f"[*] Billing Organization : {rec.org_id.upper()} ENTERPRISE AP")
+        print(f"[*] Issue Date           : {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}")
+        print(f"[*] Payment Terms        : Net-30 Days from Invoice Receipt")
+        print(f"[*] Settlement Channel   : {rail} (Direct Bank-to-Bank)")
+        print("-" * 75)
+        print("ITEMIZED ENTERPRISE DELIVERABLES & SERVICES:")
+        print("  1. Bartholomew Protocol Core Execution Firewall License (12 Mos) : $15,000.00 USD")
+        print("     - Sub-35us in-process AST gating for up to 50 active agent workers")
+        print("     - Python, SQL, Bash & eBPF syscall execution interceptors")
+        print("  2. Enterprise Architecture Review & Custom AST Policy Synthesis   :  $5,000.00 USD")
+        print("     - Dedicated security review mapping internal DB schemas & HIPAA/SOC2")
+        print("  3. Private Tenant Enclave Deployment & Dedicated SOC 2 Audit Pack :  $5,000.00 USD")
+        print("     - Cryptographic Merkle tree verification & priority sentinel SLA")
+        print("-" * 75)
+        print(f"[*] TOTAL AMOUNT DUE     : $25,000.00 USD")
+        print("-" * 75)
+        print("CORPORATE WIRE REMITTANCE INSTRUCTIONS:")
+        print("  Beneficiary Name       : Bartholomew Trust Protocol / Sovereign AI Security")
+        print("  Settlement Currency    : USD ($)")
+        print("  Remittance Method      : FedNow / Direct Domestic ACH / Wire Transfer")
+        print(f"  Payment Reference / PO : {inv_id}")
+        print("  Remittance Inquiries   : ap-billing@bartholomew.info")
+        print("=" * 75)
+        return
+
     inv = MeteredInvoiceGenerator.generate_invoice(rec, settlement_rail=rail)
-    print("=" * 70)
+    print("=" * 75)
     print(f"BTP ITEMIZED INVOICE: {inv.invoice_id}")
-    print("=" * 70)
+    print("=" * 75)
     print(f"[*] Tenant ID            : {inv.tenant_id} ({inv.org_id})")
     print(f"[*] Base Subscription   : ${inv.base_subscription_usd:.2f} USD (Pro Tier)")
     print(f"[*] AST Evaluations      : {inv.ast_scans_count} scans -> ${inv.ast_scans_cost_usd:.4f} USD")
     print(f"[*] Threats Blocked      : {inv.threats_blocked_count} threats -> ${inv.threats_blocked_cost_usd:.4f} USD")
     print(f"[*] Escrow Clearing Fee  : ${inv.escrow_fees_usd:.4f} USD (on ${inv.escrow_volume_cleared_usd:.2f} volume)")
     print(f"[*] Webhook Dispatches   : {inv.webhooks_count} events -> ${inv.webhooks_cost_usd:.4f} USD")
-    print("-" * 70)
+    print("-" * 75)
     print(f"[*] TOTAL AMOUNT DUE     : ${inv.total_due_usd:.2f} USD")
     print(f"[*] Settlement Rail      : {inv.settlement_rail}")
     print(f"[*] Cryptographic Sig    : {inv.signature}")
-    print("=" * 70)
+    if "WIRE" in rail.upper() or "ACH" in rail.upper():
+        print("-" * 75)
+        print("REMITTANCE INSTRUCTIONS (DIRECT CORPORATE WIRE):")
+        print(f"  Beneficiary: Bartholomew Protocol | Ref: {inv.invoice_id} | Terms: Net-30")
+    print("=" * 75)
 
 
 def cmd_gossip_peer_list(args):
@@ -2702,7 +2741,8 @@ def main():
 
     b_inv_p = bill_sub.add_parser("invoice", help="Generate itemized, cryptographically signed invoice")
     b_inv_p.add_argument("--tenant", "-t", required=True, help="Tenant workspace ID")
-    b_inv_p.add_argument("--rail", default="STRIPE_METERED", choices=["STRIPE_METERED", "L402_LIGHTNING"], help="Settlement payment rail")
+    b_inv_p.add_argument("--rail", default="DIRECT_WIRE", choices=["DIRECT_WIRE", "ACH_TRANSFER", "CORPORATE_INVOICE", "STRIPE_METERED", "L402_LIGHTNING"], help="Settlement payment rail (default: DIRECT_WIRE)")
+    b_inv_p.add_argument("--pilot", action="store_true", help="Generate official $25,000 USD Enterprise Pilot Invoicing & License Agreement")
 
     # gossip (BTP v5.4 Decentralized P2P Peer Reputation Mesh)
     gossip_p = subparsers.add_parser("gossip", help="BTP v5.4 Decentralized P2P Peer Reputation Gossip")
