@@ -302,6 +302,44 @@ def test_claude_3_7_hybrid_reasoning_and_thinking_blocks():
     assert "Bartholomew's Counsel" in res_veto["counsel"]
 
 
+def test_yandex_gpt_model_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-yandexgpt-5-pro",
+        worker_model="YandexGPT-5-Pro",
+        owner_pubkey="pubkey_yandex_001",
+        granted_capabilities=["db:read", "db:write"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=200.0,
+        passport=passport,
+        strict=False
+    )
+
+    # 1. Safe YandexGPT chat function_call payload
+    safe_yandex_call = {
+        "message": {
+            "function_call": {
+                "name": "fetch_user_profile",
+                "arguments": '{"user_id": 1042, "fields": ["name", "email"]}'
+            }
+        }
+    }
+    res_safe = guard.intercept_and_verify(safe_yandex_call, provider=ModelProvider.YANDEX_GPT)
+    assert res_safe["status"] == "APPROVED"
+    assert res_safe["tool_name"] == "fetch_user_profile"
+
+    # 2. Malicious YandexGPT call (SQL injection table drop)
+    malicious_yandex_call = {
+        "function_call": {
+            "name": "sql_query",
+            "arguments": '{"statement": "DROP TABLE accounts CASCADE;"}'
+        }
+    }
+    res_bad = guard.intercept_and_verify(malicious_yandex_call, provider=ModelProvider.YANDEX_GPT)
+    assert res_bad["status"] == "VETOED"
+    assert "Bartholomew's Counsel" in res_bad["counsel"]
+
+
 if __name__ == "__main__":
     print("[*] Running Universal Model Compatibility Tests...")
     test_openai_tool_calling_safety_and_veto()
@@ -320,4 +358,6 @@ if __name__ == "__main__":
     print("  [+] test_gpt_astra_and_openai_agents_sdk_compatibility: PASS")
     test_claude_3_7_hybrid_reasoning_and_thinking_blocks()
     print("  [+] test_claude_3_7_hybrid_reasoning_and_thinking_blocks: PASS")
+    test_yandex_gpt_model_compatibility()
+    print("  [+] test_yandex_gpt_model_compatibility: PASS")
     print("[+] All Universal Model Compatibility tests passed successfully!")

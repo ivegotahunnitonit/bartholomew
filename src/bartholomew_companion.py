@@ -121,6 +121,11 @@ class BartholomewCompanion:
                 {"id": "qwen-2.5-72b", "desc": "Advanced open code & multilingual reasoning", "status": "GUARDED"},
                 {"id": "llama-3.3-70b", "desc": "Community enterprise workhorse", "status": "GUARDED"}
             ],
+            "Yandex & Eurasian Frontier": [
+                {"id": "yandexgpt-5-pro", "desc": "Enterprise Russian & multilingual reasoning", "status": "GUARDED"},
+                {"id": "yandexgpt-5-lite", "desc": "High-speed operational assistant", "status": "GUARDED"},
+                {"id": "alice-ai-agent", "desc": "Consumer & robotics agent execution model", "status": "GUARDED"}
+            ],
             "Frameworks": [
                 {"name": "OpenAI Agents SDK", "wire_support": True, "adapter": "UniversalBTPModelGuard"},
                 {"name": "CrewAI", "wire_support": True, "adapter": "btp_crewai_tool"},

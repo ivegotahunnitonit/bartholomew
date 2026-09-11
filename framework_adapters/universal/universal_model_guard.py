@@ -60,6 +60,8 @@ class ModelProvider:
     GEMINI_3_8 = "gemini_3_8"
     DEEPSEEK = "deepseek"
     DEEPSEEK_R1 = "deepseek_r1"
+    YANDEX = "yandex"
+    YANDEX_GPT = "yandex_gpt"
     KIMI = "kimi"
     OLLAMA = "ollama"
     UNIVERSAL = "universal"
@@ -122,6 +124,12 @@ class UniversalBTPModelGuard:
                 data = {"raw": str(tool_call)}
         else:
             data = tool_call
+
+        # Unwrap chat completion message or tool_calls array if present (e.g. YandexGPT, OpenAI)
+        if "message" in data and isinstance(data["message"], dict):
+            data = data["message"]
+        if "tool_calls" in data and isinstance(data["tool_calls"], list) and len(data["tool_calls"]) > 0:
+            data = data["tool_calls"][0]
 
         # 1. Anthropic Claude 3.7 / 3.5 Content Array (with Hybrid Thinking Blocks):
         # {"content": [{"type": "thinking", "thinking": "..."}, {"type": "tool_use", "name": "...", "input": {...}}]}

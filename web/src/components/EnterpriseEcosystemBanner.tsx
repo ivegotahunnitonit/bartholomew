@@ -151,6 +151,19 @@ export default function EnterpriseEcosystemBanner() {
       )
     },
     {
+      name: 'YandexGPT & Yandex Cloud',
+      label: 'Sovereign Multilingual Function Gating',
+      category: 'EURASIAN FRONTIER',
+      badge: 'Air-Gapped Ready',
+      color: '#fc3f1d',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#fc3f1d">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M11 6h2v6.5l3.5 5.5h-2.3L12 13.8 9.8 18H7.5l3.5-5.5V6z" fill="#ffffff" />
+        </svg>
+      )
+    },
+    {
       name: 'AWS Bedrock & Containers',
       label: 'Runtime Invariant Attestation',
       category: 'CLOUD RUNTIME',
