@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host "=================================================================" -ForegroundColor Cyan
-Write-Host "  Installing Bartholomew Autonomous Trust Protocol (BTP v2.2.0)  " -ForegroundColor Green
+Write-Host "  Installing Bartholomew Autonomous Trust Protocol (BTP v5.4.4)  " -ForegroundColor Green
 Write-Host "=================================================================" -ForegroundColor Cyan
 
 $InstallDir = "$HOME\.bartholomew"
@@ -27,11 +27,14 @@ if (-not $PythonCmd) {
     exit 1
 }
 
+Write-Host "[*] Installing btp-guard v5.4.4 from PyPI..." -ForegroundColor Yellow
+& python -m pip install --upgrade btp-guard --quiet
+
 # 3. Create Windows Batch Launcher
 $BatchFile = "$BinDir\bartholomew.cmd"
 $BatchContent = @"
 @echo off
-python -m src.cli %*
+python -m btp_guard.cli %* 2>nul || python -m src.cli %*
 "@
 Set-Content -Path $BatchFile -Value $BatchContent
 
@@ -43,9 +46,11 @@ if ($UserPath -notlike "*$BinDir*") {
     Write-Host "[*] Added $BinDir to User PATH environment variable." -ForegroundColor Green
 }
 
-Write-Host "`n[SUCCESS] Bartholomew Desktop CLI is installed!" -ForegroundColor Green
-Write-Host "You can now run:" -ForegroundColor Cyan
+Write-Host "`n[SUCCESS] Bartholomew Desktop CLI v5.4.4 is installed!" -ForegroundColor Green
+Write-Host "Run the 3-second instant safety sandbox:" -ForegroundColor Cyan
+Write-Host "  bartholomew try" -ForegroundColor Green
+Write-Host "Other commands:" -ForegroundColor Cyan
 Write-Host "  bartholomew version" -ForegroundColor White
 Write-Host "  bartholomew init" -ForegroundColor White
-Write-Host "  bartholomew audit ." -ForegroundColor White
+Write-Host "  bartholomew leads" -ForegroundColor White
 Write-Host "=================================================================" -ForegroundColor Cyan

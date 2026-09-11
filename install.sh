@@ -5,7 +5,7 @@
 set -e
 
 echo -e "\033[1;36m=================================================================\033[0m"
-echo -e "\033[1;32m  Installing Bartholomew Autonomous Trust Protocol (BTP v2.2.0)  \033[0m"
+echo -e "\033[1;32m  Installing Bartholomew Autonomous Trust Protocol (BTP v5.4.4)  \033[0m"
 echo -e "\033[1;36m=================================================================\033[0m"
 
 INSTALL_DIR="$HOME/.bartholomew"
@@ -18,10 +18,13 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+echo -e "\033[1;33m[*] Installing btp-guard v5.4.4 from PyPI...\033[0m"
+python3 -m pip install --upgrade btp-guard --quiet || true
+
 # Create executable launcher script
 cat << 'EOF' > "$BIN_DIR/bartholomew"
 #!/usr/bin/env bash
-python3 -m src.cli "$@"
+python3 -m btp_guard.cli "$@" 2>/dev/null || python3 -m src.cli "$@"
 EOF
 
 chmod +x "$BIN_DIR/bartholomew"
@@ -35,9 +38,11 @@ if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
     echo -e "\033[1;32m[*] Added $BIN_DIR to $SHELL_RC\033[0m"
 fi
 
-echo -e "\n\033[1;32m[SUCCESS] Bartholomew Desktop CLI is installed!\033[0m"
-echo -e "\033[1;36mYou can now run:\033[0m"
+echo -e "\n\033[1;32m[SUCCESS] Bartholomew Desktop CLI v5.4.4 is installed!\033[0m"
+echo -e "\033[1;36mRun the 3-second instant safety sandbox:\033[0m"
+echo -e "  \033[1;32mbartholomew try\033[0m"
+echo -e "\033[1;36mOther commands:\033[0m"
 echo -e "  bartholomew version"
 echo -e "  bartholomew init"
-echo -e "  bartholomew audit ."
+echo -e "  bartholomew leads"
 echo -e "\033[1;36m=================================================================\033[0m"
