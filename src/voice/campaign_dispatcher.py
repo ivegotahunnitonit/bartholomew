@@ -40,44 +40,47 @@ class CampaignDispatcher:
         company = lead.company or "your team"
         notes_lower = lead.notes.lower()
 
-        # Dynamic topic targeting
+        # Tailored, conversational hooks based on their setup
         if "sql" in notes_lower or "database" in notes_lower or "postgres" in notes_lower or "bigquery" in notes_lower:
-            hook = f"Saw your team is running autonomous query agents across production databases."
-            risk_point = "Prompt injection or unconstrained hallucinations triggering destructive DROP/ALTER DDL statements."
-            code_hook = "pip install btp-guard; # sub-25µs AST & dispatch-seam query validation"
+            subject = f"Quick question on AI database safety at {company}"
+            hook = f"Saw your team is working with autonomous query agents on production databases."
+            risk_point = "the nightmare of an agent accidentally running an unconstrained DROP TABLE or leaking customer records"
+            feature_highlight = "Stops accidental drops or table wipes in under a millisecond before the query ever touches your database"
         elif "autogen" in notes_lower or "migration" in notes_lower or "code" in notes_lower:
-            hook = f"Saw you're building autonomous code migration pipelines with Microsoft AutoGen."
-            risk_point = "Dynamic command concatenation (`shlex`, `getattr`) escaping syntax guards and touching host root."
-            code_hook = "from btp_guard import guard; guard.evaluate('bash', cmd) # runs in 20µs"
+            subject = f"AI code execution safeguards for {company}"
+            hook = f"Saw you're building automated code pipelines with AutoGen."
+            risk_point = "worrying that generated scripts or bash tools might touch sensitive files or loop infinitely"
+            feature_highlight = "Hard-blocks destructive shell actions (`rm -rf`, disk wipes, config overrides) before execution"
         elif "crewai" in notes_lower or "cluster" in notes_lower:
-            hook = f"Saw you're scaling autonomous CrewAI worker swarms in production."
-            risk_point = "Human-in-the-loop approval fatigue slowing release velocity while docker sandboxes still leak env secrets."
-            code_hook = "@btp_crewai_tool(strict=True) # local deterministic safety invariant"
-        elif "hipaa" in notes_lower or "soc 2" in notes_lower or "compliance" in notes_lower:
-            hook = f"Saw you're scaling autonomous clinical/financial agents under strict regulatory audit scrutiny."
-            risk_point = "Passing enterprise SOC 2 Type II or HIPAA audits without a tamper-proof cryptographic audit trail of agent actions."
-            code_hook = "Bartholomew provides 1-click signed Ed25519 Merkle evidence packs with zero cloud latency."
+            subject = f"Letting CrewAI agents run hands-free at {company}"
+            hook = f"Saw you're running CrewAI multi-agent swarms."
+            risk_point = "the constant headache of having to manually click 'Approve' on every single task just to be safe"
+            feature_highlight = "Acts as an automated safety net so your agents can run hands-free without approval bottlenecks"
         else:
-            hook = f"Saw you're deploying autonomous agent tools in production at {company}."
-            risk_point = "The dilemma between human-in-the-loop approval bottlenecks and autonomous prompt injection terror."
-            code_hook = "btp-guard runs locally in Python in under 35µs to block catastrophic commands before process launch."
+            subject = f"Preventing AI agent accidents at {company}"
+            hook = f"Saw you're deploying AI agents and tools at {company}."
+            risk_point = "runaway spend loops or agents making unexpected mistakes on customer data"
+            feature_highlight = "Enforces strict budget spend caps and catches dangerous commands before anything breaks"
 
-        subject = f"Autonomous tool safety at {company} (sub-35µs AST gate)"
-        direct_link = f"https://bartholomew.info/cloud?ref={lead.id}&company={company.replace(' ', '+')}"
+        direct_link = f"https://bartholomew.info/cookbook?ref={lead.id}&company={company.replace(' ', '+')}"
 
         body = (
             f"Hey {first_name},\n\n"
-            f"{hook} Curious how you guys are handling {risk_point}?\n\n"
-            f"We built Bartholomew (pip install btp-guard) to solve this:\n"
-            f"• Integration: 10 seconds (literally 1 decorator `@secure_tool`)\n"
-            f"• Performance: < 15µs latency (0.015ms, 10,000x faster than cloud filters)\n"
-            f"• Protection: 100% deterministic physical block on `rm -rf` and `DROP TABLE` before OS launch, with Ed25519-signed SOC 2 audit receipts.\n\n"
-            f"You can review your live company sandbox & export our 1-click SOC 2 evidence dossier here:\n"
+            f"{hook}\n\n"
+            f"Are you guys currently having someone manually approve every tool action, or letting them run hands-free? "
+            f"Most founders and small engineering teams we speak with are caught between two headaches: "
+            f"wasting hours babysitting bots, or {risk_point}.\n\n"
+            f"We built Bartholomew (pip install btp-guard) to give small teams and startups complete peace of mind:\n"
+            f"- Setup: 30 seconds (just one line: `@guard.protect` on your functions)\n"
+            f"- Safety: {feature_highlight}\n"
+            f"- Budget bounds: Set strict dollar limits so runaway loops never spike your cloud bill\n\n"
+            f"The core library is 100% free and open-source. For growing teams, our Pro plan is just $49/month.\n\n"
+            f"You can test it live in your browser in 5 seconds with zero setup here:\n"
             f"{direct_link}\n\n"
-            f"Zero sales pressure — happy to shoot over our 1-page quickstart or walk you through a 2-minute demo if you're exploring this.\n\n"
+            f"Zero sales pressure -- happy to shoot over our 1-page quickstart or chat if you're exploring this.\n\n"
             f"Best,\n"
             f"Alex\n"
-            f"Core Engineer @ Bartholomew Trust Protocol"
+            f"Builder @ Bartholomew"
         )
 
         recipient_email = lead.email or f"{first_name.lower()}@{company.lower().replace(' ', '')}.com"
