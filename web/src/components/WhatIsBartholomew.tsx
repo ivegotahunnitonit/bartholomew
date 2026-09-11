@@ -75,7 +75,7 @@ export default function WhatIsBartholomew() {
             )
           })}
 
-          {/* Pitch card */}
+          {/* Sentinel Companion Pitch Card */}
           <div
             className="card-hover p-6 sm:col-span-2 lg:col-span-1 flex flex-col justify-between rounded-2xl"
             style={{
@@ -84,13 +84,14 @@ export default function WhatIsBartholomew() {
             }}
           >
             <div>
-              <div className="badge badge-emerald mb-4">Zero-dependency</div>
+              <div className="badge badge-emerald mb-4">The Sentinel Companion</div>
               <h3 className="font-bold text-lg mb-2" style={{ color: '#f1f5f9', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                Runs everywhere — including air-gapped
+                Meet Bartholomew: Your Swarm's Loyal Guardian
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: '#94a3b8' }}>
-                Single Go binary. No Python, no npm, no cloud API calls required. 
-                Deploy to SCIF networks, K8s, Docker, or bare metal.
+                Bartholomew is not a cold wall or robotic error. He stands watch with microsecond grace (&lt;35us)
+                between ambitious models (GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1) and your production assets,
+                offering calm, constructive counsel whenever safety boundaries are approached.
               </p>
             </div>
             <a
@@ -98,7 +99,7 @@ export default function WhatIsBartholomew() {
               className="btn-primary mt-5 self-start"
               style={{ fontSize: '0.85rem', padding: '0.55rem 1.2rem' }}
             >
-              Explore Threat Simulator
+              Experience Bartholomew's Counsel
             </a>
           </div>
         </div>

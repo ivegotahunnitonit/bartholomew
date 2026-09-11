@@ -42,12 +42,23 @@ except ImportError:
     AlertSeverity = None
 
 
+try:
+    from src.bartholomew_companion import BartholomewCompanion
+except ImportError:
+    BartholomewCompanion = None
+
+
 class ModelProvider:
     OPENAI = "openai"
-    KIMI = "kimi"
-    DEEPSEEK = "deepseek"
+    GPT_ASTRA = "gpt_astra"
+    OPENAI_AGENTS_SDK = "openai_agents_sdk"
     ANTHROPIC = "anthropic"
+    CLAUDE_3_7 = "claude_3_7"
     GEMINI = "gemini"
+    GEMINI_2 = "gemini_2"
+    DEEPSEEK = "deepseek"
+    DEEPSEEK_R1 = "deepseek_r1"
+    KIMI = "kimi"
     OLLAMA = "ollama"
     UNIVERSAL = "universal"
 
@@ -56,7 +67,8 @@ class UniversalBTPModelGuard:
     """
     Universal wire-level interceptor that accepts raw tool-call objects or dictionaries
     emitted by any major LLM provider, normalizes them into an invariant payload,
-    and applies sub-35µs local AST gating and autonomous micro-escrows.
+    and applies sub-35µs local AST gating, Bartholomew companion counsel, and autonomous micro-escrows.
+    Supports GPT-Astra, Claude 3.7 (Hybrid Reasoning), Gemini 2.0, DeepSeek-R1, and OpenAI Agents SDK.
     """
 
     def __init__(
@@ -95,7 +107,8 @@ class UniversalBTPModelGuard:
     ) -> Tuple[str, Dict[str, Any]]:
         """
         Normalizes a provider-specific tool call payload into (tool_name, arguments_dict).
-        Supports dicts or objects with attributes.
+        Supports dicts or objects with attributes across GPT-Astra, Claude 3.7, Gemini 2.0,
+        DeepSeek-R1, and OpenAI Agents SDK.
         """
         # Convert object to dict if needed
         if not isinstance(tool_call, dict):
@@ -108,14 +121,21 @@ class UniversalBTPModelGuard:
         else:
             data = tool_call
 
-        # 1. Anthropic Tool Use format: {"type": "tool_use", "name": "...", "input": {...}}
+        # 1. Anthropic Claude 3.7 / 3.5 Content Array (with Hybrid Thinking Blocks):
+        # {"content": [{"type": "thinking", "thinking": "..."}, {"type": "tool_use", "name": "...", "input": {...}}]}
+        if "content" in data and isinstance(data["content"], list):
+            for block in data["content"]:
+                if isinstance(block, dict) and block.get("type") == "tool_use":
+                    return block.get("name", ""), block.get("input", {})
+
+        # 2. Anthropic Direct Tool Use: {"type": "tool_use", "name": "...", "input": {...}}
         if data.get("type") == "tool_use" or ("name" in data and "input" in data):
             tool_name = data.get("name", "")
             raw_input = data.get("input", {})
             args = raw_input if isinstance(raw_input, dict) else {"payload": str(raw_input)}
             return tool_name, args
 
-        # 2. Google Gemini FunctionCall format: {"functionCall": {"name": "...", "args": {...}}}
+        # 3. Google Gemini 2.0 / 1.5 FunctionCall: {"functionCall": {"name": "...", "args": {...}}}
         if "functionCall" in data or "function_call" in data:
             fc = data.get("functionCall") or data.get("function_call") or {}
             tool_name = fc.get("name", "")
@@ -129,24 +149,35 @@ class UniversalBTPModelGuard:
                 args = raw_args
             return tool_name, args
 
-        # 3. OpenAI / Kimi (Moonshot) / DeepSeek / Ollama standard format:
+        # 4. OpenAI Agents SDK format: {"tool_name": "...", "tool_arguments": {...}}
+        if "tool_name" in data and ("tool_arguments" in data or "arguments" in data):
+            tool_name = data.get("tool_name", "")
+            raw_args = data.get("tool_arguments") or data.get("arguments") or {}
+            args = raw_args if isinstance(raw_args, dict) else {"payload": str(raw_args)}
+            return tool_name, args
+
+        # 5. OpenAI / GPT-Astra / DeepSeek / Ollama standard format:
         # {"id": "...", "type": "function", "function": {"name": "...", "arguments": "{...}"}}
         if "function" in data and isinstance(data["function"], dict):
             fn = data["function"]
             tool_name = fn.get("name", "")
             raw_args = fn.get("arguments", {})
             if isinstance(raw_args, str):
+                # Clean DeepSeek-R1 / reasoning scratchpad if embedded
+                clean_str = raw_args
+                if "<think>" in clean_str and "</think>" in clean_str:
+                    clean_str = clean_str.split("</think>")[-1].strip()
                 try:
-                    args = json.loads(raw_args)
+                    args = json.loads(clean_str)
                 except Exception:
-                    args = {"payload": raw_args}
+                    args = {"payload": clean_str}
             elif isinstance(raw_args, dict):
                 args = raw_args
             else:
                 args = {"payload": str(raw_args)}
             return tool_name, args
 
-        # 4. Flat / Direct format: {"name": "...", "arguments": {...}}
+        # 6. Flat / Direct format: {"name": "...", "arguments": {...}}
         if "name" in data and ("arguments" in data or "args" in data or "parameters" in data):
             tool_name = data.get("name", "")
             raw_args = data.get("arguments") or data.get("args") or data.get("parameters") or {}
@@ -159,7 +190,7 @@ class UniversalBTPModelGuard:
                 args = raw_args
             return tool_name, args
 
-        # 5. Fallback generic
+        # 7. Fallback generic
         tool_name = data.get("name", "unknown_tool")
         return tool_name, {k: v for k, v in data.items() if k != "name"}
 
@@ -314,10 +345,21 @@ class UniversalBTPModelGuard:
                 except Exception:
                     pass
 
+            counsel_msg = ""
+            if BartholomewCompanion is not None:
+                counsel_msg = BartholomewCompanion.counsel(
+                    rule_id=violation_rule or "BTP-AST-001",
+                    reason=f"Invariant violation '{violation_rule}' in tool '{tool_name}'",
+                    blocked_payload=serialized_args
+                )
+
             err_msg = (
                 f"BTP Universal Guard VETO [{provider.upper()}]: Tool call '{tool_name}' violated invariant "
                 f"'{violation_rule}'. AST latency: {latency_us:.2f}µs."
             )
+            if counsel_msg:
+                err_msg += f"\n{counsel_msg}"
+
             if self.strict:
                 raise PermissionError(err_msg)
             return {
@@ -325,6 +367,7 @@ class UniversalBTPModelGuard:
                 "provider": provider,
                 "tool_name": tool_name,
                 "violation": violation_rule,
+                "counsel": counsel_msg,
                 "latency_us": latency_us,
                 "dispute_id": dispute_id,
                 "fault_proof": proof_data,

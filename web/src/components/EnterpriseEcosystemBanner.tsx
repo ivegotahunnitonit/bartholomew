@@ -58,10 +58,23 @@ export default function EnterpriseEcosystemBanner() {
       )
     },
     {
-      name: 'Claude Desktop & Cursor',
-      label: 'Standard MCP Protocol Proxy',
-      category: 'DEVELOPER AGENT IDE',
-      badge: 'MCP Compliant',
+      name: 'OpenAI GPT-Astra & Agents SDK',
+      label: 'Multi-Agent Tool Call AST Gate',
+      category: 'FRONTIER REASONING',
+      badge: 'GPT-Astra Guarded',
+      color: '#10b981',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2a4 4 0 0 1 3.5 2.1l.5.9a4 4 0 0 1 1.5 5.5l-.5.9a4 4 0 0 1-2 5.3l-.9.5a4 4 0 0 1-5.6-1.5l-.5-.9a4 4 0 0 1-1.5-5.5l.5-.9a4 4 0 0 1 2-5.3l.9-.5A4 4 0 0 1 12 2z"/>
+          <path d="M12 8v8m-4-6l8 4m-8 0l8-4"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Claude 3.7 Sonnet & Opus',
+      label: 'Hybrid Reasoning Scratchpad Defense',
+      category: 'HYBRID THINKING',
+      badge: 'Thinking Blocks Safe',
       color: '#d97706',
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#d97706">
@@ -70,15 +83,15 @@ export default function EnterpriseEcosystemBanner() {
       )
     },
     {
-      name: 'OpenAI Swarms & GPT-4o',
-      label: 'Function Calling AST Inspector',
-      category: 'FUNCTION EXECUTION',
-      badge: 'Tool Calling Gate',
-      color: '#10b981',
+      name: 'DeepSeek-R1 & V3',
+      label: 'Open Reasoning Invariant Verifier',
+      category: 'OPEN FRONTIER',
+      badge: 'Chain-of-Thought Safe',
+      color: '#3b82f6',
       icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2a4 4 0 0 1 3.5 2.1l.5.9a4 4 0 0 1 1.5 5.5l-.5.9a4 4 0 0 1-2 5.3l-.9.5a4 4 0 0 1-5.6-1.5l-.5-.9a4 4 0 0 1-1.5-5.5l.5-.9a4 4 0 0 1 2-5.3l.9-.5A4 4 0 0 1 12 2z"/>
-          <path d="M12 8v8m-4-6l8 4m-8 0l8-4"/>
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v8M8 12h8" />
         </svg>
       )
     },

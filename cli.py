@@ -54,6 +54,35 @@ def cmd_pricing(args):
     print("=" * 70 + "\n")
 
 
+def cmd_whoami(args):
+    """Prints Bartholomew's companion introduction and sentinel oath."""
+    try:
+        from src.bartholomew_companion import BartholomewCompanion
+        print(BartholomewCompanion.introduction())
+    except ImportError:
+        print("I am Bartholomew (BTP v5.4.4). Sovereign Sentinel Companion for Autonomous Agents.")
+
+
+def cmd_models(args):
+    """Displays the matrix of supported frontier models and multi-agent frameworks."""
+    try:
+        from src.bartholomew_companion import BartholomewCompanion
+        roster = BartholomewCompanion.get_supported_model_roster()
+        print("\n" + "=" * 76)
+        print("      BARTHOLOMEW FRONTIER MODEL & FRAMEWORK PROTECTION MATRIX")
+        print("=" * 76)
+        for category, items in roster.items():
+            print(f"\n[+] {category}:")
+            for item in items:
+                if "id" in item:
+                    print(f"    - {item['id']:<22} | {item['desc']:<44} [{item['status']}]")
+                elif "name" in item:
+                    print(f"    - {item['name']:<22} | Adapter: {item['adapter']:<28} [ACTIVE]")
+        print("=" * 76 + "\n")
+    except Exception as e:
+        print(f"[-] Error loading model matrix: {e}")
+
+
 def cmd_upgrade(args):
     import webbrowser
     tier = getattr(args, "tier", "pro") or "pro"
@@ -2703,9 +2732,20 @@ def main():
     try_p = subparsers.add_parser("try", help="Run 3-second instant interactive safety sandbox simulation")
     try_p.add_argument("--interactive", "-i", action="store_true", help="Prompt for custom commands to test")
 
+    # whoami / bartholomew (Anthropomorphic Sentinel Persona)
+    subparsers.add_parser("whoami", help="Display Bartholomew's sovereign sentinel introduction and guardian oath")
+    subparsers.add_parser("bartholomew", help="Display Bartholomew's sovereign sentinel introduction and guardian oath")
+
+    # models (Frontier Model Protection Matrix)
+    subparsers.add_parser("models", help="List protected frontier models (GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1)")
+
     args = parser.parse_args()
 
-    if args.command == "leads":
+    if args.command in ("whoami", "bartholomew"):
+        cmd_whoami(args)
+    elif args.command == "models":
+        cmd_models(args)
+    elif args.command == "leads":
         cmd_leads_list(args)
     elif args.command == "try":
         cmd_try(args)

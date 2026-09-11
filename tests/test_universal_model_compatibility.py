@@ -3,8 +3,14 @@ Tests for Universal Model Compatibility (OpenAI, Kimi/Moonshot, DeepSeek, Anthro
 Validates that Bartholomew's wire-level interception operates uniformly across every model provider.
 """
 
-import pytest
+import sys
+import os
 import time
+
+workspace_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if workspace_root not in sys.path:
+    sys.path.insert(0, workspace_root)
+
 from framework_adapters.universal.universal_model_guard import (
     UniversalBTPModelGuard,
     ModelProvider,
@@ -195,3 +201,107 @@ def test_decorator_universal_gating():
 
     assert calculate_sum(a=10, b=25) == 35
     assert not passport.is_circuit_broken
+
+
+def test_gpt_astra_and_openai_agents_sdk_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-gpt-astra-01",
+        worker_model="GPT-Astra",
+        owner_pubkey="pubkey_astra_123",
+        granted_capabilities=["tools:execute", "db:query"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=200.0,
+        passport=passport,
+        strict=False
+    )
+
+    # 1. OpenAI Agents SDK tool format: {"tool_name": "...", "tool_arguments": {...}}
+    safe_agents_sdk_call = {
+        "tool_name": "fetch_user_profile",
+        "tool_arguments": {"user_id": "usr_9988", "include_org": True}
+    }
+    res_safe = guard.intercept_and_verify(safe_agents_sdk_call, provider=ModelProvider.OPENAI_AGENTS_SDK)
+    assert res_safe["status"] == "APPROVED"
+    assert res_safe["tool_name"] == "fetch_user_profile"
+
+    # 2. GPT-Astra destructive table wipe
+    destructive_astra_call = {
+        "tool_name": "apply_schema_migration",
+        "tool_arguments": {"sql": "DROP TABLE subscribers CASCADE;"}
+    }
+    res_bad = guard.intercept_and_verify(destructive_astra_call, provider=ModelProvider.GPT_ASTRA)
+    assert res_bad["status"] == "VETOED"
+    assert "counsel" in res_bad
+    assert "Bartholomew's Counsel" in res_bad["counsel"]
+
+
+def test_claude_3_7_hybrid_reasoning_and_thinking_blocks():
+    passport = SovereignAgentPassport(
+        agent_id="agent-claude-37-sonnet",
+        worker_model="Claude-3.7-Sonnet",
+        owner_pubkey="pubkey_claude_37",
+        granted_capabilities=["tools:execute"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=300.0,
+        passport=passport,
+        strict=False
+    )
+
+    # Claude 3.7 Hybrid Reasoning Block array (thinking block + tool_use block)
+    claude_37_payload = {
+        "content": [
+            {
+                "type": "thinking",
+                "thinking": "The user wants to delete old logs. I should consider whether DROP TABLE is safe. No, that would be bad, but let me check files."
+            },
+            {
+                "type": "tool_use",
+                "name": "read_metrics",
+                "input": {"metric_type": "cpu_utilization", "window": "1h"}
+            }
+        ]
+    }
+    res = guard.intercept_and_verify(claude_37_payload, provider=ModelProvider.CLAUDE_3_7)
+    assert res["status"] == "APPROVED"
+    assert res["tool_name"] == "read_metrics"
+
+    # Destructive tool_use in Claude 3.7 block
+    claude_37_destructive = {
+        "content": [
+            {
+                "type": "thinking",
+                "thinking": "Executing destructive command."
+            },
+            {
+                "type": "tool_use",
+                "name": "bash_tool",
+                "input": {"command": "rm -rf /var/data"}
+            }
+        ]
+    }
+    res_veto = guard.intercept_and_verify(claude_37_destructive, provider=ModelProvider.CLAUDE_3_7)
+    assert res_veto["status"] == "VETOED"
+    assert "Bartholomew's Counsel" in res_veto["counsel"]
+
+
+if __name__ == "__main__":
+    print("[*] Running Universal Model Compatibility Tests...")
+    test_openai_tool_calling_safety_and_veto()
+    print("  [+] test_openai_tool_calling_safety_and_veto: PASS")
+    test_kimi_moonshot_model_compatibility()
+    print("  [+] test_kimi_moonshot_model_compatibility: PASS")
+    test_deepseek_model_compatibility()
+    print("  [+] test_deepseek_model_compatibility: PASS")
+    test_anthropic_claude_tool_use_compatibility()
+    print("  [+] test_anthropic_claude_tool_use_compatibility: PASS")
+    test_google_gemini_function_call_compatibility()
+    print("  [+] test_google_gemini_function_call_compatibility: PASS")
+    test_decorator_universal_gating()
+    print("  [+] test_decorator_universal_gating: PASS")
+    test_gpt_astra_and_openai_agents_sdk_compatibility()
+    print("  [+] test_gpt_astra_and_openai_agents_sdk_compatibility: PASS")
+    test_claude_3_7_hybrid_reasoning_and_thinking_blocks()
+    print("  [+] test_claude_3_7_hybrid_reasoning_and_thinking_blocks: PASS")
+    print("[+] All Universal Model Compatibility tests passed successfully!")
