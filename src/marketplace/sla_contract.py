@@ -125,7 +125,7 @@ class SLAContract:
     payment_budget_usd: float
     provider_bond_usd: float
     deadline_timestamp: float
-    settlement_rail: str = "L402_LIGHTNING"
+    settlement_rail: str = "STRIPE_USD"
     status: SLAContractStatus = SLAContractStatus.PROPOSED
     client_escrow_id: Optional[str] = None
     provider_escrow_id: Optional[str] = None
@@ -193,7 +193,7 @@ class AgentMarketplaceEngine:
                 min_bond_usd=50.0,
                 reputation_score=0.99,
                 jobs_completed=142,
-                settlement_rails=["L402_LIGHTNING", "EVM_BASE"],
+                settlement_rails=["STRIPE_USD", "ACH_TRANSFER", "CORPORATE_INVOICE"],
             ),
             MarketplaceListing(
                 agent_id="agent-code-auditor-99",
@@ -205,19 +205,19 @@ class AgentMarketplaceEngine:
                 min_bond_usd=20.0,
                 reputation_score=0.98,
                 jobs_completed=289,
-                settlement_rails=["L402_LIGHTNING", "EVM_BASE", "EVM_ARBITRUM"],
+                settlement_rails=["STRIPE_USD", "CORPORATE_INVOICE", "ACH_TRANSFER"],
             ),
             MarketplaceListing(
                 agent_id="agent-liquidity-arbiter-07",
                 tenant_id="ten_acme_corp_prod",
                 org_id="acme-corp",
                 display_name="Acme Quantitative Liquidity Router",
-                capabilities=["dex_arbitrage", "l402_settle", "slippage_guard"],
+                capabilities=["dex_arbitrage", "corporate_settle", "slippage_guard"],
                 rate_usd_per_job=180.0,
                 min_bond_usd=40.0,
                 reputation_score=0.97,
                 jobs_completed=88,
-                settlement_rails=["L402_LIGHTNING", "EVM_BASE"],
+                settlement_rails=["STRIPE_USD", "CORPORATE_INVOICE", "ACH_TRANSFER"],
             ),
         ]
         for l in defaults:
@@ -260,7 +260,7 @@ class AgentMarketplaceEngine:
         budget_usd: float,
         provider_bond_usd: float,
         ttl_seconds: int = 3600,
-        settlement_rail: str = "L402_LIGHTNING"
+        settlement_rail: str = "STRIPE_USD"
     ) -> SLAContract:
         provider = self.listings.get(provider_agent_id)
         if not provider:

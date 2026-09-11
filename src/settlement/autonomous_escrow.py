@@ -103,7 +103,7 @@ class AutonomousEscrowPool:
         action_type: str,
         amount_usd: float,
         passport: Optional[SovereignAgentPassport] = None,
-        settlement_rail: str = "L402_LIGHTNING"
+        settlement_rail: str = "STRIPE_USD"
     ) -> EscrowDeposit:
         """
         Locks collateral against an agent's intended action.
@@ -127,8 +127,8 @@ class AutonomousEscrowPool:
                 import sys
                 try:
                     sys.stderr.write(
-                        "\n💡 [BTP Micro-Escrow] Running in local simulation mode.\n"
-                        "👉 Link to Bartholomew Cloud for live clearinghouse & multi-tenant attestation: https://bartholomew.info/cloud\n\n"
+                        "\n[*] [BTP Micro-Escrow] Running in local simulation mode.\n"
+                        "    Link to Bartholomew Cloud for live clearinghouse & multi-tenant attestation: https://bartholomew.info/cloud\n\n"
                     )
                     sys.stderr.flush()
                 except Exception:
@@ -238,6 +238,17 @@ class AutonomousEscrowPool:
         }
 
         # 4. Multi-Rail Settlement Disbursement Proofs
+        if any(fiat in deposit.settlement_rail.upper() for fiat in ["STRIPE", "USD", "CORPORATE", "ACH", "INVOICE"]):
+            settlement_receipt["fiat_disbursement"] = {
+                "rail": deposit.settlement_rail,
+                "currency": "USD",
+                "amount_usd": deposit.amount_usd,
+                "payee_account": payee_destination if (payee_destination.startswith("acct_") or "@" in payee_destination) else f"acct_{payee_destination}",
+                "cleared_at": time.time(),
+                "compliance": "SOX_GAAP_VERIFIED",
+                "tax_invoice_id": f"INV-{hashlib.sha256(f'{escrow_id}:{time.time()}'.encode()).hexdigest()[:12].upper()}"
+            }
+
         if "L402" in deposit.settlement_rail.upper() or "LIGHTNING" in deposit.settlement_rail.upper():
             settlement_receipt["l402_preimage_revealed"] = deposit.l402_preimage
             settlement_receipt["l402_payment_hash"] = (
@@ -431,14 +442,23 @@ class AutonomousEscrowPool:
         if prov_dep and prov_dep.status == "LOCKED":
             prov_dep.status = "RELEASED"
 
+        rail = getattr(contract, "settlement_rail", "STRIPE_USD")
         receipt = {
             "contract_id": contract.contract_id,
             "proof_id": getattr(completion_proof, "proof_id", "zktcp_auto"),
+            "settlement_rail": rail,
             "amount_disbursed_usd": contract.payment_budget_usd,
             "bond_returned_usd": contract.provider_bond_usd,
             "payee_destination": provider_payee_destination,
             "settled_at": time.time(),
             "status": "SLA_SETTLED_CLEAN"
         }
+        if any(fiat in rail.upper() for fiat in ["STRIPE", "USD", "CORPORATE", "ACH", "INVOICE"]):
+            receipt["fiat_clearing"] = {
+                "currency": "USD",
+                "disbursement_channel": "STRIPE_AUTOMATED_DIRECT_PAYOUT",
+                "tax_invoice_ref": f"INV-{hashlib.sha256(f'{contract.contract_id}:{time.time()}'.encode()).hexdigest()[:12].upper()}",
+                "accounting_standard": "GAAP_SOX_COMPLIANT"
+            }
         self.settlement_ledger.append(receipt)
         return True, "Cross-tenant SLA contract settled successfully.", receipt

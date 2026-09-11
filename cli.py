@@ -1971,7 +1971,7 @@ def cmd_marketplace_contract_create(args):
         required_capability=args.capability,
         budget_usd=args.budget,
         provider_bond_usd=args.bond,
-        settlement_rail=getattr(args, "rail", "L402_LIGHTNING")
+        settlement_rail=getattr(args, "rail", "STRIPE_USD")
     )
     # Lock conditional two-sided escrow
     c_dep, p_dep = pool.lock_sla_escrow(contract)
@@ -2688,7 +2688,7 @@ def main():
     mkt_create_p.add_argument("--capability", required=True, help="Required capability scope")
     mkt_create_p.add_argument("--budget", type=float, required=True, help="Budget amount in USD")
     mkt_create_p.add_argument("--bond", type=float, default=25.0, help="Provider performance bond USD")
-    mkt_create_p.add_argument("--rail", default="L402_LIGHTNING", choices=["L402_LIGHTNING", "EVM_BASE", "EVM_ARBITRUM"], help="Settlement rail")
+    mkt_create_p.add_argument("--rail", default="STRIPE_USD", choices=["STRIPE_USD", "CORPORATE_INVOICE", "ACH_TRANSFER", "L402_LIGHTNING", "EVM_BASE", "EVM_ARBITRUM"], help="Settlement rail (default: STRIPE_USD)")
 
     mkt_fulfill_p = mkt_sub.add_parser("contract-fulfill", help="Submit zk-TCP proof and settle cross-tenant SLA escrow")
     mkt_fulfill_p.add_argument("--contract-id", "-i", required=True, help="Contract ID to fulfill")
