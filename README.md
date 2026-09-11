@@ -7,17 +7,18 @@
 
 <div align="center">
 
+[![Pro Tier](https://img.shields.io/badge/Bartholomew%20Pro-%2449%2Fmo-10b981?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
+[![Enterprise Tier](https://img.shields.io/badge/Enterprise-%24199%2Fmo-6366f1?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
 [![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg?style=for-the-badge&logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/btp-guard/)
 [![npm version](https://img.shields.io/npm/v/btp-guard.svg?style=for-the-badge&logo=npm&logoColor=white&color=red)](https://www.npmjs.com/package/btp-guard)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v4.1.0-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.4-8957e5.svg?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![Tests](https://img.shields.io/badge/Tests-2%2C723%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Universal Cookbook](https://img.shields.io/badge/Cookbook-All%203%20Horizons%20%2B%20IDEs-orange.svg?style=for-the-badge)](COOKBOOK.md)
-[![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://acn-26670.web.app/#universal-cookbook)
-[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v4.1.0-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
+[![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://bartholomew.info)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v5.4.4-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
 [![Throughput](https://img.shields.io/badge/Throughput-1.05M%20evals%2Fsec-10b981.svg?style=for-the-badge&logo=speedtest&logoColor=white)](test_v25_kernel_benchmark.py)
 [![Latency](https://img.shields.io/badge/Latency-%3C35%C2%B5s%20In--Process-6366f1.svg?style=for-the-badge)](paper_v3_0.pdf)
 [![SOC 2 Type II](https://img.shields.io/badge/SOC%202%20Type%20II-CC7.1%20%2F%20CC7.2%20Ready-success.svg?style=for-the-badge)](scripts/generate_soc2_compliance_evidence.py)
-[![AutoGen Recipe](https://img.shields.io/badge/Microsoft%20AutoGen-Security%20Recipe-0078D4.svg?style=for-the-badge&logo=microsoft&logoColor=white)](examples/autogen_btp_security_recipe.py)
 
 </div>
 
@@ -262,12 +263,16 @@ Outputs:
 
 ---
 
-### **[PRICING] Subscription & Licensing**
+### **[COMMERCIAL] Commercial Editions & Cloud Fleet Management**
 
-* **Developer Edition (Apache 2.0 / Open Source):** Free forever for local Python/TypeScript agents, MCP clients, and open-source models.
-* **Pro Tier ($49/month):** Real-time cloud policy editor, 10M events/month, priority MCP registry indexing.
-* **Enterprise Tier ($199/month):** SOC 2 Type II continuous evidence generation, on-premises enclave deployments, dedicated audit ledger support.
-* **Official Store:** [bartholomew.info/store/](https://bartholomew.info/store/)
+| Tier | Price | Features | Direct Checkout |
+| :--- | :--- | :--- | :--- |
+| **Community** | **Free Forever** | Offline in-memory AST gating, Ed25519 local signing, secret scrubbing, local SQLite audit trail | Included in repo |
+| **Bartholomew Pro** | **$49 / month** | Real-time Cloud Telemetry dashboard, Slack threat alerts, SIEM event streaming, priority MCP indexing | [**Upgrade to Pro &rarr;**](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600) |
+| **Enterprise Fleet** | **$199 / month** | Multi-tenant workspace isolation, continuous SOC 2 Type II audit packs, eBPF syscall tracing, dedicated CISO ledger | [**Upgrade to Enterprise &rarr;**](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601) |
+
+* **Fleet Dashboard:** [https://bartholomew.info/cloud](https://bartholomew.info/cloud)
+* **Live Pricing & Portal:** [https://bartholomew.info/pricing](https://bartholomew.info/pricing)
 
 ---
 

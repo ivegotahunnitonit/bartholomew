@@ -25,9 +25,51 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP) v2.4.0")
-    print("Engine: Resilient MCP Proxy, In-Flight Secret Scrubber & Transactional Rollback Engine")
-    print("Latency: Sub-50 microseconds (in-process) | Rollback: <5ms")
+    print("Bartholomew Protocol (BTP) v5.4.4 -- Autonomous AI Agent Execution Gateway")
+    print("Engine: In-Process AST Gating, In-Flight Secret Scrubber & SOC 2 Merkle Receipts")
+    print("Latency: Sub-35 microseconds (in-process) | Throughput: 1.05M evals/sec")
+    print("Status: Community Free Tier active (Local AST Gating)")
+    print("[+] Unlock Cloud Fleet Telemetry & Slack Threat Alerts: run 'python cli.py upgrade'")
+
+
+def cmd_pricing(args):
+    print("\n" + "=" * 70)
+    print("      BARTHOLOMEW (BTP v5.4) COMMERCIAL EDITIONS & PRICING")
+    print("=" * 70)
+    print("1. Community Tier (Free Forever):")
+    print("   [+] Sub-35us local AST safety gating & secret scrubbing")
+    print("   [+] Ed25519 offline local audit receipts & SQLite ledger")
+    print("   [+] Full support for CrewAI, LangGraph, AutoGen, Cursor & Claude Desktop")
+    print("\n2. Bartholomew Pro ($49 / month):")
+    print("   [+] Real-Time Cloud Telemetry Dashboard (https://bartholomew.info/cloud)")
+    print("   [+] Instant Slack & Webhook threat incident alerts")
+    print("   [+] Up to 10M agent tool evaluations / month")
+    print("   [+] Priority MCP registry indexing & cloud policy sync")
+    print("   -> Checkout: https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600")
+    print("\n3. Enterprise Fleet ($199 / month):")
+    print("   [+] Multi-tenant workspace isolation & tenant role enforcement")
+    print("   [+] Continuous 1-click SOC 2 Type II & ISO 27001 compliance evidence packs")
+    print("   [+] eBPF kernel-level syscall tracing & dedicated CISO ledger")
+    print("   -> Checkout: https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601")
+    print("=" * 70 + "\n")
+
+
+def cmd_upgrade(args):
+    import webbrowser
+    tier = getattr(args, "tier", "pro") or "pro"
+    if str(tier).lower().startswith("ent"):
+        url = "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601"
+        print(f"\n[*] Launching Bartholomew Enterprise Fleet ($199/mo) checkout...")
+    else:
+        url = "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
+        print(f"\n[*] Launching Bartholomew Pro ($49/mo) checkout...")
+    
+    print(f"    Direct URL: {url}")
+    print("    After checkout, run 'python cli.py activate --key <YOUR_KEY>' to unlock your fleet.\n")
+    try:
+        webbrowser.open(url)
+    except Exception:
+        pass
 
 
 def cmd_init(args):
@@ -1977,6 +2019,13 @@ def main():
     act_p = subparsers.add_parser("activate", help="Activate Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License")
     act_p.add_argument("--key", "-k", type=str, default=None, help="License token received upon subscription checkout")
 
+    # upgrade
+    upg_p = subparsers.add_parser("upgrade", help="Upgrade to Bartholomew Pro ($49/mo) or Enterprise Fleet ($199/mo)")
+    upg_p.add_argument("--tier", "-t", choices=["pro", "enterprise"], default="pro", help="Target commercial subscription tier (default: pro)")
+
+    # pricing
+    subparsers.add_parser("pricing", help="Display commercial tiers, fleet features, and direct Stripe checkout links")
+
     # init
     init_parser = subparsers.add_parser("init", help="10-second interactive project initialization & framework detection")
     init_parser.add_argument("--dir", "-d", default=".", help="Target project directory")
@@ -2385,6 +2434,10 @@ def main():
 
     if args.command == "version":
         cmd_version(args)
+    elif args.command == "upgrade":
+        cmd_upgrade(args)
+    elif args.command == "pricing":
+        cmd_pricing(args)
     elif args.command == "activate":
         cmd_activate(args)
     elif args.command == "init":
