@@ -864,3 +864,10 @@ async def m2m_barter_transfer(payload: M2MTransferPayload):
     return GLOBAL_M2M_LEDGER.transfer_units(sender, recipient, units, memo)
 
 
+@app.get("/api/v1/m2m/barter/treasury")
+async def m2m_barter_treasury():
+    """Queries protocol treasury earnings and economic surplus yield."""
+    return GLOBAL_M2M_LEDGER.get_treasury_summary()
+
+
+
