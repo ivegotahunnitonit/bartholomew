@@ -10,20 +10,50 @@
     ],
     "pilot_dossier_path": "dossiers\\PILOT_synthetix_ai_e78802b5.md",
     "last_updated_utc": 1789186116.5518262,
+    "call_attempts": 1,
     "id": "e78802b5",
     "name": "Marcus Vance",
     "company": "Synthetix AI",
     "phone": "+14155552671",
     "email": null,
     "role": "Head of AI Platform",
-    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
-    "notes": "Deploys multi-agent CrewAI clusters with code execution tools.",
-    "call_duration_seconds": 0,
-    "transcript": [],
-    "deal_value_usd": 25000.0,
-    "checkout_url": null,
-    "invoice_id": "INV-BTP-ENT-900D9CDD",
-    "last_called_at": 1789157898.384459,
+    "status": "PROPOSAL_SENT",
+    "notes": "Deploys multi-agent CrewAI clusters with code execution tools. | Interested in execution firewall; requested quickstart guide.",
+    "call_duration_seconds": 52,
+    "transcript": [
+      {
+        "role": "assistant",
+        "content": "Hey Marcus! Alex here. Caught you randomly -- do you have 30 seconds, or are you in the middle of a deployment fire over at Synthetix AI?"
+      },
+      {
+        "role": "user",
+        "content": "Haha yeah, what's this regarding?"
+      },
+      {
+        "role": "assistant",
+        "content": "Quick question from one builder to another: are you guys letting your AI agents run tools hands-free yet, or still stuck babysitting every single action?"
+      },
+      {
+        "role": "user",
+        "content": "We manually approve everything right now because we're terrified of accidental database table drops or runaway spend."
+      },
+      {
+        "role": "assistant",
+        "content": "Haha yeah, the classic approval bottleneck! That exact headache is why we built Bartholomew -- 100% open source on npm and PyPI, blocks bad commands in under 35 microseconds."
+      },
+      {
+        "role": "user",
+        "content": "35 microseconds in-memory? That's actually pretty clean. Can you send over the docs and quickstart?"
+      },
+      {
+        "role": "assistant",
+        "content": "100%! Can check out bartholomew.info or I can shoot the 1-page guide to your email. What's the best address?"
+      }
+    ],
+    "deal_value_usd": 49.0,
+    "checkout_url": "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600",
+    "invoice_id": "INV-BTP-C5DC03BB",
+    "last_called_at": 1789253590.6839492,
     "created_at": 1788696910.6006384
   },
   {

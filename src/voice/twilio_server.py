@@ -51,7 +51,16 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
     if call_sid not in conversation_histories:
         conversation_histories[call_sid] = []
 
-    # 1. Fast sub-millisecond keyword objection matcher
+    # 1. Recipient Intent Classification: check if answering party is voicemail/IVR
+    from src.voice.sales_persona import classify_recipient_intent, CallRecipientType, generate_voicemail_text
+    rec_type, reason = classify_recipient_intent(user_speech)
+    if rec_type in (CallRecipientType.VOICEMAIL, CallRecipientType.IVR):
+        logger.info(f"Voicemail detected during speech analysis [{call_sid}]: {reason}")
+        reply = format_speech_for_natural_delivery(generate_voicemail_text("there", "your team"))
+        conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
+        return reply
+
+    # 2. Fast sub-millisecond keyword objection matcher (including AI-proofing)
     speech_lower = user_speech.lower()
     for obj in OBJECTIONS:
         if any(kw in speech_lower for kw in obj.keywords):
@@ -59,7 +68,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
             conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
             return reply
 
-    # 2. Query Gemini with fast timeout and Astra-level conversational prompt
+    # 3. Query Gemini with fast timeout and Astra-level conversational prompt
     key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if key:
         prompt = generate_session_instructions("there")
@@ -74,8 +83,8 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
             contents = (
                 f"{prompt}\n\n"
                 f"Prospect just said on phone: \"{user_speech}\"\n\n"
-                "Reply as Alex in 1 to 2 short conversational sentences (10-25 words max), "
-                "mirroring their emotion or technical problem naturally:"
+                "Reply as Alex in 1 to 2 short conversational sentences (15-25 words max), "
+                "speaking articulately and addressing their technical situation directly:"
             )
 
             for model_name in ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash"]:
@@ -85,7 +94,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
                         contents=contents,
                         config=types.GenerateContentConfig(
                             max_output_tokens=80,
-                            temperature=0.7
+                            temperature=0.6
                         )
                     )
                     if resp and resp.text:
@@ -97,7 +106,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
         except Exception as exc:
             logger.error(f"GenAI error: {exc}")
 
-    return "Haha yeah, totally hear you. Are you guys letting your agents run tools autonomously, or still babysitting every step?"
+    return "Understood. Is your team currently allowing AI agents to run tools autonomously, or are you gating actions with manual approvals?"
 
 
 # ---------------------------------------------------------------------------
@@ -234,7 +243,7 @@ async def voice_interactive_start(request: Request):
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="5">
-        <Say voice="Polly.Joey-Neural">Hey there, Alex here. Caught you randomly — saw your team is building with autonomous agents. We built Bartholomew, an open-source execution firewall that blocks dangerous shell commands and database drops in under 35 microseconds. Do you have 30 seconds, or did I catch you in the middle of a deployment fire?</Say>
+        <Say voice="Polly.Joey-Neural">Hello there, Alex here from Bartholomew Trust. Caught you briefly — saw your team is deploying autonomous agent workflows. We provide an in-memory execution gate that prevents destructive commands and unconstrained spend in sub-35 microseconds. Do you have 30 seconds, or did I catch you in the middle of a deployment release?</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>"""

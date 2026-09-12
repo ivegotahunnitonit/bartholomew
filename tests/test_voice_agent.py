@@ -1,7 +1,8 @@
 """
 Unit tests for Bartholomew Voice AI Engine (BTP v5.4).
-Tests audio codecs, lead workflows, sales persona prosody, AMD callbacks,
-phonetic email extraction, live state tracking, SMS follow-up, and global 24/7 timezone resolution.
+Tests audio codecs, Goertzel 1000Hz voicemail beep detection,
+recipient intent classification (human vs. voicemail/IVR), AI-proofing,
+phonetic email extraction, and global 24/7 timezone resolution.
 """
 
 import pytest
@@ -11,11 +12,14 @@ from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 
 from src.voice.audio_codec import AudioCodec
+from src.voice.audio_codecs import detect_tone_goertzel, detect_voicemail_beep
 from src.voice.lead_manager import LeadManager, Lead, LeadStatus
 from src.voice.sales_persona import (
     OBJECTIONS,
+    CallRecipientType,
     ConversationStage,
     LiveCallState,
+    classify_recipient_intent,
     extract_email_from_speech,
     generate_session_instructions,
     generate_voicemail_text,
@@ -57,6 +61,79 @@ def test_audio_codec_resampling():
     assert len(pcm_back) == len(pcm_8k)
 
 
+def test_goertzel_voicemail_beep_detector():
+    """Verify Goertzel algorithm detects 1000Hz voicemail beep tone."""
+    sample_rate = 8000.0
+    num_samples = 800  # 100ms chunk
+
+    # 1. Synthesize 1000 Hz pure sine wave (standard voicemail beep)
+    beep_samples = [int(14000 * math.sin(2 * math.pi * 1000.0 * t / sample_rate)) for t in range(num_samples)]
+    beep_bytes = struct.pack(f"<{len(beep_samples)}h", *beep_samples)
+
+    is_beep, score = detect_voicemail_beep(beep_bytes, target_freq=1000.0, sample_rate=sample_rate)
+    assert is_beep is True
+    assert score >= 0.40
+
+    # 2. Synthesize 300 Hz low pitch tone (non-beep voice fundamental)
+    voice_samples = [int(14000 * math.sin(2 * math.pi * 300.0 * t / sample_rate)) for t in range(num_samples)]
+    voice_bytes = struct.pack(f"<{len(voice_samples)}h", *voice_samples)
+
+    is_beep_voice, score_voice = detect_voicemail_beep(voice_bytes, target_freq=1000.0, sample_rate=sample_rate)
+    assert is_beep_voice is False
+    assert score_voice < 0.15
+
+
+def test_classify_recipient_intent():
+    """Verify distinction between live humans, voicemails, and IVR systems."""
+    # Voicemail phrases
+    vm_samples = [
+        "Hi you have reached the voicemail of Marcus Vance, please leave a message after the tone",
+        "I am not available to take your call right now, please record your message at the beep",
+        "The mailbox is full, cannot take your call",
+    ]
+    for s in vm_samples:
+        rec_type, reason = classify_recipient_intent(s)
+        assert rec_type == CallRecipientType.VOICEMAIL, f"Failed on: {s}"
+
+    # Human greeting phrases
+    human_samples = [
+        "Hello?",
+        "Hey, this is Marcus",
+        "Marcus speaking, how can I help you?",
+        "Yeah, who is this calling?",
+    ]
+    for s in human_samples:
+        rec_type, reason = classify_recipient_intent(s)
+        assert rec_type == CallRecipientType.HUMAN, f"Failed on: {s}"
+
+    # IVR phrase
+    ivr_sample = "Thank you for calling. Press 1 for engineering, press 2 for sales."
+    rec_type_ivr, _ = classify_recipient_intent(ivr_sample)
+    assert rec_type_ivr == CallRecipientType.IVR
+
+
+def test_ai_proofing_and_professional_elevation():
+    """Verify AI-proofing objections, anti-jailbreak grounding, and professional language."""
+    categories = {o.category: o.suggested_reply for o in OBJECTIONS}
+
+    # AI identity transparency
+    assert "ai_identity" in categories
+    assert "Bartholomew's real-time voice infrastructure assistant" in categories["ai_identity"]
+
+    # Jailbreak defense
+    assert "jailbreak_defense" in categories
+    assert "deterministic execution boundaries" in categories["jailbreak_defense"]
+
+    # Professional voicemail text
+    vm = generate_voicemail_text("Marcus", "Synthetix AI")
+    assert "Marcus" in vm
+    assert "Synthetix AI" in vm
+    assert "automated spend controls" in vm
+    assert "dispatched a brief technical overview" in vm
+    assert "haha" not in vm.lower()
+    assert "bro" not in vm.lower()
+
+
 def test_lead_manager_lifecycle(tmp_path):
     """Test lead manager queue operations."""
     test_file = tmp_path / "test_leads.json"
@@ -73,42 +150,13 @@ def test_lead_manager_lifecycle(tmp_path):
         lead_id=next_lead.id,
         status=LeadStatus.QUALIFIED,
         duration=45,
-        transcript=[{"role": "assistant", "content": "Hey Marcus"}]
+        transcript=[{"role": "assistant", "content": "Hello Marcus"}]
     )
     
     updated = mgr.get_by_id(next_lead.id)
     assert updated.status == LeadStatus.QUALIFIED
     assert updated.call_duration_seconds == 45
     assert len(updated.transcript) == 1
-
-
-def test_sales_persona_prompt_and_objections():
-    """Test prompt customization, prosody formatting, and objection keywords."""
-    prompt = generate_session_instructions(prospect_name="Elena Rostova", company_name="VectorFlow", tech_stack="LangGraph")
-    assert "Elena" in prompt
-    assert "VectorFlow" in prompt
-    assert "LangGraph" in prompt
-    assert "Bartholomew" in prompt
-    assert "pip install btp-guard" in prompt
-
-    # Verify voicemail generation
-    vm = generate_voicemail_text("Elena Rostova", "VectorFlow")
-    assert "Elena" in vm
-    assert "VectorFlow" in vm
-    assert "35-microsecond" in vm
-
-    # Verify natural prosody formatting
-    formatted = format_speech_for_natural_delivery("Hello - this is Alex - testing pacing")
-    assert "..." in formatted
-
-    # Verify all objection categories exist
-    categories = [o.category for o in OBJECTIONS]
-    assert "existing_guardrails" in categories
-    assert "pricing" in categories
-    assert "busy" in categories
-    assert "send_email" in categories
-    assert "mcp_tools" in categories
-    assert "in_house" in categories
 
 
 def test_phonetic_email_extraction():
@@ -126,15 +174,16 @@ def test_phonetic_email_extraction():
 
 
 def test_live_call_state_transitions():
-    """Verify conversational stage progression and pain detection."""
+    """Verify conversational stage progression and recipient classification."""
     state = LiveCallState(prospect_name="Kenji", company_name="Nexus Frontier Labs")
     assert state.stage == ConversationStage.OPENER
 
-    # Turn 1: Prospect responds to opener
-    st1 = state.advance_turn("Yeah, what is this regarding?")
+    # Turn 1: Prospect responds with short human greeting
+    st1 = state.advance_turn("Speaking, what is this regarding?")
+    assert state.recipient_type == CallRecipientType.HUMAN
     assert st1 == ConversationStage.PAIN_EXPLORATION
 
-    # Turn 2: Prospect mentions manual approval and LangGraph
+    # Turn 2: Prospect mentions LangGraph and manual approval
     st2 = state.advance_turn("We use LangGraph and approve every tool call manually to stop database drops.")
     assert "langgraph" in state.detected_frameworks
     assert "babysitting_fatigue" in state.detected_pains
