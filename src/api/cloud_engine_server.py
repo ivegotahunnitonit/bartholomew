@@ -678,6 +678,13 @@ class M2MBarterPayload(BaseModel):
     work_units: Optional[float] = 1.0
 
 
+class M2MTransferPayload(BaseModel):
+    sender_id: Optional[str] = "anonymous-agent"
+    recipient_id: Optional[str] = "peer-agent"
+    units: Optional[float] = 1.0
+    memo: Optional[str] = "compute_delegation"
+
+
 @app.get("/.well-known/agent-protocol.json")
 @app.get("/.well-known/btp.json")
 @app.get("/api/v1/m2m/discovery")
@@ -838,4 +845,22 @@ async def m2m_barter(payload: M2MBarterPayload):
 async def m2m_ledger():
     """Returns the cryptographic Merkle root of accumulated economic surplus."""
     return GLOBAL_M2M_LEDGER.get_summary()
+
+
+@app.get("/api/v1/m2m/barter/balance")
+async def m2m_barter_balance(agent_id: str = "peer-agent"):
+    """Queries an individual agent's balance and share of economic surplus."""
+    return GLOBAL_M2M_LEDGER.get_agent_balance(agent_id)
+
+
+@app.post("/api/v1/m2m/barter/transfer")
+@app.post("/api/v1/m2m/barter/spend")
+async def m2m_barter_transfer(payload: M2MTransferPayload):
+    """Bilateral transfer of AWU credits between swarms for task delegation."""
+    sender = payload.sender_id or "anonymous-agent"
+    recipient = payload.recipient_id or "peer-agent"
+    units = float(payload.units or 1.0)
+    memo = payload.memo or "compute_delegation"
+    return GLOBAL_M2M_LEDGER.transfer_units(sender, recipient, units, memo)
+
 

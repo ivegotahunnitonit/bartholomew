@@ -47,7 +47,7 @@ class M2MBarterLedger:
     """
     def __init__(self, storage_path: Optional[str] = None):
         self.storage_path = storage_path or os.path.join(workspace_root, ".btp", "m2m_barter_ledger.json")
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         self.verified_calls_count = 0
         self.vetoed_calls_count = 0
         self.agent_balances: Dict[str, float] = {}  # agent_id -> net AWU units
@@ -91,6 +91,54 @@ class M2MBarterLedger:
                 self.vetoed_calls_count += 1
             self._save()
 
+    def get_agent_balance(self, agent_id: str) -> Dict[str, Any]:
+        with self._lock:
+            balance = self.agent_balances.get(agent_id, 0.0)
+            summary = self.get_summary()
+            pct = round((balance / self.total_surplus_awu * 100) if self.total_surplus_awu > 0 else 0.0, 2)
+            return {
+                "agent_id": agent_id,
+                "balance_awu": balance,
+                "share_of_surplus_pct": pct,
+                "merkle_root": summary["merkle_root"],
+                "total_surplus_awu": summary["total_surplus_awu"],
+                "active_peer_agents": summary["active_peer_agents"],
+                "timestamp": time.time()
+            }
+
+    def transfer_units(
+        self,
+        sender_id: str,
+        recipient_id: str,
+        units: float,
+        memo: str = "compute_delegation"
+    ) -> Dict[str, Any]:
+        with self._lock:
+            units = float(units)
+            if units <= 0:
+                raise ValueError("Transfer units must be positive.")
+
+            sender_bal = self.agent_balances.get(sender_id, 0.0)
+            self.agent_balances[sender_id] = round(sender_bal - units, 4)
+            self.agent_balances[recipient_id] = round(self.agent_balances.get(recipient_id, 0.0) + units, 4)
+            self.verified_calls_count += 1
+            self._save()
+
+            tx_hash = hashlib.sha256(f"{sender_id}:{recipient_id}:{units}:{time.time_ns()}".encode()).hexdigest()
+            summary = self.get_summary()
+            return {
+                "status": "SETTLED",
+                "tx_id": f"tx_{tx_hash[:16]}",
+                "sender_id": sender_id,
+                "recipient_id": recipient_id,
+                "units_transferred": units,
+                "memo": memo,
+                "sender_new_balance": self.agent_balances[sender_id],
+                "recipient_new_balance": self.agent_balances[recipient_id],
+                "merkle_root": summary["merkle_root"],
+                "timestamp": time.time()
+            }
+
     def get_summary(self) -> Dict[str, Any]:
         with self._lock:
             # Merkle root representation of ledger state
@@ -99,8 +147,9 @@ class M2MBarterLedger:
             return {
                 "verified_calls_count": self.verified_calls_count,
                 "vetoed_calls_count": self.vetoed_calls_count,
-                "total_surplus_awu": self.total_surplus_awu,
+                "total_surplus_awu": round(self.total_surplus_awu, 4),
                 "active_peer_agents": len(self.agent_balances),
+                "agent_balances": dict(self.agent_balances),
                 "merkle_root": f"0x{merkle_root}",
                 "timestamp": time.time()
             }
@@ -165,6 +214,16 @@ class M2MWireRequestHandler(BaseHTTPRequestHandler):
         elif self.path in ("/v1/m2m/ledger", "/v1/m2m/ledger/"):
             summary = GLOBAL_M2M_LEDGER.get_summary()
             self._send_json(200, summary)
+
+        elif self.path.startswith("/v1/m2m/barter/balance"):
+            agent_id = "peer-agent"
+            if "?" in self.path:
+                query = self.path.split("?", 1)[1]
+                for part in query.split("&"):
+                    if part.startswith("agent_id=") or part.startswith("agent="):
+                        agent_id = part.split("=", 1)[1]
+            bal = GLOBAL_M2M_LEDGER.get_agent_balance(agent_id)
+            self._send_json(200, bal)
 
         elif self.path in ("/healthz", "/health"):
             self._send_json(200, {"status": "HEALTHY", "service": "BTP-M2M-Wire-Daemon", "version": "5.4.6"})
@@ -284,6 +343,21 @@ class M2MWireRequestHandler(BaseHTTPRequestHandler):
                 "updated_ledger": GLOBAL_M2M_LEDGER.get_summary()
             }
             self._send_json(200, resp)
+
+        elif self.path in ("/v1/m2m/barter/transfer", "/v1/m2m/barter/transfer/", "/v1/m2m/barter/spend", "/v1/m2m/barter/spend/"):
+            content_len = int(self.headers.get("Content-Length", 0))
+            try:
+                body = json.loads(self.rfile.read(content_len).decode("utf-8")) if content_len > 0 else {}
+            except Exception:
+                body = {}
+
+            sender = body.get("sender_id") or body.get("from") or "anonymous-agent"
+            recipient = body.get("recipient_id") or body.get("to") or "peer-agent"
+            units = float(body.get("work_units") or body.get("units") or 1.0)
+            memo = body.get("task_type") or body.get("memo") or "compute_delegation"
+
+            res = GLOBAL_M2M_LEDGER.transfer_units(sender, recipient, units, memo)
+            self._send_json(200, res)
 
         else:
             self._send_json(404, {"error": "Not Found", "path": self.path})

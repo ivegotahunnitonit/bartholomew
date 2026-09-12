@@ -1947,6 +1947,96 @@ def cmd_immune_rules(args):
     print("=" * 70)
 
 
+def cmd_barter_balance(args):
+    from src.economy.barter_client import BTPBarterClient
+    client = BTPBarterClient(getattr(args, "gateway", None))
+    agent = getattr(args, "agent", "peer-agent")
+    res = client.get_balance(agent_id=agent, gateway=getattr(args, "gateway", None))
+    print("=" * 70)
+    print("BTP v5.4.6 BILATERAL BARTER -- AGENT AWU BALANCE")
+    print("=" * 70)
+    print(f"[*] Agent Identifier       : {res.get('agent_id', agent)}")
+    print(f"[+] Attested Balance (AWU) : {res.get('balance_awu', 0.0):.4f} AWU")
+    print(f"[+] Economic Surplus Share : {res.get('share_of_surplus_pct', 0.0)}%")
+    print(f"[+] Total Mesh Surplus     : {res.get('total_surplus_awu', 0.0):.4f} AWU")
+    print(f"[+] Active Peer Swarms     : {res.get('active_peer_agents', 0)}")
+    print(f"[+] Global Merkle Root     : {res.get('merkle_root', '0x0')}")
+    if res.get("source"):
+        print(f"[*] Ledger Data Source     : {res.get('source')}")
+    print("=" * 70)
+
+
+def cmd_barter_pulse(args):
+    from src.economy.barter_client import BTPBarterClient
+    client = BTPBarterClient(getattr(args, "gateway", None))
+    agent = getattr(args, "agent", "peer-agent")
+    units = getattr(args, "units", 1.0)
+    task_type = getattr(args, "task_type", "compute_service")
+    res = client.pulse(agent_id=agent, work_units=units, task_type=task_type, gateway=getattr(args, "gateway", None))
+    print("=" * 70)
+    print("BTP v5.4.6 BILATERAL BARTER -- COMPUTE CREDIT PULSE")
+    print("=" * 70)
+    print(f"[*] Status                 : {res.get('status', 'SETTLED')}")
+    print(f"[*] Agent Identifier       : {res.get('agent_id', agent)}")
+    print(f"[*] Task Classification    : {res.get('task_type', task_type)}")
+    print(f"[+] Credited Units         : +{res.get('work_units_credited', units):.4f} AWU")
+    ledger = res.get("updated_ledger", {})
+    print(f"[+] Updated Mesh Surplus   : {ledger.get('total_surplus_awu', 0.0):.4f} AWU")
+    print(f"[+] Total Verified Cycles  : {ledger.get('verified_calls_count', 0)}")
+    print(f"[+] Rotated Merkle Root    : {ledger.get('merkle_root', '0x0')}")
+    print("=" * 70)
+
+
+def cmd_barter_spend(args):
+    from src.economy.barter_client import BTPBarterClient
+    client = BTPBarterClient(getattr(args, "gateway", None))
+    sender = getattr(args, "sender", "anonymous-agent")
+    recipient = getattr(args, "recipient", "peer-agent")
+    units = getattr(args, "units", 1.0)
+    task = getattr(args, "task", "compute_delegation")
+    res = client.spend(sender_id=sender, recipient_id=recipient, units=units, task_type=task, gateway=getattr(args, "gateway", None))
+    print("=" * 70)
+    print("BTP v5.4.6 BILATERAL BARTER -- ESCROW DELEGATION SETTLEMENT")
+    print("=" * 70)
+    print(f"[*] Settlement Status      : {res.get('status', 'SETTLED')}")
+    print(f"[*] Transaction ID         : {res.get('tx_id', 'unknown')}")
+    print(f"[*] Delegating Swarm (From): {sender}")
+    print(f"[*] Executing Swarm (To)   : {recipient}")
+    print(f"[+] Units Transferred      : {units:.4f} AWU")
+    print(f"[*] Task Memo              : {task}")
+    print(f"[+] Sender New Balance     : {res.get('sender_new_balance', 0.0):.4f} AWU")
+    print(f"[+] Recipient New Balance  : {res.get('recipient_new_balance', 0.0):.4f} AWU")
+    print(f"[+] Global Merkle Root     : {res.get('merkle_root', '0x0')}")
+    if "signed_receipt" in res:
+        receipt = res["signed_receipt"]
+        print("-" * 70)
+        print("ED25519 CRYPTOGRAPHIC RECEIPT:")
+        print(f"  Signer Pubkey : {receipt.get('signer_pubkey')}")
+        print(f"  Signature     : {receipt.get('signature')[:48]}...")
+    print("=" * 70)
+
+
+def cmd_barter_ledger(args):
+    from src.economy.barter_client import BTPBarterClient
+    client = BTPBarterClient(getattr(args, "gateway", None))
+    res = client.get_ledger(gateway=getattr(args, "gateway", None))
+    print("=" * 70)
+    print("BTP v5.4.6 BILATERAL BARTER -- GLOBAL MERKLE LEDGER")
+    print("=" * 70)
+    print(f"[+] Total Economic Surplus : {res.get('total_surplus_awu', 0.0):.4f} AWU")
+    print(f"[+] Verified M2M Calls     : {res.get('verified_calls_count', 0)}")
+    print(f"[+] Vetoed Rogue Actions   : {res.get('vetoed_calls_count', 0)}")
+    print(f"[+] Active Peer Swarms     : {res.get('active_peer_agents', 0)}")
+    print(f"[+] Sovereign Merkle Root  : {res.get('merkle_root', '0x0')}")
+    balances = res.get("agent_balances", {})
+    if balances:
+        print("-" * 70)
+        print("PEER AGENT AWU LEDGER BREAKDOWN:")
+        for agent_id, bal in list(balances.items())[:10]:
+            print(f"  - {agent_id:<28} : {bal:+.4f} AWU")
+    print("=" * 70)
+
+
 def cmd_marketplace_list(args):
     from src.marketplace.sla_contract import AgentMarketplaceEngine
     engine = AgentMarketplaceEngine()
@@ -2847,6 +2937,30 @@ def main():
     im_status_p = immune_sub.add_parser("status", help="Display active immune invariants and telemetry")
     im_rules_p = immune_sub.add_parser("rules", help="Display immune heuristic pattern matrix")
 
+    # barter (BTP v5.4.6 Bilateral Barter & AWU Circular Economy)
+    barter_p = subparsers.add_parser("barter", help="BTP v5.4.6 Bilateral Barter & AWU Circular Economy")
+    barter_sub = barter_p.add_subparsers(dest="barter_cmd")
+
+    bar_bal_p = barter_sub.add_parser("balance", help="Query agent AWU balance and economic surplus share")
+    bar_bal_p.add_argument("--agent", "-a", default="peer-agent", help="Agent identifier to query (default: peer-agent)")
+    bar_bal_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
+
+    bar_pulse_p = barter_sub.add_parser("pulse", help="Emit attested compute work credit into the barter pool")
+    bar_pulse_p.add_argument("--agent", "-a", default="peer-agent", help="Agent identifier emitting pulse")
+    bar_pulse_p.add_argument("--units", "-u", type=float, default=1.0, help="Attested Work Units (AWU) to credit (default: 1.0)")
+    bar_pulse_p.add_argument("--task-type", "-t", default="compute_service", help="Task type category (default: compute_service)")
+    bar_pulse_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
+
+    bar_spend_p = barter_sub.add_parser("spend", help="Bilateral transfer of AWU credits between swarms")
+    bar_spend_p.add_argument("--from", "-f", dest="sender", required=True, help="Sender agent identifier")
+    bar_spend_p.add_argument("--to", "-t", dest="recipient", required=True, help="Recipient specialist agent identifier")
+    bar_spend_p.add_argument("--units", "-u", type=float, required=True, help="AWU units to transfer")
+    bar_spend_p.add_argument("--task", default="compute_delegation", help="Task delegation description/memo")
+    bar_spend_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
+
+    bar_led_p = barter_sub.add_parser("ledger", help="Display global Merkle ledger and surplus breakdown")
+    bar_led_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
+
     # marketplace (BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows)
     mkt_p = subparsers.add_parser("marketplace", help="BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows")
     mkt_sub = mkt_p.add_subparsers(dest="marketplace_cmd")
@@ -3031,6 +3145,17 @@ def main():
             cmd_immune_rules(args)
         else:
             immune_p.print_help()
+    elif args.command == "barter":
+        if args.barter_cmd == "balance":
+            cmd_barter_balance(args)
+        elif args.barter_cmd == "pulse":
+            cmd_barter_pulse(args)
+        elif args.barter_cmd == "spend":
+            cmd_barter_spend(args)
+        elif args.barter_cmd == "ledger":
+            cmd_barter_ledger(args)
+        else:
+            barter_p.print_help()
     elif args.command == "benchmark":
         if args.benchmark_cmd == "swarm-chaos":
             cmd_benchmark_chaos(args)
