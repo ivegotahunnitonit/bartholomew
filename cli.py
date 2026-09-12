@@ -2314,7 +2314,11 @@ def cmd_hud(args):
     """Launches the real-time terminal Swarm HUD."""
     from src.daemon.swarm_hud import SwarmHUD
     hud = SwarmHUD(gateway_url=getattr(args, "gateway", None))
-    hud.run(interval_sec=getattr(args, "interval", 3.0), once=getattr(args, "once", False))
+    hud.run(
+        interval_sec=getattr(args, "interval", 3.0),
+        once=getattr(args, "once", False),
+        simulate=getattr(args, "simulate", False)
+    )
 
 
 
@@ -2909,6 +2913,7 @@ def main():
     # hud (BTP Real-Time Swarm Heads-Up Display)
     hud_p = subparsers.add_parser("hud", help="Real-time Bartholomew Swarm HUD and telemetry dashboard")
     hud_p.add_argument("--once", action="store_true", help="Render single HUD frame and exit")
+    hud_p.add_argument("--simulate", "-s", action="store_true", help="Simulate live concurrent agent swarm operations")
     hud_p.add_argument("--interval", "-i", type=float, default=3.0, help="Refresh interval in seconds (default: 3.0)")
     hud_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
 
