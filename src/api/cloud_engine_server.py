@@ -702,10 +702,10 @@ async def m2m_discovery():
             "bash_veto:recursive_rm",
             "secret_scrub:zero_leakage",
             "zk_tcp_verify",
-            "mutual_barter:awu"
+            "mutual_barter:bmu"
         ],
         "latency_sla_us": 35.0,
-        "barter_unit": "AWU (Attested Work Unit)",
+        "barter_unit": "BMU (Bartholomew Work Unit)",
         "endpoints": {
             "verify": "/api/v1/m2m/verify",
             "barter": "/api/v1/m2m/barter",
@@ -714,6 +714,21 @@ async def m2m_discovery():
         "public_key": pubkey,
         "timestamp": time.time()
     }
+
+
+@app.get("/.well-known/anti-malware.json")
+@app.get("/api/v1/security/clearance")
+async def security_clearance():
+    """Returns official anti-malware clearance manifest and SLSA Level 3 attestation."""
+    manifest_path = os.path.join(os.getcwd(), "ANTI_MALWARE_MANIFEST.json")
+    if os.path.exists(manifest_path):
+        try:
+            with open(manifest_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    from scripts.verify_anti_malware_clearance import generate_clearance_manifest
+    return generate_clearance_manifest(os.getcwd())
 
 
 @app.get("/.well-known/mcp.json")

@@ -43,7 +43,7 @@ def run_m2m_wire_daemon_suite():
             assert discovery["protocol"] == "BTP/5.4"
             assert discovery["agent_id"] == "bartholomew-sentinel-core"
             assert "ast_gate:audit" in discovery["capabilities"]
-            assert discovery["barter_unit"] == "AWU (Attested Work Unit)"
+            assert "BMU" in discovery["barter_unit"]
             assert discovery["latency_sla_us"] == 35.0
             print("  [+] GET /.well-known/agent-protocol.json: PASS")
 

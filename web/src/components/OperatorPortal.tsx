@@ -92,7 +92,7 @@ export default function OperatorPortal() {
   }
 
   const triggerComputePulse = async () => {
-    setPulseMessage('Transmitting 1.0 AWU pulse...')
+    setPulseMessage('Transmitting 1.0 BMU pulse...')
     try {
       const res = await fetch(`${DEFAULT_CLOUD_GATEWAY}/api/v1/m2m/barter`, {
         method: 'POST',
@@ -228,10 +228,10 @@ export default function OperatorPortal() {
             <DollarSign size={16} />
           </div>
           <div className="text-2xl font-bold font-mono text-white mb-1">
-            {treasury?.accumulated_royalties_awu !== undefined ? treasury.accumulated_royalties_awu.toFixed(4) : '0.2500'} <span className="text-sm text-amber-400 font-normal">AWU</span>
+            {treasury?.accumulated_royalties_awu !== undefined ? treasury.accumulated_royalties_awu.toFixed(4) : '0.2500'} <span className="text-sm text-amber-400 font-normal">BMU</span>
           </div>
           <div className="text-[11px] font-mono text-zinc-400">
-            5.0% Sovereign Tithe on All Multi-Agent Runs
+            5.0% Sovereign Tithe on All Multi-Agent Runs (Bartholomew Work Units)
           </div>
         </div>
 
@@ -242,7 +242,7 @@ export default function OperatorPortal() {
             <Activity size={16} />
           </div>
           <div className="text-2xl font-bold font-mono text-white mb-1">
-            {ledger?.total_surplus_awu !== undefined ? `${ledger.total_surplus_awu.toFixed(2)} AWU` : '23.50 AWU'}
+            {ledger?.total_surplus_awu !== undefined ? `${ledger.total_surplus_awu.toFixed(2)} BMU` : '23.50 BMU'}
           </div>
           <div className="text-[11px] font-mono text-zinc-400">
             Mutual Bilateral Credit Ledger Balance
@@ -270,7 +270,7 @@ export default function OperatorPortal() {
             <Shield size={16} />
           </div>
           <div className="text-2xl font-bold font-mono text-white mb-1">
-            19.1 <span className="text-sm text-purple-400 font-normal">µs</span>
+            &lt; 35 <span className="text-sm text-purple-400 font-normal">µs</span>
           </div>
           <div className="text-[11px] font-mono text-zinc-400">
             0 False Negatives • In-Memory AST Gating
@@ -301,7 +301,7 @@ export default function OperatorPortal() {
               onClick={triggerComputePulse}
               className="px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-bold text-xs uppercase tracking-wider transition"
             >
-              Emit Test Liveness Pulse (+1.0 AWU)
+              Emit Test Liveness Pulse (+1.0 BMU)
             </button>
 
             {pulseMessage && (

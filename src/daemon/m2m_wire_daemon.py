@@ -43,16 +43,25 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 class M2MBarterLedger:
     """
     In-memory and persistent bilateral barter ledger.
-    Tracks Attested Work Units (AWU) exchanged between machines.
+    Tracks Bartholomew Work Units (BMU) exchanged between machines.
     """
     def __init__(self, storage_path: Optional[str] = None):
         self.storage_path = storage_path or os.path.join(workspace_root, ".btp", "m2m_barter_ledger.json")
         self._lock = threading.RLock()
         self.verified_calls_count = 0
         self.vetoed_calls_count = 0
-        self.agent_balances: Dict[str, float] = {}  # agent_id -> net AWU units
-        self.total_surplus_awu: float = 0.0
+        self.agent_balances: Dict[str, float] = {}  # agent_id -> net BMU units
+        self.total_surplus_bmu: float = 0.0
         self._load()
+
+    @property
+    def total_surplus_awu(self) -> float:
+        """Backwards compatibility alias for total_surplus_bmu."""
+        return self.total_surplus_bmu
+
+    @total_surplus_awu.setter
+    def total_surplus_awu(self, val: float):
+        self.total_surplus_bmu = val
 
     def _load(self):
         if os.path.exists(self.storage_path):
@@ -62,7 +71,7 @@ class M2MBarterLedger:
                     self.verified_calls_count = data.get("verified_calls_count", 0)
                     self.vetoed_calls_count = data.get("vetoed_calls_count", 0)
                     self.agent_balances = data.get("agent_balances", {})
-                    self.total_surplus_awu = data.get("total_surplus_awu", 0.0)
+                    self.total_surplus_bmu = data.get("total_surplus_bmu", data.get("total_surplus_awu", 0.0))
             except Exception:
                 pass
 
@@ -71,11 +80,12 @@ class M2MBarterLedger:
             os.makedirs(os.path.dirname(self.storage_path), exist_ok=True)
             with open(self.storage_path, "w", encoding="utf-8") as f:
                 json.dump({
-                    "version": "5.4.0",
+                    "version": "5.4.8",
                     "updated_at": time.time(),
                     "verified_calls_count": self.verified_calls_count,
                     "vetoed_calls_count": self.vetoed_calls_count,
-                    "total_surplus_awu": self.total_surplus_awu,
+                    "total_surplus_bmu": self.total_surplus_bmu,
+                    "total_surplus_awu": self.total_surplus_bmu,
                     "agent_balances": self.agent_balances
                 }, f, indent=2)
         except Exception:
@@ -85,12 +95,12 @@ class M2MBarterLedger:
         with self._lock:
             if approved:
                 self.verified_calls_count += 1
-                self.total_surplus_awu += units
+                self.total_surplus_bmu += units
                 self.agent_balances[agent_id] = self.agent_balances.get(agent_id, 0.0) + units
                 # Treasury dividend: protocol collects 5% royalty minted into protocol_treasury_vault
                 if agent_id != "protocol_treasury_vault":
                     treasury_dividend = round(units * 0.05, 4)
-                    self.total_surplus_awu += treasury_dividend
+                    self.total_surplus_bmu += treasury_dividend
                     self.agent_balances["protocol_treasury_vault"] = (
                         self.agent_balances.get("protocol_treasury_vault", 0.0) + treasury_dividend
                     )
@@ -102,13 +112,15 @@ class M2MBarterLedger:
         with self._lock:
             balance = self.agent_balances.get(agent_id, 0.0)
             summary = self.get_summary()
-            pct = round((balance / self.total_surplus_awu * 100) if self.total_surplus_awu > 0 else 0.0, 2)
+            pct = round((balance / self.total_surplus_bmu * 100) if self.total_surplus_bmu > 0 else 0.0, 2)
             return {
                 "agent_id": agent_id,
+                "balance_bmu": balance,
                 "balance_awu": balance,
                 "share_of_surplus_pct": pct,
                 "merkle_root": summary["merkle_root"],
-                "total_surplus_awu": summary["total_surplus_awu"],
+                "total_surplus_bmu": summary["total_surplus_bmu"],
+                "total_surplus_awu": summary["total_surplus_bmu"],
                 "active_peer_agents": summary["active_peer_agents"],
                 "timestamp": time.time()
             }
@@ -117,12 +129,14 @@ class M2MBarterLedger:
         with self._lock:
             treasury_bal = self.agent_balances.get("protocol_treasury_vault", 0.0)
             summary = self.get_summary()
-            pct = round((treasury_bal / self.total_surplus_awu * 100) if self.total_surplus_awu > 0 else 0.0, 2)
+            pct = round((treasury_bal / self.total_surplus_bmu * 100) if self.total_surplus_bmu > 0 else 0.0, 2)
             return {
                 "treasury_agent_id": "protocol_treasury_vault",
+                "accumulated_earnings_bmu": round(treasury_bal, 4),
                 "accumulated_earnings_awu": round(treasury_bal, 4),
                 "share_of_surplus_pct": pct,
-                "total_surplus_awu": summary["total_surplus_awu"],
+                "total_surplus_bmu": summary["total_surplus_bmu"],
+                "total_surplus_awu": summary["total_surplus_bmu"],
                 "total_verified_calls": self.verified_calls_count,
                 "total_vetoed_calls": self.vetoed_calls_count,
                 "merkle_root": summary["merkle_root"],
@@ -165,12 +179,14 @@ class M2MBarterLedger:
     def get_summary(self) -> Dict[str, Any]:
         with self._lock:
             # Merkle root representation of ledger state
-            state_entropy = f"{self.verified_calls_count}:{self.vetoed_calls_count}:{self.total_surplus_awu}"
+            state_entropy = f"{self.verified_calls_count}:{self.vetoed_calls_count}:{self.total_surplus_bmu}"
             merkle_root = hashlib.sha256(state_entropy.encode()).hexdigest()
             return {
+                "barter_unit": "BMU (Bartholomew Work Unit)",
                 "verified_calls_count": self.verified_calls_count,
                 "vetoed_calls_count": self.vetoed_calls_count,
-                "total_surplus_awu": round(self.total_surplus_awu, 4),
+                "total_surplus_bmu": round(self.total_surplus_bmu, 4),
+                "total_surplus_awu": round(self.total_surplus_bmu, 4),
                 "active_peer_agents": len(self.agent_balances),
                 "agent_balances": dict(self.agent_balances),
                 "merkle_root": f"0x{merkle_root}",
@@ -220,10 +236,10 @@ class M2MWireRequestHandler(BaseHTTPRequestHandler):
                     "bash_veto:recursive_rm",
                     "secret_scrub:zero_leakage",
                     "zk_tcp_verify",
-                    "mutual_barter:awu"
+                    "mutual_barter:bmu"
                 ],
                 "latency_sla_us": 35.0,
-                "barter_unit": "AWU (Attested Work Unit)",
+                "barter_unit": "BMU (Bartholomew Work Unit)",
                 "endpoints": {
                     "verify": "/v1/m2m/verify",
                     "barter": "/v1/m2m/barter",

@@ -131,7 +131,7 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
             className="block text-sm font-mono text-emerald-400 hover:text-emerald-300"
           >
-            [10-SECOND QUICKSTART]
+            [QUICKSTART]
           </a>
           <a
             href="/#threat-model"

@@ -31,7 +31,7 @@ interface ConsoleItem {
 const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
   quickstart: {
     tab: 'quickstart',
-    label: '10s Quickstart',
+    label: 'Quickstart',
     pill: 'Auto-Detect',
     filename: 'terminal — btp-guard init',
     command: 'pip install btp-guard',
@@ -44,8 +44,8 @@ const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
 [+] Sub-35µs In-Process AST Validation Gate: ACTIVE
 [+] OWASP LLM02 In-Flight Secret Vault Redaction: ACTIVE
 [+] Autonomous Deterministic Tool Sandboxing: ENFORCED`,
-    explanation: 'Interactive 10-second developer wizard. Automatically detects your agent framework and scaffolds sovereign credentials, AST policies, and drop-in guards.',
-    latency: 'Sub-19.1µs AST SLA Gate'
+    explanation: 'Interactive developer wizard. Automatically detects your agent framework and scaffolds sovereign credentials, AST policies, and drop-in guards.',
+    latency: 'Deterministic AST SLA Gate'
   },
   crewai: {
     tab: 'crewai',
@@ -191,7 +191,7 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="text-center mx-auto mb-8 text-[#a1a1aa] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
-          Zero cloud lag. Zero prompt leakage. Sub-19.1µs deterministic AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Multi-tenant workspace isolation, OWASP LLM02 credential scrubbing, and verifiable cryptographic execution audit receipts.
+          Zero cloud lag. Zero prompt leakage. Deterministic in-memory AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Multi-tenant workspace isolation, OWASP LLM02 credential scrubbing, and verifiable cryptographic execution audit receipts.
         </p>
 
         {/* Minimalist Action & Quick-Start Pill */}
@@ -224,44 +224,11 @@ export default function Hero() {
           </Link>
         </div>
 
-        {/* The 3 Core Answers Every Engineering Lead Asks */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-10 max-w-3xl mx-auto text-left">
-          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-emerald-500/40 transition">
-            <div className="text-[11px] font-mono text-emerald-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>[+] Integration Time</span>
-            </div>
-            <div className="text-white font-bold text-sm mb-0.5">10 Seconds (1 Line)</div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
-              Add <code className="text-emerald-300">@secure_tool</code> above your tool function. Zero proxy configs or cloud rewrites.
-            </p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-cyan-500/40 transition">
-            <div className="text-[11px] font-mono text-cyan-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>[&gt;] Latency Added</span>
-            </div>
-            <div className="text-white font-bold text-sm mb-0.5">&lt; 15 Microseconds</div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
-              Evaluates AST in 0.015ms. 10,000x faster than cloud filters with 100% deterministic command blocking.
-            </p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-[#09090e] border border-[#22222b] hover:border-purple-500/40 transition">
-            <div className="text-[11px] font-mono text-purple-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1.5">
-              <span>[#] Framework Support</span>
-            </div>
-            <div className="text-white font-bold text-sm mb-0.5">CrewAI &bull; AutoGen &bull; LangGraph</div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
-              Tested drop-in support for CrewAI, LangChain, AutoGen, and Cursor/Claude
-            </p>
-          </div>
-        </div>
-
         {/* Trust & Performance Metrics Bar */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-[#71717a] mb-10 pb-2">
           <span className="flex items-center gap-1.5 text-emerald-400">
             <Zap size={13} className="text-amber-400" />
-            <span>Fastest &amp; Most Reliable AST Gating</span>
+            <span>Deterministic AST Gating</span>
           </span>
           <span className="hidden xs:inline">&bull;</span>
           <span className="flex items-center gap-1.5 text-cyan-300">
@@ -271,12 +238,7 @@ export default function Hero() {
           <span className="hidden xs:inline">&bull;</span>
           <span className="flex items-center gap-1.5 text-purple-300">
             <ShieldCheck size={13} className="text-purple-400" />
-            <span>Multi-Tenant AST Gating</span>
-          </span>
-          <span className="hidden xs:inline">&bull;</span>
-          <span className="flex items-center gap-1.5 text-zinc-300">
-            <ShieldCheck size={13} className="text-emerald-400" />
-            <span>2,791 Passing Tests (100%)</span>
+            <span>Multi-Tenant Invariant Isolation</span>
           </span>
         </div>
 

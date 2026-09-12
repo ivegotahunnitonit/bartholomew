@@ -113,12 +113,14 @@ class BTPBarterClient:
         if "error" not in ledger:
             balances = ledger.get("agent_balances", {})
             bal = balances.get(agent_id, 0.0)
-            total = ledger.get("total_surplus_awu", 0.0)
+            total = ledger.get("total_surplus_bmu", ledger.get("total_surplus_awu", 0.0))
             pct = round((bal / total * 100) if total > 0 else 0.0, 2)
             return {
                 "agent_id": agent_id,
+                "balance_bmu": bal,
                 "balance_awu": bal,
                 "share_of_surplus_pct": pct,
+                "total_surplus_bmu": total,
                 "total_surplus_awu": total,
                 "merkle_root": ledger.get("merkle_root", "0x0"),
                 "active_peer_agents": ledger.get("active_peer_agents", 0),

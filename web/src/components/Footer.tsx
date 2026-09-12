@@ -28,10 +28,10 @@ export default function Footer() {
 
             {/* Seals Badges Grid */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {/* 2,791 Clean Tests Seal */}
+              {/* Clean Tests Seal */}
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#050508] border border-emerald-500/40 text-[11px] font-mono text-[#d4d4d8] rounded-xl shadow-sm">
                 <Cpu size={13} className="text-emerald-400" />
-                <span className="text-emerald-400 font-bold">2,791 / 2,791 TESTS PASSING (100%)</span>
+                <span className="text-emerald-400 font-bold">AUTOMATED TEST SUITES PASSING (100%)</span>
               </div>
 
               {/* FIPS 186-5 Cryptographic Seal */}
@@ -79,7 +79,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs font-mono">
               <li>
                 <a href="#quickstart" className="text-emerald-400 hover:text-emerald-300 transition">
-                  [10s QUICKSTART]
+                  [QUICKSTART]
                 </a>
               </li>
               <li>
