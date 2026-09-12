@@ -2310,6 +2310,14 @@ def cmd_observe(args):
         observer.monitor_live(poll_interval_sec=getattr(args, "interval", 2.0))
 
 
+def cmd_hud(args):
+    """Launches the real-time terminal Swarm HUD."""
+    from src.daemon.swarm_hud import SwarmHUD
+    hud = SwarmHUD(gateway_url=getattr(args, "gateway", None))
+    hud.run(interval_sec=getattr(args, "interval", 3.0), once=getattr(args, "once", False))
+
+
+
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
     import webbrowser
@@ -2895,12 +2903,21 @@ def main():
     # observe (BTP Real-Time M2M Telemetry & Merkle Ledger Observer)
     obs_p = subparsers.add_parser("observe", help="Real-time M2M telemetry and public Merkle ledger observer")
     obs_p.add_argument("--once", action="store_true", help="Print a single telemetry snapshot and exit")
+    obs_p.add_argument("--interval", "-i", type=float, default=2.0, help="Polling interval in seconds")
     obs_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
+
+    # hud (BTP Real-Time Swarm Heads-Up Display)
+    hud_p = subparsers.add_parser("hud", help="Real-time Bartholomew Swarm HUD and telemetry dashboard")
+    hud_p.add_argument("--once", action="store_true", help="Render single HUD frame and exit")
+    hud_p.add_argument("--interval", "-i", type=float, default=3.0, help="Refresh interval in seconds (default: 3.0)")
+    hud_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
 
     args = parser.parse_args()
 
     if args.command in ("whoami", "bartholomew"):
         cmd_whoami(args)
+    elif args.command == "hud":
+        cmd_hud(args)
     elif args.command == "observe":
         cmd_observe(args)
     elif args.command == "companion":
