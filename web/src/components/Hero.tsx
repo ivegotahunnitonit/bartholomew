@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { 
   Check, 
   Copy, 
@@ -33,17 +33,16 @@ const CONSOLE_ITEMS: Record<ConsoleTab, ConsoleItem> = {
     label: '10s Quickstart',
     pill: 'Auto-Detect',
     filename: 'terminal — btp-guard init',
-    command: 'pip install btp-guard==5.4.6',
-    code: `❯ pip install --upgrade btp-guard==5.4.6
-❯ python cli.py hud --once
+    command: 'pip install btp-guard',
+    code: `❯ pip install --upgrade btp-guard
+❯ python cli.py init
 ================================================================================
-  BARTHOLOMEW PROTOCOL (BTP v5.4.6) -- REAL-TIME SWARM HEADS-UP DISPLAY
+  BARTHOLOMEW PROTOCOL (BTP v5.4.7) -- SOVEREIGN EXECUTION FIREWALL
 ================================================================================
-[*] 100K Multi-Swarm Benchmark: 6,300 ops/sec • 0 False Negatives • 19.1µs SLA
-[+] Merkle State Root         : 0xd6d43143f78335863d6a821fc1723c5f...
-[+] Total Economic Surplus    : 9.50 AWU (Attested Work Units)
-[+] Active Peer Agent Swarms  : 5 Connected Mesh Nodes
-[+] 24/7 Cloud Heartbeat      : Synchronized via GCP Cloud Scheduler`,
+[*] Frontier Model Wire Protection: OpenAI Astra • Claude 3.7 • Gemini 2.0
+[+] Sub-35µs In-Process AST Validation Gate: ACTIVE
+[+] OWASP LLM02 In-Flight Secret Vault Redaction: ACTIVE
+[+] Autonomous Deterministic Tool Sandboxing: ENFORCED`,
     explanation: 'Interactive 10-second developer wizard. Automatically detects your agent framework and scaffolds sovereign credentials, AST policies, and drop-in guards.',
     latency: 'Sub-19.1µs AST SLA Gate'
   },
@@ -162,20 +161,6 @@ export default function Hero() {
   const [copiedCode, setCopiedCode] = useState(false)
   const [copiedCmd, setCopiedCmd] = useState(false)
   const [showChecksums, setShowChecksums] = useState(false)
-  const [liveLedger, setLiveLedger] = useState<{
-    merkle_root?: string
-    total_surplus_awu?: number
-    active_peer_agents?: number
-    verified_calls_count?: number
-  } | null>(null)
-
-  useEffect(() => {
-    fetch('https://bartolomew-cloud-engine-322603900775.us-central1.run.app/api/v1/m2m/ledger')
-      .then(res => res.json())
-      .then(data => setLiveLedger(data))
-      .catch(() => {})
-  }, [])
-
   const current = CONSOLE_ITEMS[activeTab]
 
   const handleCopyCode = () => {
@@ -190,34 +175,6 @@ export default function Hero() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-r from-emerald-500/15 via-cyan-500/10 to-purple-500/10 blur-[140px] rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto w-full relative z-10 text-center">
-        
-        {/* Protocol Version & 100K Benchmark Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0a0f] border border-[#1f1f26] shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
-            <span className="text-xs font-mono font-bold tracking-wider text-white">
-              Bartholomew Trust Protocol v5.4.6
-            </span>
-            <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
-              100K SWARM BENCHMARK: 6,300 OPS/S • 0 FALSE NEGATIVES
-            </span>
-          </div>
-
-          <a
-            href="https://www.producthunt.com/products/bartholomew-2"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="View Bartholomew on Product Hunt"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff6154]/10 border border-[#ff6154]/30 hover:border-[#ff6154] text-[#ff6154] text-xs font-mono font-bold hover:bg-[#ff6154]/20 transition-all shadow-sm hover:shadow-[0_0_12px_rgba(255,97,84,0.3)] group"
-          >
-            <span className="w-2 h-2 rounded-full bg-[#ff6154] animate-pulse shadow-[0_0_6px_#ff6154]" />
-            <svg className="w-3.5 h-3.5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="12" fill="#ff6154" />
-              <path d="M13.6 13.2h-2.8V8.4h2.8c1.325 0 2.4 1.075 2.4 2.4s-1.075 2.4-2.4 2.4zm0-6.8H8.8v11.2h2v-2.4h2.8c2.43 0 4.4-1.97 4.4-4.4s-1.97-4.4-4.4-4.4z" fill="#ffffff" />
-            </svg>
-            <span>[PRODUCT HUNT LAUNCH]</span>
-          </a>
-        </div>
 
         {/* Impactful Headline */}
         <h1 
@@ -232,33 +189,19 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-center mx-auto mb-6 text-[#a1a1aa] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
+        <p className="text-center mx-auto mb-8 text-[#a1a1aa] leading-relaxed max-w-2xl text-sm sm:text-base font-sans">
           Zero cloud lag. Zero prompt leakage. Sub-19.1µs deterministic AST safety gating stops catastrophic tool calls (<code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">rm -rf</code>, <code className="text-cyan-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">DROP TABLE</code>) in memory before reaching the OS. Multi-tenant workspace isolation, OWASP LLM02 credential scrubbing, and verifiable cryptographic execution audit receipts.
         </p>
-
-        {/* Live Merkle Ticker Banner */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8 px-4 py-2 rounded-lg bg-[#0d0d12] border border-[#22222a] text-xs font-mono text-zinc-400 max-w-2xl mx-auto shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
-          <span className="text-zinc-500">LIVE WIRE MERKLE:</span>
-          <span className="text-emerald-400 font-bold truncate">
-            {liveLedger?.merkle_root ? `${liveLedger.merkle_root.slice(0, 18)}...` : '0xd6d43143f783...'}
-          </span>
-          <span className="text-zinc-600">•</span>
-          <span className="text-zinc-500">SURPLUS:</span>
-          <span className="text-amber-400 font-bold">{liveLedger?.total_surplus_awu ? `${liveLedger.total_surplus_awu.toFixed(1)} AWU` : '9.5 AWU'}</span>
-          <span className="text-zinc-600">•</span>
-          <span className="text-cyan-400 font-bold">{liveLedger?.active_peer_agents || 3} CONNECTED PEERS</span>
-        </div>
 
         {/* Minimalist Action & Quick-Start Pill */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
           {/* Quick Terminal Copy Pill */}
           <div className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#0c0c10] border border-[#27272a] font-mono text-xs text-[#e4e4e7] shadow-inner max-w-full">
             <span className="text-emerald-400 select-none font-bold">❯</span>
-            <span className="text-amber-400 truncate">pip install btp-guard==5.4.6</span>
+            <span className="text-amber-400 truncate">pip install btp-guard</span>
             <button
               onClick={() => {
-                navigator.clipboard.writeText('pip install btp-guard==5.4.6')
+                navigator.clipboard.writeText('pip install btp-guard')
                 setCopiedCmd(true)
                 setTimeout(() => setCopiedCmd(false), 2000)
               }}
