@@ -113,3 +113,20 @@ def test_soc2_compliance_export():
     assert "compliance_frameworks" in dossier
     assert "merkle_verification" in dossier
     assert dossier["tenant_id"] == "ws_enterprise_core"
+
+
+def test_security_badge_endpoints():
+    """Verify dynamic SVG security badge generation for GitHub READMEs."""
+    resp = client.get("/api/v1/badge/shield")
+    assert resp.status_code == 200
+    assert "image/svg+xml" in resp.headers["content-type"]
+    svg_text = resp.text
+    assert "<svg" in svg_text
+    assert "Secured by Bartholomew" in svg_text
+    assert "BTP v5.4.7" in svg_text
+
+    # Test customized framework badge
+    resp_crewai = client.get("/api/v1/badge/shield?agent=crewai&status=v5.4.7")
+    assert resp_crewai.status_code == 200
+    assert "Crewai • Bartholomew" in resp_crewai.text
+

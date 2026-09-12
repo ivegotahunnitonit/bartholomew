@@ -21,7 +21,7 @@ import uuid
 import json
 import logging
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, Request, HTTPException, Query, BackgroundTasks, Header
+from fastapi import FastAPI, Request, HTTPException, Query, BackgroundTasks, Header, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -723,7 +723,7 @@ async def mcp_discovery():
         "$schema": "https://modelcontextprotocol.io/schema.json",
         "name": "Bartholomew Protocol Execution Sentinel",
         "protocol": "BTP/5.4",
-        "version": "5.4.6",
+        "version": "5.4.7",
         "description": "Sub-35us AST execution firewall, zero-trust gating, and cryptographic proof verification for AI agents.",
         "mcpServers": {
             "bartholomew-sentinel": {
@@ -868,6 +868,77 @@ async def m2m_barter_transfer(payload: M2MTransferPayload):
 async def m2m_barter_treasury():
     """Queries protocol treasury earnings and economic surplus yield."""
     return GLOBAL_M2M_LEDGER.get_treasury_summary()
+
+
+def build_badge_svg(
+    left_text: str = "Secured by Bartholomew",
+    right_text: str = "BTP v5.4.7",
+    color: str = "#10b981",
+    subtext: Optional[str] = "Sub-35µs AST"
+) -> str:
+    """Builds a high-resolution, standards-compliant SVG badge for GitHub READMEs."""
+    left_width = max(len(left_text) * 7 + 18, 140)
+    right_label = f"{right_text} • {subtext}" if subtext else right_text
+    right_width = max(len(right_label) * 7 + 18, 120)
+    total_width = left_width + right_width
+    left_mid = left_width // 2
+    right_mid = left_width + (right_width // 2)
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{total_width}" height="24" viewBox="0 0 {total_width} 24" role="img" aria-label="{left_text}: {right_label}">
+  <title>{left_text}: {right_label}</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#fff" stop-opacity=".12"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="{total_width}" height="24" rx="4" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="{left_width}" height="24" fill="#09090f"/>
+    <rect x="{left_width}" width="{right_width}" height="24" fill="{color}"/>
+    <rect width="{total_width}" height="24" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="JetBrains Mono,Segoe UI,DejaVu Sans,sans-serif" font-size="11" font-weight="600">
+    <text x="{left_mid}" y="16" fill="#e4e4e7">{left_text}</text>
+    <text x="{right_mid}" y="16" fill="#040406">{right_label}</text>
+  </g>
+</svg>"""
+
+
+@app.get("/api/v1/badge/shield")
+@app.get("/api/badge/btp-guard.svg")
+@app.get("/api/badge/secured-by-bartholomew.svg")
+async def get_security_badge(
+    agent: Optional[str] = Query(None, description="Optional agent framework name"),
+    status: str = Query("BTP v5.4.7", description="Badge status text"),
+    ast: str = Query("passed", description="AST verification status")
+):
+    """Dynamic SVG security badge service for embedding in GitHub repository READMEs."""
+    label = f"Secured by Bartholomew"
+    if agent:
+        label = f"{agent.capitalize()} • Bartholomew"
+
+    color = "#10b981"  # Emerald green for passed
+    subtext = "Sub-35µs AST"
+    if ast.lower() in ("failed", "vetoed", "blocked"):
+        color = "#ef4444"
+        subtext = "VETO ACTIVE"
+
+    svg_content = build_badge_svg(
+        left_text=label,
+        right_text=status,
+        color=color,
+        subtext=subtext
+    )
+    return Response(
+        content=svg_content,
+        media_type="image/svg+xml",
+        headers={
+            "Cache-Control": "public, max-age=300, s-maxage=600",
+            "Content-Disposition": "inline; filename=secured-by-bartholomew.svg"
+        }
+    )
+
 
 
 

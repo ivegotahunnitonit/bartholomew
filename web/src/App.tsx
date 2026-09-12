@@ -13,6 +13,7 @@ import BartholomewCloudDashboard from './components/BartholomewCloudDashboard'
 import Pricing from './components/Pricing'
 import Founder from './components/Founder'
 import Footer from './components/Footer'
+import OperatorPortal from './components/OperatorPortal'
 
 
 function ScrollToHash() {
@@ -145,7 +146,6 @@ function HomeView() {
       <EnterpriseEcosystemBanner />
       <DesktopInstallerSection />
       <SecurityThreatModelSection />
-      <SwarmArbitrationArena />
       <Pricing />
       <EnterpriseDesignPartnerSection />
       <EcosystemGatewayBanner />
@@ -164,6 +164,8 @@ export default function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomeView />} />
+            <Route path="/operator" element={<div className="pt-16"><OperatorPortal /></div>} />
+            <Route path="/arena" element={<div className="pt-16"><SwarmArbitrationArena /></div>} />
             <Route path="/cloud" element={<div className="pt-16"><BartholomewCloudDashboard /></div>} />
             <Route path="/cookbook" element={<div className="pt-16"><UniversalCookbookExplorer /></div>} />
             <Route path="/compliance" element={<div className="pt-16"><ContinuousComplianceTimeline /></div>} />

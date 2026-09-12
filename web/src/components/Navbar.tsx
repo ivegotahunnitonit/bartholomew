@@ -42,9 +42,6 @@ export default function Navbar() {
           <a href="/#threat-model" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [THREAT MODEL]
           </a>
-          <a href="/#swarm-arena" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [SWARM ARENA]
-          </a>
           <Link to="/cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
             [COOKBOOK]
           </Link>
@@ -142,13 +139,6 @@ export default function Navbar() {
             className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
           >
             [THREAT MODEL &amp; FAQ]
-          </a>
-          <a
-            href="/#swarm-arena"
-            onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
-          >
-            [SWARM ARENA]
           </a>
           <Link
             to="/cookbook"

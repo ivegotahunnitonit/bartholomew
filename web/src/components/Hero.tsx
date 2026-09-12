@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { 
   Check, 
   Copy, 
@@ -212,15 +213,15 @@ export default function Hero() {
             </button>
           </div>
 
-          {/* Jump to Interactive Swarm Arena Button */}
-          <a
-            href="#swarm-arena"
+          {/* Jump to Interactive Universal Cookbook */}
+          <Link
+            to="/cookbook"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 hover:border-emerald-400 text-xs font-mono font-bold transition shadow-[0_0_15px_rgba(16,185,129,0.15)]"
           >
             <Sparkles size={14} />
-            <span>ENTER LIVE SWARM ARENA</span>
+            <span>EXPLORE INTERACTIVE COOKBOOK</span>
             <ArrowRight size={13} />
-          </a>
+          </Link>
         </div>
 
         {/* The 3 Core Answers Every Engineering Lead Asks */}

@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic cryptography
 # Copy source application
 COPY src/ ./src/
 COPY btp_guard.py ./
+COPY framework_adapters/ ./framework_adapters/
 
 EXPOSE 8080
 
