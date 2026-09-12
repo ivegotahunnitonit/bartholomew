@@ -210,15 +210,18 @@ def btp_langchain_tool(
     settlement_rail: str = "L402_LIGHTNING",
     payee_destination: Optional[str] = None,
     on_violation: Optional[Callable[["BTPViolationError"], Any]] = None,
+    barter_agent_id: Optional[str] = None,
+    mint_awu: float = 0.0,
+    barter_gateway: Optional[str] = None,
 ):
     """
     Drop-in decorator for LangChain / LangGraph tool functions.  Intercepts raw
     tool arguments in memory and evaluates AST invariants (<35µs), with optional
-    automated micro-escrow collateral staking and Byzantine swarm slashing on
-    violation.
+    automated micro-escrow collateral staking, Byzantine swarm slashing on
+    violation, and automated Attested Work Unit (AWU) minting into the bilateral barter pool.
 
     Usage:
-        @btp_langchain_tool(spend_cap=50.0, passport=agent_passport)
+        @btp_langchain_tool(spend_cap=50.0, passport=agent_passport, mint_awu=1.0)
         def run_terminal_command(command: str) -> str:
             ...
 
@@ -309,6 +312,21 @@ def btp_langchain_tool(
                     pool.release_escrow(deposit.escrow_id)
                     if passport is not None:
                         passport.record_action(volume_usd=escrow_collateral_usd)
+
+                # Bilateral Barter AWU Minting on clean execution
+                effective_agent = barter_agent_id or (getattr(passport, "agent_id", None) if passport else None)
+                if mint_awu > 0 and effective_agent:
+                    try:
+                        from src.economy.barter_client import BTPBarterClient
+                        client = BTPBarterClient(default_gateway=barter_gateway)
+                        client.pulse(
+                            agent_id=effective_agent,
+                            work_units=mint_awu,
+                            task_type=action_type
+                        )
+                    except Exception as e:
+                        logger.warning(f"BTP barter AWU mint failed: {e}")
+
                 return result
             except Exception as exc:
                 if pool and deposit and getattr(deposit, "status", None) == "LOCKED":
@@ -373,13 +391,14 @@ class BartholomewLangChainTool:
 
 
 # ---------------------------------------------------------------------------
-# LangGraphBTPGuard — Ed25519 receipt + passport class wrapper
+# LangGraphBTPGuard — Ed25519 receipt + passport + delegation class wrapper
 # ---------------------------------------------------------------------------
 
 class LangGraphBTPGuard:
     """
     Wraps LangGraph tools and nodes with offline Ed25519 Merkle receipt
-    attestation and sovereign passport reputation gating.
+    attestation, sovereign passport reputation gating, and bilateral
+    cross-swarm delegation settlement via the AWU circular economy.
 
     Usage:
         guard = LangGraphBTPGuard(
@@ -391,6 +410,14 @@ class LangGraphBTPGuard:
         @guard.wrap_tool
         def execute_sql_query(query: str) -> str:
             return db.execute(query)
+
+        # Cross-swarm task delegation with AWU transfer:
+        res = guard.delegate_task(
+            task_description="Execute specialized SQL analysis",
+            task_fn=sql_specialist_fn,
+            specialist_id="agent-db-expert",
+            awu_units=1.5
+        )
     """
 
     def __init__(
@@ -400,12 +427,14 @@ class LangGraphBTPGuard:
         enforce_strict: bool = True,
         passport: Optional[Any] = None,
         escrow_collateral_usd: Optional[float] = None,
+        barter_gateway: Optional[str] = None,
     ):
         self.trusted_authorities = trusted_authorities or []
         self.agent_id = agent_id
         self.enforce_strict = enforce_strict
         self.passport = passport
         self.escrow_collateral_usd = escrow_collateral_usd
+        self.barter_gateway = barter_gateway
         self.seen_nonces: set = set()
 
     def wrap_tool(self, tool_fn: Callable) -> Callable:
@@ -446,3 +475,43 @@ class LangGraphBTPGuard:
             return tool_fn(*args, **kwargs)
 
         return guarded_exec
+
+    def delegate_task(
+        self,
+        task_description: str,
+        task_fn: Callable,
+        specialist_id: str,
+        awu_units: float = 1.0,
+        task_args: Optional[List[Any]] = None,
+        task_kwargs: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Delegates a task/tool execution from this LangGraph node to a specialist swarm,
+        atomically transferring AWU credits with an Ed25519 escrow receipt.
+        """
+        task_args = task_args or []
+        task_kwargs = task_kwargs or {}
+        sender = getattr(self.passport, "agent_id", self.agent_id)
+
+        from src.economy.barter_client import BTPBarterClient
+        barter_client = BTPBarterClient(default_gateway=self.barter_gateway)
+
+        transfer_result = barter_client.spend(
+            sender_id=sender,
+            recipient_id=specialist_id,
+            units=awu_units,
+            task_type=f"delegation:{task_description[:32]}"
+        )
+
+        guarded_fn = self.wrap_tool(task_fn)
+        task_result = guarded_fn(*task_args, **task_kwargs)
+
+        return {
+            "status": "DELEGATION_COMPLETED",
+            "task_description": task_description,
+            "sender_id": sender,
+            "specialist_id": specialist_id,
+            "awu_transferred": float(awu_units),
+            "barter_settlement": transfer_result,
+            "result": task_result,
+        }

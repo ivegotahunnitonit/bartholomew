@@ -212,15 +212,19 @@ def btp_crewai_tool(
     use_wire: bool = False,
     wire_endpoint: Optional[str] = None,
     on_violation: Optional[Callable[["BTPViolationError"], Any]] = None,
+    barter_agent_id: Optional[str] = None,
+    mint_awu: float = 0.0,
+    barter_gateway: Optional[str] = None,
 ):
     """
     Drop-in decorator for CrewAI tools.  Inspects every string argument
     for malicious payloads, destructive commands, or prompt injections in
     sub-35 microseconds before the underlying system receives the call.
-    Supports live public cloud-wire verification via WireGuard (BTP v5.4.6).
+    Supports live public cloud-wire verification via WireGuard (BTP v5.4.6)
+    and automated Attested Work Unit (AWU) minting into the bilateral barter pool.
 
     Usage:
-        @btp_crewai_tool(spend_cap=50.0, passport=agent_passport, use_wire=True)
+        @btp_crewai_tool(spend_cap=50.0, passport=agent_passport, mint_awu=1.5)
         def execute_code(code: str) -> str:
             ...
 
@@ -342,6 +346,21 @@ def btp_crewai_tool(
                     pool.release_escrow(deposit.escrow_id)
                     if passport is not None:
                         passport.record_action(volume_usd=escrow_collateral_usd)
+
+                # Bilateral Barter AWU Minting on clean execution
+                effective_agent = barter_agent_id or (getattr(passport, "agent_id", None) if passport else None)
+                if mint_awu > 0 and effective_agent:
+                    try:
+                        from src.economy.barter_client import BTPBarterClient
+                        client = BTPBarterClient(default_gateway=barter_gateway)
+                        client.pulse(
+                            agent_id=effective_agent,
+                            work_units=mint_awu,
+                            task_type=action_type
+                        )
+                    except Exception as e:
+                        logger.warning(f"BTP barter AWU mint failed: {e}")
+
                 return result
             except Exception as exc:
                 if pool and deposit and getattr(deposit, "status", None) == "LOCKED":
@@ -356,18 +375,27 @@ def btp_crewai_tool(
 
 
 # ---------------------------------------------------------------------------
-# CrewAIBTPTaskGuard class (receipt + passport attestation)
+# CrewAIBTPTaskGuard class (receipt + passport attestation + delegation)
 # ---------------------------------------------------------------------------
 
 class CrewAIBTPTaskGuard:
     """
     Guards CrewAI task execution with offline Ed25519 BTP receipt attestation,
-    capability bounds, and sovereign passport reputation gating.
+    capability bounds, sovereign passport reputation gating, and bilateral
+    cross-swarm task delegation settlement via the AWU circular economy.
 
     Usage:
         guard = CrewAIBTPTaskGuard(trusted_authorities=[ROOT_KEY], passport=my_passport)
         safe_deploy = guard.wrap_task("Deploy Production Patch", deploy_fn)
         safe_deploy(..., btp_receipt=receipt_json)
+
+        # Cross-swarm task delegation with AWU transfer:
+        res = guard.delegate_task(
+            task_description="Analyze logs",
+            task_fn=specialist_fn,
+            specialist_id="agent-analyst-swarm",
+            awu_units=2.0
+        )
     """
 
     def __init__(
@@ -378,6 +406,7 @@ class CrewAIBTPTaskGuard:
         enforce_strict: bool = True,
         passport: Optional[Any] = None,
         escrow_collateral_usd: Optional[float] = None,
+        barter_gateway: Optional[str] = None,
     ):
         self.trusted_authorities = trusted_authorities or []
         self.recipient_id = recipient_id
@@ -385,6 +414,7 @@ class CrewAIBTPTaskGuard:
         self.enforce_strict = enforce_strict
         self.passport = passport
         self.escrow_collateral_usd = escrow_collateral_usd
+        self.barter_gateway = barter_gateway
         self.seen_nonces: set = set()
 
     def wrap_task(self, task_description: str, task_fn: Callable) -> Callable:
@@ -426,3 +456,48 @@ class CrewAIBTPTaskGuard:
             return task_fn(*args, **kwargs)
 
         return guarded_task_exec
+
+    def delegate_task(
+        self,
+        task_description: str,
+        task_fn: Callable,
+        specialist_id: str,
+        awu_units: float = 1.0,
+        task_args: Optional[List[Any]] = None,
+        task_kwargs: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Delegates a task execution to a specialist agent swarm, atomically
+        transferring AWU credits from caller to specialist with an Ed25519
+        escrow settlement receipt.
+        """
+        task_args = task_args or []
+        task_kwargs = task_kwargs or {}
+        sender = getattr(self.passport, "agent_id", self.recipient_id)
+
+        from src.economy.barter_client import BTPBarterClient
+        barter_client = BTPBarterClient(default_gateway=self.barter_gateway)
+
+        # 1. Execute barter transfer spend
+        transfer_result = barter_client.spend(
+            sender_id=sender,
+            recipient_id=specialist_id,
+            units=awu_units,
+            task_type=f"delegation:{task_description[:32]}"
+        )
+
+        # 2. Wrap task execution with task guard
+        guarded_fn = self.wrap_task(task_description, task_fn)
+
+        # 3. Execute delegated task
+        task_result = guarded_fn(*task_args, **task_kwargs)
+
+        return {
+            "status": "DELEGATION_COMPLETED",
+            "task_description": task_description,
+            "sender_id": sender,
+            "specialist_id": specialist_id,
+            "awu_transferred": float(awu_units),
+            "barter_settlement": transfer_result,
+            "result": task_result,
+        }

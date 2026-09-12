@@ -30,7 +30,8 @@ class BTPBarterClient:
     """Client interface for interacting with BTP Bilateral Barter & AWU Ledgers."""
 
     def __init__(self, default_gateway: Optional[str] = None):
-        self.gateway = (default_gateway or DEFAULT_CLOUD_GATEWAY).rstrip("/")
+        gateway_env = os.getenv("BTP_BARTER_GATEWAY")
+        self.gateway = (default_gateway or gateway_env or DEFAULT_CLOUD_GATEWAY).rstrip("/")
         self.trust_authority = BartholomewTrustAuthority()
 
     def _http_get(self, endpoint: str, params: Optional[Dict[str, Any]] = None, timeout: float = 5.0) -> Dict[str, Any]:
@@ -75,6 +76,11 @@ class BTPBarterClient:
     def get_ledger(self, gateway: Optional[str] = None) -> Dict[str, Any]:
         """Fetches the global Merkle root and economic surplus summary."""
         gw = (gateway or self.gateway).rstrip("/")
+        if gw in ("inprocess", "in_process") or os.getenv("BTP_BARTER_OFFLINE", "0") == "1":
+            local_summary = GLOBAL_M2M_LEDGER.get_summary()
+            local_summary["source"] = "local_in_process"
+            return local_summary
+
         client = BTPBarterClient(gw)
         # Try cloud route
         res = client._http_get("/api/v1/m2m/ledger")
@@ -92,6 +98,11 @@ class BTPBarterClient:
     def get_balance(self, agent_id: str = "peer-agent", gateway: Optional[str] = None) -> Dict[str, Any]:
         """Queries the current AWU balance and surplus share of a specific agent."""
         gw = (gateway or self.gateway).rstrip("/")
+        if gw in ("inprocess", "in_process") or os.getenv("BTP_BARTER_OFFLINE", "0") == "1":
+            local_bal = GLOBAL_M2M_LEDGER.get_agent_balance(agent_id)
+            local_bal["source"] = "local_in_process"
+            return local_bal
+
         client = BTPBarterClient(gw)
         res = client._http_get("/api/v1/m2m/barter/balance", params={"agent_id": agent_id}, timeout=3.0)
         if "error" not in res:
@@ -128,22 +139,34 @@ class BTPBarterClient:
     ) -> Dict[str, Any]:
         """Emits an attested compute work unit credit into the barter pool."""
         gw = (gateway or self.gateway).rstrip("/")
+        work_units = float(work_units)
+        if gw in ("inprocess", "in_process") or os.getenv("BTP_BARTER_OFFLINE", "0") == "1":
+            GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=True, units=work_units)
+            return {
+                "status": "BARTER_SETTLED",
+                "agent_id": agent_id,
+                "task_type": task_type,
+                "work_units_credited": work_units,
+                "updated_ledger": GLOBAL_M2M_LEDGER.get_summary(),
+                "source": "local_in_process"
+            }
+
         client = BTPBarterClient(gw)
         payload = {
             "agent_id": agent_id,
-            "work_units": float(work_units),
+            "work_units": work_units,
             "task_type": task_type
         }
         res = client._http_post("/api/v1/m2m/barter", payload, timeout=3.0)
         if "error" not in res:
             return res
         # Fallback to in-process
-        GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=True, units=float(work_units))
+        GLOBAL_M2M_LEDGER.record_verification(agent_id=agent_id, approved=True, units=work_units)
         return {
             "status": "BARTER_SETTLED",
             "agent_id": agent_id,
             "task_type": task_type,
-            "work_units_credited": float(work_units),
+            "work_units_credited": work_units,
             "updated_ledger": GLOBAL_M2M_LEDGER.get_summary(),
             "source": "local_in_process_fallback"
         }
@@ -161,24 +184,33 @@ class BTPBarterClient:
         signing an Ed25519 escrow receipt for verifiable accounting.
         """
         gw = (gateway or self.gateway).rstrip("/")
-        client = BTPBarterClient(gw)
         units = float(units)
-        payload = {
-            "sender_id": sender_id,
-            "recipient_id": recipient_id,
-            "units": units,
-            "memo": task_type
-        }
-        res = client._http_post("/api/v1/m2m/barter/transfer", payload, timeout=3.0)
-        if "error" in res:
-            # Fallback to local in-process
+        if gw in ("inprocess", "in_process") or os.getenv("BTP_BARTER_OFFLINE", "0") == "1":
             res = GLOBAL_M2M_LEDGER.transfer_units(
                 sender_id=sender_id,
                 recipient_id=recipient_id,
                 units=units,
                 memo=task_type
             )
-            res["source"] = "local_in_process_fallback"
+            res["source"] = "local_in_process"
+        else:
+            client = BTPBarterClient(gw)
+            payload = {
+                "sender_id": sender_id,
+                "recipient_id": recipient_id,
+                "units": units,
+                "memo": task_type
+            }
+            res = client._http_post("/api/v1/m2m/barter/transfer", payload, timeout=3.0)
+            if "error" in res:
+                # Fallback to local in-process
+                res = GLOBAL_M2M_LEDGER.transfer_units(
+                    sender_id=sender_id,
+                    recipient_id=recipient_id,
+                    units=units,
+                    memo=task_type
+                )
+                res["source"] = "local_in_process_fallback"
 
         # Attach cryptographic Ed25519 receipt
         receipt_data = {
