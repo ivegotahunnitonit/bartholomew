@@ -128,17 +128,13 @@ result = guard.intercept_and_verify(raw_tool_call, provider=ModelProvider.GEMINI
 print(result["status"], result["latency_us"])
 ```
 
-#### **3. Multi-Agent Frameworks (CrewAI, LangGraph, AutoGen, LlamaIndex)**
-Protect agent tool swarms against accidental drops, runaway spend loops, and shell escapes:
-- **CrewAI**: `from framework_adapters.crewai import btp_crewai_tool` &mdash; see [CrewAI Quickstart](cookbook/crewai_quickstart.md)
-- **LangGraph**: `from framework_adapters.langgraph import btp_langchain_tool` &mdash; see [LangGraph Quickstart](cookbook/langgraph_quickstart.md)
-- **Microsoft AutoGen**: `from framework_adapters.autogen import btp_autogen_guard` &mdash; see [AutoGen Quickstart](cookbook/autogen_quickstart.md)
-- **LlamaIndex**: `from framework_adapters.llamaindex import btp_llamaindex_tool` &mdash; see [LlamaIndex Quickstart](cookbook/llamaindex_quickstart.md)
+#### **2. Universal Python Tool Guard (`pip install btp-guard`)**
+Protect any function or tool against destructive SQL, shell escapes, and credential leaks:
 
 ```python
-from framework_adapters.crewai import btp_crewai_tool
+from btp_guard import secure_tool
 
-@btp_crewai_tool(spend_cap=25.0)
+@secure_tool
 def execute_sql_query(query: str):
     # Destructive operations (DROP TABLE, TRUNCATE) are blocked in <25us before execution
     return db.query(query)
@@ -202,57 +198,37 @@ Drop this into `.github/workflows/ci.yml` to automatically block prompt injectio
 
 ---
 
-### **[FRAMEWORK_ADAPTERS] Production-Ready Framework Middleware**
+### **[UNIVERSAL_GATEWAY] Model Context Protocol (MCP) & Coding Agent Execution Firewall**
 
-BTP v5.4.4 ships identical `BTPViolationError` semantics across **all major agentic frameworks**, providing structured diagnostics, latency tracking, and optional `on_violation` callbacks — no try/except boilerplate required.
+BTP v5.4.10 operates directly at the execution boundary between autonomous models, tools, and the operating system. It protects developers and enterprise infrastructure against destructive commands (`rm -rf`, `DROP TABLE`, `mkfs`), runaway token loops, and high-entropy secret exfiltration.
 
-| Framework | Adapter Location | Decorator / Class | Protection Mechanism |
+| Gateway Layer | Target Scenario | Setup / Command | Protection Mechanism |
 | :--- | :--- | :--- | :--- |
-| **Microsoft AutoGen** | [`framework_adapters/autogen/`](framework_adapters/autogen/) | `@btp_autogen_guard`, `AutoGenBTPInterceptor` | Multi-agent message interceptor; structured `BTPViolationError` with `to_diagnostics()` |
-| **LangChain & LangGraph** | [`framework_adapters/langgraph/`](framework_adapters/langgraph/) | `@btp_langchain_tool`, `LangGraphBTPGuard` | AST gating of tool args + kwargs; `BTPViolationError` with escrow slash |
-| **CrewAI** | [`framework_adapters/crewai/`](framework_adapters/crewai/) | `@btp_crewai_tool`, `CrewAIBTPTaskGuard` | Task-level invariant bounds; `BTPViolationError` anti-confused deputy isolation |
-| **LlamaIndex** | [`framework_adapters/llamaindex/`](framework_adapters/llamaindex/) | `@btp_llamaindex_tool`, `BartholomewLlamaIndexTool` | Sub-35µs AST inspection blocking indirect prompt injections |
-| **GitHub Actions** | [`action.yml`](action.yml) | `ivegotahunnitonit/bartholomew@v5.4.4` | Continuous PR security gate & SOC 2 audit summary table generation |
+| **Model Context Protocol (MCP)** | Claude Desktop, Cursor, Windsurf | `npx btp-guard init` | Native stdio/SSE proxy inspecting all tool arguments before tool dispatch |
+| **Terminal & Coding Agents** | Claude Code, Aider, Cline, CLI agents | `npx btp-guard demo` | Sub-35µs AST command interception before OS `fork`/`exec` |
+| **Universal Python Functions** | Raw OpenAI, Anthropic, Gemini callers | `from btp_guard import secure_tool` | In-memory pre-flight AST inspection with Ed25519 cryptographic attestation |
+| **Universal TypeScript / Node** | Node.js / ESM backend agent runtimes | `import { evaluateIntent } from 'btp-guard'` | Zero-dependency RFC 8785 JSON canonicalization & secret redaction |
+| **GitHub Actions CI/CD** | Automated PR & Agent trajectory verification | `uses: ivegotahunnitonit/bartholomew@v5.4.10` | Continuous PR security gate & SOC 2 compliance summary generation |
 
-#### **Common BTPViolationError API (all adapters)**
+#### **Common BTPViolationError Handling**
 ```python
+from btp_guard import secure_tool, BTPViolationError
+
+@secure_tool
+def run_shell(cmd: str):
+    return subprocess.run(cmd, shell=True, capture_output=True)
+
 try:
-    result = guarded_tool("DROP TABLE users;")
+    result = run_shell("rm -rf /")
 except BTPViolationError as e:
     print(e)                  # Human-readable summary
     print(e.to_diagnostics()) # Structured JSON for logs / telemetry
-    # → {
-    #     "status": "BLOCKED",
-    #     "rule_id": "BTP-AST-001",
-    #     "reason":  "Destructive SQL pattern detected",
-    #     "latency_us": 12.4,
-    #     ...
-    #   }
-```
-
----
-
-### **[AUTOGEN_RECIPE] Microsoft AutoGen Security Recipe**
-
-Bartholomew's AutoGen integration is documented as an official security recipe for the Microsoft AutoGen multi-agent framework.  
-See: [`examples/autogen_btp_security_recipe.py`](examples/autogen_btp_security_recipe.py) &bull; [`examples/autogen_btp_security_recipe.ipynb`](examples/autogen_btp_security_recipe.ipynb)
-
-```python
-from framework_adapters.autogen import btp_autogen_guard, AutoGenBTPInterceptor, BTPViolationError
-
-# 1. Decorate any AutoGen tool with a single line
-@btp_autogen_guard
-def execute_sql(query: str) -> str:
-    return db.execute(query)
-
-# 2. Intercept in-flight agent messages before tool dispatch
-interceptor = AutoGenBTPInterceptor()
-safe_message = interceptor.intercept_message(inbound_message)
-
-# 3. Handle violations with full structured diagnostics
-@btp_autogen_guard(on_violation=lambda e: {"error": e.to_diagnostics()})
-def run_shell_command(cmd: str) -> dict:
-    return subprocess.run(cmd, shell=True, capture_output=True)
+    # -> {
+    #      "status": "BLOCKED",
+    #      "rule_id": "BTP-AST-001",
+    #      "reason":  "Destructive filesystem pattern detected",
+    #      "latency_us": 14.2
+    #    }
 ```
 
 ---
