@@ -93,22 +93,65 @@ def test_sales_persona_prompt_and_objections():
 
 def test_fastapi_endpoints():
     """Test Twilio TwiML and API routes."""
-    client = TestClient(app)
-    
-    # TwiML endpoint
-    resp = client.post("/voice/twiml")
-    assert resp.status_code == 200
-    assert "<Stream" in resp.text
-    assert "voice/stream" in resp.text
+    from src.voice.twilio_server import lead_mgr
+    original_leads_content = None
+    if lead_mgr.storage_file.exists():
+        original_leads_content = lead_mgr.storage_file.read_bytes()
 
-    # Leads API
-    leads_resp = client.get("/api/leads")
-    assert leads_resp.status_code == 200
-    data = leads_resp.json()
-    assert "leads" in data
-    assert len(data["leads"]) > 0
+    try:
+        client = TestClient(app)
+        
+        # TwiML endpoint
+        resp = client.post("/voice/twiml")
+        assert resp.status_code == 200
+        assert "<Stream" in resp.text
+        assert "voice/stream" in resp.text
 
-    # Dial simulation response
-    dial_resp = client.post("/api/dial?phone=%2B15550001111")
-    assert dial_resp.status_code == 200
-    assert "status" in dial_resp.json()
+        # Leads API
+        leads_resp = client.get("/api/leads")
+        assert leads_resp.status_code == 200
+        data = leads_resp.json()
+        assert "leads" in data
+        assert len(data["leads"]) > 0
+
+        # Dial simulation response
+        dial_resp = client.post("/api/dial?phone=%2B15550001111")
+        assert dial_resp.status_code == 200
+        assert "status" in dial_resp.json()
+
+        # Leads summary endpoint
+        summary_resp = client.get("/api/leads/summary")
+        assert summary_resp.status_code == 200
+        sum_data = summary_resp.json()
+        assert "total_leads" in sum_data
+        assert "total_pipeline_value_usd" in sum_data
+
+        # Create a dynamic test lead to keep production queue clean
+        create_resp = client.post("/api/leads", json={
+            "name": "Alex Test",
+            "company": "Test Enterprise Corp",
+            "phone": "+15559990000",
+            "email": "test@enterprise.ai",
+            "role": "CTO"
+        })
+        assert create_resp.status_code == 200
+        test_lead_id = create_resp.json()["lead"]["id"]
+
+        # Qualify and send proposal on the test lead
+        qual_resp = client.post(f"/api/leads/{test_lead_id}/qualify", json={"notes": "Agreed to trial", "email": "test@enterprise.ai"})
+        assert qual_resp.status_code == 200
+        assert qual_resp.json()["lead"]["status"] == "QUALIFIED"
+
+        prop_resp = client.post(f"/api/leads/{test_lead_id}/send_proposal", json={"tier": "pro"})
+        assert prop_resp.status_code == 200
+        assert prop_resp.json()["proposal"]["tier"] == "Pro Startup ($49/mo)"
+
+        close_resp = client.post(f"/api/leads/{test_lead_id}/close", json={"tier": "enterprise", "deal_value_usd": 199.0})
+        assert close_resp.status_code == 200
+        assert close_resp.json()["lead"]["status"] == "CLOSED_WON"
+        assert close_resp.json()["lead"]["deal_value_usd"] == 199.0
+
+    finally:
+        if original_leads_content is not None:
+            lead_mgr.storage_file.write_bytes(original_leads_content)
+            lead_mgr._load_or_seed()

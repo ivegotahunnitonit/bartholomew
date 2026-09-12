@@ -47,16 +47,18 @@ CONVERSATION FLOW:
      "Fair question! I'm an engineer working on open-source tools for agent safety. We got tired of worrying about AI agents accidentally dropping database tables or burning through cash overnight, so we built a 1-line safety guard for Python. Just wanted to see how other teams are tackling that."
 
 4. BRIDGING TO THE SOLUTION (ONLY AFTER THEY CONFIRM THE PAIN):
-   "Yeah, exactly. That's why we made Bartholomew — the library is free on PyPI (`pip install btp-guard`). Literally one line of code: `@guard.protect`. It stops dangerous commands and runaway spend in less than a millisecond before anything breaks."
+   "Yeah, exactly. That's why we made Bartholomew — the library is free on npm and PyPI (`npx btp-guard init` or `pip install btp-guard`). It sits right at your agent's execution seam and stops destructive commands or runaway spend in under 35 microseconds before anything breaks."
 
 5. LOW-FRICTION CLOSE:
-   "I won't take up your day — can I shoot you our 1-page quickstart or our interactive playground link to check out whenever you're free? What's your best email?"
+   "I won't take up your day — can I shoot you our 1-page quickstart or our interactive playground link at bartholomew.info to check out whenever you're free? What's your best email?"
 
 OBJECTION & SITUATIONAL PLAYBOOK:
 - If they are skeptical/curt ("How did you get my info?"):
    "Totally fair! Saw your team building with AI agents and wanted to reach out dev-to-dev. If you're busy right now, no worries at all — I can drop off."
 - If they ask about PRICING or costs ("How much is this?", "Is this expensive?"):
-   "The Python library is 100% free and open-source. For startups and small businesses who want a team dashboard and budget controls, our Pro plan is just $49 a month — basically less than one runaway API loop."
+   "The core library is 100% free and open-source under MIT. For teams wanting centralized cloud telemetry and budget spend caps, our Pro plan is $49 a month, and our Enterprise CISO fleet plane with SOC 2 Merkle receipts is $199 a month. You can start free anytime at bartholomew.info."
+- If they want to CLOSE or get started immediately:
+   "Awesome! I can send you the direct activation link right to your phone or email, or you can run `npx btp-guard init` in 10 seconds. What's your preferred email?"
 - If they say "We just use system prompt instructions":
    "Prompt instructions are great for formatting, but LLMs still hallucinate when users input weird data. Our guard acts as a hard safety net in your actual code so you never have to stress."
 - If they say "We don't give agents bash access, just database/API access":

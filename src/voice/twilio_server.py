@@ -41,48 +41,52 @@ conversation_histories: Dict[str, List[Dict[str, Any]]] = {}
 
 
 def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
-    """Queries Gemini Flash in real-time with multi-model fallback and conversational developer persona."""
-    key = os.getenv("GEMINI_API_KEY")
-    if not key:
-        return "Hey man, I hear you, but my API key is not configured in .env."
-
+    """Queries conversational AI in real-time with sub-millisecond objection matching and model fallback."""
     if call_sid not in conversation_histories:
         conversation_histories[call_sid] = []
 
-    history = conversation_histories[call_sid]
-    history.append({"role": "user", "parts": [{"text": user_speech}]})
+    # 1. Fast sub-millisecond keyword objection matcher
+    speech_lower = user_speech.lower()
+    for obj in OBJECTIONS:
+        if any(kw in speech_lower for kw in obj.keywords):
+            reply = obj.suggested_reply
+            conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
+            return reply
 
-    prompt = generate_session_instructions("there")
-    payload = {
-        "contents": history,
-        "systemInstruction": {"parts": [{"text": prompt}]}
-    }
-
-    import urllib.request
-    models_to_try = [
-        "gemini-3.1-flash-lite-preview",
-        "gemini-2.5-flash",
-        "gemini-flash-latest",
-        "gemini-3-flash-preview",
-    ]
-
-    for model_name in models_to_try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"}
-        )
+    # 2. Query Gemini with fast timeout
+    key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if key:
+        prompt = generate_session_instructions("there")
         try:
-            with urllib.request.urlopen(req, timeout=6) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                reply = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                history.append({"role": "model", "parts": [{"text": reply}]})
-                return reply
-        except Exception as e:
-            logger.warning(f"Model {model_name} failed: {e}. Trying next fallback...")
+            from google import genai
+            from google.genai import types
 
-    return "Haha yeah, totally hear you man. Are you guys giving your agents raw shell tools right now, or keeping humans in the loop?"
+            client = genai.Client(api_key=key)
+            history = conversation_histories[call_sid]
+            history.append({"role": "user", "parts": [{"text": user_speech}]})
+
+            contents = f"{prompt}\n\nProspect just said on phone: \"{user_speech}\"\n\nReply as Alex in 1 to 2 short conversational sentences acknowledging what they said:"
+
+            for model_name in ["gemini-3.5-flash", "gemini-flash-latest", "gemini-3.6-flash"]:
+                try:
+                    resp = client.models.generate_content(
+                        model=model_name,
+                        contents=contents,
+                        config=types.GenerateContentConfig(
+                            max_output_tokens=100,
+                            temperature=0.7
+                        )
+                    )
+                    if resp and resp.text:
+                        reply = resp.text.strip()
+                        history.append({"role": "model", "parts": [{"text": reply}]})
+                        return reply
+                except Exception as e:
+                    logger.warning(f"Model {model_name} failed: {e}. Trying fallback...")
+        except Exception as exc:
+            logger.error(f"GenAI error: {exc}")
+
+    return "Haha yeah, totally hear you. Are you guys letting your agents run shell and database tools autonomously, or keeping humans in the loop?"
 
 
 # ---------------------------------------------------------------------------
@@ -132,17 +136,16 @@ async def get_voice_audio(filename: str):
 async def voice_interactive_start(request: Request):
     """
     Initial entrypoint for conversational outbound phone calls.
-    Plays Gemini's native voice product pitch greeting and gathers user speech.
+    Plays developer pitch greeting and gathers user speech.
     """
     host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
     base_url = f"https://{host}"
     respond_url = f"{base_url}/voice/respond"
-    audio_url = f"{base_url}/voice/audio/gemini_alex_pitch_greeting.wav"
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
-        <Play>{audio_url}</Play>
+    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="5">
+        <Say voice="Polly.Joey-Neural">Hey there, Alex here. Caught you randomly — saw your team is building with autonomous agents. We built Bartholomew, an open-source execution firewall that blocks dangerous shell commands and database drops in under 35 microseconds. Do you have 30 seconds, or did I catch you in the middle of a deployment fire?</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>"""
@@ -152,7 +155,7 @@ async def voice_interactive_start(request: Request):
 @app.post("/voice/respond")
 async def voice_interactive_respond(request: Request):
     """
-    Processes the user's spoken response with Gemini Live native audio and returns the next turn.
+    Processes the user's spoken response and returns the conversational reply with intent classification.
     """
     import urllib.parse
     raw_body = await request.body()
@@ -166,19 +169,21 @@ async def voice_interactive_respond(request: Request):
     respond_url = f"{base_url}/voice/respond"
 
     if not user_speech:
-        prompt = "Hey, you still there? No worries if you're swamped, I can let you get back to it."
+        reply = "Hey, you still there? No worries if you're swamped, I can let you get back to it."
     else:
-        prompt = user_speech
+        reply = get_gemini_alex_reply(user_speech, call_sid)
 
-    from src.voice.gemini_audio_gen import generate_gemini_conversational_reply_wav
-    wav_path = await generate_gemini_conversational_reply_wav(prompt, call_sid)
-    filename = wav_path.name
-    audio_url = f"{base_url}/voice/audio/{filename}"
+        # Automatic Lead Qualification in Real-Time
+        speech_lower = user_speech.lower()
+        if any(w in speech_lower for w in ["yes", "sure", "email", "send", "pricing", "cost", "sign up", "deck", "doc"]):
+            lead = lead_mgr.get_next_pending()
+            if lead:
+                lead_mgr.qualify_lead(lead.id, notes=f"Spoke on phone [{call_sid}]: {user_speech}")
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
-        <Play>{audio_url}</Play>
+    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="5">
+        <Say voice="Polly.Joey-Neural">{reply}</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>"""
@@ -437,6 +442,83 @@ async def browser_audio_websocket(websocket: WebSocket):
 @app.get("/api/leads")
 async def list_leads():
     return {"leads": [l.to_dict() for l in lead_mgr.get_all()]}
+
+
+@app.get("/api/leads/summary")
+async def leads_summary():
+    """Returns real-time sales pipeline metrics."""
+    leads = lead_mgr.get_all()
+    total = len(leads)
+    by_status = {}
+    total_val = 0.0
+    closed_won_val = 0.0
+
+    for l in leads:
+        st = l.status.value if hasattr(l.status, "value") else str(l.status)
+        by_status[st] = by_status.get(st, 0) + 1
+        val = getattr(l, "deal_value_usd", 0.0) or 0.0
+        total_val += val
+        if st == "CLOSED_WON":
+            closed_won_val += val
+
+    return {
+        "total_leads": total,
+        "by_status": by_status,
+        "total_pipeline_value_usd": total_val,
+        "closed_won_revenue_usd": closed_won_val,
+        "qualified_count": by_status.get("QUALIFIED", 0),
+        "proposals_sent": by_status.get("PROPOSAL_SENT", 0),
+        "closed_won_count": by_status.get("CLOSED_WON", 0)
+    }
+
+
+@app.post("/api/leads/{lead_id}/qualify")
+async def qualify_lead_endpoint(lead_id: str, request: Request):
+    """Mark a prospect as qualified."""
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    notes = body.get("notes", "Qualified via phone consultation")
+    email = body.get("email")
+    lead = lead_mgr.qualify_lead(lead_id, notes=notes, email=email)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"status": "qualified", "lead": lead.to_dict()}
+
+
+@app.post("/api/leads/{lead_id}/send_proposal")
+async def send_proposal_endpoint(lead_id: str, request: Request):
+    """Dispatch proposal and Stripe checkout link to prospect."""
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    tier = body.get("tier", "pro")
+    notes = body.get("notes", "")
+    result = lead_mgr.send_proposal(lead_id, tier=tier, notes=notes)
+    if not result:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"status": "proposal_sent", "proposal": result}
+
+
+@app.post("/api/leads/{lead_id}/close")
+async def close_deal_endpoint(lead_id: str, request: Request):
+    """Close deal as CLOSED_WON with recorded contract value."""
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    tier = body.get("tier", "pro")
+    deal_val = body.get("deal_value_usd")
+    notes = body.get("notes", "Closed via direct consultation")
+    lead = lead_mgr.close_deal(lead_id, tier=tier, deal_value_usd=deal_val, notes=notes)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"status": "closed_won", "lead": lead.to_dict()}
 
 
 @app.post("/api/leads")

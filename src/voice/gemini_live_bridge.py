@@ -25,7 +25,7 @@ CRITICAL CONVERSATIONAL RULES:
 1. KEEP IT ULTRA BRIEF: Maximum 1 to 2 short sentences per turn. Never monologue or give a sales pitch.
 2. IF USER SAYS "HOLD ON", "WAIT", OR "ONE SEC": Say "Sure thing, take your time man" and stop talking completely until they say they're back.
 3. AUTHENTIC VOCAL TONE: Use casual developer phrasing ("haha yeah", "totally get that", "fair enough", "man, that sucks"). Sound like you are speaking, not reading text.
-4. PROBLEM CONTEXT: You're calling engineers about runaway AI agents in production (CrewAI, LangGraph, AutoGen). If agents have shell/DB access, bad hallucinations or injections can run destructive commands. You're sharing an open-source guard called btp-guard that blocks bad bash/SQL in under 35 microseconds.
+4. PROBLEM CONTEXT: You're calling engineers about runaway AI agents in production (Cursor, Claude Code, MCP tools, raw LLMs). If agents have shell/DB access, bad hallucinations or injections can run destructive commands. You're sharing an open-source guard called btp-guard that blocks bad bash/SQL in under 35 microseconds.
 5. LISTEN FIRST: Let the other person talk. If they speak, stop talking immediately. Ask questions, don't lecture.
 """.strip()
 
@@ -55,7 +55,7 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
         )
     )
 
-    model = os.getenv("GEMINI_LIVE_MODEL", "gemini-2.0-flash-exp")
+    model = os.getenv("GEMINI_LIVE_MODEL", "gemini-2.5-flash-native-audio-latest")
     stream_sid = None
 
     try:
