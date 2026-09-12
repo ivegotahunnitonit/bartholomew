@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0.0",
+  "timestamp_utc": "2026-09-12 04:08:36 UTC",
+  "total_accounts": 20,
+  "total_pipeline_value_usd": 500000.0,
+  "accounts": [
+    {
+      "lead_id": "e78802b5",
+      "company": "Synthetix AI",
+      "contact": "Marcus Vance",
+      "invoice_id": "INV-BTP-ENT-900D9CDD",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_synthetix_ai_e78802b5.md"
+    },
+    {
+      "lead_id": "46a509ad",
+      "company": "VectorFlow Dynamics",
+      "contact": "Elena Rostova",
+      "invoice_id": "INV-BTP-ENT-B8BCCD35",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_vectorflow_dynamics_46a509ad.md"
+    },
+    {
+      "lead_id": "132f5d0f",
+      "company": "HyperScale Agents",
+      "contact": "Devin Chen",
+      "invoice_id": "INV-BTP-ENT-40E5DFF7",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_hyperscale_agents_132f5d0f.md"
+    },
+    {
+      "lead_id": "d29494a6",
+      "company": "Cognitive Corp",
+      "contact": "Sarah Jenkins",
+      "invoice_id": "INV-BTP-ENT-DAB0B26D",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_cognitive_corp_d29494a6.md"
+    },
+    {
+      "lead_id": "385d7775",
+      "company": "Independent / HN",
+      "contact": "dshapi",
+      "invoice_id": "INV-BTP-ENT-1896C232",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_independent___hn_385d7775.md"
+    },
+    {
+      "lead_id": "61dc0dd2",
+      "company": "Independent / HN",
+      "contact": "thomaslwang",
+      "invoice_id": "INV-BTP-ENT-252CF113",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_independent___hn_61dc0dd2.md"
+    },
+    {
+      "lead_id": "2b379849",
+      "company": "Independent / HN",
+      "contact": "chendev2",
+      "invoice_id": "INV-BTP-ENT-7BC2F0D7",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_independent___hn_2b379849.md"
+    },
+    {
+      "lead_id": "4e1937f7",
+      "company": "Independent / HN",
+      "contact": "windsor",
+      "invoice_id": "INV-BTP-ENT-C7BCB361",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_independent___hn_4e1937f7.md"
+    },
+    {
+      "lead_id": "9aead5af",
+      "company": "Independent / HN",
+      "contact": "nivedit-jain",
+      "invoice_id": "INV-BTP-ENT-1CB820FC",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_independent___hn_9aead5af.md"
+    },
+    {
+      "lead_id": "a1b2c3d4",
+      "company": "Nexus Automation",
+      "contact": "Liam Gallagher",
+      "invoice_id": "INV-BTP-ENT-2130562D",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_nexus_automation_a1b2c3d4.md"
+    },
+    {
+      "lead_id": "e5f6a7b8",
+      "company": "FinLedger Systems",
+      "contact": "Priya Nair",
+      "invoice_id": "INV-BTP-ENT-0F5F76D8",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_finledger_systems_e5f6a7b8.md"
+    },
+    {
+      "lead_id": "c9d0e1f2",
+      "company": "CloudMorph AI",
+      "contact": "Alex Rivera",
+      "invoice_id": "INV-BTP-ENT-93153BA2",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_cloudmorph_ai_c9d0e1f2.md"
+    },
+    {
+      "lead_id": "b3c4d5e6",
+      "company": "MedData Intelligence",
+      "contact": "David Kowalski",
+      "invoice_id": "INV-BTP-ENT-599D1F1B",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_meddata_intelligence_b3c4d5e6.md"
+    },
+    {
+      "lead_id": "f7a8b9c0",
+      "company": "KubeAgent Technologies",
+      "contact": "Jordan Zhao",
+      "invoice_id": "INV-BTP-ENT-525781CA",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_kubeagent_technologies_f7a8b9c0.md"
+    },
+    {
+      "lead_id": "d1e2f3a4",
+      "company": "CyberSentry Labs",
+      "contact": "Sophia Martinez",
+      "invoice_id": "INV-BTP-ENT-5A180C5D",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_cybersentry_labs_d1e2f3a4.md"
+    },
+    {
+      "lead_id": "b5c6d7e8",
+      "company": "Apex Logistics AI",
+      "contact": "Zach Thornton",
+      "invoice_id": "INV-BTP-ENT-E84E1CEC",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_apex_logistics_ai_b5c6d7e8.md"
+    },
+    {
+      "lead_id": "f9a0b1c2",
+      "company": "DataMesh Scale",
+      "contact": "Hannah Kim",
+      "invoice_id": "INV-BTP-ENT-8910F055",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_datamesh_scale_f9a0b1c2.md"
+    },
+    {
+      "lead_id": "d3e4f5a6",
+      "company": "OmniRetail AI",
+      "contact": "Carlos Mendez",
+      "invoice_id": "INV-BTP-ENT-79155EA0",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_omniretail_ai_d3e4f5a6.md"
+    },
+    {
+      "lead_id": "b7c8d9e0",
+      "company": "Aura Health AI",
+      "contact": "Emily Watson",
+      "invoice_id": "INV-BTP-ENT-EB52FE70",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_aura_health_ai_b7c8d9e0.md"
+    },
+    {
+      "lead_id": "f1a2b3c4",
+      "company": "QuantumStream Analytics",
+      "contact": "Tariq Mansour",
+      "invoice_id": "INV-BTP-ENT-DCF1E28C",
+      "contract_value_usd": 25000.0,
+      "dossier_file": "PILOT_quantumstream_analytics_f1a2b3c4.md"
+    }
+  ]
+}

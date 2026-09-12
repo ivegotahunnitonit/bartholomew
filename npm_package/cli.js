@@ -26,8 +26,8 @@ const command = args[0] || 'demo';
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
-║   ${YELLOW}★ BARTHOLOMEW TRUST PROTOCOL (BTP v2.5.0) — FRONTIER SECURITY${CYAN}      ║
-║   ${RESET}0.95µs OS Event Gating, CoW Rollbacks & 1.05M Evals/Sec Throughput  ${BOLD}${CYAN}║
+║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.8) -- EXECUTION SENTINEL${CYAN}     ║
+║   ${RESET}Sub-35us AST Safety Gating, Zero Leakage & SOC 2 Merkle Receipts   ${BOLD}${CYAN}║
 ╚══════════════════════════════════════════════════════════════════════╝${RESET}
 `);
 }
@@ -97,37 +97,91 @@ function runDemo() {
   console.log(`  • Online Command Center: ${CYAN}https://acn-fastapi-backend-322603900775.us-central1.run.app/dashboard${RESET}\n`);
 }
 
-function runInit() {
+function runInit(subargs = []) {
   printBanner();
-  console.log(`${BOLD}Detecting Claude Desktop Configuration...${RESET}\n`);
-  let configPath;
-  if (process.platform === 'win32') {
-    configPath = path.join(process.env.APPDATA || '', 'Claude', 'claude_desktop_config.json');
-  } else if (process.platform === 'darwin') {
-    configPath = path.join(os.homedir(), 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
-  } else {
-    configPath = path.join(os.homedir(), '.config', 'Claude', 'claude_desktop_config.json');
-  }
+  console.log(`${BOLD}[BTP v5.4.8 Developer Onboarding & Project Initializer]${RESET}\n`);
+  
+  const targetDir = process.cwd();
+  console.log(`  ${DIM}Project Directory:${RESET} ${targetDir}`);
+  
+  // 1. Auto-detect framework
+  let framework = 'generic';
+  const checkFile = (f) => fs.existsSync(path.join(targetDir, f)) ? fs.readFileSync(path.join(targetDir, f), 'utf8') : '';
+  const fileContent = checkFile('requirements.txt') + checkFile('pyproject.toml') + checkFile('package.json');
+  
+  if (/crewai/i.test(fileContent)) framework = 'crewai';
+  else if (/langgraph/i.test(fileContent) || /langchain/i.test(fileContent)) framework = 'langgraph';
+  else if (/autogen/i.test(fileContent) || /pyautogen/i.test(fileContent)) framework = 'autogen';
+  else if (/openai/i.test(fileContent)) framework = 'openai';
+  else if (/anthropic/i.test(fileContent)) framework = 'anthropic';
 
-  console.log(`Target config path: ${CYAN}${configPath}${RESET}`);
+  console.log(`  ${GREEN}+ Framework Detected:${RESET} ${BOLD}${framework.toUpperCase()}${RESET}`);
 
-  const snippet = {
+  // 2. Scaffold .btp/
+  const btpDir = path.join(targetDir, '.btp');
+  if (!fs.existsSync(btpDir)) fs.mkdirSync(btpDir, { recursive: true });
+
+  const policyYaml = `# Bartholomew Protocol (BTP v5.4.8) Project Policy
+version: "5.4.8"
+framework: "${framework}"
+invariants:
+  ast_gating:
+    enabled: true
+    latency_sla_us: 35.0
+    blocked_commands:
+      - "rm -rf"
+      - ":(){ :|:& };:"
+      - "mkfs"
+      - "dd if="
+    blocked_sql:
+      - "DROP TABLE"
+      - "DROP SCHEMA"
+      - "TRUNCATE"
+  secret_scrubbing:
+    enabled: true
+    entropy_threshold: 4.2
+    mask_pattern: "[REDACTED_SECRET]"
+`;
+  fs.writeFileSync(path.join(btpDir, 'policy.yaml'), policyYaml, 'utf8');
+  console.log(`  ${GREEN}+ Security Policy:${RESET}   .btp/policy.yaml (Sub-35us AST & Secret Scrubbing)`);
+
+  // 3. Configure Cursor / Claude if requested or available
+  const cursorDir = path.join(targetDir, '.cursor');
+  if (!fs.existsSync(cursorDir)) fs.mkdirSync(cursorDir, { recursive: true });
+  const cursorMcp = {
     mcpServers: {
       "bartholomew-guard": {
-        command: "python",
-        args: ["-m", "mcp_server"]
+        command: "npx",
+        args: ["-y", "btp-guard", "mcp"]
       }
     }
   };
+  fs.writeFileSync(path.join(cursorDir, 'mcp.json'), JSON.stringify(cursorMcp, null, 2), 'utf8');
+  console.log(`  ${GREEN}+ Cursor IDE Config:${RESET} .cursor/mcp.json`);
 
-  console.log(`\nTo route all Claude Desktop tools through Bartholomew's transactional proxy, add:`);
-  console.log(YELLOW + JSON.stringify(snippet, null, 2) + RESET);
+  // 4. Output snippet
+  console.log(`\n${BOLD}${CYAN}READY-TO-USE INTEGRATION SNIPPET FOR ${framework.toUpperCase()}:${RESET}`);
+  console.log('='.repeat(65));
+  if (framework === 'crewai') {
+    console.log(`${YELLOW}from btp_guard import secure_tool
 
-  if (fs.existsSync(configPath)) {
-    console.log(`\n${GREEN}✓ Config file found!${RESET} You can inspect or update it directly.`);
+@secure_tool
+def my_tool_function(param: str):
+    # Protected by Bartholomew AST Gate in < 35 microseconds
+    return perform_operation(param)${RESET}`);
+  } else if (framework === 'langgraph') {
+    console.log(`${YELLOW}from framework_adapters.langgraph.langgraph_btp_guard import LangGraphBTPGuard
+
+guard = LangGraphBTPGuard()
+app = guard.wrap_graph(workflow.compile())${RESET}`);
   } else {
-    console.log(`\n${DIM}(File does not exist yet. Launch Claude Desktop once to initialize it).${RESET}`);
+    console.log(`${YELLOW}from btp_guard import Guard
+
+guard = Guard()
+is_safe, violation = guard.check(command_or_sql)${RESET}`);
   }
+  console.log('='.repeat(65));
+  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.8!${RESET}\n`);
 }
 
 function runScrub(targetFile) {

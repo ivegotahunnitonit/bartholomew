@@ -6,7 +6,7 @@
     "phone": "+14155552671",
     "email": null,
     "role": "Head of AI Platform",
-    "status": "DISPATCHED_WAVE_1",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Deploys multi-agent CrewAI clusters with code execution tools.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -19,7 +19,11 @@
         "timestamp": 1789157898.3844602,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_synthetix_ai_e78802b5.md",
+    "invoice_id": "INV-BTP-ENT-900D9CDD",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5518262
   },
   {
     "id": "46a509ad",
@@ -28,7 +32,7 @@
     "phone": "+12065558914",
     "email": null,
     "role": "Lead ML Infrastructure Engineer",
-    "status": "DISPATCHED_WAVE_1",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Scaling LangGraph pipelines for enterprise financial clients.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -41,7 +45,11 @@
         "timestamp": 1789157898.3844924,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_vectorflow_dynamics_46a509ad.md",
+    "invoice_id": "INV-BTP-ENT-B8BCCD35",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5524845
   },
   {
     "id": "132f5d0f",
@@ -50,7 +58,7 @@
     "phone": "+16505553190",
     "email": null,
     "role": "CTO",
-    "status": "DISPATCHED_WAVE_1",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Building autonomous database query agents with Postgres & BigQuery.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -63,7 +71,11 @@
         "timestamp": 1789157898.3845136,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_hyperscale_agents_132f5d0f.md",
+    "invoice_id": "INV-BTP-ENT-40E5DFF7",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.553439
   },
   {
     "id": "d29494a6",
@@ -72,7 +84,7 @@
     "phone": "+13125557732",
     "email": null,
     "role": "VP of Engineering",
-    "status": "DISPATCHED_WAVE_1",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Needs SOC 2 Type II audit compliance for LLM tool executions.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -85,7 +97,11 @@
         "timestamp": 1789157898.384532,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_cognitive_corp_d29494a6.md",
+    "invoice_id": "INV-BTP-ENT-DAB0B26D",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5541472
   },
   {
     "id": "385d7775",
@@ -94,7 +110,7 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "DISPATCHED_WAVE_2",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "HN post: 'Show HN: Runtime security for AI agents(injection,tool abuse, data exfiltration)' | 1pts 2 comments | https://news.ycombinator.com/item?id=47799856",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -107,7 +123,11 @@
         "timestamp": 1789158168.237628,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_385d7775.md",
+    "invoice_id": "INV-BTP-ENT-1896C232",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5547535
   },
   {
     "id": "61dc0dd2",
@@ -116,7 +136,7 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "DISPATCHED_WAVE_2",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "HN post: 'I built a runtime guardrail that stops AI agents from doing dumb things' | 9pts 3 comments | https://news.ycombinator.com/item?id=47421451",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -129,7 +149,11 @@
         "timestamp": 1789158168.2379203,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_61dc0dd2.md",
+    "invoice_id": "INV-BTP-ENT-252CF113",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5553498
   },
   {
     "id": "2b379849",
@@ -138,7 +162,7 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "DISPATCHED_WAVE_2",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "HN post: 'Show HN: ClawCare \u2013 Security scanner and runtime guard for AI agent skills' | 1pts 4 comments | https://github.com/natechensan/ClawCare",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -151,7 +175,11 @@
         "timestamp": 1789158168.2382004,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_2b379849.md",
+    "invoice_id": "INV-BTP-ENT-7BC2F0D7",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5559802
   },
   {
     "id": "4e1937f7",
@@ -160,7 +188,7 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "DISPATCHED_WAVE_2",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "HN post: 'Launch HN: Dedalus Labs (YC S25) \u2013 Vercel for Agents' | 77pts 15 comments | https://news.ycombinator.com/item?id=45054040",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -173,7 +201,11 @@
         "timestamp": 1789158168.2382236,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_4e1937f7.md",
+    "invoice_id": "INV-BTP-ENT-C7BCB361",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5565825
   },
   {
     "id": "9aead5af",
@@ -182,7 +214,7 @@
     "phone": "",
     "email": null,
     "role": "AI Builder / HN Member",
-    "status": "DISPATCHED_WAVE_2",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "HN post: 'Ask HN: How are you scaling AI agents reliably in production?' | 7pts 2 comments | https://news.ycombinator.com/item?id=44909029",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -195,7 +227,11 @@
         "timestamp": 1789158168.2382405,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_9aead5af.md",
+    "invoice_id": "INV-BTP-ENT-1CB820FC",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5571706
   },
   {
     "id": "a1b2c3d4",
@@ -204,7 +240,7 @@
     "phone": "+14155554921",
     "email": "liam@nexusauto.io",
     "role": "Lead AI Architect",
-    "status": "DISPATCHED_WAVE_1",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Deploying autonomous AutoGen code migration agents; worried about filesystem escape and unconstrained bash execution.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -217,7 +253,11 @@
         "timestamp": 1789157898.384546,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_nexus_automation_a1b2c3d4.md",
+    "invoice_id": "INV-BTP-ENT-2130562D",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5577185
   },
   {
     "id": "e5f6a7b8",
@@ -226,7 +266,7 @@
     "phone": "+14085556201",
     "email": "priya.nair@finledger.com",
     "role": "Staff Platform Engineer",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Using LangGraph to generate dynamic SQL on Snowflake & BigQuery; needs strict AST gating to prevent accidental DROP or TRUNCATE.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -239,7 +279,11 @@
         "timestamp": 1789158229.1338732,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_finledger_systems_e5f6a7b8.md",
+    "invoice_id": "INV-BTP-ENT-0F5F76D8",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5582702
   },
   {
     "id": "c9d0e1f2",
@@ -248,7 +292,7 @@
     "phone": "+12125558319",
     "email": "arivera@cloudmorph.ai",
     "role": "VP of AI Engineering",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Autonomous cloud provisioning with Terraform & AWS CLI; needs tool dispatch inspection to stop destructive teardowns.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -261,7 +305,11 @@
         "timestamp": 1789158229.133897,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_cloudmorph_ai_c9d0e1f2.md",
+    "invoice_id": "INV-BTP-ENT-93153BA2",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5588264
   },
   {
     "id": "b3c4d5e6",
@@ -270,7 +318,7 @@
     "phone": "+16175557743",
     "email": "dkowalski@meddataintel.org",
     "role": "Head of Security & Compliance",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Deploying HIPAA-compliant clinical summary agents; requires signed Merkle audit ledger of all agent tool dispatches.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -283,7 +331,11 @@
         "timestamp": 1789158229.1339147,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_meddata_intelligence_b3c4d5e6.md",
+    "invoice_id": "INV-BTP-ENT-599D1F1B",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5592995
   },
   {
     "id": "f7a8b9c0",
@@ -292,7 +344,7 @@
     "phone": "+16505559082",
     "email": "jordan@kubeagent.dev",
     "role": "Founder & CTO",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Deploying Kubernetes agent operators with kubectl access; worried about container escapes and cluster privilege escalation.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -305,7 +357,11 @@
         "timestamp": 1789158229.13393,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_kubeagent_technologies_f7a8b9c0.md",
+    "invoice_id": "INV-BTP-ENT-525781CA",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5597992
   },
   {
     "id": "d1e2f3a4",
@@ -314,7 +370,7 @@
     "phone": "+15125553412",
     "email": "smartinez@cybersentry.io",
     "role": "Director of Machine Learning",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Autonomous penetration testing agents; needs deterministic containment so red team agents don't accidentally attack production subnets.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -327,7 +383,11 @@
         "timestamp": 1789158229.13395,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_cybersentry_labs_d1e2f3a4.md",
+    "invoice_id": "INV-BTP-ENT-5A180C5D",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5603616
   },
   {
     "id": "b5c6d7e8",
@@ -336,7 +396,7 @@
     "phone": "+13125554628",
     "email": "zthornton@apexlogistics.ai",
     "role": "Tech Lead - Agent Infrastructure",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Autonomous freight routing agents calling external carrier APIs; worried about secret API token leakage in logs.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -349,7 +409,11 @@
         "timestamp": 1789158229.133965,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_apex_logistics_ai_b5c6d7e8.md",
+    "invoice_id": "INV-BTP-ENT-E84E1CEC",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5610158
   },
   {
     "id": "f9a0b1c2",
@@ -358,7 +422,7 @@
     "phone": "+12065551984",
     "email": "hkim@datameshscale.com",
     "role": "Senior SRE / AI Platform",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Managing 200+ autonomous agent cron workers; human-in-the-loop review fatigue is blocking autonomous release velocity.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -371,7 +435,11 @@
         "timestamp": 1789158229.1339803,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_datamesh_scale_f9a0b1c2.md",
+    "invoice_id": "INV-BTP-ENT-8910F055",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5615625
   },
   {
     "id": "d3e4f5a6",
@@ -380,7 +448,7 @@
     "phone": "+13055556810",
     "email": "carlos@omniretail.ai",
     "role": "Principal Software Engineer",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Building customer-facing returns & refund agents; preventing hallucinated unauthorized refund tool calls.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -393,7 +461,11 @@
         "timestamp": 1789158229.1339934,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_omniretail_ai_d3e4f5a6.md",
+    "invoice_id": "INV-BTP-ENT-79155EA0",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5620556
   },
   {
     "id": "b7c8d9e0",
@@ -402,7 +474,7 @@
     "phone": "+14155557293",
     "email": "emily@aurahealth.ai",
     "role": "CTO",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Diagnostic assistant agents interacting with FHIR APIs; needs signed Merkle receipts for FDA/HIPAA compliance.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -415,7 +487,11 @@
         "timestamp": 1789158229.1340058,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_aura_health_ai_b7c8d9e0.md",
+    "invoice_id": "INV-BTP-ENT-EB52FE70",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.5627463
   },
   {
     "id": "f1a2b3c4",
@@ -424,7 +500,7 @@
     "phone": "+16465558832",
     "email": "tmansour@quantumstream.io",
     "role": "Head of Data Engineering",
-    "status": "DISPATCHED_WAVE_3",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
     "notes": "Autonomous ETL pipelines writing to production datalakes; requires sub-50\u00b5s gating for SQL and Python steps.",
     "call_duration_seconds": 0,
     "transcript": [],
@@ -437,6 +513,10 @@
         "timestamp": 1789158229.134496,
         "status": "SENT"
       }
-    ]
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_quantumstream_analytics_f1a2b3c4.md",
+    "invoice_id": "INV-BTP-ENT-DCF1E28C",
+    "contract_value_usd": 25000.0,
+    "last_updated_utc": 1789186116.563944
   }
 ]
