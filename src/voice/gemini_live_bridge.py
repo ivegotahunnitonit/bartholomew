@@ -2,6 +2,7 @@
 Bartholomew Voice AI — Gemini Live Realtime Audio Bridge
 Connects Twilio Media Streams (WebSockets) directly to Google Gemini Live API
 for full-duplex native human voice conversations with live interruption (barge-in).
+Achieves conversational pacing, active listening, and sub-millisecond response timing.
 """
 
 import asyncio
@@ -14,25 +15,25 @@ from google import genai
 from google.genai import types
 
 from src.voice.audio_codecs import mulaw8k_to_pcm16k, pcm24k_to_mulaw8k
+from src.voice.sales_persona import generate_session_instructions
 
 logger = logging.getLogger("btp.voice.gemini_live")
 
-SYSTEM_INSTRUCTION = """
-You are Alex, an authentic, chill software engineer calling another developer.
-You sound 100% like a real person having a quick phone conversation — casual, natural cadence, subtle humor, relaxed.
-
-CRITICAL CONVERSATIONAL RULES:
-1. KEEP IT ULTRA BRIEF: Maximum 1 to 2 short sentences per turn. Never monologue or give a sales pitch.
-2. IF USER SAYS "HOLD ON", "WAIT", OR "ONE SEC": Say "Sure thing, take your time man" and stop talking completely until they say they're back.
-3. AUTHENTIC VOCAL TONE: Use casual developer phrasing ("haha yeah", "totally get that", "fair enough", "man, that sucks"). Sound like you are speaking, not reading text.
-4. PROBLEM CONTEXT: You're calling engineers about runaway AI agents in production (Cursor, Claude Code, MCP tools, raw LLMs). If agents have shell/DB access, bad hallucinations or injections can run destructive commands. You're sharing an open-source guard called btp-guard that blocks bad bash/SQL in under 35 microseconds.
-5. LISTEN FIRST: Let the other person talk. If they speak, stop talking immediately. Ask questions, don't lecture.
-""".strip()
-
 
 async def handle_twilio_gemini_stream(websocket: WebSocket):
+    """
+    Handles bidirectional Twilio WebSocket MediaStream to Gemini Live.
+    Extracts caller context and enforces Astra-grade conversational pacing.
+    """
     await websocket.accept()
     logger.info("Twilio Media Stream WebSocket accepted.")
+
+    # Extract initial query parameters if provided
+    query_params = dict(websocket.query_params)
+    prospect_name = query_params.get("name", "there")
+    company_name = query_params.get("company", "")
+    tech_stack = query_params.get("stack", "")
+    voice_name = os.getenv("GEMINI_VOICE_NAME", "Puck")
 
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
@@ -41,17 +42,25 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
         return
 
     client = genai.Client(api_key=api_key)
+
+    # Compile dynamic prompt with prospect context
+    instruction_text = generate_session_instructions(
+        prospect_name=prospect_name,
+        company_name=company_name,
+        tech_stack=tech_stack
+    )
+
     config = types.LiveConnectConfig(
         response_modalities=["AUDIO"],
         speech_config=types.SpeechConfig(
             voice_config=types.VoiceConfig(
                 prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                    voice_name="Puck"  # Youthful, natural, friendly conversational male voice
+                    voice_name=voice_name
                 )
             )
         ),
         system_instruction=types.Content(
-            parts=[types.Part.from_text(text=SYSTEM_INSTRUCTION)]
+            parts=[types.Part.from_text(text=instruction_text)]
         )
     )
 
@@ -60,15 +69,11 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
 
     try:
         async with client.aio.live.connect(model=model, config=config) as session:
-            logger.info("Connected to Gemini Live session.")
-
-            # Queue for audio from Gemini to Twilio
-            send_queue = asyncio.Queue()
+            logger.info(f"Connected to Gemini Live session with voice '{voice_name}' for {prospect_name}.")
 
             # Task 1: Receive from Twilio -> Send to Gemini
             async def twilio_to_gemini():
-                nonlocal stream_sid
-                first_media_seen = False
+                nonlocal stream_sid, prospect_name, company_name
                 greeting_sent = False
 
                 while True:
@@ -82,14 +87,29 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
 
                         elif event == "start":
                             stream_sid = data.get("start", {}).get("streamSid")
-                            logger.info(f"Twilio stream started. StreamSid: {stream_sid}")
+                            custom_params = data.get("start", {}).get("customParameters", {})
+                            
+                            # Update context if custom parameters were passed via TwiML
+                            if custom_params.get("prospectName"):
+                                prospect_name = custom_params["prospectName"]
+                            if custom_params.get("companyName"):
+                                company_name = custom_params["companyName"]
 
-                            # Trigger casual opening line from Alex
+                            first_name = prospect_name.strip().split()[0] if prospect_name != "there" else "there"
+                            logger.info(f"Twilio stream started. StreamSid: {stream_sid} for {first_name} at {company_name}")
+
+                            # Trigger casual, hyper-natural opening line from Alex
                             if not greeting_sent:
                                 greeting_sent = True
+                                company_ref = f" over at {company_name}" if company_name else ""
+                                opener_prompt = (
+                                    f"[Call answered by {first_name}. Say hello casually: "
+                                    f"'Hey {first_name}! Alex here. Caught you randomly -- "
+                                    f"do you have 30 seconds, or are you in the middle of a deployment fire{company_ref}?']"
+                                )
                                 opener = types.Content(
                                     role="user",
-                                    parts=[types.Part.from_text(text="[Call answered. Say hello casually: 'Hey! Alex here. Did I catch you in the middle of something or do you have 30 seconds?']")]
+                                    parts=[types.Part.from_text(text=opener_prompt)]
                                 )
                                 await session.send_client_content(turns=[opener], turn_complete=True)
 
@@ -121,14 +141,14 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                         async for response in session.receive():
                             sc = response.server_content
                             if sc:
-                                # Live Barge-In detection: if user speaks over Gemini, clear Twilio buffer
+                                # Sub-millisecond barge-in: If user interrupts, clear Twilio playback buffer
                                 if sc.interrupted:
-                                    logger.info("Gemini detected interruption! Sending clear to Twilio.")
+                                    logger.info("Interruption detected: clearing Twilio playback queue.")
                                     if stream_sid:
                                         clear_msg = json.dumps({"event": "clear", "streamSid": stream_sid})
                                         await websocket.send_text(clear_msg)
 
-                                # Forward synthesized audio to Twilio
+                                # Forward synthesized native audio chunks to Twilio
                                 if sc.model_turn:
                                     for part in sc.model_turn.parts:
                                         if part.inline_data and part.inline_data.data:

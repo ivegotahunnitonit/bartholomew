@@ -1,15 +1,16 @@
 """
 Bartholomew Trust Protocol (BTP v5.4) — Twilio Voice Server & Interactive Web Bench
 Provides FastAPI routes, Twilio bi-directional MediaStream WebSockets,
-outbound dialing endpoints, and browser test benches.
+outbound dialing endpoints, Answering Machine Detection (AMD), and browser test benches.
 """
 
 import asyncio
 import json
 import logging
 import os
+import urllib.parse
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response, Form, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
@@ -17,7 +18,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .voice_config import config, VoiceConfig
 from .audio_codec import AudioCodec
-from .sales_persona import OBJECTIONS, generate_session_instructions
+from .sales_persona import (
+    OBJECTIONS,
+    generate_session_instructions,
+    generate_voicemail_text,
+    format_speech_for_natural_delivery
+)
 from .lead_manager import LeadManager, Lead, LeadStatus
 from .realtime_session import RealtimeVoiceSession
 
@@ -49,11 +55,11 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
     speech_lower = user_speech.lower()
     for obj in OBJECTIONS:
         if any(kw in speech_lower for kw in obj.keywords):
-            reply = obj.suggested_reply
+            reply = format_speech_for_natural_delivery(obj.suggested_reply)
             conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
             return reply
 
-    # 2. Query Gemini with fast timeout
+    # 2. Query Gemini with fast timeout and Astra-level conversational prompt
     key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if key:
         prompt = generate_session_instructions("there")
@@ -65,20 +71,25 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
             history = conversation_histories[call_sid]
             history.append({"role": "user", "parts": [{"text": user_speech}]})
 
-            contents = f"{prompt}\n\nProspect just said on phone: \"{user_speech}\"\n\nReply as Alex in 1 to 2 short conversational sentences acknowledging what they said:"
+            contents = (
+                f"{prompt}\n\n"
+                f"Prospect just said on phone: \"{user_speech}\"\n\n"
+                "Reply as Alex in 1 to 2 short conversational sentences (10-25 words max), "
+                "mirroring their emotion or technical problem naturally:"
+            )
 
-            for model_name in ["gemini-3.5-flash", "gemini-flash-latest", "gemini-3.6-flash"]:
+            for model_name in ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash"]:
                 try:
                     resp = client.models.generate_content(
                         model=model_name,
                         contents=contents,
                         config=types.GenerateContentConfig(
-                            max_output_tokens=100,
+                            max_output_tokens=80,
                             temperature=0.7
                         )
                     )
                     if resp and resp.text:
-                        reply = resp.text.strip()
+                        reply = format_speech_for_natural_delivery(resp.text.strip())
                         history.append({"role": "model", "parts": [{"text": reply}]})
                         return reply
                 except Exception as e:
@@ -86,7 +97,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
         except Exception as exc:
             logger.error(f"GenAI error: {exc}")
 
-    return "Haha yeah, totally hear you. Are you guys letting your agents run shell and database tools autonomously, or keeping humans in the loop?"
+    return "Haha yeah, totally hear you. Are you guys letting your agents run tools autonomously, or still babysitting every step?"
 
 
 # ---------------------------------------------------------------------------
@@ -98,17 +109,36 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
 async def voice_live_stream_entrypoint(request: Request):
     """
     TwiML entrypoint that connects Twilio call directly to Gemini Live full-duplex WebSocket stream.
+    Passes prospect context parameters into the WebSocket stream.
     """
     host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
     proto = request.headers.get("x-forwarded-proto", "http")
     ws_scheme = "wss" if (proto == "https" or "loca.lt" in host) else "ws"
-    stream_url = f"{ws_scheme}://{host}/voice/stream"
+
+    lead_id = request.query_params.get("lead_id", "")
+    lead = lead_mgr.get_by_id(lead_id) if lead_id else None
+
+    prospect_name = lead.name if lead else request.query_params.get("name", "there")
+    company_name = lead.company if lead else request.query_params.get("company", "")
+    tech_stack = request.query_params.get("stack", "")
+
+    query_encoded = urllib.parse.urlencode({
+        "name": prospect_name,
+        "company": company_name,
+        "stack": tech_stack
+    })
+    stream_url = f"{ws_scheme}://{host}/voice/stream?{query_encoded}"
     logger.info(f"Connecting Twilio call to stream URL: {stream_url}")
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Connect>
-        <Stream url="{stream_url}" />
+        <Stream url="{stream_url}">
+            <Parameter name="customContext" value="bartholomew_cold_call" />
+            <Parameter name="prospectName" value="{prospect_name}" />
+            <Parameter name="companyName" value="{company_name}" />
+            <Parameter name="leadId" value="{lead_id}" />
+        </Stream>
     </Connect>
 </Response>"""
     return Response(content=twiml, media_type="application/xml")
@@ -118,6 +148,65 @@ async def voice_live_stream_entrypoint(request: Request):
 async def websocket_voice_stream(websocket: WebSocket):
     from src.voice.gemini_live_bridge import handle_twilio_gemini_stream
     await handle_twilio_gemini_stream(websocket)
+
+
+@app.post("/voice/voicemail")
+@app.get("/voice/voicemail")
+async def voice_voicemail_drop(request: Request):
+    """
+    TwiML endpoint for leaving an authentic 8-second human voicemail drop.
+    """
+    lead_id = request.query_params.get("lead_id", "")
+    lead = lead_mgr.get_by_id(lead_id) if lead_id else None
+
+    name = lead.name if lead else request.query_params.get("name", "there")
+    company = lead.company if lead else request.query_params.get("company", "")
+
+    voicemail_msg = generate_voicemail_text(prospect_name=name, company_name=company)
+    logger.info(f"Leaving automated voicemail drop for {name} ({company})...")
+
+    if lead:
+        lead.status = LeadStatus.VOICEMAIL
+        lead.notes = f"{lead.notes} | Voicemail dropped".strip(" |")
+        lead_mgr.save()
+        lead_mgr.send_proposal(lead.id, tier="pro", notes="Automated follow-up after voicemail drop")
+
+    twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Pause length="1"/>
+    <Say voice="Polly.Joey-Neural">{voicemail_msg}</Say>
+    <Hangup/>
+</Response>"""
+    return Response(content=twiml, media_type="application/xml")
+
+
+@app.post("/voice/amd_callback")
+async def twilio_amd_callback(request: Request):
+    """
+    Twilio Answering Machine Detection (AMD) status callback.
+    Transitions machine-answered calls to voicemail drop or follow-up status.
+    Zero external dependencies using standard library urllib.parse.
+    """
+    raw_body = await request.body()
+    params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
+    answered_by = params.get("AnsweredBy", ["unknown"])[0]
+    call_sid = params.get("CallSid", [""])[0]
+    lead_id = request.query_params.get("lead_id", "")
+
+    logger.info(f"AMD Callback for CallSid {call_sid} (Lead {lead_id}): AnsweredBy={answered_by}")
+
+    lead = lead_mgr.get_by_id(lead_id) if lead_id else None
+    if lead:
+        if answered_by.startswith("machine"):
+            lead.status = LeadStatus.VOICEMAIL
+            lead.notes = f"{lead.notes} | AMD: {answered_by}".strip(" |")
+            lead_mgr.save()
+            lead_mgr.send_proposal(lead.id, tier="pro", notes="Auto proposal dispatched after AMD voicemail")
+        elif answered_by == "human":
+            lead.status = LeadStatus.CONNECTED
+            lead_mgr.save()
+
+    return {"status": "ok", "answered_by": answered_by, "lead_id": lead_id}
 
 
 @app.get("/voice/audio/{filename}")
@@ -157,7 +246,6 @@ async def voice_interactive_respond(request: Request):
     """
     Processes the user's spoken response and returns the conversational reply with intent classification.
     """
-    import urllib.parse
     raw_body = await request.body()
     params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
     user_speech = params.get("SpeechResult", [""])[0].strip()
@@ -197,8 +285,13 @@ async def twilio_twiml_endpoint(request: Request):
     Returns TwiML that connects Twilio's audio call to our bi-directional MediaStream WebSocket.
     """
     host = request.headers.get("host", f"localhost:{config.server_port}")
-    # Use wss for secure or ws for local development
     ws_protocol = "wss" if "https" in str(request.base_url) else "ws"
+
+    lead_id = request.query_params.get("lead_id", "")
+    lead = lead_mgr.get_by_id(lead_id) if lead_id else None
+    name = lead.name if lead else request.query_params.get("name", "there")
+    company = lead.company if lead else request.query_params.get("company", "")
+
     stream_url = f"{ws_protocol}://{host}/voice/stream"
 
     twiml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -207,85 +300,13 @@ async def twilio_twiml_endpoint(request: Request):
     <Connect>
         <Stream url="{stream_url}">
             <Parameter name="customContext" value="bartholomew_cold_call" />
+            <Parameter name="prospectName" value="{name}" />
+            <Parameter name="companyName" value="{company}" />
+            <Parameter name="leadId" value="{lead_id}" />
         </Stream>
     </Connect>
 </Response>"""
     return Response(content=twiml_response, media_type="application/xml")
-
-
-@app.websocket("/voice/stream")
-async def twilio_stream_websocket(websocket: WebSocket):
-    """
-    Twilio MediaStream bi-directional WebSocket handler.
-    Exchanges 8kHz mu-law audio with Twilio and coordinates with RealtimeVoiceSession.
-    """
-    await websocket.accept()
-    stream_sid: Optional[str] = None
-    call_sid: Optional[str] = None
-    session: Optional[RealtimeVoiceSession] = None
-    lead = lead_mgr.get_next_pending() or Lead(name="Prospect", company="Engineering Team")
-
-    # Callbacks for Realtime AI
-    def on_ai_audio_delta(pcm16_24k_b64: str):
-        if stream_sid:
-            mulaw_8k_b64 = AudioCodec.openai_to_twilio(pcm16_24k_b64)
-            media_msg = {
-                "event": "media",
-                "streamSid": stream_sid,
-                "media": {"payload": mulaw_8k_b64}
-            }
-            asyncio.create_task(websocket.send_json(media_msg))
-
-    def on_ai_interruption():
-        if stream_sid:
-            clear_msg = {"event": "clear", "streamSid": stream_sid}
-            asyncio.create_task(websocket.send_json(clear_msg))
-
-    session = RealtimeVoiceSession(
-        lead=lead,
-        voice_config=config,
-        on_audio_delta=on_ai_audio_delta,
-        on_interruption=on_ai_interruption
-    )
-
-    try:
-        while True:
-            raw_msg = await websocket.receive_text()
-            data = json.loads(raw_msg)
-            event = data.get("event")
-
-            if event == "start":
-                stream_sid = data.get("start", {}).get("streamSid")
-                call_sid = data.get("start", {}).get("callSid")
-                logger.info(f"Twilio MediaStream started: streamSid={stream_sid} callSid={call_sid}")
-                active_sessions[stream_sid] = session
-                await session.start()
-
-            elif event == "media":
-                payload_b64 = data.get("media", {}).get("payload")
-                if payload_b64 and session:
-                    pcm16_24k_b64 = AudioCodec.twilio_to_openai(payload_b64)
-                    await session.send_audio_chunk(pcm16_24k_b64)
-
-            elif event == "stop":
-                logger.info(f"Twilio MediaStream ended for {stream_sid}")
-                break
-
-    except WebSocketDisconnect:
-        logger.info(f"Twilio WebSocket disconnected for {stream_sid}")
-    except Exception as e:
-        logger.error(f"Error in Twilio MediaStream: {e}")
-    finally:
-        if session:
-            await session.close()
-            lead_mgr.update_lead_outcome(
-                lead_id=lead.id,
-                status=LeadStatus.CONNECTED,
-                duration=session.get_duration(),
-                transcript=session.transcript
-            )
-        if stream_sid and stream_sid in active_sessions:
-            del active_sessions[stream_sid]
 
 
 # ---------------------------------------------------------------------------
@@ -295,7 +316,7 @@ async def twilio_stream_websocket(websocket: WebSocket):
 @app.post("/api/dial")
 async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[str] = None):
     """
-    Trigger a real outbound phone call via Twilio REST API.
+    Trigger a real outbound phone call via Twilio REST API with Answering Machine Detection.
     """
     target_lead = lead_mgr.get_by_id(lead_id) if lead_id else None
     target_phone = phone or (target_lead.phone if target_lead else None)
@@ -312,7 +333,9 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
         }
 
     try:
-        twiml_url = f"{config.public_base_url.rstrip('/')}/voice/twiml"
+        lead_param = f"?lead_id={target_lead.id}" if target_lead else ""
+        twiml_url = f"{config.public_base_url.rstrip('/')}/voice/live_stream{lead_param}"
+        amd_callback_url = f"{config.public_base_url.rstrip('/')}/voice/amd_callback{lead_param}"
         call_sid = None
 
         try:
@@ -321,13 +344,15 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
             call = client.calls.create(
                 to=target_phone,
                 from_=config.twilio_phone_number,
-                url=twiml_url
+                url=twiml_url,
+                machine_detection="DetectMessageEnd",
+                async_amd="true",
+                async_amd_status_callback=amd_callback_url
             )
             call_sid = call.sid
         except ImportError:
             # Zero-dependency fallback via Twilio REST API
             import base64
-            import urllib.parse
             import urllib.request
 
             api_url = f"https://api.twilio.com/2010-04-01/Accounts/{config.twilio_account_sid}/Calls.json"
@@ -335,6 +360,9 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
                 "To": target_phone,
                 "From": config.twilio_phone_number,
                 "Url": twiml_url,
+                "MachineDetection": "DetectMessageEnd",
+                "AsyncAmd": "true",
+                "AsyncAmdStatusCallback": amd_callback_url
             }).encode("utf-8")
             auth_str = f"{config.twilio_account_sid}:{config.twilio_auth_token}"
             auth_b64 = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
@@ -401,7 +429,7 @@ async def browser_audio_websocket(websocket: WebSocket):
         await websocket.send_json({
             "type": "ready",
             "lead": lead.to_dict(),
-            "mode": "openai" if config.is_openai_ready() else "simulated"
+            "mode": "gemini" if (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")) else "simulated"
         })
 
         while True:
@@ -468,6 +496,7 @@ async def leads_summary():
         "closed_won_revenue_usd": closed_won_val,
         "qualified_count": by_status.get("QUALIFIED", 0),
         "proposals_sent": by_status.get("PROPOSAL_SENT", 0),
+        "voicemails_dropped": by_status.get("VOICEMAIL", 0),
         "closed_won_count": by_status.get("CLOSED_WON", 0)
     }
 

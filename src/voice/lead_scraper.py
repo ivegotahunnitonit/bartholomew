@@ -361,15 +361,15 @@ def run_scraper(
     raw: List[Dict[str, Any]] = []
 
     if "github" in sources:
-        logger.info("🔍 Scraping GitHub repos...")
+        logger.info("[SCRAPER] Scraping GitHub repos...")
         raw += scrape_github(limit=limit, github_token=github_token)
 
     if "hn" in sources:
-        logger.info("🔍 Scraping Hacker News...")
+        logger.info("[SCRAPER] Scraping Hacker News...")
         raw += scrape_hacker_news(limit=limit // 2)
 
     if "issues" in sources:
-        logger.info("🔍 Scraping GitHub Issues (warm leads)...")
+        logger.info("[SCRAPER] Scraping GitHub Issues (warm leads)...")
         raw += scrape_github_issues(limit=limit // 2, github_token=github_token)
 
     filtered = _dedupe_and_filter(raw)
@@ -398,15 +398,15 @@ def run_scraper(
 
         existing_names.add(name.lower())
         added += 1
-        logger.info("  ✅ Added: %s @ %s [%s]", name, item.get("company"), item.get("source"))
+        logger.info("  Added: %s @ %s [%s]", name, item.get("company"), item.get("source"))
 
-    logger.info("\n🎯 Lead scrape complete. Added %d new leads to queue.", added)
-    logger.info("📄 Queue saved to: %s", manager.storage_file)
+    logger.info("\nLead scrape complete. Added %d new leads to queue.", added)
+    logger.info("Queue saved to: %s", manager.storage_file)
 
     # Print summary
     all_leads = manager.get_all()
     pending = [l for l in all_leads if l.status == LeadStatus.PENDING]
-    logger.info("📊 Total queue: %d leads | %d pending dial", len(all_leads), len(pending))
+    logger.info("Total queue: %d leads | %d pending dial", len(all_leads), len(pending))
 
     return added
 

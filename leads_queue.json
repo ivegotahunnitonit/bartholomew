@@ -1,5 +1,15 @@
 [
   {
+    "outreach_history": [
+      {
+        "channel": "EMAIL_WAVE_1",
+        "subject": "AI code execution safeguards for Synthetix AI",
+        "timestamp": 1789157898.3844602,
+        "status": "SENT"
+      }
+    ],
+    "pilot_dossier_path": "dossiers\\PILOT_synthetix_ai_e78802b5.md",
+    "last_updated_utc": 1789186116.5518262,
     "id": "e78802b5",
     "name": "Marcus Vance",
     "company": "Synthetix AI",
@@ -10,22 +20,23 @@
     "notes": "Deploys multi-agent CrewAI clusters with code execution tools.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-900D9CDD",
     "last_called_at": 1789157898.384459,
-    "created_at": 1788696910.6006384,
+    "created_at": 1788696910.6006384
+  },
+  {
     "outreach_history": [
       {
         "channel": "EMAIL_WAVE_1",
-        "subject": "AI code execution safeguards for Synthetix AI",
-        "timestamp": 1789157898.3844602,
+        "subject": "Preventing AI agent accidents at VectorFlow Dynamics",
+        "timestamp": 1789157898.3844924,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_synthetix_ai_e78802b5.md",
-    "invoice_id": "INV-BTP-ENT-900D9CDD",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5518262
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_vectorflow_dynamics_46a509ad.md",
+    "last_updated_utc": 1789186116.5524845,
     "id": "46a509ad",
     "name": "Elena Rostova",
     "company": "VectorFlow Dynamics",
@@ -36,22 +47,23 @@
     "notes": "Scaling LangGraph pipelines for enterprise financial clients.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-B8BCCD35",
     "last_called_at": 1789157898.3844912,
-    "created_at": 1788696910.6006534,
+    "created_at": 1788696910.6006534
+  },
+  {
     "outreach_history": [
       {
         "channel": "EMAIL_WAVE_1",
-        "subject": "Preventing AI agent accidents at VectorFlow Dynamics",
-        "timestamp": 1789157898.3844924,
+        "subject": "Quick question on AI database safety at HyperScale Agents",
+        "timestamp": 1789157898.3845136,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_vectorflow_dynamics_46a509ad.md",
-    "invoice_id": "INV-BTP-ENT-B8BCCD35",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5524845
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_hyperscale_agents_132f5d0f.md",
+    "last_updated_utc": 1789186116.553439,
     "id": "132f5d0f",
     "name": "Devin Chen",
     "company": "HyperScale Agents",
@@ -62,22 +74,23 @@
     "notes": "Building autonomous database query agents with Postgres & BigQuery.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-40E5DFF7",
     "last_called_at": 1789157898.3845103,
-    "created_at": 1788696910.6006596,
+    "created_at": 1788696910.6006596
+  },
+  {
     "outreach_history": [
       {
         "channel": "EMAIL_WAVE_1",
-        "subject": "Quick question on AI database safety at HyperScale Agents",
-        "timestamp": 1789157898.3845136,
+        "subject": "Preventing AI agent accidents at Cognitive Corp",
+        "timestamp": 1789157898.384532,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_hyperscale_agents_132f5d0f.md",
-    "invoice_id": "INV-BTP-ENT-40E5DFF7",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.553439
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_cognitive_corp_d29494a6.md",
+    "last_updated_utc": 1789186116.5541472,
     "id": "d29494a6",
     "name": "Sarah Jenkins",
     "company": "Cognitive Corp",
@@ -88,22 +101,23 @@
     "notes": "Needs SOC 2 Type II audit compliance for LLM tool executions.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-DAB0B26D",
     "last_called_at": 1789157898.3845317,
-    "created_at": 1788696910.6006641,
+    "created_at": 1788696910.6006641
+  },
+  {
     "outreach_history": [
       {
-        "channel": "EMAIL_WAVE_1",
-        "subject": "Preventing AI agent accidents at Cognitive Corp",
-        "timestamp": 1789157898.384532,
+        "channel": "HN_COMMUNITY_WAVE_2",
+        "subject": "Fellow HN builder: loved your post on runtime security for AI agents",
+        "timestamp": 1789158168.237628,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_cognitive_corp_d29494a6.md",
-    "invoice_id": "INV-BTP-ENT-DAB0B26D",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5541472
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_385d7775.md",
+    "last_updated_utc": 1789186116.5547535,
     "id": "385d7775",
     "name": "dshapi",
     "company": "Independent / HN",
@@ -114,22 +128,23 @@
     "notes": "HN post: 'Show HN: Runtime security for AI agents(injection,tool abuse, data exfiltration)' | 1pts 2 comments | https://news.ycombinator.com/item?id=47799856",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-1896C232",
     "last_called_at": 1789158168.2376266,
-    "created_at": 1788729054.9375494,
+    "created_at": 1788729054.9375494
+  },
+  {
     "outreach_history": [
       {
         "channel": "HN_COMMUNITY_WAVE_2",
-        "subject": "Fellow HN builder: loved your post on runtime security for AI agents",
-        "timestamp": 1789158168.237628,
+        "subject": "Fellow HN builder: stopping AI agents from doing dumb things",
+        "timestamp": 1789158168.2379203,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_385d7775.md",
-    "invoice_id": "INV-BTP-ENT-1896C232",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5547535
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_61dc0dd2.md",
+    "last_updated_utc": 1789186116.5553498,
     "id": "61dc0dd2",
     "name": "thomaslwang",
     "company": "Independent / HN",
@@ -140,22 +155,23 @@
     "notes": "HN post: 'I built a runtime guardrail that stops AI agents from doing dumb things' | 9pts 3 comments | https://news.ycombinator.com/item?id=47421451",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-252CF113",
     "last_called_at": 1789158168.237919,
-    "created_at": 1788729054.940593,
+    "created_at": 1788729054.940593
+  },
+  {
     "outreach_history": [
       {
         "channel": "HN_COMMUNITY_WAVE_2",
-        "subject": "Fellow HN builder: stopping AI agents from doing dumb things",
-        "timestamp": 1789158168.2379203,
+        "subject": "ClawCare & runtime agent skills security -- fellow builder",
+        "timestamp": 1789158168.2382004,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_61dc0dd2.md",
-    "invoice_id": "INV-BTP-ENT-252CF113",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5553498
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_2b379849.md",
+    "last_updated_utc": 1789186116.5559802,
     "id": "2b379849",
     "name": "chendev2",
     "company": "Independent / HN",
@@ -166,22 +182,23 @@
     "notes": "HN post: 'Show HN: ClawCare \u2013 Security scanner and runtime guard for AI agent skills' | 1pts 4 comments | https://github.com/natechensan/ClawCare",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-7BC2F0D7",
     "last_called_at": 1789158168.2381992,
-    "created_at": 1788729054.9432333,
+    "created_at": 1788729054.9432333
+  },
+  {
     "outreach_history": [
       {
         "channel": "HN_COMMUNITY_WAVE_2",
-        "subject": "ClawCare & runtime agent skills security -- fellow builder",
-        "timestamp": 1789158168.2382004,
+        "subject": "Dedalus Labs (YC S25) -- agent sandboxing & execution safety",
+        "timestamp": 1789158168.2382236,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_2b379849.md",
-    "invoice_id": "INV-BTP-ENT-7BC2F0D7",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5559802
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_4e1937f7.md",
+    "last_updated_utc": 1789186116.5565825,
     "id": "4e1937f7",
     "name": "windsor",
     "company": "Independent / HN",
@@ -192,22 +209,23 @@
     "notes": "HN post: 'Launch HN: Dedalus Labs (YC S25) \u2013 Vercel for Agents' | 77pts 15 comments | https://news.ycombinator.com/item?id=45054040",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-C7BCB361",
     "last_called_at": 1789158168.238223,
-    "created_at": 1788729054.9453173,
+    "created_at": 1788729054.9453173
+  },
+  {
     "outreach_history": [
       {
         "channel": "HN_COMMUNITY_WAVE_2",
-        "subject": "Dedalus Labs (YC S25) -- agent sandboxing & execution safety",
-        "timestamp": 1789158168.2382236,
+        "subject": "Scaling AI agents reliably -- fellow HN builder",
+        "timestamp": 1789158168.2382405,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_4e1937f7.md",
-    "invoice_id": "INV-BTP-ENT-C7BCB361",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5565825
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_9aead5af.md",
+    "last_updated_utc": 1789186116.5571706,
     "id": "9aead5af",
     "name": "nivedit-jain",
     "company": "Independent / HN",
@@ -218,22 +236,23 @@
     "notes": "HN post: 'Ask HN: How are you scaling AI agents reliably in production?' | 7pts 2 comments | https://news.ycombinator.com/item?id=44909029",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-1CB820FC",
     "last_called_at": 1789158168.23824,
-    "created_at": 1788729054.947157,
+    "created_at": 1788729054.947157
+  },
+  {
     "outreach_history": [
       {
-        "channel": "HN_COMMUNITY_WAVE_2",
-        "subject": "Scaling AI agents reliably -- fellow HN builder",
-        "timestamp": 1789158168.2382405,
+        "channel": "EMAIL_WAVE_1",
+        "subject": "AI code execution safeguards for Nexus Automation",
+        "timestamp": 1789157898.384546,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_independent___hn_9aead5af.md",
-    "invoice_id": "INV-BTP-ENT-1CB820FC",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5571706
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_nexus_automation_a1b2c3d4.md",
+    "last_updated_utc": 1789186116.5577185,
     "id": "a1b2c3d4",
     "name": "Liam Gallagher",
     "company": "Nexus Automation",
@@ -244,22 +263,23 @@
     "notes": "Deploying autonomous AutoGen code migration agents; worried about filesystem escape and unconstrained bash execution.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-2130562D",
     "last_called_at": 1789157898.3845458,
-    "created_at": 1788973667.8268323,
+    "created_at": 1788973667.8268323
+  },
+  {
     "outreach_history": [
       {
-        "channel": "EMAIL_WAVE_1",
-        "subject": "AI code execution safeguards for Nexus Automation",
-        "timestamp": 1789157898.384546,
+        "channel": "STARTUP_OUTREACH_WAVE_3",
+        "subject": "Accidental database drops with AI agents at FinLedger Systems",
+        "timestamp": 1789158229.1338732,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_nexus_automation_a1b2c3d4.md",
-    "invoice_id": "INV-BTP-ENT-2130562D",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5577185
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_finledger_systems_e5f6a7b8.md",
+    "last_updated_utc": 1789186116.5582702,
     "id": "e5f6a7b8",
     "name": "Priya Nair",
     "company": "FinLedger Systems",
@@ -270,22 +290,23 @@
     "notes": "Using LangGraph to generate dynamic SQL on Snowflake & BigQuery; needs strict AST gating to prevent accidental DROP or TRUNCATE.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-0F5F76D8",
     "last_called_at": 1789158229.133872,
-    "created_at": 1788973667.826834,
+    "created_at": 1788973667.826834
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Accidental database drops with AI agents at FinLedger Systems",
-        "timestamp": 1789158229.1338732,
+        "subject": "Preventing accidental cloud wipes at CloudMorph AI",
+        "timestamp": 1789158229.133897,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_finledger_systems_e5f6a7b8.md",
-    "invoice_id": "INV-BTP-ENT-0F5F76D8",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5582702
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_cloudmorph_ai_c9d0e1f2.md",
+    "last_updated_utc": 1789186116.5588264,
     "id": "c9d0e1f2",
     "name": "Alex Rivera",
     "company": "CloudMorph AI",
@@ -296,22 +317,23 @@
     "notes": "Autonomous cloud provisioning with Terraform & AWS CLI; needs tool dispatch inspection to stop destructive teardowns.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-93153BA2",
     "last_called_at": 1789158229.133896,
-    "created_at": 1788973667.826835,
+    "created_at": 1788973667.826835
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Preventing accidental cloud wipes at CloudMorph AI",
-        "timestamp": 1789158229.133897,
+        "subject": "Audit-ready agent safety for MedData Intelligence",
+        "timestamp": 1789158229.1339147,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_cloudmorph_ai_c9d0e1f2.md",
-    "invoice_id": "INV-BTP-ENT-93153BA2",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5588264
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_meddata_intelligence_b3c4d5e6.md",
+    "last_updated_utc": 1789186116.5592995,
     "id": "b3c4d5e6",
     "name": "David Kowalski",
     "company": "MedData Intelligence",
@@ -322,22 +344,23 @@
     "notes": "Deploying HIPAA-compliant clinical summary agents; requires signed Merkle audit ledger of all agent tool dispatches.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-599D1F1B",
     "last_called_at": 1789158229.133914,
-    "created_at": 1788973667.8268356,
+    "created_at": 1788973667.8268356
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Audit-ready agent safety for MedData Intelligence",
-        "timestamp": 1789158229.1339147,
+        "subject": "Safe Kubernetes agent execution at KubeAgent Technologies",
+        "timestamp": 1789158229.13393,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_meddata_intelligence_b3c4d5e6.md",
-    "invoice_id": "INV-BTP-ENT-599D1F1B",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5592995
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_kubeagent_technologies_f7a8b9c0.md",
+    "last_updated_utc": 1789186116.5597992,
     "id": "f7a8b9c0",
     "name": "Jordan Zhao",
     "company": "KubeAgent Technologies",
@@ -348,22 +371,23 @@
     "notes": "Deploying Kubernetes agent operators with kubectl access; worried about container escapes and cluster privilege escalation.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-525781CA",
     "last_called_at": 1789158229.1339295,
-    "created_at": 1788973667.826836,
+    "created_at": 1788973667.826836
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Safe Kubernetes agent execution at KubeAgent Technologies",
-        "timestamp": 1789158229.13393,
+        "subject": "AI agent safety & budget guardrails for CyberSentry Labs",
+        "timestamp": 1789158229.13395,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_kubeagent_technologies_f7a8b9c0.md",
-    "invoice_id": "INV-BTP-ENT-525781CA",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5597992
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_cybersentry_labs_d1e2f3a4.md",
+    "last_updated_utc": 1789186116.5603616,
     "id": "d1e2f3a4",
     "name": "Sophia Martinez",
     "company": "CyberSentry Labs",
@@ -374,22 +398,23 @@
     "notes": "Autonomous penetration testing agents; needs deterministic containment so red team agents don't accidentally attack production subnets.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-5A180C5D",
     "last_called_at": 1789158229.1339498,
-    "created_at": 1788973667.826837,
+    "created_at": 1788973667.826837
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "AI agent safety & budget guardrails for CyberSentry Labs",
-        "timestamp": 1789158229.13395,
+        "subject": "Preventing API credential leaks in Apex Logistics AI's AI agents",
+        "timestamp": 1789158229.133965,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_cybersentry_labs_d1e2f3a4.md",
-    "invoice_id": "INV-BTP-ENT-5A180C5D",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5603616
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_apex_logistics_ai_b5c6d7e8.md",
+    "last_updated_utc": 1789186116.5610158,
     "id": "b5c6d7e8",
     "name": "Zach Thornton",
     "company": "Apex Logistics AI",
@@ -400,22 +425,23 @@
     "notes": "Autonomous freight routing agents calling external carrier APIs; worried about secret API token leakage in logs.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-E84E1CEC",
     "last_called_at": 1789158229.1339648,
-    "created_at": 1788973667.8268375,
+    "created_at": 1788973667.8268375
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Preventing API credential leaks in Apex Logistics AI's AI agents",
-        "timestamp": 1789158229.133965,
+        "subject": "Killing approval fatigue on agent workers at DataMesh Scale",
+        "timestamp": 1789158229.1339803,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_apex_logistics_ai_b5c6d7e8.md",
-    "invoice_id": "INV-BTP-ENT-E84E1CEC",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5610158
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_datamesh_scale_f9a0b1c2.md",
+    "last_updated_utc": 1789186116.5615625,
     "id": "f9a0b1c2",
     "name": "Hannah Kim",
     "company": "DataMesh Scale",
@@ -426,22 +452,23 @@
     "notes": "Managing 200+ autonomous agent cron workers; human-in-the-loop review fatigue is blocking autonomous release velocity.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-8910F055",
     "last_called_at": 1789158229.1339798,
-    "created_at": 1788973667.8268383,
+    "created_at": 1788973667.8268383
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Killing approval fatigue on agent workers at DataMesh Scale",
-        "timestamp": 1789158229.1339803,
+        "subject": "Protecting customer-facing AI agents at OmniRetail AI",
+        "timestamp": 1789158229.1339934,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_datamesh_scale_f9a0b1c2.md",
-    "invoice_id": "INV-BTP-ENT-8910F055",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5615625
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_omniretail_ai_d3e4f5a6.md",
+    "last_updated_utc": 1789186116.5620556,
     "id": "d3e4f5a6",
     "name": "Carlos Mendez",
     "company": "OmniRetail AI",
@@ -452,22 +479,23 @@
     "notes": "Building customer-facing returns & refund agents; preventing hallucinated unauthorized refund tool calls.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-79155EA0",
     "last_called_at": 1789158229.1339931,
-    "created_at": 1788973667.8268387,
+    "created_at": 1788973667.8268387
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Protecting customer-facing AI agents at OmniRetail AI",
-        "timestamp": 1789158229.1339934,
+        "subject": "Audit-ready agent safety for Aura Health AI",
+        "timestamp": 1789158229.1340058,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_omniretail_ai_d3e4f5a6.md",
-    "invoice_id": "INV-BTP-ENT-79155EA0",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5620556
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_aura_health_ai_b7c8d9e0.md",
+    "last_updated_utc": 1789186116.5627463,
     "id": "b7c8d9e0",
     "name": "Emily Watson",
     "company": "Aura Health AI",
@@ -478,22 +506,23 @@
     "notes": "Diagnostic assistant agents interacting with FHIR APIs; needs signed Merkle receipts for FDA/HIPAA compliance.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-EB52FE70",
     "last_called_at": 1789158229.1340055,
-    "created_at": 1788973667.8268392,
+    "created_at": 1788973667.8268392
+  },
+  {
     "outreach_history": [
       {
         "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Audit-ready agent safety for Aura Health AI",
-        "timestamp": 1789158229.1340058,
+        "subject": "Accidental database drops with AI agents at QuantumStream Analytics",
+        "timestamp": 1789158229.134496,
         "status": "SENT"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_aura_health_ai_b7c8d9e0.md",
-    "invoice_id": "INV-BTP-ENT-EB52FE70",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.5627463
-  },
-  {
+    "pilot_dossier_path": "dossiers\\PILOT_quantumstream_analytics_f1a2b3c4.md",
+    "last_updated_utc": 1789186116.563944,
     "id": "f1a2b3c4",
     "name": "Tariq Mansour",
     "company": "QuantumStream Analytics",
@@ -504,19 +533,304 @@
     "notes": "Autonomous ETL pipelines writing to production datalakes; requires sub-50\u00b5s gating for SQL and Python steps.",
     "call_duration_seconds": 0,
     "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-DCF1E28C",
     "last_called_at": 1789158229.1344948,
-    "created_at": 1788973667.8268402,
-    "outreach_history": [
+    "created_at": 1788973667.8268402
+  },
+  {
+    "id": "uk_helix_01",
+    "name": "James Harford",
+    "company": "Helix AI Systems",
+    "phone": "+442079460912",
+    "email": "jharford@helixai.co.uk",
+    "role": "Head of AI Safety",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
+    "notes": "Scaling autonomous coding agents in London; needs execution dispatch containment.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-UK01",
+    "last_called_at": null,
+    "created_at": 1789193397.3560984
+  },
+  {
+    "id": "de_kinetix_02",
+    "name": "Dr. Stefan Weber",
+    "company": "Kinetix Robotics AI",
+    "phone": "+493012345678",
+    "email": "weber@kinetix-ai.de",
+    "role": "VP of Engineering",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
+    "notes": "Industrial agent actuators in Berlin; requires sub-35us deterministic veto.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-DE02",
+    "last_called_at": null,
+    "created_at": 1789193397.3561065
+  },
+  {
+    "id": "sg_singadata_03",
+    "name": "Mei Ling Tan",
+    "company": "SingaData Autonomous",
+    "phone": "+6567890123",
+    "email": "mltan@singadata.ai",
+    "role": "Lead Architect",
+    "status": "PROPOSAL_SENT",
+    "notes": "Autonomous BigQuery and Postgres data lake ETL in Singapore; prevents accidental table drops. | Interested in execution firewall; requested quickstart guide.",
+    "call_duration_seconds": 52,
+    "transcript": [
       {
-        "channel": "STARTUP_OUTREACH_WAVE_3",
-        "subject": "Accidental database drops with AI agents at QuantumStream Analytics",
-        "timestamp": 1789158229.134496,
-        "status": "SENT"
+        "role": "assistant",
+        "content": "Hey Mei! Alex here. Caught you randomly -- do you have 30 seconds, or are you in the middle of a deployment fire over at SingaData Autonomous?"
+      },
+      {
+        "role": "user",
+        "content": "Haha yeah, what's this regarding?"
+      },
+      {
+        "role": "assistant",
+        "content": "Quick question from one builder to another: are you guys letting your AI agents run tools hands-free yet, or still stuck babysitting every single action?"
+      },
+      {
+        "role": "user",
+        "content": "We manually approve everything right now because we're terrified of accidental database table drops or runaway spend."
+      },
+      {
+        "role": "assistant",
+        "content": "Haha yeah, the classic approval bottleneck! That exact headache is why we built Bartholomew -- 100% open source on npm and PyPI, blocks bad commands in under 35 microseconds."
+      },
+      {
+        "role": "user",
+        "content": "35 microseconds in-memory? That's actually pretty clean. Can you send over the docs and quickstart?"
+      },
+      {
+        "role": "assistant",
+        "content": "100%! Can check out bartholomew.info or I can shoot the 1-page guide to your email. What's the best address?"
       }
     ],
-    "pilot_dossier_path": "dossiers\\PILOT_quantumstream_analytics_f1a2b3c4.md",
-    "invoice_id": "INV-BTP-ENT-DCF1E28C",
-    "contract_value_usd": 25000.0,
-    "last_updated_utc": 1789186116.563944
+    "deal_value_usd": 49.0,
+    "checkout_url": "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600",
+    "invoice_id": "INV-BTP-90E352B8",
+    "last_called_at": null,
+    "created_at": 1789193397.356117
+  },
+  {
+    "id": "jp_nexus_04",
+    "name": "Kenji Takahashi",
+    "company": "Nexus Frontier Labs",
+    "phone": "+81355550142",
+    "email": "takahashi@nexus-frontier.jp",
+    "role": "CTO",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
+    "notes": "Multi-agent coding clusters in Tokyo; seeks automated budget spend caps.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-JP04",
+    "last_called_at": null,
+    "created_at": 1789193397.3561263
+  },
+  {
+    "id": "au_aurapacific_05",
+    "name": "Liam O Connor",
+    "company": "Aura Pacific AI",
+    "phone": "+61298765432",
+    "email": "liam@aurapacific.com.au",
+    "role": "Principal Engineer",
+    "status": "DISPATCHED_EXECUTIVE_DOSSIER",
+    "notes": "Agentic tool calling in Sydney; needs SOC 2 audit proofs.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-AU05",
+    "last_called_at": null,
+    "created_at": 1789193397.356134
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_eirescale_autonomous_db1001a1.md",
+    "id": "db1001a1",
+    "name": "Cormac Murphy",
+    "company": "EireScale Autonomous",
+    "phone": "+35315554321",
+    "email": "cormac@eirescale.ie",
+    "role": "VP of Cloud Infrastructure",
+    "status": "PENDING",
+    "notes": "Building LangGraph multi-tenant orchestration for European financial customers.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-353DUB01",
+    "last_called_at": null,
+    "created_at": 1789193358.6671116
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_lumiere_neural_paris_fr2002b2.md",
+    "id": "fr2002b2",
+    "name": "Camille Laurent",
+    "company": "Lumiere Neural Paris",
+    "phone": "+3315557890",
+    "email": "camille@lumiere.paris",
+    "role": "Head of AI Platform",
+    "status": "PENDING",
+    "notes": "Scaling Mistral-based code execution sidecars with MCP integrations.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-33PAR02",
+    "last_called_at": null,
+    "created_at": 1789193358.6671145
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_alpine_autonomy_ch3003c3.md",
+    "id": "ch3003c3",
+    "name": "Beat Zimmermann",
+    "company": "Alpine Autonomy Zurich",
+    "phone": "+41445556789",
+    "email": "beat@alpineautonomy.ch",
+    "role": "Chief AI Architect",
+    "status": "PENDING",
+    "notes": "Robotics and deterministic shell execution agents for enterprise logistics.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-41ZUR03",
+    "last_called_at": null,
+    "created_at": 1789193358.6671164
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_deltaflow_amsterdam_nl4004d4.md",
+    "id": "nl4004d4",
+    "name": "Daan Van Der Meer",
+    "company": "DeltaFlow Amsterdam",
+    "phone": "+31205553456",
+    "email": "daan@deltaflow.nl",
+    "role": "Staff Security Engineer",
+    "status": "PENDING",
+    "notes": "Fintech agent pipelines requiring strict sub-millisecond AST boundary enforcement.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-31AMS04",
+    "last_called_at": null,
+    "created_at": 1789193358.667118
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_oasis_frontier_ae5005e5.md",
+    "id": "ae5005e5",
+    "name": "Zayd Al-Maktoum",
+    "company": "Oasis Frontier Dubai",
+    "phone": "+97145558901",
+    "email": "zayd@oasisfrontier.ae",
+    "role": "Director of Sovereign AI",
+    "status": "PENDING",
+    "notes": "Autonomous agent clusters across public cloud and high-compliance on-premise enclaves.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-971DXB05",
+    "last_called_at": null,
+    "created_at": 1789193358.6671195
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_indus_neural_in6006f6.md",
+    "id": "in6006f6",
+    "name": "Aarav Patel",
+    "company": "Indus Neural Labs",
+    "phone": "+91805552345",
+    "email": "aarav@indusneural.in",
+    "role": "Founder & CTO",
+    "status": "PENDING",
+    "notes": "Building autonomous coding assistants for over 2,000 enterprise developers in Bangalore.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-91BLR06",
+    "last_called_at": null,
+    "created_at": 1789193358.667121
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_seoul_ai_matrix_kr7007g7.md",
+    "id": "kr7007g7",
+    "name": "Min-jun Kim",
+    "company": "Seoul AI Matrix",
+    "phone": "+8225556789",
+    "email": "minjun@seoulmatrix.kr",
+    "role": "Head of Engineering",
+    "status": "PENDING",
+    "notes": "Autonomous agent swarm execution across distributed GPU clusters.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-82SEL07",
+    "last_called_at": null,
+    "created_at": 1789193358.6671226
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_hypernorthern_toronto_ca8008h8.md",
+    "id": "ca8008h8",
+    "name": "Liam MacLeod",
+    "company": "HyperNorthern Labs Toronto",
+    "phone": "+14165558912",
+    "email": "liam@hypernorthern.ca",
+    "role": "Lead Infrastructure Architect",
+    "status": "PENDING",
+    "notes": "Cohere-powered agent tools running database mutations hands-free.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-1TOR08",
+    "last_called_at": null,
+    "created_at": 1789193358.6671243
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_pacific_cascade_vancouver_ca9009i9.md",
+    "id": "ca9009i9",
+    "name": "Chloe Tremblay",
+    "company": "Pacific Cascade AI Vancouver",
+    "phone": "+16045554329",
+    "email": "chloe@cascadeai.ca",
+    "role": "VP of Machine Learning",
+    "status": "PENDING",
+    "notes": "Deploying autonomous agents for healthcare and insurance workflows.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-1VAN09",
+    "last_called_at": null,
+    "created_at": 1789193358.6671257
+  },
+  {
+    "pilot_dossier_path": "dossiers/PILOT_paulista_neural_br1010j0.md",
+    "id": "br1010j0",
+    "name": "Rodrigo Silva",
+    "company": "Paulista Neural Agents",
+    "phone": "+55115559876",
+    "email": "rodrigo@paulistaneural.br",
+    "role": "CTO",
+    "status": "PENDING",
+    "notes": "Fintech autonomous agents interacting directly with Brazilian payment gateways.",
+    "call_duration_seconds": 0,
+    "transcript": [],
+    "deal_value_usd": 25000.0,
+    "checkout_url": null,
+    "invoice_id": "INV-BTP-ENT-55SAO10",
+    "last_called_at": null,
+    "created_at": 1789193358.6671274
   }
 ]
