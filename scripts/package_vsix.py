@@ -28,9 +28,9 @@ CONTENT_TYPES_XML = """<?xml version="1.0" encoding="utf-8"?>
 VSIX_MANIFEST_XML = """<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="bartholomew-guard-vscode" Version="2.2.0" Publisher="Bartholomew" />
-    <DisplayName>Bartholomew Autonomous AI Guard</DisplayName>
-    <Description xml:space="preserve">Sub-millisecond cryptographic attestation and invariant guard for Cursor and VS Code agent sessions.</Description>
+    <Identity Id="bartholomew-guard-vscode" Version="5.4.10" Publisher="Bartholomew" />
+    <DisplayName>Bartholomew Autonomous AI Guard (BTP v5.4.10)</DisplayName>
+    <Description xml:space="preserve">Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.</Description>
     <Categories>Security,Machine Learning,Programming Languages</Categories>
     <License>extension/LICENSE.txt</License>
   </Metadata>
@@ -49,13 +49,14 @@ def build_vsix():
     print("[VSIX] Building Bartholomew VS Code Extension VSIX package...")
     PUBLIC_OUT.parent.mkdir(parents=True, exist_ok=True)
     DIST_OUT.parent.mkdir(parents=True, exist_ok=True)
+    NAMED_OUT = EXT_DIR / "bartholomew-guard-vscode-5.4.10.vsix"
 
     package_json = EXT_DIR / "package.json"
     extension_js = EXT_DIR / "dist" / "extension.js"
     readme_md = ROOT / "README.md"
     license_md = ROOT / "LICENSE.md"
 
-    for target in [PUBLIC_OUT, DIST_OUT]:
+    for target in [PUBLIC_OUT, DIST_OUT, NAMED_OUT]:
         with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as z:
             z.writestr("[Content_Types].xml", CONTENT_TYPES_XML.strip())
             z.writestr("extension.vsixmanifest", VSIX_MANIFEST_XML.strip())
