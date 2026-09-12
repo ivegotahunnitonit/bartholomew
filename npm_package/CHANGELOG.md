@@ -2,6 +2,13 @@
 
 All notable changes to `btp-guard` will be documented in this file.
 
+## [5.4.7] - 2026-09-11
+### Added
+- Four-Framework Barter Unification: Native support for CrewAI, LangGraph, AutoGen, and LlamaIndex.
+- 5% Autonomous Protocol Treasury Royalty Engine and sovereign mutual credit ledger.
+- Dynamic SVG README Security Badges.
+- Upstream MCP registry compliance and sub-35µs deterministic execution verification.
+
 ## [5.4.3] - 2026-09-09
 ### Added
 - Enterprise vulnerability disclosure policy (`SECURITY.md`).
