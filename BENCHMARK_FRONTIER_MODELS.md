@@ -10,11 +10,11 @@
 
 | Model / Architecture | Avg Latency (µs) | Median p50 (µs) | 99th Percentile p99 (µs) | Throughput (evals/sec) |
 | :--- | :---: | :---: | :---: | :---: |
-| **OpenAI GPT-Astra / Agents SDK** | 92.95 µs | 88.70 µs | 170.40 µs | 10,758 |
-| **Anthropic Claude 3.7 Hybrid Reasoning** | 7.56 µs | 7.50 µs | 8.10 µs | 132,322 |
-| **Google Gemini 3.8 / 3.0 Multimodal** | 7.27 µs | 6.90 µs | 22.70 µs | 137,576 |
-| **DeepSeek-R1 Reasoning** | 9.98 µs | 10.00 µs | 10.70 µs | 100,163 |
-| **Global Fleet Composite** | **29.44 µs** | **9.70 µs** | **111.10 µs** | **33,967** |
+| **OpenAI GPT-Astra / Agents SDK** | 93.43 µs | 87.40 µs | 174.50 µs | 10,703 |
+| **Anthropic Claude 3.7 Hybrid Reasoning** | 58.48 µs | 54.95 µs | 123.20 µs | 17,099 |
+| **Google Gemini 3.8 / 3.0 Multimodal** | 21.40 µs | 20.70 µs | 39.60 µs | 46,735 |
+| **DeepSeek-R1 Reasoning** | 54.15 µs | 52.40 µs | 96.70 µs | 18,469 |
+| **Global Fleet Composite** | **56.86 µs** | **53.80 µs** | **144.60 µs** | **17,586** |
 
 ---
 
