@@ -167,7 +167,7 @@ class M2MWireRequestHandler(BaseHTTPRequestHandler):
             self._send_json(200, summary)
 
         elif self.path in ("/healthz", "/health"):
-            self._send_json(200, {"status": "HEALTHY", "service": "BTP-M2M-Wire-Daemon", "version": "5.4.5"})
+            self._send_json(200, {"status": "HEALTHY", "service": "BTP-M2M-Wire-Daemon", "version": "5.4.6"})
 
         else:
             self._send_json(404, {"error": "Not Found", "path": self.path})

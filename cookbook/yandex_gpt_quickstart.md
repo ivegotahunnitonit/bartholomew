@@ -1,5 +1,5 @@
 # YandexGPT & Alice AI Sovereign Wire Safety
-**Bartholomew Protocol (BTP v5.4.5)**
+**Bartholomew Protocol (BTP v5.4.6)**
 
 Zero-dependency, air-gapped, in-process execution safety for YandexGPT Pro, YandexGPT Lite, and Alice AI autonomous agent swarms.
 

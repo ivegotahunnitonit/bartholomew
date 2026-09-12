@@ -716,7 +716,7 @@ async def mcp_discovery():
         "$schema": "https://modelcontextprotocol.io/schema.json",
         "name": "Bartholomew Protocol Execution Sentinel",
         "protocol": "BTP/5.4",
-        "version": "5.4.5",
+        "version": "5.4.6",
         "description": "Sub-35us AST execution firewall, zero-trust gating, and cryptographic proof verification for AI agents.",
         "mcpServers": {
             "bartholomew-sentinel": {

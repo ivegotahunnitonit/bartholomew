@@ -1,5 +1,5 @@
 # Gemini 3.8 Multimodal Function Safety & Thought Parts Defense
-**Bartholomew Protocol (BTP v5.4.5)**
+**Bartholomew Protocol (BTP v5.4.6)**
 
 Protect your Google Gemini 3.8 Ultra, Gemini 3.8 Flash, and Vertex AI agents from destructive tool calls and in-flight secret exfiltration with sub-35µs AST inspection.
 

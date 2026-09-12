@@ -1,5 +1,5 @@
 # Hacker News Technical Response Playbook
-**Bartholomew Protocol (BTP v5.4.5)**
+**Bartholomew Protocol (BTP v5.4.6)**
 
 Keep this cheatsheet handy for responding to technical questions on your Show HN thread.
 
@@ -31,7 +31,7 @@ Keep this cheatsheet handy for responding to technical questions on your Show HN
 > 
 > If a security filter scans the entire raw text payload, an agent considering dangerous actions during internal brainstorming (e.g. "I could delete the directory, but that would be destructive...") triggers false positive blocks.
 > 
-> In BTP v5.4.5, our wire adapter parses the candidate structure into distinct streams: it isolates internal reasoning blocks while strictly evaluating the final external tool dispatch (`tool_use` or `functionCall`). That lets agents think freely without risking unauthorized execution.
+> In BTP v5.4.6, our wire adapter parses the candidate structure into distinct streams: it isolates internal reasoning blocks while strictly evaluating the final external tool dispatch (`tool_use` or `functionCall`). That lets agents think freely without risking unauthorized execution.
 
 ---
 

@@ -2,21 +2,21 @@
 
 > **Need SOC 2 Type II Audit Trails & Multi-Agent Fleet Management?** [Try Bartholomew Cloud &rarr; https://bartholomew.info/cloud](https://bartholomew.info/cloud) (Pro: $49/mo &bull; Enterprise Fleet: $199/mo &bull; Centralized Fleet Control Plane).
 
-# **Bartholomew AI &bull; BTP v5.4.5 Standards Track**
+# **Bartholomew AI &bull; BTP v5.4.6 Standards Track**
 ### **The Sovereign Sentinel Companion & AI Agent Execution Gateway**
 #### **Sub-35µs In-Process Tool Gating &bull; Zero Prompt Leakage &bull; Multi-Model Defense &bull; SOC 2 Type II Merkle Receipts**
 
 <div align="center">
 
-[![PyPI version](https://img.shields.io/badge/PyPI-v5.4.5-blue?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/5.4.5/)
+[![PyPI version](https://img.shields.io/badge/PyPI-v5.4.6-blue?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/5.4.6/)
 [![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Featured-orange?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/posts/bartholomew)
-[![Frontier Benchmark](https://img.shields.io/badge/Benchmark-29.44%C2%B5s%20Avg-10b981?style=for-the-badge)](BENCHMARK_FRONTIER_MODELS.md)
+[![Frontier Benchmark](https://img.shields.io/badge/Benchmark-19.10%C2%B5s%20Median-10b981?style=for-the-badge)](BENCHMARK_FRONTIER_MODELS.md)
 [![Pro Tier](https://img.shields.io/badge/Bartholomew%20Pro-%2449%2Fmo-10b981?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
 [![Enterprise Tier](https://img.shields.io/badge/Enterprise-%24199%2Fmo-6366f1?style=for-the-badge&logo=stripe&logoColor=white)](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
 [![Tests](https://img.shields.io/badge/Tests-All%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Universal Cookbook](https://img.shields.io/badge/Cookbooks-Gemini%20%7C%20Claude%20%7C%20OpenAI-orange.svg?style=for-the-badge)](cookbook/)
 [![Live Explorer](https://img.shields.io/badge/Web%20Explorer-Live-10b981.svg?style=for-the-badge&logo=firebase&logoColor=white)](https://bartholomew.info)
-[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v5.4.5-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-v5.4.6-2088FF.svg?style=for-the-badge&logo=githubactions&logoColor=white)](action.yml)
 
 </div>
 
@@ -45,7 +45,7 @@ python -m cli companion
 
 Traditional AI guardrails operate **outside** the local runtime process—acting as conversational prompt filters or external cloud proxy LLM classifiers (80ms to 2,500ms latency). While critical for dialog safety, they are completely **blind** to what happens when an autonomous agent invokes real-world tools, dispatches SQL mutations, runs shell scripts, or interacts with the operating system.
 
-> **Bartholomew (BTP v5.4.5)** is the open-source **In-Process AI Agent Execution Gateway**.  
+> **Bartholomew (BTP v5.4.6)** is the open-source **In-Process AI Agent Execution Gateway**.  
 > It acts as a real-time runtime boundary layer inside the agent's memory space, evaluating raw tool arguments and AST syntax trees in **under 35 microseconds** (29.44µs average) before actions are dispatched to operating systems, cloud APIs, or production databases. Test live in the [Interactive AST Playground](https://bartholomew.info/cookbook).
 
 ---

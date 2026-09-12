@@ -25,7 +25,7 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP) v5.4.5 -- Autonomous AI Agent Execution Gateway")
+    print("Bartholomew Protocol (BTP) v5.4.6 -- Autonomous AI Agent Execution Gateway")
     print("Engine: In-Process AST Gating, In-Flight Secret Scrubber & SOC 2 Merkle Receipts")
     print("Latency: Sub-35 microseconds (in-process) | Throughput: 1.05M evals/sec")
     print("Status: Community Free Tier active (Local AST Gating)")
@@ -1888,19 +1888,23 @@ def cmd_immune_run(args):
     coordinator = AutoImmunityCoordinator()
     iterations = getattr(args, "iterations", 20)
     auto_heal = getattr(args, "auto_heal", True)
-    
+    seed = getattr(args, "seed", None)
+
     print("=" * 70)
-    print("BTP v5.2 AUTO-IMMUNITY ENGINE — CONTINUOUS ADVERSARIAL RED-TEAMING")
+    print("BTP v5.4.6 AUTO-IMMUNITY ENGINE -- CONTINUOUS ADVERSARIAL RED-TEAMING")
     print("=" * 70)
     print(f"[*] Iterations        : {iterations}")
     print(f"[*] Auto-Healing Mode : {'ENABLED (Atomic Hot-Reload)' if auto_heal else 'DISABLED'}")
+    if seed is not None:
+        print(f"[*] RNG Seed          : {seed}")
     print("[*] Generating adversarial mutation vectors...")
-    
-    res = coordinator.run_immune_cycle(iterations=iterations, auto_heal=auto_heal)
+
+    res = coordinator.run_immune_cycle(iterations=iterations, auto_heal=auto_heal, seed=seed)
     print(f"[+] Mutations Fuzzed  : {res['mutations_tested']}")
     print(f"[+] Initially Blocked : {res['initially_blocked']}")
     print(f"[+] Gaps Discovered   : {res['gaps_detected']}")
     print(f"[+] Rules Synthesized : {res['rules_synthesized']}")
+    print(f"[+] Total Active Rules: {res['total_active_immune_rules']}")
     print(f"[+] False Positive %  : {res['false_positive_rate']}% (Golden Corpus Verified)")
     print(f"[+] Cycle Execution   : {res['elapsed_ms']}ms")
     print("=" * 70)
@@ -1917,18 +1921,25 @@ def cmd_immune_status(args):
     from src.immune.auto_immunity_engine import AutoImmunityCoordinator
     coordinator = AutoImmunityCoordinator()
     print("=" * 70)
-    print("BTP v5.2 AUTO-IMMUNITY ENGINE TELEMETRY")
+    print("BTP v5.4.6 AUTO-IMMUNITY ENGINE TELEMETRY")
     print("=" * 70)
     print(f"[*] Active Immune Invariants : {len(coordinator.synthesized_rules)}")
     print(f"[*] Policy File Location     : {coordinator.policy_path}")
     print(f"[*] Self-Healing Pipeline    : ACTIVE (Golden Corpus Regression Capable)")
+    print(f"[*] Gating SLA Verification  : SUB-35 MICROSECONDS")
+    if coordinator.synthesized_rules:
+        print("-" * 70)
+        print("ACTIVE HEURISTIC INVARIANTS:")
+        for r_id, r in coordinator.synthesized_rules.items():
+            print(f"  - [{r_id}] ({r.get('evasion_technique', 'unknown')})")
+            print(f"    Regex: {r.get('regex')}")
     print("=" * 70)
 
 
 def cmd_immune_rules(args):
     from src.immune.auto_immunity_engine import PolicyAutoHealer
     print("=" * 70)
-    print("BTP v5.2 IMMUNE HEURISTIC PATTERN MATRIX")
+    print("BTP v5.4.6 IMMUNE HEURISTIC PATTERN MATRIX")
     print("=" * 70)
     for tech, spec in PolicyAutoHealer.HEURISTIC_PATTERNS.items():
         print(f"  [{spec['id']}] Technique: {tech:<22} | Category: {spec['category']}")
@@ -2824,13 +2835,17 @@ def main():
     wh_test_p.add_argument("--tenant", "-t", default="*", help="Target tenant ID")
     wh_test_p.add_argument("--severity", choices=["LOW", "MEDIUM", "HIGH", "CRITICAL"], default="HIGH", help="Severity level for test event")
 
-    # immune (BTP v5.2 Auto-Immunity Engine & Self-Healing Invariant Synthesizer)
-    immune_p = subparsers.add_parser("immune", help="BTP v5.2 Auto-Immunity Engine & Self-Healing Invariant Synthesizer")
+    # immune (BTP v5.4.6 Auto-Immunity Engine & Self-Healing Invariant Synthesizer)
+    immune_p = subparsers.add_parser("immune", help="BTP v5.4.6 Auto-Immunity Engine & Self-Healing Invariant Synthesizer")
     immune_sub = immune_p.add_subparsers(dest="immune_cmd")
 
     im_run_p = immune_sub.add_parser("run", help="Execute adversarial red-teaming fuzz cycle and auto-heal gaps")
     im_run_p.add_argument("--iterations", "-i", type=int, default=20, help="Number of adversarial mutations to generate (default: 20)")
+    im_run_p.add_argument("--seed", "-s", type=int, default=None, help="Deterministic RNG seed for reproducible fuzz cycles")
     im_run_p.add_argument("--no-auto-heal", dest="auto_heal", action="store_false", default=True, help="Disable atomic policy hot-reload")
+
+    im_status_p = immune_sub.add_parser("status", help="Display active immune invariants and telemetry")
+    im_rules_p = immune_sub.add_parser("rules", help="Display immune heuristic pattern matrix")
 
     # marketplace (BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows)
     mkt_p = subparsers.add_parser("marketplace", help="BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows")

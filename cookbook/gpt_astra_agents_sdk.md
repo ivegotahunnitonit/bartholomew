@@ -1,5 +1,5 @@
 # OpenAI GPT-Astra & Agents SDK Security Seam
-**Bartholomew Protocol (BTP v5.4.5)**
+**Bartholomew Protocol (BTP v5.4.6)**
 
 OpenAI's GPT-Astra reasoning family and the OpenAI Agents SDK orchestrate autonomous agent-to-agent loops. Bartholomew sits directly on the execution seam to verify AST safety, enforce spend limits, and block destructive file or SQL operations before they hit your machine.
 

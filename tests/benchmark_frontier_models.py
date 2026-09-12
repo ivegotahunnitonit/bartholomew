@@ -108,7 +108,7 @@ def run_frontier_benchmark(iterations: int = 1000):
     print("=" * 76 + "\n")
 
     # Generate Markdown Report
-    report_md = f"""# Bartholomew Protocol (BTP v5.4.5) Frontier Model Benchmark Report
+    report_md = f"""# Bartholomew Protocol (BTP v5.4.6) Frontier Model Benchmark Report
 
 **Benchmark Execution Date**: September 2026  
 **Target Specification**: Sub-35 Microsecond Invariant Gating (<35µs)  

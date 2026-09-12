@@ -1,5 +1,5 @@
 # Anthropic Claude 3.7 Hybrid Reasoning & Thinking Blocks Defense
-**Bartholomew Protocol (BTP v5.4.5)**
+**Bartholomew Protocol (BTP v5.4.6)**
 
 Claude 3.7 Sonnet introduces hybrid reasoning where the model emits explicit `<thinking>` scratchpad tokens alongside external `tool_use` dispatches. Bartholomew provides sub-35µs parsing that shields your tools without triggering false positive alarms on internal thoughts.
 

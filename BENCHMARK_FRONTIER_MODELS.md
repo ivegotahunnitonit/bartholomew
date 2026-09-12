@@ -1,4 +1,4 @@
-# Bartholomew Protocol (BTP v5.4.5) Frontier Model Benchmark Report
+# Bartholomew Protocol (BTP v5.4.6) Frontier Model Benchmark Report
 
 **Benchmark Execution Date**: September 2026  
 **Target Specification**: Sub-35 Microsecond Invariant Gating (<35µs)  

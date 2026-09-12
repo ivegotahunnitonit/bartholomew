@@ -1,6 +1,6 @@
 # Hacker News (Show HN) Launch Submission Kit
-**Bartholomew Protocol (BTP v5.4.5)**
-
+**Bartholomew Protocol (BTP v5.4.6)**
+ 
 Copy and paste the title, URL, and body below directly into Hacker News (https://news.ycombinator.com/submit).
 
 ---
@@ -30,7 +30,7 @@ Most agent safety systems today operate as post-execution audit loggers or exter
 
 Bartholomew runs *inline* within the agent process (Python/Go/Rust). Every tool call, database query, and shell dispatch is intercepted before it reaches the OS or database seam. It evaluates local AST syntax trees, masks credentials, checks spend caps, and produces signed Ed25519 Merkle audit receipts—with an average latency of 29.44 microseconds (<0.03 milliseconds).
 
-### What's New in v5.4.5:
+### What's New in v5.4.6:
 * **Frontier Model Wire Support**: Native tool normalization for OpenAI GPT-Astra / Agents SDK, Anthropic Claude 3.7 (with hybrid reasoning scratchpad isolation so `<thinking>` blocks don't cause false positives), Google Gemini 3.8 / 2.0 multimodal thought parts, and DeepSeek-R1.
 * **The Sentinel Companion**: Bartholomew is designed not as a cold HTTP 403 error, but as your swarm's digital steward. If an LLM hallucination attempts an unconstrained delete, Bartholomew holds the line and prints empathetic, constructive guidance explaining what went wrong and how the agent can safely achieve its goal.
 * **1-Line Multi-Agent Adapters**: Drop-in guards for CrewAI, LangGraph, Microsoft AutoGen, and LlamaIndex.

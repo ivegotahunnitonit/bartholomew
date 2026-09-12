@@ -21,7 +21,7 @@ class BartholomewCompanion:
 
     NAME = "Bartholomew"
     TITLE = "The Sovereign Sentinel Companion"
-    PROTOCOL_VERSION = "BTP v5.4.5"
+    PROTOCOL_VERSION = "BTP v5.4.6"
 
     @classmethod
     def introduction(cls) -> str:

@@ -3,7 +3,7 @@
 
 **Prepared For**: Chief Information Security Officers (CISOs), Heads of AI Infrastructure, VPs of Engineering  
 **Classification**: Commercial Confidential / Enterprise Evaluation  
-**Protocol Version**: BTP Enterprise v5.4.5  
+**Protocol Version**: BTP Enterprise v5.4.6  
 **Package**: `pip install bartholomew-agent-protocol`  
 
 ---

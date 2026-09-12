@@ -285,6 +285,35 @@ class AutoImmunityCoordinator:
         self.policy_path = os.path.abspath(policy_path or self.DEFAULT_POLICY_PATH)
         self.synthesized_rules: Dict[str, Dict[str, Any]] = {}
         self.audit_log: List[Dict[str, Any]] = []
+        self._load_existing_policy_rules()
+
+    def _load_existing_policy_rules(self) -> None:
+        """Loads persisted heuristic immune invariants from the policy file."""
+        if not os.path.exists(self.policy_path):
+            return
+        try:
+            with open(self.policy_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            rule_pattern = re.compile(
+                r"#\s*Rule:\s*([A-Z0-9_]+)\s*\(([^)]+)\)\s*\n#\s*Regex:\s*(.+)",
+                re.MULTILINE
+            )
+            for match in rule_pattern.finditer(content):
+                r_id = match.group(1).strip()
+                technique = match.group(2).strip()
+                regex_str = match.group(3).strip()
+                if r_id not in self.synthesized_rules:
+                    self.synthesized_rules[r_id] = {
+                        "id": r_id,
+                        "evasion_technique": technique,
+                        "regex": regex_str,
+                        "description": f"Persisted auto-immune invariant: {technique}",
+                        "created_at": os.path.getmtime(self.policy_path),
+                        "false_positive_rate": 0.0,
+                        "persisted": True,
+                    }
+        except Exception:
+            pass
 
     def evaluate_payload_against_policy(self, payload: str) -> Tuple[bool, Optional[str]]:
         """
