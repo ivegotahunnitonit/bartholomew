@@ -1,65 +1,119 @@
-<p align="center">
-  <img src="https://bartholomew.info/bartholomew_logo_4k.png" width="140" alt="Bartholomew Logo" />
-</p>
+# btp-guard
 
-<h1 align="center">btp-guard</h1>
+Deterministic In-Process Invariant Gate & Cryptographic Attestation Protocol for Autonomous AI Agents
 
-<p align="center">
-  <strong>Sub-50 µs In-Memory Deterministic Invariant Guard & Cryptographic Attestation Protocol for Autonomous AI Agents</strong>
-</p>
-
-<p align="center">
-  <a href="https://bartholomew.info"><img src="https://img.shields.io/badge/Protocol-BTP%20v2.3-10b981?style=flat-square" alt="BTP Version" /></a>
-  <a href="https://www.npmjs.com/package/btp-guard"><img src="https://img.shields.io/npm/v/btp-guard?style=flat-square&color=38bdf8" alt="npm version" /></a>
-  <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License" /></a>
-</p>
+[![npm version](https://img.shields.io/npm/v/btp-guard?style=flat-square&color=38bdf8)](https://www.npmjs.com/package/btp-guard)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/ivegotahunnitonit/bartholomew/blob/main/LICENSE)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-green.svg?style=flat-square)](https://github.com/ivegotahunnitonit/bartholomew/blob/main/SECURITY.md)
+[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg?style=flat-square)](https://www.npmjs.com/package/btp-guard)
 
 ---
 
-##  What is Bartholomew?
+## Overview
 
-**Bartholomew** is a sub-50 microsecond in-memory deterministic invariant gate and cryptographic attestation protocol (BTP v2.3). It evaluates proposed AI agent tool actions (Bash commands, SQL queries, HTTP calls) in caller memory before execution, preventing catastrophic commands (`rm -rf`, `DROP TABLE`) and high-entropy secret leaks with FIPS 186-5 Ed25519 verifiable receipts.
+`btp-guard` is a sub-35 microsecond in-process deterministic invariant gate and cryptographic attestation engine implementing the Bartholomew Trust Protocol (BTP v5.4.10).
+
+It evaluates proposed AI agent tool actions (Bash executions, SQL queries, HTTP calls, MCP tool calls) in caller memory before execution, blocking catastrophic operations (`rm -rf`, `DROP TABLE`, destructive disk overwrites) and redacting high-entropy secrets (OpenAI, Anthropic, AWS, GitHub) while generating FIPS 186-5 Ed25519 verifiable receipts.
 
 ---
 
-##  Installation
+## Installation
 
 ```bash
 npm install btp-guard
 ```
 
+Zero external dependencies. Operates natively using Node.js built-in cryptography and standard primitives.
+
 ---
 
-##  Quickstart
+## Quickstart
 
-```typescript
-import { evaluateIntent, verifyReceipt } from '@bartholomew/guard';
+### In-Process Intent Gate
 
-// 1. Evaluate tool call in caller memory (<50 µs)
+```javascript
+import { evaluateIntent, verifyReceipt } from 'btp-guard';
+
+// 1. Evaluate tool call in caller memory (<35 us)
 const result = evaluateIntent({
   agentId: 'worker-node-01',
   actionType: 'EXECUTE_QUERY',
   payload: { sql: 'SELECT * FROM users WHERE active = true;' }
 });
 
-console.log(`Allowed: ${result.allowed} | Latency: ${result.latencyUs} µs`);
-console.log(`Ed25519 Signature: ${result.signature}`);
+console.log('Allowed:', result.allowed);
+console.log('Latency:', result.latencyUs.toFixed(2), 'us');
+console.log('Attestation Verdict:', result.verdict);
+console.log('Signature:', result.signature);
 
-// 2. Verify receipt offline with zero dependencies
+// 2. Cryptographic receipt validation
 const isValid = verifyReceipt(result);
-console.log(`Cryptographically Valid: ${isValid}`);
+console.log('Cryptographically Valid:', isValid);
+```
+
+### In-Flight Secret Redaction
+
+```javascript
+import { scrubSensitiveCredentials } from 'btp-guard';
+
+const payload = {
+  task: 'sync_data',
+  auth: 'Bearer sk-proj-00000000000000000000000000000000',
+  aws_key: 'AKIAIOSFODNN7EXAMPLE'
+};
+
+const { data, redactionCount } = scrubSensitiveCredentials(payload);
+console.log('Redacted count:', redactionCount);
+console.log('Sanitized payload:', data);
+```
+
+### RFC 8785 Canonicalization & Offline Verification
+
+```javascript
+import { verifyBtpReceipt, rfc8785Canonicalize } from 'btp-guard';
+
+const canonBytes = rfc8785Canonicalize({ action: 'query', id: 42 });
+console.log('Canonical UTF-8 Hex:', canonBytes.toString('hex'));
 ```
 
 ---
 
-##  Enterprise Security Invariants
-* **Zero-Escape Polyglot AST Engine**: Mathematical pre-flight inspection for Python, TypeScript, SQL, and POSIX shell.
-* **Secret Vault Masking**: In-flight redaction of OpenAI, Anthropic, GitHub, and AWS credentials.
-* **RFC 8785 Canonical JCS**: Deterministic JSON hashing paired with Ed25519 nonced receipts.
+## CLI Usage
+
+The package exposes `btp-guard` and `btp-mcp-proxy` binaries for terminal and pipeline inspection:
+
+```bash
+# Run local self-test and latency benchmark
+npx btp-guard demo
+
+# Initialize Model Context Protocol (MCP) desktop proxy
+npx btp-guard init
+
+# Scrub sensitive credentials from JSON input
+npx btp-guard scrub payload.json
+```
 
 ---
 
-##  Resources
-* **Website & Interactive Sandbox**: [https://bartholomew.info](https://bartholomew.info)
-* **GitHub Repository**: [https://github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
-* **AWS Bedrock White Paper**: [AWS_BEDROCK_TIER0_WHITE_PAPER.md](https://github.com/ivegotahunnitonit/bartholomew/blob/main/AWS_BEDROCK_TIER0_WHITE_PAPER.md)
+## Enterprise Quality & Compliance
+
+- **Zero External Dependencies**: Pure Node.js standard library. No supply chain exposure.
+- **RFC 8785 Compliance**: Canonical JSON formatting ensures deterministic cryptographic hashing across polyglot implementations (TypeScript, Python, Go, Rust).
+- **FIPS 186-5 Ed25519 Signatures**: Receipts are signed and verifiable offline without network round-trips.
+- **Sub-35 Microsecond Latency**: In-memory inspection executes orders of magnitude faster than cloud-hosted proxy services.
+- **Fail-Closed Architecture**: Any syntax corruption or policy mismatch rejects the candidate execution by default.
+
+---
+
+## Security & Verification
+
+- **Security Policy**: [SECURITY.md](https://github.com/ivegotahunnitonit/bartholomew/blob/main/SECURITY.md)
+- **Vulnerability Reporting**: security@bartholomew.info
+- **Official Portal**: [https://bartholomew.info](https://bartholomew.info)
+- **GitHub Repository**: [https://github.com/ivegotahunnitonit/bartholomew](https://github.com/ivegotahunnitonit/bartholomew)
+
+---
+
+## License
+
+MIT License. Copyright (c) 2026 Bartholomew AI Contributors.

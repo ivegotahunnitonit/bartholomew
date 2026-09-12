@@ -26,7 +26,7 @@ const command = args[0] || 'demo';
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
-║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.8) -- EXECUTION SENTINEL${CYAN}     ║
+║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.10) -- EXECUTION SENTINEL${CYAN}    ║
 ║   ${RESET}Sub-35us AST Safety Gating, Zero Leakage & SOC 2 Merkle Receipts   ${BOLD}${CYAN}║
 ╚══════════════════════════════════════════════════════════════════════╝${RESET}
 `);

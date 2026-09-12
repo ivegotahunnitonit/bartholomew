@@ -1,12 +1,21 @@
 {
   "name": "btp-guard",
-  "version": "5.4.9",
-  "description": "BTP v5.4.9 The AI Agent Execution Gateway -- Sub-35us In-Process Tool Gating, Autonomous Micro-Escrow & SOC 2 Merkle Receipts",
+  "version": "5.4.10",
+  "description": "BTP v5.4.10 The AI Agent Execution Gateway - Sub-35us In-Process Tool Gating, Autonomous Micro-Escrow & SOC 2 Merkle Receipts",
   "main": "index.js",
   "types": "index.d.ts",
+  "sideEffects": false,
   "bin": {
     "btp-guard": "cli.js",
     "btp-mcp-proxy": "cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
   },
   "type": "module",
   "engines": {
@@ -36,6 +45,11 @@
   "author": "Itsub Alemayehu <itsub@bartholomew.info>",
   "license": "MIT",
   "homepage": "https://bartholomew.info",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivegotahunnitonit/bartholomew.git",
+    "directory": "npm_package"
+  },
   "bugs": {
     "url": "https://github.com/ivegotahunnitonit/bartholomew/issues"
   },
@@ -47,9 +61,5 @@
     "LICENSE",
     "SECURITY.md",
     "CHANGELOG.md"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ivegotahunnitonit/bartholomew.git"
-  }
+  ]
 }

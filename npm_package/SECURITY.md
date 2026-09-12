@@ -4,11 +4,11 @@
 
 Bartholomew Trust Protocol (BTP) adheres to deterministic security release lifecycles:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.4.x   | :white_check_mark: |
-| 5.3.x   | :white_check_mark: |
-| < 5.3   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 5.4.x   | Yes       |
+| 5.3.x   | Yes       |
+| < 5.3   | No        |
 
 ## Reporting a Vulnerability
 

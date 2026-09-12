@@ -59,6 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write # Required for npm SLSA Provenance generation
 
     steps:
       - name: Checkout Code
@@ -81,4 +82,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd npm_package
-          npm publish --access public
+          npm publish --access public --provenance

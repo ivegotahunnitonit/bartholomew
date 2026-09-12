@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bartholomew-guard": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "btp-guard",
+        "mcp"
+      ]
+    }
+  }
+}
