@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "2.2.0"
+version = "5.4.10"
 authors = [
-  { name="Bartholomew Autonomous Systems", email="help@bartholomew.info" },
+  { name="Itsub Alemayehu", email="security@bartholomew.info" },
 ]
-description = "BTP v2.2 Universal Cryptographic Trust Guard for Autonomous Agent Frameworks (LangGraph, AutoGen, CrewAI)"
+description = "BTP v5.4.10 Universal Cryptographic Trust Guard for Autonomous Agent Frameworks (LangGraph, AutoGen, CrewAI)"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
