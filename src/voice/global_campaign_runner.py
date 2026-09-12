@@ -7,8 +7,7 @@ Autonomous timezone-aware dialer that operates 24/7 across global markets:
   - Europe & Middle East (UTC+0 to UTC+4): 07:00 - 16:00 UTC (London, Berlin, Paris, Dublin, Dubai)
 
 Enforces strict local business-hour windows (9:00 AM - 5:30 PM local time),
-ensuring prospects are never disturbed outside working hours while keeping
-Bartholomew dialing round-the-clock as the globe rotates.
+smart redial cadences (max 3 attempts, 4-hour cooldown), and automated SMS follow-ups.
 """
 
 import os
@@ -16,6 +15,7 @@ import sys
 import time
 import json
 import logging
+import asyncio
 import argparse
 from datetime import datetime, timezone
 from pathlib import Path
@@ -61,6 +61,7 @@ COUNTRY_TIMEZONES: Dict[str, Tuple[float, str]] = {
     "+46": (2.0, "Europe/Stockholm (CEST/CET)"),
     # Middle East
     "+971": (4.0, "Asia/Dubai (GST)"),
+    "+972": (3.0, "Asia/Jerusalem (IDT)"),
     # Asia & Pacific
     "+91": (5.5, "Asia/Kolkata (IST)"),
     "+65": (8.0, "Asia/Singapore (SGT)"),
@@ -152,23 +153,41 @@ class GlobalCampaignRunner:
     def __init__(self, lead_manager: Optional[LeadManager] = None):
         self.lead_mgr = lead_manager or LeadManager()
 
-    def get_callable_leads_now(self, allow_weekends: bool = False) -> List[Tuple[Lead, float, str, str]]:
+    def get_callable_leads_now(
+        self,
+        allow_weekends: bool = False,
+        cooldown_hours: float = 4.0,
+        max_attempts: int = 3
+    ) -> List[Tuple[Lead, float, str, str]]:
         """
         Scans all leads and returns those whose local time is currently in active business hours.
-        Prioritizes pending leads and leads ready for follow-up.
+        Enforces polite redial cadences (max attempts and cooldown).
         """
+        now_ts = time.time()
         callable_list = []
         eligible_statuses = (
             LeadStatus.PENDING,
             LeadStatus.DISPATCHED_EXECUTIVE_DOSSIER,
             LeadStatus.VOICEMAIL
         )
+
         for lead in self.lead_mgr.get_all():
             if lead.status in eligible_statuses:
+                # Check attempt count
+                attempts = lead.extra.get("call_attempts", 0)
+                if attempts >= max_attempts:
+                    continue
+
+                # Check cooldown
+                last_called = lead.last_called_at or 0.0
+                if (now_ts - last_called) < (cooldown_hours * 3600):
+                    continue
+
                 offset, tz_name = resolve_prospect_timezone(lead.phone)
                 in_hours, local_str = is_in_business_hours(offset, allow_weekends=allow_weekends)
                 if in_hours:
                     callable_list.append((lead, offset, tz_name, local_str))
+
         return callable_list
 
     def get_global_schedule_status(self, allow_weekends: bool = False) -> Dict[str, Any]:
@@ -182,17 +201,21 @@ class GlobalCampaignRunner:
         # Regional breakdowns
         regions = {
             "APAC (Tokyo, Singapore, Sydney, Bangalore)": is_in_business_hours(8.0, now_utc, allow_weekends=allow_weekends)[0],
-            "Middle East (Dubai)": is_in_business_hours(4.0, now_utc, allow_weekends=allow_weekends)[0],
-            "EMEA (London, Berlin, Paris, Dublin)": is_in_business_hours(1.0, now_utc, allow_weekends=allow_weekends)[0],
+            "Middle East (Dubai, Tel Aviv)": is_in_business_hours(4.0, now_utc, allow_weekends=allow_weekends)[0],
+            "EMEA (London, Berlin, Paris, Dublin, Zurich)": is_in_business_hours(1.0, now_utc, allow_weekends=allow_weekends)[0],
             "Americas (New York, Austin, SF, Toronto)": is_in_business_hours(-5.0, now_utc, allow_weekends=allow_weekends)[0],
         }
 
         active_region = [r for r, active in regions.items() if active]
 
+        # Calculate total pipeline revenue
+        total_pipeline = sum(getattr(l, "contract_value_usd", 25000.0) or 25000.0 for l in leads)
+
         return {
             "current_utc": now_utc.strftime("%Y-%m-%d %H:%M:%S UTC"),
             "active_business_regions": active_region or ["Global Transition Window"],
             "total_leads_in_queue": len(leads),
+            "total_pipeline_value_usd": total_pipeline,
             "callable_leads_right_now": len(callable_now),
             "callable_sample": [
                 {
@@ -206,11 +229,16 @@ class GlobalCampaignRunner:
             ]
         }
 
-    def dial_prospect(self, lead: Lead, simulate: bool = False) -> Dict[str, Any]:
+    def dial_prospect(self, lead: Lead, simulate: bool = False, send_sms: bool = True) -> Dict[str, Any]:
         """
         Executes a real or simulated phone consultation call.
         """
         logger.info(f"Initiating consultation with {lead.name} at {lead.company} ({lead.phone})...")
+
+        # Track attempt
+        attempts = lead.extra.get("call_attempts", 0) + 1
+        lead.extra["call_attempts"] = attempts
+        lead.last_called_at = time.time()
 
         if simulate or "555" in lead.phone or not config.is_twilio_ready():
             logger.info(f"[SIMULATION] Simulating conversational phone session for {lead.name}...")
@@ -227,13 +255,20 @@ class GlobalCampaignRunner:
                 {"role": "assistant", "content": "100%! Can check out bartholomew.info or I can shoot the 1-page guide to your email. What's the best address?"}
             ]
             self.lead_mgr.qualify_lead(lead.id, notes="Interested in execution firewall; requested quickstart guide.")
-            self.lead_mgr.send_proposal(lead.id, tier="pro")
+            proposal = self.lead_mgr.send_proposal(lead.id, tier="pro")
+
+            sms_result = None
+            if send_sms:
+                from .twilio_server import send_followup_sms
+                sms_result = send_followup_sms(lead.phone, lead.name, checkout_url=proposal.get("checkout_url"))
+
             return {
                 "status": "simulated_success",
                 "lead_id": lead.id,
                 "company": lead.company,
                 "outcome": "QUALIFIED",
-                "proposal_sent": True
+                "proposal_sent": True,
+                "sms_dispatched": bool(sms_result)
             }
 
         # Real Twilio Outbound Call Execution with AMD
@@ -268,7 +303,8 @@ class GlobalCampaignRunner:
         interval_seconds: int = 45,
         max_calls: int = 50,
         dry_run: bool = False,
-        allow_weekends: bool = False
+        allow_weekends: bool = False,
+        send_sms: bool = True
     ):
         """
         Continuous round-the-clock campaign loop.
@@ -288,7 +324,7 @@ class GlobalCampaignRunner:
             target_lead, offset, tz_name, local_time = callable_leads[0]
             logger.info(f"Selected Lead: {target_lead.name} ({target_lead.company}) in {tz_name} [{local_time}]")
 
-            result = self.dial_prospect(target_lead, simulate=dry_run)
+            result = self.dial_prospect(target_lead, simulate=dry_run, send_sms=send_sms)
             calls_made += 1
             logger.info(f"Call #{calls_made}/{max_calls} completed: {result.get('status')} -> {result.get('outcome', 'IN_PROGRESS')}")
 
@@ -312,6 +348,7 @@ def main():
     parser.add_argument("--max-calls", type=int, default=25, help="Maximum calls to execute in this run")
     parser.add_argument("--dry-run", action="store_true", help="Run in simulation mode without carrier charges")
     parser.add_argument("--allow-weekends", action="store_true", help="Allow daytime calling on weekends (10:00 - 18:00 local)")
+    parser.add_argument("--no-sms", action="store_true", help="Disable automated follow-up SMS dispatch")
 
     args = parser.parse_args()
     runner = GlobalCampaignRunner()
@@ -323,12 +360,13 @@ def main():
         print(f"  Current UTC Time:          {st['current_utc']}")
         print(f"  Active Business Regions:   {', '.join(st['active_business_regions'])}")
         print(f"  Total Leads in Queue:      {st['total_leads_in_queue']}")
+        print(f"  Total Pipeline Value:      USD {st['total_pipeline_value_usd']:,.2f}")
         print(f"  Callable Right Now:        {st['callable_leads_right_now']}")
         print("======================================================================")
         if st["callable_sample"]:
             print("\nSample Callable Prospects:")
             for p in st["callable_sample"]:
-                print(f"  - {p['name']:<18} | {p['company']:<24} | {p['region']:<28} | {p['local_time']}")
+                print(f"  - {p['name']:<18} | {p['company']:<28} | {p['region']:<28} | {p['local_time']}")
         print()
 
     elif args.dial_next:
@@ -337,7 +375,7 @@ def main():
             print("No prospects currently in local business hours. Check back as the next region opens.")
             return
         target = callable_leads[0][0]
-        res = runner.dial_prospect(target, simulate=args.dry_run)
+        res = runner.dial_prospect(target, simulate=args.dry_run, send_sms=not args.no_sms)
         print("Dial Result:", json.dumps(res, indent=2))
 
     elif args.continuous:
@@ -345,7 +383,8 @@ def main():
             interval_seconds=args.interval,
             max_calls=args.max_calls,
             dry_run=args.dry_run,
-            allow_weekends=args.allow_weekends
+            allow_weekends=args.allow_weekends,
+            send_sms=not args.no_sms
         )
 
     else:

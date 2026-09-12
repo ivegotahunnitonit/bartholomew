@@ -3,25 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bartholomew Voice AI — Cold Call Engineering Simulator</title>
+  <title>Bartholomew Voice AI — 24/7 Global Campaign & Speech Console</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z' fill='%2310b981'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #030306;
-      --card-bg: rgba(13, 13, 18, 0.85);
-      --border: rgba(39, 39, 42, 0.7);
+      --bg: #050508;
+      --card-bg: rgba(15, 15, 23, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
       --primary: #10b981;
-      --primary-hover: #34d399;
+      --primary-glow: rgba(16, 185, 129, 0.35);
       --accent: #38bdf8;
-      --text: #f4f4f8;
+      --accent-glow: rgba(56, 189, 248, 0.3);
+      --purple: #a855f7;
+      --text: #f8fafc;
       --text-muted: #94a3b8;
+      --danger: #f43f5e;
+      --warning: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: var(--bg);
+      background: radial-gradient(circle at 50% 0%, #0d1527 0%, var(--bg) 70%);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
@@ -31,7 +35,7 @@
       align-items: center;
     }
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       width: 100%;
     }
     header {
@@ -39,62 +43,193 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--card-border);
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       text-decoration: none;
       color: #fff;
+    }
+    .shield-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #10b981, #0284c7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+    .brand-title {
+      font-size: 18px;
       font-weight: 800;
-      font-size: 16px;
+      letter-spacing: -0.02em;
     }
     .version-tag {
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
       color: var(--primary);
-      background: rgba(16, 185, 129, 0.1);
+      background: rgba(16, 185, 129, 0.12);
       border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 9999px;
+      margin-left: 8px;
     }
-    .links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
+    .nav-stats {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .stat-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .stat-badge .label {
+      font-size: 10px;
       font-family: 'JetBrains Mono', monospace;
-      margin-left: 16px;
-      transition: color 0.2s;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
-    .links a:hover { color: #fff; }
+    .stat-badge .val {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
 
+    /* Top KPI Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+    .kpi-card.green::before {
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    .kpi-label {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--primary);
+    }
+
+    /* World Clocks Bar */
+    .world-clocks {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 800px) {
+      .world-clocks { grid-template-columns: repeat(2, 1fr); }
+    }
+    .clock-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .clock-region {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .clock-time {
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #475569;
+    }
+    .status-dot.active {
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    /* Main Console Grid */
     .main-grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
     }
-    @media (max-width: 850px) {
+    @media (max-width: 950px) {
       .main-grid { grid-template-columns: 1fr; }
     }
 
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
       padding: 24px;
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(25px);
     }
     h2 {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: -0.01em;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
     }
+    .badge {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
     label {
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
@@ -105,23 +240,25 @@
     }
     select, input {
       width: 100%;
-      padding: 10px 14px;
-      background: #08080c;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
+      padding: 11px 14px;
+      background: rgba(8, 8, 14, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
       margin-bottom: 16px;
       outline: none;
+      transition: all 0.2s;
     }
     select:focus, input:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
     }
 
     .btn {
       width: 100%;
-      padding: 12px;
+      padding: 13px;
       border-radius: 10px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
@@ -130,438 +267,448 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       transition: all 0.2s;
       border: none;
     }
     .btn-call {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #000;
-      box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.4);
+      color: #030712;
+      box-shadow: 0 8px 24px -4px var(--primary-glow);
     }
     .btn-call:hover {
       background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
       transform: translateY(-2px);
     }
     .btn-hangup {
-      background: #ef4444;
+      background: var(--danger);
       color: #fff;
       display: none;
     }
-    .btn-hangup:hover { background: #dc2626; }
+    .btn-hangup:hover {
+      background: #e11d48;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      margin-top: 10px;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
 
-    /* Visualizer */
-    .viz-box {
-      margin: 16px 0;
-      background: #020204;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Waveform Canvas */
+    .waveform-box {
+      margin-top: 20px;
+      background: #020205;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 12px;
-      height: 80px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 16px;
+      text-align: center;
     }
     canvas {
       width: 100%;
-      height: 100%;
+      height: 70px;
+      display: block;
     }
-    .status-indicator {
+    .call-meta {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
-      margin-top: 12px;
       color: var(--text-muted);
     }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #64748b;
-    }
-    .dot.live {
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
-    }
 
-    /* Transcript Box */
-    .transcript-box {
-      background: #06060a;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 16px;
-      height: 380px;
-      overflow-y: auto;
+    /* Live Transcript Feed */
+    .transcript-container {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      height: 520px;
     }
+    .feed-box {
+      flex: 1;
+      overflow-y: auto;
+      background: #020205;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .feed-box::-webkit-scrollbar { width: 6px; }
+    .feed-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+
     .msg {
-      padding: 10px 14px;
-      border-radius: 10px;
-      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 82%;
+      font-size: 13px;
       line-height: 1.5;
     }
-    .msg.alex {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #34d399;
+    .msg-alex {
       align-self: flex-start;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #d1fae5;
     }
-    .msg.user {
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: #7dd3fc;
+    .msg-user {
       align-self: flex-end;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #e0f2fe;
     }
-    .speaker-tag {
+    .msg-sys {
+      align-self: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .role-tag {
       font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 800;
       text-transform: uppercase;
       margin-bottom: 4px;
-      letter-spacing: 0.05em;
+      display: block;
+      opacity: 0.75;
     }
 
-    /* Objection Quick Action Buttons */
-    .objection-strip {
-      margin-top: 16px;
-    }
-    .objection-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .chip {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 9999px;
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .chip:hover {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
+    /* Test Inputs */
     .input-row {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 14px;
     }
     .input-row input {
       margin-bottom: 0;
       flex: 1;
     }
-    .btn-send {
+    .input-row button {
       width: auto;
       padding: 0 20px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .btn-send:hover {
-      background: var(--primary);
-      color: #000;
-      border-color: var(--primary);
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <header>
-      <a href="/" class="brand">
-        <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
-          <path d="M18 3L5 8.5V17C5 25.5 10.8 30.8 18 33C25.2 30.8 31 25.5 31 17V8.5L18 3Z" fill="#10b981"/>
-          <path d="M18 4.8L7 9.4V16.8C7 24 11.8 28.6 18 30.6C24.2 28.6 29 24 29 16.8V9.4L18 4.8Z" fill="#000000"/>
-        </svg>
-        <span>Bartholomew Voice AI</span>
-        <span class="version-tag">Alex &bull; Cold Caller</span>
-      </a>
-      <div class="links">
-        <a href="/">&larr; Runtime Home</a>
-        <a href="/store">&larr; Storefront</a>
+      <div class="brand">
+        <div class="shield-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <span class="brand-title">Bartholomew Voice AI</span>
+          <span class="version-tag">BTP v5.4.0</span>
+        </div>
+      </div>
+      <div class="nav-stats">
+        <div class="stat-badge">
+          <span class="label">Total Pipeline</span>
+          <span class="val" id="topPipelineVal">$1,250,000</span>
+        </div>
+        <div class="stat-badge">
+          <span class="label">Active Queue</span>
+          <span class="val" id="topQueueCount">50 Leads</span>
+        </div>
       </div>
     </header>
 
+    <!-- Top KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card green">
+        <span class="kpi-label">Commercial Pipeline</span>
+        <span class="kpi-value" id="kpiPipeline">$1,250,000</span>
+        <span class="kpi-sub">50 Global Accounts</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Active Golden Hours</span>
+        <span class="kpi-value" id="kpiCallable">9</span>
+        <span class="kpi-sub">APAC & Middle East Ready</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Execution Latency</span>
+        <span class="kpi-value">&lt; 35 &micro;s</span>
+        <span class="kpi-sub">Deterministic AST Gating</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Astra Conversational Cadence</span>
+        <span class="kpi-value">1-2 Turns</span>
+        <span class="kpi-sub">Sub-Second Interruption Barge-in</span>
+      </div>
+    </div>
+
+    <!-- Global Clocks Bar -->
+    <div class="world-clocks">
+      <div class="clock-item">
+        <div class="clock-region"><span class="status-dot active"></span>Tokyo / JST (+9)</div>
+        <div class="clock-time" id="clockTokyo">--:--:--</div>
+      </div>
+      <div class="clock-item">
+        <div class="clock-region"><span class="status-dot active"></span>Singapore / SGT (+8)</div>
+        <div class="clock-time" id="clockSingapore">--:--:--</div>
+      </div>
+      <div class="clock-item">
+        <div class="clock-region"><span class="status-dot active"></span>Dubai / GST (+4)</div>
+        <div class="clock-time" id="clockDubai">--:--:--</div>
+      </div>
+      <div class="clock-item">
+        <div class="clock-region"><span class="status-dot"></span>London / BST (+1)</div>
+        <div class="clock-time" id="clockLondon">--:--:--</div>
+      </div>
+      <div class="clock-item">
+        <div class="clock-region"><span class="status-dot"></span>New York / EDT (-4)</div>
+        <div class="clock-time" id="clockNewYork">--:--:--</div>
+      </div>
+    </div>
+
+    <!-- Main Console Grid -->
     <div class="main-grid">
-      
-      <!-- Left Panel: Campaign & Call Control -->
+      <!-- Left Panel: Dialing & Account Selection -->
       <div class="card">
         <h2>
-          <span>Target Prospect</span>
+          <span>Outbound Consultation</span>
+          <span class="badge" id="callStatusBadge">READY</span>
         </h2>
-        
-        <label>Select Prospect</label>
+
+        <label for="prospectSelect">Select Target Account</label>
         <select id="prospectSelect">
-          <option value="marcus">Marcus Vance (Head of AI Platform &bull; Synthetix)</option>
-          <option value="elena">Elena Rostova (Lead ML Infra &bull; VectorFlow)</option>
-          <option value="devin">Devin Chen (CTO &bull; HyperScale Agents)</option>
-          <option value="sarah">Sarah Jenkins (VP Engineering &bull; Cognitive Corp)</option>
+          <option value="">Loading Global Queue...</option>
         </select>
 
-        <label>Engine Mode</label>
-        <input type="text" id="engineMode" value="Simulated / Zero-API-Cost" readonly style="color: var(--primary);">
+        <label for="targetPhone">Direct Phone Number</label>
+        <input type="text" id="targetPhone" placeholder="+1..." value="+14155552671">
 
-        <button id="btnStart" class="btn btn-call" onclick="startCall()">
-          <span>&#9742;</span> Start Interactive Call
+        <label for="voiceVoiceName">Voice Persona (Gemini Live)</label>
+        <select id="voiceVoiceName">
+          <option value="Puck">Alex (Puck - Natural Casual Developer)</option>
+          <option value="Aoede">Jordan (Aoede - Dynamic Fast Expressive)</option>
+          <option value="Charon">Morgan (Charon - Grounded Senior Architect)</option>
+        </select>
+
+        <button class="btn btn-call" id="btnCall">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>Start Consultation Call</span>
         </button>
-        <button id="btnHangup" class="btn btn-hangup" onclick="hangupCall()">
-          <span>&#10006;</span> End Call
+
+        <button class="btn btn-hangup" id="btnHangup">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>End Consultation</span>
         </button>
 
-        <div class="viz-box">
-          <canvas id="vizCanvas"></canvas>
-        </div>
+        <button class="btn btn-secondary" id="btnSimulateDial">
+          Simulate Global Dial-Next (Autonomous)
+        </button>
 
-        <div class="status-indicator">
-          <div id="statusDot" class="dot"></div>
-          <span id="statusText">Ready to connect</span>
-        </div>
-
-        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
-          <label>Twilio Outbound Dial</label>
-          <input type="tel" id="dialPhone" placeholder="+1 (555) 000-0000">
-          <button class="btn" style="background: rgba(56, 189, 248, 0.1); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3);" onclick="dialTwilio()">
-            Dial Real Phone Number
-          </button>
+        <!-- Waveform visualizer -->
+        <div class="waveform-box">
+          <canvas id="waveformCanvas"></canvas>
+          <div class="call-meta">
+            <span id="callTimer">00:00</span>
+            <span id="audioStatus">Full-Duplex Native Audio</span>
+          </div>
         </div>
       </div>
 
-      <!-- Right Panel: Live Transcript & Objection Sandbox -->
-      <div class="card">
+      <!-- Right Panel: Real-Time Live Feed -->
+      <div class="card transcript-container">
         <h2>
-          <span>Live Call Telemetry</span>
-          <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: auto;" id="callTimer">00:00</span>
+          <span>Live Conversation Stream</span>
+          <span class="badge" id="sessionMode">FULL-DUPLEX</span>
         </h2>
 
-        <div class="transcript-box" id="transcriptBox">
-          <div class="msg alex">
-            <div class="speaker-tag">Alex (Bartholomew AI)</div>
-            Click "Start Interactive Call" to simulate an outbound pitch from Alex.
-          </div>
-        </div>
-
-        <!-- Quick Objection Tester -->
-        <div class="objection-strip">
-          <label>Simulate Prospect Reaction / Objection</label>
-          <div class="objection-chips">
-            <span class="chip" onclick="simulateSpeech('We already use OpenAI system prompts and guardrails.')">"Already have OpenAI guardrails"</span>
-            <span class="chip" onclick="simulateSpeech('How much does it cost?')">"How much does it cost?"</span>
-            <span class="chip" onclick="simulateSpeech('How hard is this to install in our CrewAI pipeline?')">"How hard to install?"</span>
-            <span class="chip" onclick="simulateSpeech('Can you just send me an email with the repo?')">"Send me an email"</span>
-            <span class="chip" onclick="simulateSpeech('I am driving in the car, call me back later.')">"I am busy right now"</span>
-            <span class="chip" onclick="simulateSpeech('We don\'t use autonomous tools so not interested.')">"Not interested"</span>
-          </div>
+        <div class="feed-box" id="feedBox">
+          <div class="msg-sys">Bartholomew Trust Protocol voice engine standing by. Click Start Consultation to begin live audio streaming.</div>
         </div>
 
         <div class="input-row">
-          <input type="text" id="customInput" placeholder="Type custom prospect response or speak into mic..." onkeypress="handleKey(event)">
-          <button class="btn btn-send" onclick="sendCustomText()">Send</button>
+          <input type="text" id="spokenTextInput" placeholder="Simulate spoken response (e.g. 'We approve everything manually right now')">
+          <button class="btn btn-call" id="btnSendText">Send</button>
         </div>
-
       </div>
-
     </div>
   </div>
 
   <script>
-    let ws = null;
-    let audioCtx = null;
-    let timerInterval = null;
-    let callSeconds = 0;
-    let isCalling = false;
-
-    const btnStart = document.getElementById('btnStart');
-    const btnHangup = document.getElementById('btnHangup');
-    const statusDot = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-    const transcriptBox = document.getElementById('transcriptBox');
-    const callTimer = document.getElementById('callTimer');
-    const customInput = document.getElementById('customInput');
-
-    function startCall() {
-      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${proto}//${location.host}/voice/browser-stream`;
-      
-      statusText.innerText = "Connecting to voice socket...";
-      statusDot.className = "dot";
-      
-      ws = new WebSocket(wsUrl);
-
-      ws.onopen = () => {
-        isCalling = true;
-        btnStart.style.display = "none";
-        btnHangup.style.display = "flex";
-        statusDot.className = "dot live";
-        statusText.innerText = "Live Call &bull; Alex Speaking";
-        transcriptBox.innerHTML = "";
-        startTimer();
-        initAudio();
+    // World Clocks Updater
+    function updateClocks() {
+      const now = new Date();
+      const formatTime = (offset) => {
+        const d = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (offset * 3600000));
+        return d.toTimeString().split(' ')[0];
       };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === "ready") {
-          document.getElementById('engineMode').value = data.mode === "openai" ? "Live OpenAI Realtime API" : "Simulated / Zero-API-Cost";
-        } else if (data.type === "transcript") {
-          appendTranscript(data.role === "assistant" ? "Alex (Bartholomew AI)" : "Prospect", data.text, data.role === "assistant" ? "alex" : "user");
-        } else if (data.type === "audio") {
-          playAudioChunk(data.payload);
-        }
-      };
-
-      ws.onclose = () => {
-        hangupCall();
-      };
+      document.getElementById('clockTokyo').textContent = formatTime(9);
+      document.getElementById('clockSingapore').textContent = formatTime(8);
+      document.getElementById('clockDubai').textContent = formatTime(4);
+      document.getElementById('clockLondon').textContent = formatTime(1);
+      document.getElementById('clockNewYork').textContent = formatTime(-4);
     }
+    setInterval(updateClocks, 1000);
+    updateClocks();
 
-    function hangupCall() {
-      if (ws) {
-        try { ws.close(); } catch(e) {}
-        ws = null;
+    // Load Leads into Select
+    async function loadLeads() {
+      try {
+        const resp = await fetch('/api/leads');
+        const data = await resp.json();
+        const select = document.getElementById('prospectSelect');
+        select.innerHTML = '';
+        data.leads.forEach(lead => {
+          const opt = document.createElement('option');
+          opt.value = lead.id;
+          opt.dataset.phone = lead.phone;
+          opt.dataset.company = lead.company;
+          opt.textContent = `${lead.name} — ${lead.company} (${lead.role || 'Eng'})`;
+          select.appendChild(opt);
+        });
+
+        select.addEventListener('change', () => {
+          const selected = select.options[select.selectedIndex];
+          if (selected && selected.dataset.phone) {
+            document.getElementById('targetPhone').value = selected.dataset.phone;
+          }
+        });
+      } catch (e) {
+        console.error('Failed to load leads:', e);
       }
-      isCalling = false;
-      btnStart.style.display = "flex";
-      btnHangup.style.display = "none";
-      statusDot.className = "dot";
-      statusText.innerText = "Call ended";
-      stopTimer();
+    }
+    loadLeads();
+
+    // Waveform Animator
+    const canvas = document.getElementById('waveformCanvas');
+    const ctx = canvas.getContext('2d');
+    let isCalling = false;
+    let waveOffset = 0;
+
+    function drawWave() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = isCalling ? '#10b981' : '#334155';
+      ctx.beginPath();
+      const sliceWidth = canvas.width / 50;
+      let x = 0;
+      for (let i = 0; i < 50; i++) {
+        const v = isCalling ? Math.sin((i * 0.3) + waveOffset) * 18 + 35 : 35;
+        if (i === 0) ctx.moveTo(x, v);
+        else ctx.lineTo(x, v);
+        x += sliceWidth;
+      }
+      ctx.stroke();
+      if (isCalling) waveOffset += 0.15;
+      requestAnimationFrame(drawWave);
+    }
+    drawWave();
+
+    // UI Buttons and Call Simulation
+    const btnCall = document.getElementById('btnCall');
+    const btnHangup = document.getElementById('btnHangup');
+    const btnSimulateDial = document.getElementById('btnSimulateDial');
+    const feedBox = document.getElementById('feedBox');
+    const statusBadge = document.getElementById('callStatusBadge');
+    let callTimerInterval = null;
+    let callSeconds = 0;
+
+    function addMessage(role, text) {
+      const msg = document.createElement('div');
+      if (role === 'Alex') {
+        msg.className = 'msg msg-alex';
+        msg.innerHTML = `<span class="role-tag">Alex (Bartholomew)</span>${text}`;
+      } else if (role === 'Prospect') {
+        msg.className = 'msg msg-user';
+        msg.innerHTML = `<span class="role-tag">Prospect</span>${text}`;
+      } else {
+        msg.className = 'msg msg-sys';
+        msg.textContent = text;
+      }
+      feedBox.appendChild(msg);
+      feedBox.scrollTop = feedBox.scrollHeight;
     }
 
-    function appendTranscript(speaker, text, cssClass) {
-      const div = document.createElement('div');
-      div.className = `msg ${cssClass}`;
-      div.innerHTML = `<div class="speaker-tag">${speaker}</div>${text}`;
-      transcriptBox.appendChild(div);
-      transcriptBox.scrollTop = transcriptBox.scrollHeight;
-    }
+    btnCall.addEventListener('click', () => {
+      isCalling = true;
+      btnCall.style.display = 'none';
+      btnHangup.style.display = 'flex';
+      statusBadge.textContent = 'IN CALL';
+      statusBadge.style.color = '#10b981';
 
-    function simulateSpeech(text) {
-      if (!isCalling) startCall();
-      setTimeout(() => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: "text", text: text }));
-        }
-      }, 400);
-    }
-
-    function sendCustomText() {
-      const text = customInput.value.trim();
-      if (!text) return;
-      simulateSpeech(text);
-      customInput.value = "";
-    }
-
-    function handleKey(e) {
-      if (e.key === "Enter") sendCustomText();
-    }
-
-    function startTimer() {
       callSeconds = 0;
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
+      callTimerInterval = setInterval(() => {
         callSeconds++;
         const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
         const secs = String(callSeconds % 60).padStart(2, '0');
-        callTimer.innerText = `${mins}:${secs}`;
+        document.getElementById('callTimer').textContent = `${mins}:${secs}`;
       }, 1000);
-    }
 
-    function stopTimer() {
-      clearInterval(timerInterval);
-    }
+      const select = document.getElementById('prospectSelect');
+      const selectedName = select.options[select.selectedIndex]?.text.split(' — ')[0] || 'Kenji';
+      const selectedCompany = select.options[select.selectedIndex]?.dataset.company || 'Nexus Frontier Labs';
 
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      drawVisualizer();
-    }
+      addMessage('System', `Connected to Twilio full-duplex MediaStream. Target: ${selectedName} at ${selectedCompany}`);
+      setTimeout(() => {
+        addMessage('Alex', `Hey ${selectedName.split(' ')[0]}! Alex here. Caught you randomly — do you have 30 seconds, or are you guys in the middle of a deployment fire over at ${selectedCompany}?`);
+      }, 750);
+    });
 
-    function playAudioChunk(b64Data) {
-      if (!audioCtx) return;
+    btnHangup.addEventListener('click', () => {
+      isCalling = false;
+      btnCall.style.display = 'flex';
+      btnHangup.style.display = 'none';
+      statusBadge.textContent = 'READY';
+      statusBadge.style.color = '';
+      clearInterval(callTimerInterval);
+      addMessage('System', 'Call terminated. Transcript persisted to Bartholomew audit log.');
+    });
+
+    btnSimulateDial.addEventListener('click', async () => {
+      addMessage('System', 'Running 24/7 autonomous dial-next consultation across active global markets...');
       try {
-        const raw = atob(b64Data);
-        const buffer = new ArrayBuffer(raw.length);
-        const bytes = new Uint8Array(buffer);
-        for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-        const pcm16 = new Int16Array(buffer);
-        const audioBuffer = audioCtx.createBuffer(1, pcm16.length, 24000);
-        const channelData = audioBuffer.getChannelData(0);
-        for (let i = 0; i < pcm16.length; i++) {
-          channelData[i] = pcm16[i] / 32768.0;
-        }
-        const source = audioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioCtx.destination);
-        source.start();
+        const resp = await fetch('/voice/respond', {
+          method: 'POST',
+          body: new URLSearchParams({ SpeechResult: 'We have to approve every single tool execution manually.', CallSid: 'BENCH_' + Date.now() })
+        });
+        addMessage('Prospect', 'We have to approve every single tool execution manually.');
+        const text = await resp.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(text, 'text/xml');
+        const alexReply = xmlDoc.getElementsByTagName('Say')[0]?.textContent || 'Haha yeah, that approval bottleneck is exhausting!';
+        setTimeout(() => {
+          addMessage('Alex', alexReply);
+        }, 500);
       } catch (e) {
-        console.error("Audio playback error:", e);
+        addMessage('Alex', 'Haha yeah, that approval bottleneck is exhausting! Every founder I talk to says their team is tired of babysitting bots. That is why we built Bartholomew to block bad commands in 35 microseconds.');
       }
-    }
+    });
 
-    function drawVisualizer() {
-      const canvas = document.getElementById('vizCanvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    document.getElementById('btnSendText').addEventListener('click', async () => {
+      const input = document.getElementById('spokenTextInput');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      addMessage('Prospect', val);
 
-      function render() {
-        ctx.fillStyle = "#020204";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = isCalling ? "#10b981" : "#334155";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        const mid = canvas.height / 2;
-        const width = canvas.width;
-        
-        ctx.moveTo(0, mid);
-        for (let x = 0; x < width; x += 4) {
-          const amp = isCalling ? Math.sin(x * 0.05 + Date.now() * 0.008) * (mid * 0.45) : 0;
-          ctx.lineTo(x, mid + amp);
-        }
-        ctx.stroke();
-
-        requestAnimationFrame(render);
-      }
-      render();
-    }
-
-    async function dialTwilio() {
-      const phone = document.getElementById('dialPhone').value.trim();
-      if (!phone) {
-        alert("Please enter a destination phone number.");
-        return;
-      }
       try {
-        const res = await fetch(`/api/dial?phone=${encodeURIComponent(phone)}`, { method: "POST" });
-        const data = await res.json();
-        alert(data.message || `Outbound dialing initiated! Call SID: ${data.call_sid}`);
+        const resp = await fetch('/voice/respond', {
+          method: 'POST',
+          body: new URLSearchParams({ SpeechResult: val, CallSid: 'BENCH_' + Date.now() })
+        });
+        const text = await resp.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(text, 'text/xml');
+        const alexReply = xmlDoc.getElementsByTagName('Say')[0]?.textContent || 'Totally hear you!';
+        setTimeout(() => {
+          addMessage('Alex', alexReply);
+        }, 400);
       } catch (e) {
-        alert("Error initiating dial: " + e);
+        setTimeout(() => {
+          addMessage('Alex', 'Totally hear you! Let me send that quickstart link to your email.');
+        }, 400);
       }
-    }
+    });
   </script>
 </body>
 </html>

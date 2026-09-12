@@ -563,6 +563,61 @@ async def add_lead(request: Request):
     return {"status": "created", "lead": new_lead.to_dict()}
 
 
+@app.post("/api/leads/{lead_id}/send_sms")
+async def send_lead_sms_endpoint(lead_id: str, request: Request):
+    """Dispatch instant SMS follow-up with sandbox link and Stripe checkout portal."""
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    lead = lead_mgr.get_by_id(lead_id)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found")
+
+    checkout = body.get("checkout_url", lead.checkout_url)
+    res = send_followup_sms(lead.phone, lead.name, checkout_url=checkout)
+    lead.notes = f"{lead.notes} | SMS follow-up sent ({res.get('status')})".strip(" |")
+    lead_mgr.save()
+    return {"status": "sms_dispatched", "result": res, "lead_id": lead.id}
+
+
+@app.get("/api/campaign/status")
+async def campaign_status_endpoint():
+    """Returns global timezone readiness and active callable leads."""
+    from src.voice.global_campaign_runner import GlobalCampaignRunner
+    runner = GlobalCampaignRunner(lead_mgr)
+    return runner.get_global_schedule_status(allow_weekends=True)
+
+
+def send_followup_sms(to_phone: str, prospect_name: str, checkout_url: Optional[str] = None) -> Dict[str, Any]:
+    """Sends an authentic, zero-pressure SMS follow-up via Twilio REST API."""
+    if not config.is_twilio_ready() or "555" in to_phone:
+        logger.info(f"[SIMULATION] Outbound SMS to {to_phone} simulated successfully.")
+        return {"status": "simulated_sms_sent", "to": to_phone}
+
+    try:
+        from twilio.rest import Client
+        client = Client(config.twilio_account_sid, config.twilio_auth_token)
+        first_name = prospect_name.split()[0] if prospect_name else "there"
+        checkout = checkout_url or "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
+        body = (
+            f"Hey {first_name}, Alex here from Bartholomew -- "
+            f"here is our 1-page sandbox guide: https://bartholomew.info "
+            f"or start Pro anytime: {checkout}. Text me back if you have any questions!"
+        )
+        msg = client.messages.create(
+            to=to_phone,
+            from_=config.twilio_phone_number,
+            body=body
+        )
+        logger.info(f"Twilio SMS sent to {to_phone} (Sid: {msg.sid})")
+        return {"status": "sms_sent", "sid": msg.sid, "to": to_phone}
+    except Exception as e:
+        logger.error(f"Failed to send Twilio SMS to {to_phone}: {e}")
+        return {"status": "error", "error": str(e)}
+
+
 @app.get("/voice/test")
 @app.get("/voice")
 async def get_test_bench_html():

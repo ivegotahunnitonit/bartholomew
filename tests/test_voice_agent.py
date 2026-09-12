@@ -1,7 +1,7 @@
 """
 Unit tests for Bartholomew Voice AI Engine (BTP v5.4).
 Tests audio codecs, lead workflows, sales persona prosody, AMD callbacks,
-and global 24/7 timezone resolution.
+phonetic email extraction, live state tracking, SMS follow-up, and global 24/7 timezone resolution.
 """
 
 import pytest
@@ -14,6 +14,9 @@ from src.voice.audio_codec import AudioCodec
 from src.voice.lead_manager import LeadManager, Lead, LeadStatus
 from src.voice.sales_persona import (
     OBJECTIONS,
+    ConversationStage,
+    LiveCallState,
+    extract_email_from_speech,
     generate_session_instructions,
     generate_voicemail_text,
     format_speech_for_natural_delivery
@@ -108,6 +111,42 @@ def test_sales_persona_prompt_and_objections():
     assert "in_house" in categories
 
 
+def test_phonetic_email_extraction():
+    """Verify speech-to-text phonetic email address extraction."""
+    cases = [
+        ("send it to alex at synthetix dot com please", "alex@synthetix.com"),
+        ("my email is devin dot chen at hyperscale dot io", "devin.chen@hyperscale.io"),
+        ("drop it to beat at alpineautonomy dot ch", "beat@alpineautonomy.ch"),
+        ("email is zayd at oasisfrontier dot ae thanks", "zayd@oasisfrontier.ae"),
+        ("no email here just testing", None),
+    ]
+    for spoken, expected in cases:
+        result = extract_email_from_speech(spoken)
+        assert result == expected, f"Failed for '{spoken}': got '{result}', expected '{expected}'"
+
+
+def test_live_call_state_transitions():
+    """Verify conversational stage progression and pain detection."""
+    state = LiveCallState(prospect_name="Kenji", company_name="Nexus Frontier Labs")
+    assert state.stage == ConversationStage.OPENER
+
+    # Turn 1: Prospect responds to opener
+    st1 = state.advance_turn("Yeah, what is this regarding?")
+    assert st1 == ConversationStage.PAIN_EXPLORATION
+
+    # Turn 2: Prospect mentions manual approval and LangGraph
+    st2 = state.advance_turn("We use LangGraph and approve every tool call manually to stop database drops.")
+    assert "langgraph" in state.detected_frameworks
+    assert "babysitting_fatigue" in state.detected_pains
+    assert "destructive_action" in state.detected_pains
+    assert st2 == ConversationStage.SOLUTION_BRIDGE
+
+    # Turn 3: Prospect provides email
+    st3 = state.advance_turn("Sure, send docs to kenji at nexusfrontier dot jp")
+    assert st3 == ConversationStage.EMAIL_CAPTURED
+    assert state.captured_email == "kenji@nexusfrontier.jp"
+
+
 def test_global_timezone_resolution():
     """Verify international prefix and area code timezone resolution."""
     # US & Canada
@@ -132,6 +171,10 @@ def test_global_timezone_resolution():
     assert offset == 4.0
     assert "Dubai" in desc
 
+    offset, desc = resolve_prospect_timezone("+97235559876")
+    assert offset == 3.0
+    assert "Jerusalem" in desc
+
     # APAC
     offset, desc = resolve_prospect_timezone("+81355556789")
     assert offset == 9.0
@@ -148,30 +191,25 @@ def test_global_timezone_resolution():
 
 def test_business_hours_checker():
     """Test business hours calculation across weekday and weekend windows."""
-    # Weekday 14:00 UTC (10:00 AM Eastern at UTC-4) -> in hours
     test_dt = datetime(2026, 9, 9, 14, 0, tzinfo=timezone.utc)  # Wednesday
     in_hours, status = is_in_business_hours(-4.0, target_time_utc=test_dt)
     assert in_hours is True
 
-    # Weekday 03:00 UTC (23:00 PM Eastern at UTC-4) -> off hours
     test_dt_night = datetime(2026, 9, 9, 3, 0, tzinfo=timezone.utc)
     in_hours, status = is_in_business_hours(-4.0, target_time_utc=test_dt_night)
     assert in_hours is False
 
-    # Weekend without allow_weekends -> False
     test_weekend = datetime(2026, 9, 12, 15, 0, tzinfo=timezone.utc)  # Saturday
     in_hours_sat, status_sat = is_in_business_hours(-4.0, target_time_utc=test_weekend, allow_weekends=False)
     assert in_hours_sat is False
 
-    # Weekend with allow_weekends at 12:00 local time -> True
-    # At UTC+8 (Singapore/Tokyo), 06:00 UTC is 14:00 (2:00 PM) local
     test_weekend_day = datetime(2026, 9, 12, 6, 0, tzinfo=timezone.utc)
     in_hours_apac, status_apac = is_in_business_hours(8.0, target_time_utc=test_weekend_day, allow_weekends=True)
     assert in_hours_apac is True
 
 
 def test_fastapi_endpoints():
-    """Test Twilio TwiML, AMD callbacks, voicemail drop, and API routes."""
+    """Test Twilio TwiML, AMD callbacks, voicemail drop, SMS dispatch, and API routes."""
     from src.voice.twilio_server import lead_mgr
     original_leads_content = None
     if lead_mgr.storage_file.exists():
@@ -203,6 +241,12 @@ def test_fastapi_endpoints():
         assert amd_resp.status_code == 200
         assert amd_resp.json()["answered_by"] == "machine_start"
 
+        # Campaign status API
+        camp_resp = client.get("/api/campaign/status")
+        assert camp_resp.status_code == 200
+        assert "active_business_regions" in camp_resp.json()
+        assert "total_pipeline_value_usd" in camp_resp.json()
+
         # Leads API
         leads_resp = client.get("/api/leads")
         assert leads_resp.status_code == 200
@@ -222,7 +266,7 @@ def test_fastapi_endpoints():
         assert "total_leads" in sum_data
         assert "total_pipeline_value_usd" in sum_data
 
-        # Create a dynamic test lead to keep production queue clean
+        # Create dynamic test lead
         create_resp = client.post("/api/leads", json={
             "name": "Alex Test",
             "company": "Test Enterprise Corp",
@@ -232,6 +276,11 @@ def test_fastapi_endpoints():
         })
         assert create_resp.status_code == 200
         test_lead_id = create_resp.json()["lead"]["id"]
+
+        # SMS follow-up endpoint test
+        sms_resp = client.post(f"/api/leads/{test_lead_id}/send_sms", json={})
+        assert sms_resp.status_code == 200
+        assert sms_resp.json()["status"] == "sms_dispatched"
 
         # Qualify and send proposal on the test lead
         qual_resp = client.post(f"/api/leads/{test_lead_id}/qualify", json={"notes": "Agreed to trial", "email": "test@enterprise.ai"})

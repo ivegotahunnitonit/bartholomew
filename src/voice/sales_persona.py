@@ -2,13 +2,117 @@
 Bartholomew Trust Protocol (BTP v5.4) — Conversational Engineering Persona
 ==========================================================================
 Hyper-natural, Astra-grade conversational persona with authentic vocal prosody,
-active listening verbal mirroring, sub-second objection pivots, and
-non-intrusive voicemail drop capabilities.
+active listening verbal mirroring, sub-second objection pivots,
+live state tracking, and phonetic email extraction.
 """
 
-from dataclasses import dataclass
-from typing import Dict, List, Optional
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Dict, List, Optional, Set
 import re
+
+
+class ConversationStage(str, Enum):
+    OPENER = "OPENER"
+    PAIN_EXPLORATION = "PAIN_EXPLORATION"
+    SOLUTION_BRIDGE = "SOLUTION_BRIDGE"
+    SOFT_CLOSE = "SOFT_CLOSE"
+    EMAIL_CAPTURED = "EMAIL_CAPTURED"
+    CLOSING_CONFIRMATION = "CLOSING_CONFIRMATION"
+
+
+NATURAL_BACKCHANNELS: List[str] = [
+    "Yeah...",
+    "Totally...",
+    "Right...",
+    "Gotcha...",
+    "Mm-hmm...",
+    "100%..."
+]
+
+
+@dataclass
+class LiveCallState:
+    """Tracks active conversational turn state, pain points, and lead attributes."""
+    prospect_name: str = "there"
+    company_name: str = ""
+    stage: ConversationStage = ConversationStage.OPENER
+    turn_count: int = 0
+    detected_frameworks: Set[str] = field(default_factory=set)
+    detected_pains: Set[str] = field(default_factory=set)
+    captured_email: Optional[str] = None
+    sms_dispatched: bool = False
+
+    def advance_turn(self, user_speech: str) -> ConversationStage:
+        self.turn_count += 1
+        speech_lower = user_speech.lower()
+
+        # Detect frameworks
+        for fw in ["langgraph", "crewai", "autogen", "claude code", "cursor", "llamaindex", "mcp"]:
+            if fw in speech_lower:
+                self.detected_frameworks.add(fw)
+
+        # Detect pain points
+        if any(w in speech_lower for w in ["babysit", "approve", "bottleneck", "manual", "exhaust"]):
+            self.detected_pains.add("babysitting_fatigue")
+        if any(w in speech_lower for w in ["spend", "bill", "cost", "loop", "infinite", "token", "cash"]):
+            self.detected_pains.add("runaway_spend")
+        if any(w in speech_lower for w in ["drop", "delete", "wipe", "leak", "secret", "crash", "damage"]):
+            self.detected_pains.add("destructive_action")
+
+        # Check for email extraction
+        extracted = extract_email_from_speech(user_speech)
+        if extracted:
+            self.captured_email = extracted
+            self.stage = ConversationStage.EMAIL_CAPTURED
+            return self.stage
+
+        # Stage progression logic
+        if self.stage == ConversationStage.OPENER:
+            self.stage = ConversationStage.PAIN_EXPLORATION
+        elif self.stage == ConversationStage.PAIN_EXPLORATION:
+            if self.detected_pains or self.turn_count >= 2:
+                self.stage = ConversationStage.SOLUTION_BRIDGE
+        elif self.stage == ConversationStage.SOLUTION_BRIDGE:
+            self.stage = ConversationStage.SOFT_CLOSE
+
+        return self.stage
+
+
+def extract_email_from_speech(speech: str) -> Optional[str]:
+    """
+    Extracts email addresses from phonetic spoken text.
+    Handles 'alex at synthetix dot com', 'john dot doe at gmail', etc.
+    """
+    if not speech:
+        return None
+
+    cleaned = speech.lower().strip()
+    
+    # Common speech-to-text phonetic replacements
+    cleaned = re.sub(r"\b(at the rate of|at the rate|at sign| at )\b", "@", cleaned)
+    cleaned = re.sub(r"\b(dot com)\b", ".com", cleaned)
+    cleaned = re.sub(r"\b(dot io)\b", ".io", cleaned)
+    cleaned = re.sub(r"\b(dot ai)\b", ".ai", cleaned)
+    cleaned = re.sub(r"\b(dot net)\b", ".net", cleaned)
+    cleaned = re.sub(r"\b(dot org)\b", ".org", cleaned)
+    cleaned = re.sub(r"\b(dot co)\b", ".co", cleaned)
+    cleaned = re.sub(r"\b(dot de)\b", ".de", cleaned)
+    cleaned = re.sub(r"\b(dot uk)\b", ".uk", cleaned)
+    cleaned = re.sub(r"\b(dot)\b", ".", cleaned)
+    cleaned = re.sub(r"\b(underscore)\b", "_", cleaned)
+    cleaned = re.sub(r"\b(dash|hyphen)\b", "-", cleaned)
+
+    # Remove internal spaces around @ and .
+    cleaned = re.sub(r"\s*@\s*", "@", cleaned)
+    cleaned = re.sub(r"\s*\.\s*", ".", cleaned)
+
+    # Match email regex
+    match = re.search(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", cleaned)
+    if match:
+        email = match.group(0).strip(".,")
+        return email
+    return None
 
 
 COLD_CALL_SYSTEM_PROMPT = """You are Alex, an experienced infrastructure engineer and builder. You are having a live, spontaneous, founder-to-founder / dev-to-dev phone conversation with someone building with AI ({prospect_name}{target_company}).
@@ -53,6 +157,10 @@ CONVERSATION FLOW:
 
 5. LOW-FRICTION CLOSE:
    "I won't take up your day — can I shoot you our 1-page quickstart or can you check out bartholomew.info whenever you're free? What's your best email?"
+
+6. CONFIRMATION & TEXT DISPATCH:
+   When they give an email:
+   "Awesome! Just shot the sandbox link and quickstart right over to you. Feel free to check out bartholomew.info whenever you're at your laptop. Really appreciate your time!"
 
 VOICEMAIL PROTOCOL:
 If an automated voicemail greeting or beep tone is detected, deliver this crisp 8-second voicemail:
@@ -100,9 +208,7 @@ def format_speech_for_natural_delivery(text: str) -> str:
     Applies prosodic micro-pauses and human cadence formatting to spoken text.
     """
     cleaned = text.strip()
-    # Normalize excessive spaces
     cleaned = re.sub(r"\s+", " ", cleaned)
-    # Ensure natural comma pauses
     cleaned = cleaned.replace(" - ", " ... ")
     return cleaned
 
