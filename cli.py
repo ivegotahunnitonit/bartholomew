@@ -2321,6 +2321,16 @@ def cmd_hud(args):
     )
 
 
+def cmd_dossier(args):
+    """Generates a cryptographically signed SOC 2 / ISO 27001 compliance audit dossier."""
+    from src.security.audit_dossier import AuditDossierGenerator
+    gen = AuditDossierGenerator()
+    out = getattr(args, "out", None)
+    dossier = gen.generate_dossier(output_path=out)
+    gen.render_cli(dossier)
+
+
+
 
 def cmd_activate(args):
     """Activates Bartholomew Pro ($49/mo) or Enterprise ($199/mo) License."""
@@ -2917,10 +2927,16 @@ def main():
     hud_p.add_argument("--interval", "-i", type=float, default=3.0, help="Refresh interval in seconds (default: 3.0)")
     hud_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
 
+    # dossier (BTP Enterprise SOC 2 / ISO 27001 Cryptographic Audit Dossier)
+    dos_p = subparsers.add_parser("dossier", help="Generate cryptographically signed SOC 2 / ISO 27001 compliance dossier")
+    dos_p.add_argument("--out", "-o", default=None, help="Output JSON dossier file path")
+
     args = parser.parse_args()
 
     if args.command in ("whoami", "bartholomew"):
         cmd_whoami(args)
+    elif args.command == "dossier":
+        cmd_dossier(args)
     elif args.command == "hud":
         cmd_hud(args)
     elif args.command == "observe":

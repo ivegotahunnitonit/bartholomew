@@ -1,0 +1,34 @@
+# Bartholomew Protocol (BTP v5.4.6) -- Standing Mesh Daemon
+# 24/7 Autonomous P2P Reputation Gossip & Bilateral Utility Barter (AWU)
+
+version: "3.8"
+
+services:
+  btp-mesh-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile.mesh
+    container_name: btp-standing-mesh-daemon
+    restart: unless-stopped
+    environment:
+      - BTP_WIRE_GATEWAY=https://bartolomew-cloud-engine-322603900775.us-central1.run.app
+      - BTP_NODE_ID=node_docker_sentinel
+      - BTP_HEARTBEAT_INTERVAL=10.0
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - btp-mesh-data:/app/.data
+    healthcheck:
+      test: ["CMD", "python", "cli.py", "daemon", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  btp-mesh-data:
+    driver: local
