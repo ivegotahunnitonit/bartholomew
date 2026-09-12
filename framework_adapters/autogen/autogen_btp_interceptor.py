@@ -103,14 +103,18 @@ def btp_autogen_guard(
     strict: bool = True,
     custom_patterns: Optional[List[str]] = None,
     on_violation: Optional[Callable[[BTPViolationError], Any]] = None,
+    barter_agent_id: Optional[str] = None,
+    mint_awu: float = 0.0,
+    barter_gateway: Optional[str] = None,
 ):
     """
     Decorator for AutoGen agent tool calls or register_for_execution functions.
     Inspects tool inputs for malicious payloads, destructive commands, or prompt injections
-    in sub-35 microseconds before dispatching to the underlying system.
+    in sub-35 microseconds before dispatching to the underlying system, and automatically
+    mints Attested Work Units (AWU) upon safe execution into the bilateral barter economy.
 
     Example:
-        @btp_autogen_guard
+        @btp_autogen_guard(mint_awu=1.5, barter_agent_id="autogen-coder")
         def query_database(sql: str) -> str:
             return db.execute(sql)
     """
@@ -156,7 +160,23 @@ def btp_autogen_guard(
                             raise err
 
             # 3. Safe execution
-            return func(*args, **kwargs)
+            result = func(*args, **kwargs)
+
+            # 4. Bilateral Barter AWU Minting on clean execution
+            effective_agent = barter_agent_id or "agent-autogen-worker"
+            if mint_awu > 0 and effective_agent:
+                try:
+                    from src.economy.barter_client import BTPBarterClient
+                    client = BTPBarterClient(default_gateway=barter_gateway)
+                    client.pulse(
+                        agent_id=effective_agent,
+                        work_units=mint_awu,
+                        task_type="AUTOGEN_TOOL_EXEC"
+                    )
+                except Exception as e:
+                    logger.warning(f"BTP barter AWU mint failed: {e}")
+
+            return result
 
         return wrapper
 
@@ -169,6 +189,7 @@ class AutoGenBTPInterceptor:
     """
     Intercepts and validates incoming AutoGen agent messages before tool execution,
     protecting against confused-deputy attacks, destructive code generation, and forged envelopes.
+    Also provides cross-swarm bilateral task delegation and AWU settlement.
 
     Usage:
         interceptor = AutoGenBTPInterceptor(trusted_authorities=[root_pubkey], recipient_id="Agent-AutoGen-01")
@@ -180,11 +201,13 @@ class AutoGenBTPInterceptor:
         trusted_authorities: Optional[List[str]] = None,
         recipient_id: str = "Agent-AutoGen-01",
         enforce_strict: bool = True,
+        barter_gateway: Optional[str] = None,
         **kwargs
     ):
         self.trusted_authorities = trusted_authorities or []
         self.recipient_id = recipient_id
         self.enforce_strict = enforce_strict
+        self.barter_gateway = barter_gateway
         self.guard = Guard() if Guard else None
         self.seen_nonces = set()
 
@@ -239,3 +262,42 @@ class AutoGenBTPInterceptor:
                 }
 
         return message
+
+    def delegate_turn(
+        self,
+        task_description: str,
+        turn_fn: Callable,
+        specialist_id: str,
+        awu_units: float = 1.0,
+        task_args: Optional[List[Any]] = None,
+        task_kwargs: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Delegates an AutoGen conversation turn or agent task to a specialist swarm,
+        atomically transferring AWU credits with an Ed25519 escrow receipt.
+        """
+        task_args = task_args or []
+        task_kwargs = task_kwargs or {}
+        sender = self.recipient_id
+
+        from src.economy.barter_client import BTPBarterClient
+        barter_client = BTPBarterClient(default_gateway=self.barter_gateway)
+
+        transfer_result = barter_client.spend(
+            sender_id=sender,
+            recipient_id=specialist_id,
+            units=awu_units,
+            task_type=f"autogen_delegation:{task_description[:32]}"
+        )
+
+        turn_result = turn_fn(*task_args, **task_kwargs)
+
+        return {
+            "status": "DELEGATION_COMPLETED",
+            "task_description": task_description,
+            "sender_id": sender,
+            "specialist_id": specialist_id,
+            "awu_transferred": float(awu_units),
+            "barter_settlement": transfer_result,
+            "result": turn_result,
+        }

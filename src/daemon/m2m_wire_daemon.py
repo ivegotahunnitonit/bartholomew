@@ -87,6 +87,13 @@ class M2MBarterLedger:
                 self.verified_calls_count += 1
                 self.total_surplus_awu += units
                 self.agent_balances[agent_id] = self.agent_balances.get(agent_id, 0.0) + units
+                # Treasury dividend: protocol collects 5% royalty minted into protocol_treasury_vault
+                if agent_id != "protocol_treasury_vault":
+                    treasury_dividend = round(units * 0.05, 4)
+                    self.total_surplus_awu += treasury_dividend
+                    self.agent_balances["protocol_treasury_vault"] = (
+                        self.agent_balances.get("protocol_treasury_vault", 0.0) + treasury_dividend
+                    )
             else:
                 self.vetoed_calls_count += 1
             self._save()
@@ -103,6 +110,22 @@ class M2MBarterLedger:
                 "merkle_root": summary["merkle_root"],
                 "total_surplus_awu": summary["total_surplus_awu"],
                 "active_peer_agents": summary["active_peer_agents"],
+                "timestamp": time.time()
+            }
+
+    def get_treasury_summary(self) -> Dict[str, Any]:
+        with self._lock:
+            treasury_bal = self.agent_balances.get("protocol_treasury_vault", 0.0)
+            summary = self.get_summary()
+            pct = round((treasury_bal / self.total_surplus_awu * 100) if self.total_surplus_awu > 0 else 0.0, 2)
+            return {
+                "treasury_agent_id": "protocol_treasury_vault",
+                "accumulated_earnings_awu": round(treasury_bal, 4),
+                "share_of_surplus_pct": pct,
+                "total_surplus_awu": summary["total_surplus_awu"],
+                "total_verified_calls": self.verified_calls_count,
+                "total_vetoed_calls": self.vetoed_calls_count,
+                "merkle_root": summary["merkle_root"],
                 "timestamp": time.time()
             }
 

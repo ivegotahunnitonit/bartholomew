@@ -130,6 +130,18 @@ class BTPBarterClient:
         local_bal["source"] = "local_in_process_fallback"
         return local_bal
 
+    def get_treasury(self, gateway: Optional[str] = None) -> Dict[str, Any]:
+        """Queries the accumulated protocol earnings of the treasury vault."""
+        gw = (gateway or self.gateway).rstrip("/")
+        if gw in ("inprocess", "in_process") or os.getenv("BTP_BARTER_OFFLINE", "0") == "1":
+            return GLOBAL_M2M_LEDGER.get_treasury_summary()
+
+        client = BTPBarterClient(gw)
+        res = client._http_get("/api/v1/m2m/barter/treasury", timeout=3.0)
+        if "error" not in res:
+            return res
+        return GLOBAL_M2M_LEDGER.get_treasury_summary()
+
     def pulse(
         self,
         agent_id: str = "peer-agent",

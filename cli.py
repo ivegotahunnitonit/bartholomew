@@ -2075,6 +2075,23 @@ def cmd_barter_ledger(args):
     print("=" * 70)
 
 
+def cmd_barter_treasury(args):
+    from src.economy.barter_client import BTPBarterClient
+    client = BTPBarterClient(getattr(args, "gateway", None))
+    res = client.get_treasury(gateway=getattr(args, "gateway", None))
+    print("=" * 70)
+    print("BTP v5.4.6 PROTOCOL TREASURY & EARNINGS METRICS")
+    print("=" * 70)
+    print(f"[*] Treasury Vault ID     : {res.get('treasury_agent_id', 'protocol_treasury_vault')}")
+    print(f"[+] Accumulated Earnings   : {res.get('accumulated_earnings_awu', 0.0):.4f} AWU")
+    print(f"[+] Share of Total Surplus : {res.get('share_of_surplus_pct', 0.0):.2f}%")
+    print(f"[+] Total Mesh Surplus     : {res.get('total_surplus_awu', 0.0):.4f} AWU")
+    print(f"[+] Verified M2M Settled   : {res.get('total_verified_calls', 0)}")
+    print(f"[+] Vetoed Rogue Actions   : {res.get('total_vetoed_calls', 0)}")
+    print(f"[+] Sovereign Merkle Root  : {res.get('merkle_root', '0x0')}")
+    print("=" * 70)
+
+
 def cmd_marketplace_list(args):
     from src.marketplace.sla_contract import AgentMarketplaceEngine
     engine = AgentMarketplaceEngine()
@@ -3000,6 +3017,9 @@ def main():
     bar_led_p = barter_sub.add_parser("ledger", help="Display global Merkle ledger and surplus breakdown")
     bar_led_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
 
+    bar_treas_p = barter_sub.add_parser("treasury", help="Query protocol treasury earnings and economic surplus yield")
+    bar_treas_p.add_argument("--gateway", "-g", default=None, help="Custom gateway URL override")
+
     # marketplace (BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows)
     mkt_p = subparsers.add_parser("marketplace", help="BTP v5.3 Cross-Tenant Autonomous Agent Marketplace & SLA Escrows")
     mkt_sub = mkt_p.add_subparsers(dest="marketplace_cmd")
@@ -3193,6 +3213,8 @@ def main():
             cmd_barter_spend(args)
         elif args.barter_cmd == "ledger":
             cmd_barter_ledger(args)
+        elif args.barter_cmd == "treasury":
+            cmd_barter_treasury(args)
         else:
             barter_p.print_help()
     elif args.command == "benchmark":

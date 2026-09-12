@@ -13,14 +13,17 @@ This directory contains standalone integration adapters for autonomous agent fra
    * Automated AWU surplus minting (`mint_awu`) and cross-swarm task delegation (`delegate_task`).
 3. **Microsoft AutoGen:** [`framework_adapters/autogen/autogen_btp_interceptor.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/framework_adapters/autogen/autogen_btp_interceptor.py)
    * Conversational message interceptor (`AutoGenBTPInterceptor`) and tool wrapper (`@btp_autogen_guard`) filtering toxic tool dispatches across multi-agent group chats.
+   * Automated AWU surplus minting (`mint_awu`) and conversation turn delegation (`delegate_turn`).
 4. **LlamaIndex:** [`framework_adapters/llamaindex/llamaindex_btp_tool.py`](file:///c:/Users/User/.gemini/antigravity/scratch/autonomous-circularity-network/framework_adapters/llamaindex/llamaindex_btp_tool.py)
-   * Query-engine and function-tool gating interceptor (`@btp_llamaindex_tool`).
+   * Query-engine and function-tool gating interceptor (`@btp_llamaindex_tool`, `BartholomewLlamaIndexTool`).
+   * Automated AWU surplus minting (`mint_awu`) and RAG query delegation (`delegate_query`).
 
 ---
 
 ## Key Guarantees
 * **Sub-35 Microsecond Latency:** In-process AST parsing and regex heuristic screening execute in microsecond timeframes without blocking async event loops.
 * **Bilateral Barter & AWU Economy:** Autonomous agents mint Attested Work Units into the global Merkle surplus ledger upon clean tool execution, enabling decentralized compute barter.
+* **Protocol Treasury Yield:** Every verified compute pulse across any agent swarm automatically accrues a 5% royalty to `protocol_treasury_vault`, generating programmatic protocol earnings.
 * **100% Offline Verifiability:** Cryptographic validation relies on RFC 8785 JSON Canonicalization and FIPS 186-5 Ed25519 signatures with zero external API dependencies.
 * **Non-Invasive Pass-Through:** Clean exception signaling (`[BTP-VETO]`) with native rollback handling.
 

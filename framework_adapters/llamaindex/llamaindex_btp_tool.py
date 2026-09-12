@@ -98,14 +98,18 @@ def btp_llamaindex_tool(
     spend_cap: float = 50.0, 
     strict: bool = True,
     on_violation: Optional[Callable[[BTPViolationError], Any]] = None,
+    barter_agent_id: Optional[str] = None,
+    mint_awu: float = 0.0,
+    barter_gateway: Optional[str] = None,
 ):
     """
     Drop-in decorator for LlamaIndex agent tool functions.
-    Intercepts proposed tool arguments in local memory (<35µs) and validates
-    optional Sovereign Agent Passport credentials.
+    Intercepts proposed tool arguments in local memory (<35µs), validates
+    optional Sovereign Agent Passport credentials, and automatically mints
+    Attested Work Units (AWU) upon safe execution into the bilateral barter pool.
 
     Usage:
-        @btp_llamaindex_tool(required_capability="db:query")
+        @btp_llamaindex_tool(required_capability="db:query", mint_awu=1.25)
         def query_database(sql: str) -> str:
             ...
     """
@@ -182,7 +186,23 @@ def btp_llamaindex_tool(
                                 return on_violation(err)
                             raise err
 
-            return func(*args, **kwargs)
+            result = func(*args, **kwargs)
+
+            # 3. Bilateral Barter AWU Minting on clean execution
+            effective_agent = barter_agent_id or "agent-llamaindex-worker"
+            if mint_awu > 0 and effective_agent:
+                try:
+                    from src.economy.barter_client import BTPBarterClient
+                    client = BTPBarterClient(default_gateway=barter_gateway)
+                    client.pulse(
+                        agent_id=effective_agent,
+                        work_units=mint_awu,
+                        task_type="LLAMAINDEX_TOOL_EXEC"
+                    )
+                except Exception as e:
+                    pass
+
+            return result
         return wrapper
 
     if fn is not None:
@@ -192,7 +212,8 @@ def btp_llamaindex_tool(
 
 class BartholomewLlamaIndexTool:
     """
-    Wrapper for LlamaIndex BaseTool or FunctionTool instances to enforce BTP execution safety.
+    Wrapper for LlamaIndex BaseTool or FunctionTool instances to enforce BTP execution safety,
+    passport attestation, and cross-swarm bilateral query delegation.
     """
     def __init__(
         self, 
@@ -201,15 +222,60 @@ class BartholomewLlamaIndexTool:
         description: str,
         required_capability: Optional[str] = "tools:execute",
         on_violation: Optional[Callable[[BTPViolationError], Any]] = None,
+        barter_gateway: Optional[str] = None,
+        agent_id: str = "Agent-LlamaIndex-Node",
     ):
         self.name = tool_name
         self.description = description
         self.required_capability = required_capability
+        self.barter_gateway = barter_gateway
+        self.agent_id = agent_id
         self._guarded_fn = btp_llamaindex_tool(
             tool_fn, 
             required_capability=required_capability,
             on_violation=on_violation,
+            barter_gateway=barter_gateway,
+            barter_agent_id=agent_id,
         )
 
     def __call__(self, *args, **kwargs):
         return self._guarded_fn(*args, **kwargs)
+
+    def delegate_query(
+        self,
+        task_description: str,
+        query_fn: Callable,
+        specialist_id: str,
+        awu_units: float = 1.0,
+        query_args: Optional[List[Any]] = None,
+        query_kwargs: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Delegates a RAG retrieval or query synthesis to a specialist agent swarm,
+        atomically transferring AWU credits with an Ed25519 escrow receipt.
+        """
+        query_args = query_args or []
+        query_kwargs = query_kwargs or {}
+        sender = self.agent_id
+
+        from src.economy.barter_client import BTPBarterClient
+        barter_client = BTPBarterClient(default_gateway=self.barter_gateway)
+
+        transfer_result = barter_client.spend(
+            sender_id=sender,
+            recipient_id=specialist_id,
+            units=awu_units,
+            task_type=f"llamaindex_delegation:{task_description[:32]}"
+        )
+
+        query_result = query_fn(*query_args, **query_kwargs)
+
+        return {
+            "status": "DELEGATION_COMPLETED",
+            "task_description": task_description,
+            "sender_id": sender,
+            "specialist_id": specialist_id,
+            "awu_transferred": float(awu_units),
+            "barter_settlement": transfer_result,
+            "result": query_result,
+        }
