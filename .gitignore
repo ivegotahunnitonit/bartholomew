@@ -48,6 +48,7 @@ venv/
 .btp_usage_ledger.json
 .btp_gossip_ledger.json
 .btp_bridge_ledger.json
+.btp_mesh_heartbeat.json
 ENV/
 env.bak/
 venv.bak/

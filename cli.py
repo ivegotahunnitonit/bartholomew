@@ -2247,8 +2247,57 @@ def cmd_daemon_ledger(args):
     print(f"[*] Vetoed Rogue Actions    : {summary['vetoed_calls_count']:,}")
     print(f"[*] Total Economic Surplus  : {summary['total_surplus_awu']:,.1f} AWU (Attested Work Units)")
     print(f"[*] Active Peer Swarms      : {summary['active_peer_agents']}")
-    print(f"[*] Merkle State Root       : {summary['merkle_root']}")
-    print("=" * 75)
+def cmd_daemon_mesh(args):
+    """Runs the continuous standing mesh daemon for P2P gossip and barter heartbeat."""
+    from src.daemon.mesh_daemon import StandingMeshDaemon
+    daemon = StandingMeshDaemon(
+        node_id=getattr(args, "node_id", "node_local_sentinel"),
+        gateway_url=getattr(args, "gateway", None),
+        heartbeat_interval_sec=getattr(args, "interval", 10.0)
+    )
+    if getattr(args, "once", False):
+        snap = daemon.step_heartbeat(sync_barter=True)
+        print("=" * 76)
+        print("BTP v5.4.6 STANDING MESH DAEMON -- DISCRETE HEARTBEAT CYCLE")
+        print("=" * 76)
+        print(f"[*] Node ID         : {snap['node_id']}")
+        print(f"[*] Gateway         : {snap['gateway_url']}")
+        print(f"[*] Status          : {snap['status']}")
+        print(f"[*] Merkle Root     : {snap['merkle_root']}")
+        print(f"[*] AWU Surplus     : {snap['total_surplus_awu']:.2f} AWU")
+        print(f"[*] Active Peers    : {snap['active_peer_agents']}")
+        print("=" * 76)
+    else:
+        daemon.start(blocking=True)
+
+
+def cmd_daemon_status(args):
+    """Displays current standing mesh daemon and wire status."""
+    import json
+    import os
+    hb_file = os.path.abspath(".btp_mesh_heartbeat.json")
+    print("=" * 76)
+    print("BTP v5.4.6 STANDING MESH DAEMON STATUS")
+    print("=" * 76)
+    if os.path.exists(hb_file):
+        try:
+            with open(hb_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            print(f"[*] Status            : {data.get('status', 'UNKNOWN')}")
+            print(f"[*] Node ID           : {data.get('node_id')}")
+            print(f"[*] Gateway URL       : {data.get('gateway_url')}")
+            print(f"[*] Last Heartbeat UTC: {data.get('timestamp_utc')}")
+            print(f"[*] Uptime (sec)      : {data.get('uptime_seconds')}")
+            print(f"[*] Cycles Completed  : {data.get('cycle_count')}")
+            print(f"[*] Merkle Root       : {data.get('merkle_root')}")
+            print(f"[*] Total Surplus AWU : {data.get('total_surplus_awu'):.2f} AWU")
+            print(f"[*] Active Peers      : {data.get('active_peer_agents')}")
+        except Exception as e:
+            print(f"[!] Error reading heartbeat checkpoint: {e}")
+    else:
+        print("[!] No active local heartbeat file found. Run 'python cli.py daemon mesh --once' to initialize.")
+    print("=" * 76)
+
 
 
 def cmd_observe(args):
@@ -2433,6 +2482,12 @@ def main():
     status_p.add_argument("--port", type=int, default=8443, help="Daemon port")
 
     ledger_p = daemon_sub.add_parser("ledger", help="Display autonomous M2M utility barter ledger & Merkle proof")
+
+    mesh_p = daemon_sub.add_parser("mesh", help="Run standing mesh daemon for P2P gossip and barter heartbeat")
+    mesh_p.add_argument("--interval", "-i", type=float, default=10.0, help="Heartbeat interval in seconds")
+    mesh_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
+    mesh_p.add_argument("--node-id", "-n", type=str, default="node_local_sentinel", help="Local peer node identifier")
+    mesh_p.add_argument("--once", action="store_true", help="Execute single discrete heartbeat and exit")
 
     # mcp
     mcp_parser = subparsers.add_parser("mcp", help="Manage Model Context Protocol (MCP) server for Claude Desktop / Cursor / Astra")
@@ -2840,7 +2895,6 @@ def main():
     # observe (BTP Real-Time M2M Telemetry & Merkle Ledger Observer)
     obs_p = subparsers.add_parser("observe", help="Real-time M2M telemetry and public Merkle ledger observer")
     obs_p.add_argument("--once", action="store_true", help="Print a single telemetry snapshot and exit")
-    obs_p.add_argument("--interval", "-i", type=float, default=2.0, help="Polling interval in seconds (default: 2.0)")
     obs_p.add_argument("--gateway", "-g", type=str, default=None, help="Custom gateway URL override")
 
     args = parser.parse_args()
@@ -3046,6 +3100,8 @@ def main():
             cmd_daemon_start(args)
         elif args.daemon_cmd == "ledger":
             cmd_daemon_ledger(args)
+        elif args.daemon_cmd == "mesh":
+            cmd_daemon_mesh(args)
         elif args.daemon_cmd == "status":
             cmd_daemon_status(args)
         else:

@@ -18,9 +18,11 @@ from typing import Dict, Any, List, Optional, Tuple, Union
 
 try:
     from btp_guard import Guard, WireGuard
+    from src.polyglot_ast_validator import PolyglotASTValidator
 except ImportError:
     Guard = None
     WireGuard = None
+    PolyglotASTValidator = None
 
 try:
     from src.agent_passport import SovereignAgentPassport
@@ -270,15 +272,18 @@ class UniversalBTPModelGuard:
         elif any(kw in upper_payload for kw in ["AWS_SECRET_ACCESS_KEY", "PRIVATE_KEY", "ID_RSA", "BEARER EY"]):
             is_safe = False
             violation_rule = "CREDENTIAL_EXFILTRATION_BREACH"
-        elif self._guard is not None:
+        elif self._guard is not None or PolyglotASTValidator is not None:
             for k, val in arguments.items():
-                if isinstance(val, str) and len(val) > 3:
-                    if any(c in val for c in (";", "|", "&", "`", "$", "\n", "(", ")")):
+                if isinstance(val, str) and len(val) > 2:
+                    if self._guard is not None:
                         res = self._guard.evaluate_ast(val)
-                        if not res.get("allowed", True):
-                            is_safe = False
-                            violation_rule = res.get("rule_id", "BTP-AST-001")
-                            break
+                    else:
+                        safe_ast, r_ast, _ = PolyglotASTValidator.validate_code(val)
+                        res = {"allowed": safe_ast, "reason": r_ast, "rule_id": "BTP-AST-001"}
+                    if not res.get("allowed", True):
+                        is_safe = False
+                        violation_rule = res.get("rule_id", "BTP-AST-001")
+                        break
 
         # 4. Optional Cloud Run Wire-Level Verification (BTP v5.4.6)
         if is_safe and self.wire_guard is not None:
