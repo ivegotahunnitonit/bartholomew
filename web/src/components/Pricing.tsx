@@ -10,7 +10,7 @@ export default function Pricing() {
   const [leadForm, setLeadForm] = useState({
     email: '',
     company: '',
-    framework: 'CrewAI',
+    framework: 'Cursor / Claude Code',
     fleetSize: '10-50 agents',
     notes: ''
   })
@@ -339,18 +339,18 @@ export default function Pricing() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-mono font-semibold text-[#a1a1aa] uppercase mb-1">
-                        Primary Agent Framework
+                        Agent Execution Environment
                       </label>
                       <select
                         value={leadForm.framework}
                         onChange={(e) => setLeadForm({ ...leadForm, framework: e.target.value })}
                         className="w-full px-3 py-2.5 bg-[#141418] border border-[#27272a] rounded-xl text-white text-sm focus:outline-none focus:border-[#a855f7] transition"
                       >
-                        <option value="CrewAI">CrewAI</option>
-                        <option value="LangGraph">LangGraph / LangChain</option>
-                        <option value="AutoGen">Microsoft AutoGen</option>
-                        <option value="Cursor/Claude Code">Cursor / Claude Code</option>
-                        <option value="Custom In-House">Custom In-House Swarm</option>
+                        <option value="Cursor / Claude Code">Cursor / Claude Code / Windsurf</option>
+                        <option value="MCP Tools">Model Context Protocol (MCP)</option>
+                        <option value="Raw API Function Calling">Raw API Calls (OpenAI / Anthropic / Gemini)</option>
+                        <option value="Terminal / Subprocess">Terminal &amp; Subprocess Execution</option>
+                        <option value="Custom In-House Swarm">Custom In-House Autonomous Agents</option>
                       </select>
                     </div>
 
