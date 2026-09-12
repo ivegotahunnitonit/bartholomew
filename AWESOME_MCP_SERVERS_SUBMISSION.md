@@ -11,7 +11,7 @@ Use this kit to list Bartholomew on the official and community Model Context Pro
 Under the **Security** or **Developer Tools** section:
 
 ```markdown
-- [mcp-proxy-guard](https://github.com/ivegotahunnitonit/bartholomew) - Sub-35µs in-process security proxy for MCP servers in Claude Desktop and Cursor. Intercepts destructive commands (`rm -rf`, `DROP TABLE`) and scrubs API keys in-flight with zero configuration.
+- [btp-guard](https://github.com/ivegotahunnitonit/bartholomew) - Sub-35µs in-process security proxy for MCP servers in Claude Desktop and Cursor. Intercepts destructive commands (`rm -rf`, `DROP TABLE`) and scrubs API keys in-flight with zero configuration.
 ```
 
 ---
@@ -20,31 +20,30 @@ Under the **Security** or **Developer Tools** section:
 
 **Title:**
 ```text
-Add mcp-proxy-guard: Sub-35µs security proxy & credential scrubber for MCP servers
+Add btp-guard: Sub-35µs in-process security proxy & credential scrubber for MCP servers
 ```
 
 **Body:**
 ```markdown
 ### Summary
-Add **mcp-proxy-guard** to the Security / Developer Tools category.
+Add **btp-guard** to the Security / Developer Tools category.
 
 - **Repository**: https://github.com/ivegotahunnitonit/bartholomew
 - **Website**: https://bartholomew.info
-- **npm Registry**: https://www.npmjs.com/package/mcp-proxy-guard (`npx mcp-proxy-guard`)
+- **npm Registry**: https://www.npmjs.com/package/btp-guard (`npx btp-guard init`)
 - **PyPI Registry**: https://pypi.org/project/btp-guard/ (`pip install btp-guard`)
-- **Open VSX**: https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode
-- **License**: MIT / Apache-2.0 (100% Pro Bono & Free for Developers)
+- **License**: MIT (100% Free & Open-Source for Developers)
 
 ### What it does:
-`mcp-proxy-guard` wraps any Model Context Protocol server (filesystem, terminal, sqlite, postgres) across stdio:
+`btp-guard` sits at the execution boundary of Model Context Protocol (MCP) clients (Claude Desktop, Cursor, Windsurf):
 1. **Destructive Tool Veto**: Intercepts and blocks destructive arguments (`rm -rf`, `mkfs`, `DROP TABLE`, `TRUNCATE`, `/etc/shadow`) in <35 microseconds before reaching the OS or database.
 2. **In-Flight Secret Redaction**: Scrubs OpenAI, Anthropic, AWS, GitHub, Stripe, and private keys from tool inputs and output logs.
-3. **Zero Configuration**: Simply prepend `npx -y mcp-proxy-guard --` to your existing MCP server command in `claude_desktop_config.json`.
+3. **Zero Configuration**: 1-command setup via `npx btp-guard init` or prepending `npx -y btp-guard mcp` in your MCP client configuration.
 
 ### Verification:
 Run instant in-terminal test:
 ```bash
-npx mcp-proxy-guard test
+npx btp-guard demo
 ```
 ```
 
