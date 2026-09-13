@@ -377,6 +377,29 @@ def test_intent_driven_curiosity_and_objection_holding():
     assert s5 == ConversationStage.ACTION_DISPATCH
 
 
+def test_role_and_sentiment_adaptation():
+    """Verify entity role extraction, sentiment classification, and adaptive prompt injection."""
+    state = LiveCallState(prospect_name="Elena", company_name="Sovereign AI Systems")
+    
+    # Caller introduces role and frustration
+    state.advance_turn("I am the VP of Engineering here. We had a terrible outage when an agent dropped a staging table.")
+    assert state.detected_role == "Vp Of Engineering"
+    assert state.detected_sentiment == "FRUSTRATED"
+    assert "destructive_action" in state.detected_pains
+
+    prompt = generate_session_instructions(
+        prospect_name=state.prospect_name,
+        company_name=state.company_name,
+        current_stage=state.stage,
+        detected_pains=state.detected_pains,
+        caller_role=state.detected_role,
+        caller_sentiment=state.detected_sentiment
+    )
+    assert "Caller Role: Vp Of Engineering" in prompt
+    assert "CALLER SENTIMENT: FRUSTRATED" in prompt
+    assert "destructive_action" in prompt
+
+
 def test_gemini_voice_tool_declarations():
     """Verify function calling schemas registered for Gemini Live full-duplex session."""
     from src.voice.sales_persona import VOICE_TOOL_DECLARATIONS

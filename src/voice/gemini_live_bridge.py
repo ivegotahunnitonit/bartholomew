@@ -63,7 +63,10 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
         prospect_name=prospect_name,
         company_name=company_name,
         tech_stack=tech_stack,
-        current_stage=call_state.stage
+        current_stage=call_state.stage,
+        detected_pains=call_state.detected_pains,
+        caller_role=call_state.detected_role,
+        caller_sentiment=call_state.detected_sentiment
     )
 
     gemini_tools = [types.Tool(function_declarations=VOICE_TOOL_DECLARATIONS)]

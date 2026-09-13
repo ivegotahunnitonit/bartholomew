@@ -211,6 +211,8 @@ class LiveCallState:
     sms_dispatched: bool = False
     active_objections: List[str] = field(default_factory=list)
     dispatched_tools: List[str] = field(default_factory=list)
+    detected_role: Optional[str] = None
+    detected_sentiment: str = "NEUTRAL"
 
     def advance_turn(self, user_speech: str, speech_duration: float = 0.0) -> ConversationStage:
         """
@@ -253,6 +255,27 @@ class LiveCallState:
             self.detected_pains.add("destructive_action")
         if any(w in speech_lower for w in ["latency", "lag", "overhead", "slowdown", "300ms", "delay"]):
             self.detected_pains.add("prompt_latency")
+
+        # 3.5 Extract engineering role
+        role_keywords = [
+            "cto", "vp of engineering", "vp engineering", "head of ai", "lead engineer",
+            "platform engineer", "founding engineer", "infrastructure engineer", "architect",
+            "devops", "software engineer", "founder", "co-founder"
+        ]
+        for r in role_keywords:
+            if r in speech_lower:
+                self.detected_role = r.title()
+                break
+
+        # 3.6 Extract caller sentiment & emotional energy
+        if any(w in speech_lower for w in ["terrible", "outage", "nightmare", "exhausting", "hate", "stuck", "annoying", "mess", "disaster"]):
+            self.detected_sentiment = "FRUSTRATED"
+        elif any(w in speech_lower for w in ["curious", "tell me more", "how exactly", "benchmark", "how do you achieve", "interesting", "explain"]):
+            self.detected_sentiment = "CURIOUS"
+        elif any(w in speech_lower for w in ["bot", "scam", "sales", "telemarketer", "fake", "who gave you"]):
+            self.detected_sentiment = "SKEPTICAL"
+        elif any(w in speech_lower for w in ["busy", "meeting", "driving", "hurry", "quick", "no time"]):
+            self.detected_sentiment = "HURRIED"
 
         # 4. Check for email capture
         extracted_email = extract_email_from_speech(user_speech)
@@ -597,15 +620,43 @@ def generate_session_instructions(
     prospect_name: str = "there",
     company_name: Optional[str] = None,
     tech_stack: Optional[str] = None,
-    current_stage: ConversationStage = ConversationStage.GREETING_AND_HOOK
+    current_stage: ConversationStage = ConversationStage.GREETING_AND_HOOK,
+    detected_pains: Optional[Set[str]] = None,
+    caller_role: Optional[str] = None,
+    caller_sentiment: Optional[str] = None
 ) -> str:
     """
-    Generates dynamic, stage-aware modular instructions for an active call session.
+    Generates dynamic, stage-aware modular instructions with role discovery,
+    observed operational bottlenecks, and emotional sentiment adaptation.
     """
     target_company = f" at {company_name}" if company_name else ""
     first_name = prospect_name.strip().split()[0] if prospect_name and prospect_name != "there" else "there"
     clean_company = company_name or "your team"
     stack_info = f"\nObserved AI Tech Stack: {tech_stack}" if tech_stack else ""
+    pains_info = f"\nObserved Bottlenecks: {', '.join(detected_pains)}" if detected_pains else ""
+    role_info = f"\nCaller Role: {caller_role}" if caller_role else ""
+
+    sentiment_guidance = ""
+    if caller_sentiment == "FRUSTRATED":
+        sentiment_guidance = (
+            "\nCALLER SENTIMENT: FRUSTRATED / BURNT OUT.\n"
+            "Lead with authentic peer empathy and validation before bridging to AST gating. Never sound dismissive."
+        )
+    elif caller_sentiment == "SKEPTICAL":
+        sentiment_guidance = (
+            "\nCALLER SENTIMENT: SKEPTICAL.\n"
+            "Do NOT pitch or sell. Speak purely as an infrastructure engineer. Cite sub-35 microsecond benchmarks and invite them to test the open-source repo."
+        )
+    elif caller_sentiment == "HURRIED":
+        sentiment_guidance = (
+            "\nCALLER SENTIMENT: HURRIED / TIME-CONSTRAINED.\n"
+            "Keep reply strictly under 10 words. Offer to dispatch the 1-page quickstart asynchronously."
+        )
+    elif caller_sentiment == "CURIOUS":
+        sentiment_guidance = (
+            "\nCALLER SENTIMENT: HIGH TECHNICAL CURIOSITY.\n"
+            "Provide crisp architectural insight: explain deterministic AST parsing in memory before OS execve."
+        )
 
     base = CORE_PERSONA_PRINCIPLES.format(
         prospect_name=prospect_name or "there",
@@ -622,7 +673,7 @@ def generate_session_instructions(
         company_clean=clean_company
     )
 
-    return f"{base}\n{stack_info}\n\n{stage_instruction}"
+    return f"{base}{stack_info}{pains_info}{role_info}{sentiment_guidance}\n\n{stage_instruction}"
 
 
 def generate_voicemail_text(prospect_name: str = "there", company_name: Optional[str] = None) -> str:

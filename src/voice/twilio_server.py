@@ -85,7 +85,10 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
             prospect_name=call_state.prospect_name,
             company_name=call_state.company_name,
             tech_stack=stack_str,
-            current_stage=stage
+            current_stage=stage,
+            detected_pains=call_state.detected_pains,
+            caller_role=call_state.detected_role,
+            caller_sentiment=call_state.detected_sentiment
         )
         try:
             from google import genai
