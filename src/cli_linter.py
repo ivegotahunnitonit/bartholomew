@@ -14,6 +14,12 @@ import time
 import argparse
 import ast
 import re
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 from typing import List, Dict, Any
 from src.polyglot_ast_validator import PolyglotASTValidator
 
