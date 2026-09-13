@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import time
 import json
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional, Callable, Tuple
 from dataclasses import dataclass, field
 
 from .reality_substrate import BartholomewRealitySubstrate

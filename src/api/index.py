@@ -13,11 +13,12 @@ for d in [str(app_dir), str(backend_dir), str(root_dir)]:
 
 try:
     from python_backend.app.main import app
-except Exception as e:
+except Exception as exc:
+    err_msg = str(exc)
     from fastapi import FastAPI
     from fastapi.responses import HTMLResponse
     app = FastAPI(title="Agentic-Eval Vercel Gateway Fallback")
 
     @app.get("/{full_path:path}")
     def fallback(full_path: str):
-        return HTMLResponse(f"<h1>Agentic-Eval Gateway</h1><p>Initialization Warning: {e}</p>")
+        return HTMLResponse(f"<h1>Agentic-Eval Gateway</h1><p>Initialization Warning: {err_msg}</p>")
