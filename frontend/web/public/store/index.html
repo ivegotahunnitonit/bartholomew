@@ -238,6 +238,15 @@
       text-transform: uppercase;
       margin-bottom: 8px;
     }
+    .badge-pro {
+      color: #10b981;
+    }
+    .badge-enterprise {
+      color: #38bdf8;
+    }
+    .footer-links {
+      margin-top: 14px;
+    }
     .plan-title {
       font-size: 22px;
       font-weight: 800;
@@ -443,8 +452,6 @@
       font-size: 12px;
       color: #34d399;
       overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
     .step-code::-webkit-scrollbar {
       display: none;
@@ -585,7 +592,7 @@
       <div class="card popular">
         <span class="tag-popular">Most Popular</span>
         <div class="card-top">
-          <span class="plan-badge" style="color: #10b981;">[ CLOUD &amp; TEAM SECOPS ]</span>
+          <span class="plan-badge badge-pro">[ CLOUD &amp; TEAM SECOPS ]</span>
           <div class="plan-title">Pro Developer</div>
           <p class="plan-desc">Multi-tenant workspace isolation, SecOps webhook alerts, and automated compliance evidence packs.</p>
           <div class="plan-price-row">
@@ -612,7 +619,7 @@
       <!-- Enterprise Fleet Tier ($199/mo) -->
       <div class="card">
         <div class="card-top">
-          <span class="plan-badge" style="color: #38bdf8;">[ SCALE &amp; COMPLIANCE ]</span>
+          <span class="plan-badge badge-enterprise">[ SCALE &amp; COMPLIANCE ]</span>
           <div class="plan-title">Enterprise Fleet</div>
           <p class="plan-desc">Defense-in-depth container sandboxing, self-healing auto-immunity, and dedicated SLAs.</p>
           <div class="plan-price-row">
@@ -688,7 +695,7 @@
     <!-- Footer -->
     <footer class="footer">
       <span>&copy; 2026 Bartholomew Trust Protocol &middot; Sovereign Agent Security Runtime</span>
-      <div style="margin-top: 14px;">
+      <div class="footer-links">
         <a href="/">Runtime Home</a> &bull;
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer">GitHub Source</a> &bull;
         <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank">Security Architecture Spec</a> &bull;
