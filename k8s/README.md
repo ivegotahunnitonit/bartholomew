@@ -4,7 +4,7 @@ Enterprise deployment package for running Bartholomew Guard as an in-process sid
 
 ## Architecture
 
-```
+```text
 [Agent Pod / Swarm Worker] 
         │
         ▼ (Local IPC / localhost:8080)
@@ -17,6 +17,7 @@ Enterprise deployment package for running Bartholomew Guard as an in-process sid
 ## Quickstart: Helm Installation
 
 ### 1. Deploy via Helm
+
 ```bash
 helm upgrade --install bartholomew-guard ./k8s \
   --namespace btp-security \
@@ -26,11 +27,13 @@ helm upgrade --install bartholomew-guard ./k8s \
 ```
 
 ### 2. Verify Pod Status
+
 ```bash
 kubectl get pods -n btp-security -l app.kubernetes.io/name=bartholomew-guard
 ```
 
 ### 3. Check Liveness & Metrics
+
 ```bash
 kubectl port-forward svc/bartholomew-guard 8080:8080 -n btp-security
 curl http://localhost:8080/health
@@ -52,6 +55,8 @@ docker run -d \
 ```
 
 ## Support & Enterprise Consultation
+
 For custom VPC architectures, AWS PrivateLink, or SOC 2 Type II audit packs:
+
 - Email: `security@bartholomew.info`
-- Web: https://bartholomew.info
+- Web: [https://bartholomew.info](https://bartholomew.info)

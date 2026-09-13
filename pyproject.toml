@@ -54,3 +54,9 @@ testpaths = ["tests"]
 pythonpath = ["."]
 norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*", "pypi_package*"]
 
+[tool.pyright]
+extraPaths = ["."]
+executionEnvironments = [
+  { root = "." }
+]
+
