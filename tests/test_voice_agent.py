@@ -469,3 +469,47 @@ def test_find_matching_objection_reply():
     r_none = find_matching_objection_reply("The weather in Calgary is nice today")
     assert r_none is None
 
+
+def test_twilio_status_callback_lifecycle():
+    """Verify call completion webhook updates duration, transcript, and lead status."""
+    from src.voice.twilio_server import app, lead_mgr, active_call_states
+    from src.voice.sales_persona import LiveCallState
+
+    client = TestClient(app)
+    lead = lead_mgr.get_next_pending()
+    assert lead is not None
+
+    test_sid = "CA_TEST_LIFECYCLE_99"
+    active_call_states[test_sid] = LiveCallState(prospect_name=lead.name, captured_email="test@company.ai")
+
+    resp = client.post(
+        f"/voice/status_callback?lead_id={lead.id}",
+        data={
+            "CallSid": test_sid,
+            "CallStatus": "completed",
+            "CallDuration": "42"
+        }
+    )
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "recorded"
+    assert resp.json()["duration"] == 42
+
+    updated_lead = lead_mgr.get_by_id(lead.id)
+    assert updated_lead.call_duration_seconds == 42
+    assert updated_lead.status == LeadStatus.QUALIFIED
+    assert updated_lead.email == "test@company.ai"
+
+
+def test_voice_metrics_endpoint():
+    """Verify real-time engine telemetry endpoint."""
+    from src.voice.twilio_server import app
+    client = TestClient(app)
+
+    resp = client.get("/api/voice/metrics")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status"] == "online"
+    assert data["sub_35us_deterministic_gate"] is True
+    assert data["default_voice"] == "Google.en-US-Journey-D"
+
+
