@@ -648,9 +648,8 @@
       const selectedName = select.options[select.selectedIndex]?.text.split(' — ')[0] || 'Kenji';
       const selectedCompany = select.options[select.selectedIndex]?.dataset.company || 'Nexus Frontier Labs';
 
-      addMessage('System', `Connected to Twilio full-duplex MediaStream. Target: ${selectedName} at ${selectedCompany}`);
       setTimeout(() => {
-        addMessage('Alex', `Hey ${selectedName.split(' ')[0]}! Alex here. Caught you randomly — do you have 30 seconds, or are you guys in the middle of a deployment fire over at ${selectedCompany}?`);
+        addMessage('Alex', `Hey ${selectedName.split(' ')[0]}, Alex here from Bartholomew. Saw you guys are building with AI agents over at ${selectedCompany} — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?`);
       }, 750);
     });
 

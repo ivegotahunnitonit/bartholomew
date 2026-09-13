@@ -64,9 +64,8 @@ class ConversationalSessionManager:
                 types.Content(
                     role="model",
                     parts=[types.Part.from_text(
-                        text="Hey! This is Alex. Caught you randomly — saw your team is building with autonomous agents. "
-                             "We built Bartholomew, an open-source in-process firewall that blocks rogue shell and database "
-                             "commands in 35 microseconds before anything touches your OS. Did I catch you in the middle of a deploy fire, or do you have 30 seconds?"
+                        text="Hey! Alex here from Bartholomew. Saw you guys are building with AI agents — "
+                             "quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?"
                     )]
                 )
             ]

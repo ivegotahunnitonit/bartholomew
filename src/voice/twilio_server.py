@@ -60,15 +60,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
         conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
         return reply
 
-    # 2. Fast sub-millisecond keyword objection matcher (including AI-proofing)
-    speech_lower = user_speech.lower()
-    for obj in OBJECTIONS:
-        if any(kw in speech_lower for kw in obj.keywords):
-            reply = format_speech_for_natural_delivery(obj.suggested_reply)
-            conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
-            return reply
-
-    # 3. Query Gemini with fast timeout and Astra-level conversational prompt
+    # 2. Query Gemini in real-time with Astra-level conversational prompt
     key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if key:
         prompt = generate_session_instructions("there")
@@ -83,18 +75,19 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
             contents = (
                 f"{prompt}\n\n"
                 f"Prospect just said on phone: \"{user_speech}\"\n\n"
-                "Reply as Alex in 1 to 2 short conversational sentences (15-25 words max), "
-                "speaking articulately and addressing their technical situation directly:"
+                "Reply as Alex in 1 or 2 short, natural, conversational sentences (15-25 words max). "
+                "Speak like a fellow engineer/builder -- warm, sharp, totally unscripted, and directly addressing what they just said:"
             )
 
-            for model_name in ["gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash"]:
+            for model_name in ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-flash-latest"]:
                 try:
                     resp = client.models.generate_content(
                         model=model_name,
                         contents=contents,
                         config=types.GenerateContentConfig(
-                            max_output_tokens=80,
-                            temperature=0.6
+                            thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL),
+                            max_output_tokens=300,
+                            temperature=0.7
                         )
                     )
                     if resp and resp.text:
@@ -106,7 +99,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
         except Exception as exc:
             logger.error(f"GenAI error: {exc}")
 
-    return "Understood. Is your team currently allowing AI agents to run tools autonomously, or are you gating actions with manual approvals?"
+    return "Fair enough! Are you guys currently letting agents run tools hands-free, or still having engineers manually approve every action?"
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +115,7 @@ async def voice_live_stream_entrypoint(request: Request):
     """
     host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
     proto = request.headers.get("x-forwarded-proto", "http")
-    ws_scheme = "wss" if (proto == "https" or "loca.lt" in host) else "ws"
+    ws_scheme = "wss" if (proto == "https" or "lhr.life" in host or "loca.lt" in host or "ngrok" in host or not (host.startswith("localhost") or host.startswith("127.0.0.1"))) else "ws"
 
     lead_id = request.query_params.get("lead_id", "")
     lead = lead_mgr.get_by_id(lead_id) if lead_id else None
@@ -131,26 +124,31 @@ async def voice_live_stream_entrypoint(request: Request):
     company_name = lead.company if lead else request.query_params.get("company", "")
     tech_stack = request.query_params.get("stack", "")
 
-    query_encoded = urllib.parse.urlencode({
-        "name": prospect_name,
-        "company": company_name,
-        "stack": tech_stack
-    })
-    stream_url = f"{ws_scheme}://{host}/voice/stream?{query_encoded}"
+    stream_url = f"{ws_scheme}://{host}/voice/stream"
     logger.info(f"Connecting Twilio call to stream URL: {stream_url}")
+
+    params_xml = ['            <Parameter name="customContext" value="bartholomew_cold_call" />']
+    if prospect_name and prospect_name != "there":
+        params_xml.append(f'            <Parameter name="prospectName" value="{prospect_name}" />')
+    if company_name:
+        params_xml.append(f'            <Parameter name="companyName" value="{company_name}" />')
+    if tech_stack:
+        params_xml.append(f'            <Parameter name="techStack" value="{tech_stack}" />')
+    if lead_id:
+        params_xml.append(f'            <Parameter name="leadId" value="{lead_id}" />')
+
+    stream_xml = f"""        <Stream name="alex_voice_stream" url="{stream_url}">
+{chr(10).join(params_xml)}
+        </Stream>"""
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Connect>
-        <Stream url="{stream_url}">
-            <Parameter name="customContext" value="bartholomew_cold_call" />
-            <Parameter name="prospectName" value="{prospect_name}" />
-            <Parameter name="companyName" value="{company_name}" />
-            <Parameter name="leadId" value="{lead_id}" />
-        </Stream>
+{stream_xml}
     </Connect>
-</Response>"""
-    return Response(content=twiml, media_type="application/xml")
+</Response>""".strip()
+
+    return Response(content=twiml, media_type="text/xml")
 
 
 @app.websocket("/voice/stream")
@@ -236,18 +234,24 @@ async def voice_interactive_start(request: Request):
     Initial entrypoint for conversational outbound phone calls.
     Plays developer pitch greeting and gathers user speech.
     """
-    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
-    base_url = f"https://{host}"
-    respond_url = f"{base_url}/voice/respond"
+    public_base = os.getenv("VOICE_PUBLIC_BASE_URL", "").rstrip("/")
+    if not public_base or "localhost" in public_base or "127.0.0.1" in public_base:
+        host = request.headers.get("x-forwarded-host") or request.headers.get("host") or ""
+        if host and not (host.startswith("localhost") or host.startswith("127.0.0.1")):
+            public_base = f"https://{host}"
+        else:
+            public_base = config.public_base_url.rstrip("/")
+
+    respond_url = f"{public_base}/voice/respond"
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="5">
-        <Say voice="Polly.Joey-Neural">Hello there, Alex here from Bartholomew Trust. Caught you briefly — saw your team is deploying autonomous agent workflows. We provide an in-memory execution gate that prevents destructive commands and unconstrained spend in sub-35 microseconds. Do you have 30 seconds, or did I catch you in the middle of a deployment release?</Say>
+    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
+        <Say voice="Google.en-US-Journey-D">Hey, Alex here from Bartholomew. Saw you guys are building with AI agents — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
-</Response>"""
-    return Response(content=twiml, media_type="application/xml")
+</Response>""".strip()
+    return Response(content=twiml, media_type="text/xml")
 
 
 @app.post("/voice/respond")
@@ -258,14 +262,23 @@ async def voice_interactive_respond(request: Request):
     raw_body = await request.body()
     params = urllib.parse.parse_qs(raw_body.decode("utf-8", errors="replace"))
     user_speech = params.get("SpeechResult", [""])[0].strip()
+    digits = params.get("Digits", [""])[0].strip()
     call_sid = params.get("CallSid", ["default"])[0]
-    logger.info(f"User spoken input [{call_sid}]: '{user_speech}'")
+    logger.info(f"User input [{call_sid}]: speech='{user_speech}', digits='{digits}'")
 
-    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "localhost:8765"
-    base_url = f"https://{host}"
-    respond_url = f"{base_url}/voice/respond"
+    public_base = os.getenv("VOICE_PUBLIC_BASE_URL", "").rstrip("/")
+    if not public_base or "localhost" in public_base or "127.0.0.1" in public_base:
+        host = request.headers.get("x-forwarded-host") or request.headers.get("host") or ""
+        if host and not (host.startswith("localhost") or host.startswith("127.0.0.1")):
+            public_base = f"https://{host}"
+        else:
+            public_base = config.public_base_url.rstrip("/")
 
-    if not user_speech:
+    respond_url = f"{public_base}/voice/respond"
+
+    if digits and not user_speech:
+        reply = "Hey, Alex here from Bartholomew. Saw you guys are building with AI agents — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?"
+    elif not user_speech:
         reply = "Hey, you still there? No worries if you're swamped, I can let you get back to it."
     else:
         reply = get_gemini_alex_reply(user_speech, call_sid)
@@ -279,12 +292,12 @@ async def voice_interactive_respond(request: Request):
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech" action="{respond_url}" method="POST" speechTimeout="auto" timeout="5">
-        <Say voice="Polly.Joey-Neural">{reply}</Say>
+    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
+        <Say voice="Google.en-US-Journey-D">{reply}</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>"""
-    return Response(content=twiml, media_type="application/xml")
+    return Response(content=twiml, media_type="text/xml")
 
 
 @app.post("/voice/twiml")
@@ -305,7 +318,7 @@ async def twilio_twiml_endpoint(request: Request):
 
     twiml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Say voice="Polly.Joey-Neural">Connecting to Bartholomew Engineering Security line.</Say>
+    <Say voice="Google.en-US-Journey-D">Connecting to Bartholomew live stream.</Say>
     <Connect>
         <Stream url="{stream_url}">
             <Parameter name="customContext" value="bartholomew_cold_call" />
@@ -315,7 +328,7 @@ async def twilio_twiml_endpoint(request: Request):
         </Stream>
     </Connect>
 </Response>"""
-    return Response(content=twiml_response, media_type="application/xml")
+    return Response(content=twiml_response, media_type="text/xml")
 
 
 # ---------------------------------------------------------------------------
@@ -323,9 +336,9 @@ async def twilio_twiml_endpoint(request: Request):
 # ---------------------------------------------------------------------------
 
 @app.post("/api/dial")
-async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[str] = None):
+async def trigger_outbound_dial(request: Request, lead_id: Optional[str] = None, phone: Optional[str] = None, stream: bool = True):
     """
-    Trigger a real outbound phone call via Twilio REST API with Answering Machine Detection.
+    Trigger a real outbound phone call via Twilio REST API directly into Gemini Live voice engine.
     """
     target_lead = lead_mgr.get_by_id(lead_id) if lead_id else None
     target_phone = phone or (target_lead.phone if target_lead else None)
@@ -333,7 +346,18 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
     if not target_phone:
         raise HTTPException(status_code=400, detail="Missing target phone number.")
 
-    if "555" in target_phone or not config.is_twilio_ready():
+    import re
+    clean_digits = re.sub(r"[^\d+]", "", target_phone)
+    if not clean_digits.startswith("+"):
+        if len(clean_digits) == 10:
+            clean_digits = f"+1{clean_digits}"
+        elif len(clean_digits) == 11 and clean_digits.startswith("1"):
+            clean_digits = f"+{clean_digits}"
+        else:
+            clean_digits = f"+{clean_digits}"
+    target_phone = clean_digits
+
+    if "555000" in target_phone or not config.is_twilio_ready():
         return {
             "status": "simulation_queued",
             "message": "Simulation queued for test number or simulation mode. Test with the Interactive Browser Bench at /voice/test.",
@@ -342,10 +366,21 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
         }
 
     try:
+        # Determine public base URL (from env, tunnel header, or config)
+        public_base = os.getenv("VOICE_PUBLIC_BASE_URL", "").rstrip("/")
+        if not public_base or "localhost" in public_base or "127.0.0.1" in public_base:
+            req_host = request.headers.get("x-forwarded-host") or request.headers.get("host") or ""
+            if req_host and not (req_host.startswith("localhost") or req_host.startswith("127.0.0.1")):
+                public_base = f"https://{req_host}"
+            else:
+                public_base = config.public_base_url.rstrip("/")
+
         lead_param = f"?lead_id={target_lead.id}" if target_lead else ""
-        twiml_url = f"{config.public_base_url.rstrip('/')}/voice/live_stream{lead_param}"
-        amd_callback_url = f"{config.public_base_url.rstrip('/')}/voice/amd_callback{lead_param}"
+        twiml_path = "/voice/live_stream" if stream else "/voice/interactive"
+        twiml_url = f"{public_base}{twiml_path}{lead_param}"
         call_sid = None
+
+        logger.info(f"Initiating outbound call to {target_phone} with TwiML URL: {twiml_url}")
 
         try:
             from twilio.rest import Client
@@ -353,10 +388,7 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
             call = client.calls.create(
                 to=target_phone,
                 from_=config.twilio_phone_number,
-                url=twiml_url,
-                machine_detection="DetectMessageEnd",
-                async_amd="true",
-                async_amd_status_callback=amd_callback_url
+                url=twiml_url
             )
             call_sid = call.sid
         except ImportError:
@@ -369,9 +401,6 @@ async def trigger_outbound_dial(lead_id: Optional[str] = None, phone: Optional[s
                 "To": target_phone,
                 "From": config.twilio_phone_number,
                 "Url": twiml_url,
-                "MachineDetection": "DetectMessageEnd",
-                "AsyncAmd": "true",
-                "AsyncAmdStatusCallback": amd_callback_url
             }).encode("utf-8")
             auth_str = f"{config.twilio_account_sid}:{config.twilio_auth_token}"
             auth_b64 = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")

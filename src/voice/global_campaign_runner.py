@@ -246,7 +246,7 @@ class GlobalCampaignRunner:
             lead.call_duration_seconds = 52
             first_name = lead.name.split()[0]
             lead.transcript = [
-                {"role": "assistant", "content": f"Hey {first_name}! Alex here. Caught you randomly -- do you have 30 seconds, or are you in the middle of a deployment fire over at {lead.company}?"},
+                {"role": "assistant", "content": f"Hey {first_name}, Alex here from Bartholomew. Saw you guys are building with AI agents over at {lead.company} — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?"},
                 {"role": "user", "content": "Haha yeah, what's this regarding?"},
                 {"role": "assistant", "content": "Quick question from one builder to another: are you guys letting your AI agents run tools hands-free yet, or still stuck babysitting every single action?"},
                 {"role": "user", "content": "We manually approve everything right now because we're terrified of accidental database table drops or runaway spend."},

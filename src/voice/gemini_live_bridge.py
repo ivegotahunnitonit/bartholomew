@@ -115,6 +115,10 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                                 prospect_name = custom_params["prospectName"]
                             if custom_params.get("companyName"):
                                 company_name = custom_params["companyName"]
+                            if custom_params.get("techStack"):
+                                tech_stack = custom_params["techStack"]
+                            if custom_params.get("leadId"):
+                                lead_id = custom_params["leadId"]
 
                             first_name = prospect_name.strip().split()[0] if prospect_name != "there" else "there"
                             logger.info(f"Twilio stream started. StreamSid: {stream_sid} for {first_name} at {company_name}")
@@ -123,11 +127,18 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                             if not greeting_sent:
                                 greeting_sent = True
                                 company_ref = f" at {company_name}" if company_name else ""
-                                opener_prompt = (
-                                    f"[Call answered by {first_name}. Speak articulately and professionally: "
-                                    f"'Hello {first_name}, Alex here from Bartholomew Trust. Caught you briefly -- "
-                                    f"do you have 30 seconds, or did I catch you in the middle of a deployment release{company_ref}?']"
-                                )
+                                if first_name == "there":
+                                    opener_prompt = (
+                                        "[Call answered. Say casually and naturally in 1-2 short sentences as Alex: "
+                                        "'Hey, Alex here from Bartholomew. Saw your team is building with AI agents — "
+                                        "quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?']"
+                                    )
+                                else:
+                                    opener_prompt = (
+                                        f"[Call answered by {first_name}. Say casually and naturally in 1-2 short sentences as Alex: "
+                                        f"'Hey {first_name}, Alex here from Bartholomew. Saw your team{company_ref} is building with AI agents — "
+                                        f"quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?']"
+                                    )
                                 opener = types.Content(
                                     role="user",
                                     parts=[types.Part.from_text(text=opener_prompt)]
