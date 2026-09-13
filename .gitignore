@@ -38,12 +38,22 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Ephemeral State & Evidence Dumps
+# Runtime state & ledgers (generated at runtime, never commit)
 .btp_workspaces.json
+.btp_bridge_ledger.json
+.btp_gossip_ledger.json
+.btp_marketplace.json
+.btp_usage_ledger.json
+.btp_webhooks.json
+*.db
+*.db-shm
+*.db-wal
+
+# Scratch & ephemeral working dirs
+scratch/
 audit_evidence/
 generated_evidence_artifacts/
 archived_legacy_data/
-scratch/
 DELIVERABLES_BUNDLE/
 REAL_GOOGLE_OSS_PATCH/
 acquire_flip_package/
