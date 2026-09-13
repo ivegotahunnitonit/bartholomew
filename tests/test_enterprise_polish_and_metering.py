@@ -22,7 +22,7 @@ from src.billing.metering_engine import (
     ESCROW_FEE_RATIO,
     WEBHOOK_UNIT_USD
 )
-from cli import cmd_init, cmd_billing_usage, cmd_billing_invoice
+from btp_guard.cli import cmd_init, cmd_billing_usage, cmd_billing_invoice
 
 
 def test_framework_detection_and_scaffolding():

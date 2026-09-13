@@ -136,7 +136,7 @@ class IndependentTrustVerifier:
                            trusted_root_pubkey: str,
                            current_timestamp: Optional[float] = None,
                            seen_nonces: Optional[set] = None) -> Tuple[bool, str]:
-        from standalone_btp_verifier import independent_verify_btp_receipt
+        from scripts.standalone_btp_verifier import independent_verify_btp_receipt
         return independent_verify_btp_receipt(
             receipt_json_str=attestation_packet,
             candidate_payload=expected_payload,

@@ -16,9 +16,9 @@ sys.path.insert(0, os.path.abspath("."))
 
 from src.agent_passport import SovereignAgentPassport
 from src.settlement.autonomous_escrow import AutonomousEscrowPool
-from framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, CrewAIBTPTaskGuard
-from framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, LangGraphBTPGuard
-from framework_adapters.autogen.autogen_btp_interceptor import btp_autogen_guard, AutoGenBTPInterceptor
+from src.framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, CrewAIBTPTaskGuard
+from src.framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, LangGraphBTPGuard
+from src.framework_adapters.autogen.autogen_btp_interceptor import btp_autogen_guard, AutoGenBTPInterceptor
 
 
 @pytest.fixture
@@ -78,7 +78,7 @@ def test_langchain_adapter_safe_and_slashing_lifecycle(agent_passport):
     assert agent_passport.is_circuit_broken is True
 
 
-from framework_adapters.autogen.autogen_btp_interceptor import BTPViolationError
+from src.framework_adapters.autogen.autogen_btp_interceptor import BTPViolationError
 
 
 def test_autogen_adapter_safe_and_diagnostics():

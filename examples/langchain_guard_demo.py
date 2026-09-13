@@ -9,7 +9,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath("."))
-from framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, BartholomewLangChainTool
+from src.framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, BartholomewLangChainTool
 
 # Example 1: Decorate any function directly
 @btp_langchain_tool(spend_cap=50.0, strict=True)

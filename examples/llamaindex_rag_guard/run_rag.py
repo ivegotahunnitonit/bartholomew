@@ -14,7 +14,7 @@ import os
 # Add root directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from framework_adapters.llamaindex.llamaindex_btp_tool import btp_llamaindex_tool
+from src.framework_adapters.llamaindex.llamaindex_btp_tool import btp_llamaindex_tool
 from src.agent_passport import SovereignAgentPassport
 from src.trust_protocol import BartholomewTrustAuthority
 

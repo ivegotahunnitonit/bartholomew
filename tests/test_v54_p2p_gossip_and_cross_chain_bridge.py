@@ -203,7 +203,7 @@ class TestCrossChainBridgeRelay:
 
 class TestV54CLIIntegration:
     def test_cli_gossip_peer_list(self, capsys):
-        from cli import cmd_gossip_peer_list
+        from btp_guard.cli import cmd_gossip_peer_list
         from unittest.mock import MagicMock
 
         args = MagicMock()
@@ -213,7 +213,7 @@ class TestV54CLIIntegration:
         assert "agent-code-auditor-99" in out
 
     def test_cli_gossip_rate(self, capsys):
-        from cli import cmd_gossip_rate
+        from btp_guard.cli import cmd_gossip_rate
         from unittest.mock import MagicMock
 
         args = MagicMock()
@@ -228,7 +228,7 @@ class TestV54CLIIntegration:
         assert "96.0%" in out
 
     def test_cli_bridge_transfer_and_claim(self, capsys):
-        from cli import cmd_bridge_transfer, cmd_bridge_claim
+        from btp_guard.cli import cmd_bridge_transfer, cmd_bridge_claim
         from unittest.mock import MagicMock
 
         # 1. Transfer Lock

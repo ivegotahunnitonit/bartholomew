@@ -9,7 +9,7 @@ Verifies:
 
 import json
 import pytest
-from mcp_server import BartholomewMCPServer
+from src.mcp_server import BartholomewMCPServer
 
 
 @pytest.fixture

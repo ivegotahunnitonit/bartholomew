@@ -21,7 +21,7 @@ from src.alerting.webhook_dispatcher import (
     WebhookSignatureEngine,
     WebhookDispatcher,
 )
-from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
+from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
 from src.agent_passport import SovereignAgentPassport
 from src.settlement.autonomous_escrow import AutonomousEscrowPool
 from src.settlement.swarm_arbitration import (

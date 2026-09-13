@@ -36,11 +36,11 @@ sys.path.insert(0, os.path.abspath("pypi_package"))
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives import serialization
 
-from framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, BTPViolationError as CrewAIViolation
-from framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, BTPViolationError as LangGraphViolation
-from framework_adapters.autogen.autogen_btp_interceptor import btp_autogen_guard, BTPViolationError as AutoGenViolation
-from framework_adapters.llamaindex.llamaindex_btp_tool import btp_llamaindex_tool, BTPViolationError as LlamaIndexViolation
-from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
+from src.framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, BTPViolationError as CrewAIViolation
+from src.framework_adapters.langgraph.langgraph_btp_guard import btp_langchain_tool, BTPViolationError as LangGraphViolation
+from src.framework_adapters.autogen.autogen_btp_interceptor import btp_autogen_guard, BTPViolationError as AutoGenViolation
+from src.framework_adapters.llamaindex.llamaindex_btp_tool import btp_llamaindex_tool, BTPViolationError as LlamaIndexViolation
+from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
 from src.polyglot_ast_validator import PolyglotASTValidator
 
 # Workload templates

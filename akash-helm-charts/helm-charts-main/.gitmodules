@@ -1,3 +1,0 @@
-[submodule "provider"]
-	path = provider
-	url = https://github.com/akash-network/provider.git

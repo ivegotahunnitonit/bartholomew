@@ -8,7 +8,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from framework_adapters.autogen import btp_autogen_guard, BTPViolationError, AutoGenBTPInterceptor
+from src.framework_adapters.autogen import btp_autogen_guard, BTPViolationError, AutoGenBTPInterceptor
 
 print("=" * 72)
 print("  Microsoft AutoGen + Bartholomew Trust Protocol (BTP) Recipe Demo")

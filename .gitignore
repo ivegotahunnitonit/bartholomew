@@ -3,18 +3,9 @@
 .env.*
 !.env.example
 
-# Marketing & Social Launch Copy (Local Only)
-SHOW_HN_AND_COMMUNITY_DISTRIBUTION.md
-DEVTO_GLOBAL_LAUNCH_POST.md
-HASHNODE_LAUNCH_ARTICLE.md
-
-# Python
+# Python & Caches
 __pycache__/
 *.py[cod]
-paper_v2_3.md
-paper_v2_3.pdf
-paper_v2_4.md
-paper_v2_4.pdf
 *$py.class
 *.so
 .Python
@@ -28,13 +19,26 @@ lib/
 lib64/
 parts/
 sdist/
-var/
 wheels/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Ephemeral State & Evidence Dumps
+.btp_workspaces.json
+audit_evidence/
+generated_evidence_artifacts/
+archived_legacy_data/
+scratch/
+DELIVERABLES_BUNDLE/
+REAL_GOOGLE_OSS_PATCH/
+acquire_flip_package/
+*.pdf
+*.vsix
+helm-rendered.yaml
+sbom.json
 
 # Virtual Environments
 .env

@@ -142,7 +142,7 @@ class BartholomewCompanion:
         Evaluates arbitrary developer input or tool call command live in <35us,
         returning verdict, latency, and Bartholomew's companion counsel.
         """
-        from framework_adapters.universal.universal_model_guard import (
+        from src.framework_adapters.universal.universal_model_guard import (
             UniversalBTPModelGuard,
             ModelProvider
         )
@@ -198,7 +198,7 @@ class BartholomewCompanion:
             provider = "openai_agents_sdk"
             title = "Simulated OpenAI Agents SDK Dispatch (Runaway Wallet Loop)"
 
-        from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard
+        from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard
         guard = UniversalBTPModelGuard(strict=False, escrow_collateral_usd=50.0)
         res = guard.intercept_and_verify(tool_call, provider=provider)
         res["title"] = title

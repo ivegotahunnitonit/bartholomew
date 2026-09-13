@@ -17,19 +17,19 @@ SUPPORTED_FRAMEWORKS = ["crewai", "langgraph", "autogen", "openai", "anthropic",
 
 FRAMEWORK_SNIPPETS = {
     "crewai": """# --- Bartholomew BTP Guard for CrewAI ---
-from framework_adapters.crewai import BTPCrewAITaskGuard
+from src.framework_adapters.crewai import BTPCrewAITaskGuard
 guard = BTPCrewAITaskGuard(tenant_id="{tenant_id}")
 # Attach to crew or task:
 # crew = Crew(agents=[...], tasks=[...], task_callback=guard.intercept_task_execution)
 """,
     "langgraph": """# --- Bartholomew BTP Guard for LangGraph ---
-from framework_adapters.langgraph import BTPLangGraphGuard
+from src.framework_adapters.langgraph import BTPLangGraphGuard
 guard = BTPLangGraphGuard(tenant_id="{tenant_id}")
 # Wrap graph invocation:
 # app = guard.wrap_graph(workflow.compile())
 """,
     "autogen": """# --- Bartholomew BTP Guard for AutoGen ---
-from framework_adapters.autogen import BTPAutoGenInterceptor
+from src.framework_adapters.autogen import BTPAutoGenInterceptor
 interceptor = BTPAutoGenInterceptor(tenant_id="{tenant_id}")
 # Register hook:
 # assistant.register_hook(hookable_method="process_message", hook=interceptor.verify_message)

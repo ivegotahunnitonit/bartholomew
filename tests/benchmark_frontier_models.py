@@ -18,7 +18,7 @@ root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
-from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
+from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
 
 
 def run_frontier_benchmark(iterations: int = 1000):

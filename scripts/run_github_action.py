@@ -9,7 +9,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from standalone_btp_verifier import independent_verify_btp_receipt
+from scripts.standalone_btp_verifier import independent_verify_btp_receipt
 
 def main():
     parser = argparse.ArgumentParser(description="BTP v2.2 GitHub Action Verifier")

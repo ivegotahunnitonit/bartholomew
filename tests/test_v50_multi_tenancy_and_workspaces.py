@@ -8,7 +8,7 @@ from src.tenancy.workspace_manager import WorkspaceManager, WorkspaceTenant, Env
 from src.agent_passport import SovereignAgentPassport
 from src.settlement.autonomous_escrow import AutonomousEscrowPool
 from src.settlement.swarm_arbitration import SwarmDisputeArbitrator, ArbitrationResolutionCertificate
-from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
+from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
 
 
 def test_workspace_creation_and_api_keys(tmp_path):

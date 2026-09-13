@@ -194,7 +194,7 @@ def test_sla_unverified_proof_rejection(temp_engine):
 
 def test_cli_marketplace_flow(capsys):
     import argparse
-    from cli import cmd_marketplace_list, cmd_marketplace_contract_create, cmd_marketplace_contract_fulfill
+    from btp_guard.cli import cmd_marketplace_list, cmd_marketplace_contract_create, cmd_marketplace_contract_fulfill
 
     # 1. Test listing
     args_list = argparse.Namespace(capability=None)

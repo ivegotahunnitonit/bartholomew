@@ -17,7 +17,7 @@ import statistics
 from typing import Dict, Any, List, Optional
 from concurrent.futures import ThreadPoolExecutor
 
-from framework_adapters.universal.universal_model_guard import (
+from src.framework_adapters.universal.universal_model_guard import (
     UniversalBTPModelGuard,
     ModelProvider,
 )

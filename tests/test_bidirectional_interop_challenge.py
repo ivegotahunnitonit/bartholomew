@@ -15,7 +15,7 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from standalone_btp_verifier import independent_verify_btp_receipt
+from scripts.standalone_btp_verifier import independent_verify_btp_receipt
 from src.trust_protocol import BartholomewTrustAuthority
 from tests.independent_cleanroom_authority import CleanRoomIndependentAuthority, CleanRoomIndependentVerifier
 

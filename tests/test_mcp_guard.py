@@ -6,7 +6,7 @@ Verifies JSON-RPC 2.0 stdio handshake, tool listing, and runtime execution gatin
 import os
 import json
 import pytest
-from mcp_server import BartholomewMCPServer
+from src.mcp_server import BartholomewMCPServer
 
 
 @pytest.fixture

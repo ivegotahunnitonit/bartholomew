@@ -14,7 +14,7 @@ import os
 # Add root directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from framework_adapters.langgraph.langgraph_btp_guard import LangGraphBTPGuard
+from src.framework_adapters.langgraph.langgraph_btp_guard import LangGraphBTPGuard
 from src.trust_protocol import BartholomewTrustAuthority
 
 

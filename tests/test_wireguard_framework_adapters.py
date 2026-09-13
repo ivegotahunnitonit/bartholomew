@@ -9,8 +9,8 @@ via WireGuard, correctly approving safe operations and vetoing destructive opera
 import os
 import pytest
 from btp_guard import WireGuard
-from framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, BTPViolationError
-from framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
+from src.framework_adapters.crewai.crewai_btp_task_guard import btp_crewai_tool, BTPViolationError
+from src.framework_adapters.universal.universal_model_guard import UniversalBTPModelGuard, ModelProvider
 
 
 def test_crewai_wireguard_safe_and_veto():

@@ -11,7 +11,7 @@ import argparse
 import pytest
 
 from src.compliance_dossier_exporter import ComplianceDossierExporter
-from cli import cmd_audit
+from btp_guard.cli import cmd_audit
 
 
 def test_compliance_dossier_assembly_and_merkle():

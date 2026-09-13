@@ -11,7 +11,7 @@ workspace_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if workspace_root not in sys.path:
     sys.path.insert(0, workspace_root)
 
-from framework_adapters.universal.universal_model_guard import (
+from src.framework_adapters.universal.universal_model_guard import (
     UniversalBTPModelGuard,
     ModelProvider,
     btp_universal_guard,

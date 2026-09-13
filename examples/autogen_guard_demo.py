@@ -9,7 +9,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath("."))
-from framework_adapters.autogen.autogen_btp_interceptor import AutoGenBTPInterceptor, btp_autogen_guard
+from src.framework_adapters.autogen.autogen_btp_interceptor import AutoGenBTPInterceptor, btp_autogen_guard
 
 # 1. Protect any agent tool or function with @btp_autogen_guard
 @btp_autogen_guard(spend_cap=100.0, strict=True)

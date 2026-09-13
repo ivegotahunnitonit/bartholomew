@@ -14,7 +14,7 @@ import pytest
 from cryptography.hazmat.primitives.asymmetric import ed25519
 
 from src.agent_passport import SovereignAgentPassport, AgentPeerDiscoveryRegistry
-from mcp_server import BartholomewMCPServer
+from src.mcp_server import BartholomewMCPServer
 
 
 def test_passport_issuance_and_signing():

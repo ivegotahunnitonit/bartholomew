@@ -22,7 +22,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.rfc8785 import rfc8785_canonicalize
-from standalone_btp_verifier import independent_verify_btp_receipt
+from scripts.standalone_btp_verifier import independent_verify_btp_receipt
 
 def generate_random_unicode_string(max_len=20):
     chars = [
