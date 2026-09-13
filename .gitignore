@@ -15,6 +15,15 @@ bin/*.vsix
 *.dylib
 *.dll
 
+# Go compiled binaries
+**/*.exe
+**/bartholomew_daemon
+**/go_security_service
+
+# Node modules (install via npm ci in CI)
+packages/node/node_modules/
+node_modules/
+
 # Python & Caches
 __pycache__/
 *.py[cod]

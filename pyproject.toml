@@ -44,6 +44,7 @@ Tracker = "https://github.com/ivegotahunnitonit/bartholomew/issues"
 [project.scripts]
 bartholomew = "src.cli:main"
 btp-guard = "src.cli:main"
+btp = "src.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -54,8 +55,8 @@ include = ["src*", "btp_guard*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
-norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*", "pypi_package*"]
+pythonpath = [".", "src"]
+norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*", "packages*"]
 
 [tool.pyright]
 extraPaths = ["."]
