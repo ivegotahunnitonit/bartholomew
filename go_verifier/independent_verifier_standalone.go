@@ -10,7 +10,7 @@ CRITICAL ARCHITECTURAL GUARANTEE:
 4. Executes 100% offline verification using pinned root public keys.
 */
 
-package verifier
+package main
 
 import (
 	"crypto/sha256"
