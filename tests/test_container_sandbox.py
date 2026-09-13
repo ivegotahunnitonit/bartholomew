@@ -32,7 +32,8 @@ def test_container_sandbox_permitted_command_execution():
             workspace_dir=tmpdir
         )
         assert "ISOLATED" in mode or "FALLBACK" in mode
-        assert code in (0, 128)  # 128 is git returncode outside git repo
+        # 0: clean git repo, 128: outside git repo (fallback host), 127: git not installed in minimal container (alpine)
+        assert code in (0, 127, 128)
 
 
 def test_container_sandbox_blocks_destructive_commands_in_fallback():
