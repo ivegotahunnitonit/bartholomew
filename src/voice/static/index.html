@@ -519,7 +519,12 @@
       <div class="card transcript-container">
         <h2>
           <span>Live Conversation Stream</span>
-          <span class="badge" id="sessionMode">FULL-DUPLEX</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <label style="font-size: 11px; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 4px; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" id="chkAudioOut" checked style="accent-color: var(--primary);"> 🔊 Voice Output
+            </label>
+            <span class="badge" id="sessionMode">FULL-DUPLEX</span>
+          </div>
         </h2>
 
         <div class="feed-box" id="feedBox">
@@ -528,6 +533,7 @@
 
         <div class="input-row">
           <input type="text" id="spokenTextInput" placeholder="Simulate spoken response (e.g. 'We approve everything manually right now')">
+          <button class="btn btn-secondary" id="btnMic" title="Speak into microphone" style="padding: 0 14px; width: auto;">🎙️ Mic</button>
           <button class="btn btn-call" id="btnSendText">Send</button>
         </div>
       </div>
@@ -608,22 +614,45 @@
     const btnCall = document.getElementById('btnCall');
     const btnHangup = document.getElementById('btnHangup');
     const btnSimulateDial = document.getElementById('btnSimulateDial');
+    const btnMic = document.getElementById('btnMic');
     const feedBox = document.getElementById('feedBox');
     const statusBadge = document.getElementById('callStatusBadge');
     let callTimerInterval = null;
     let callSeconds = 0;
+    let currentCallSid = 'BENCH_' + Date.now();
+
+    function cleanSsml(text) {
+      if (!text) return '';
+      return text.replace(/<[^>]+>/g, '').trim();
+    }
+
+    function speakInBrowser(text) {
+      if (!document.getElementById('chkAudioOut').checked) return;
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const clean = cleanSsml(text);
+      const utter = new SpeechSynthesisUtterance(clean);
+      utter.rate = 1.05;
+      utter.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const engVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Guy') || v.name.includes('Jenny') || v.name.includes('Alex')));
+      if (engVoice) utter.voice = engVoice;
+      window.speechSynthesis.speak(utter);
+    }
 
     function addMessage(role, text) {
+      const cleanText = cleanSsml(text);
       const msg = document.createElement('div');
       if (role === 'Alex') {
         msg.className = 'msg msg-alex';
-        msg.innerHTML = `<span class="role-tag">Alex (Bartholomew)</span>${text}`;
+        msg.innerHTML = `<span class="role-tag">Alex (Bartholomew)</span>${cleanText}`;
+        speakInBrowser(cleanText);
       } else if (role === 'Prospect') {
         msg.className = 'msg msg-user';
-        msg.innerHTML = `<span class="role-tag">Prospect</span>${text}`;
+        msg.innerHTML = `<span class="role-tag">Prospect</span>${cleanText}`;
       } else {
         msg.className = 'msg msg-sys';
-        msg.textContent = text;
+        msg.textContent = cleanText;
       }
       feedBox.appendChild(msg);
       feedBox.scrollTop = feedBox.scrollHeight;
@@ -631,6 +660,7 @@
 
     btnCall.addEventListener('click', () => {
       isCalling = true;
+      currentCallSid = 'BENCH_' + Date.now();
       btnCall.style.display = 'none';
       btnHangup.style.display = 'flex';
       statusBadge.textContent = 'IN CALL';
@@ -660,54 +690,108 @@
       statusBadge.textContent = 'READY';
       statusBadge.style.color = '';
       clearInterval(callTimerInterval);
-      addMessage('System', 'Call terminated. Transcript persisted to Bartholomew audit log.');
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      addMessage('System', 'Call terminated. Multi-turn context archived to Bartholomew audit log.');
     });
 
     btnSimulateDial.addEventListener('click', async () => {
-      addMessage('System', 'Running 24/7 autonomous dial-next consultation across active global markets...');
+      addMessage('System', 'Running autonomous dial-next consultation across active global markets...');
       try {
         const resp = await fetch('/voice/respond', {
           method: 'POST',
-          body: new URLSearchParams({ SpeechResult: 'We have to approve every single tool execution manually.', CallSid: 'BENCH_' + Date.now() })
+          body: new URLSearchParams({ SpeechResult: 'We have to approve every single tool execution manually.', CallSid: currentCallSid })
         });
         addMessage('Prospect', 'We have to approve every single tool execution manually.');
         const text = await resp.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(text, 'text/xml');
-        const alexReply = xmlDoc.getElementsByTagName('Say')[0]?.textContent || 'Haha yeah, that approval bottleneck is exhausting!';
+        const alexReply = xmlDoc.getElementsByTagName('Say')[0]?.textContent || 'Right on — that manual bottleneck is brutal!';
         setTimeout(() => {
-          addMessage('Alex', alexReply);
+          addMessage('Alex', cleanSsml(alexReply));
         }, 500);
       } catch (e) {
-        addMessage('Alex', 'Haha yeah, that approval bottleneck is exhausting! Every founder I talk to says their team is tired of babysitting bots. That is why we built Bartholomew to block bad commands in 35 microseconds.');
+        addMessage('Alex', "Totally get that! Manual approval fatigue kills developer velocity. That's why we built Bartholomew to catch dangerous bash and SQL in 35 microseconds in-memory.");
       }
     });
 
-    document.getElementById('btnSendText').addEventListener('click', async () => {
-      const input = document.getElementById('spokenTextInput');
-      const val = input.value.trim();
+    async function sendTurn(val) {
       if (!val) return;
-      input.value = '';
       addMessage('Prospect', val);
 
       try {
         const resp = await fetch('/voice/respond', {
           method: 'POST',
-          body: new URLSearchParams({ SpeechResult: val, CallSid: 'BENCH_' + Date.now() })
+          body: new URLSearchParams({ SpeechResult: val, CallSid: currentCallSid })
         });
         const text = await resp.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(text, 'text/xml');
         const alexReply = xmlDoc.getElementsByTagName('Say')[0]?.textContent || 'Totally hear you!';
         setTimeout(() => {
-          addMessage('Alex', alexReply);
-        }, 400);
+          addMessage('Alex', cleanSsml(alexReply));
+        }, 300);
       } catch (e) {
         setTimeout(() => {
-          addMessage('Alex', 'Totally hear you! Let me send that quickstart link to your email.');
-        }, 400);
+          addMessage('Alex', 'Fair play! Let me shoot the 1-page quickstart over to your email.');
+        }, 300);
+      }
+    }
+
+    document.getElementById('btnSendText').addEventListener('click', () => {
+      const input = document.getElementById('spokenTextInput');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      sendTurn(val);
+    });
+
+    document.getElementById('spokenTextInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = e.target.value.trim();
+        if (!val) return;
+        e.target.value = '';
+        sendTurn(val);
       }
     });
+
+    // Web Speech Recognition for Real Browser Mic Input
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognizer = new SpeechRecognition();
+      recognizer.continuous = false;
+      recognizer.interimResults = false;
+      recognizer.lang = 'en-US';
+
+      recognizer.onstart = () => {
+        btnMic.textContent = '🔴 Listening...';
+        btnMic.style.background = 'rgba(244, 63, 94, 0.2)';
+        btnMic.style.borderColor = 'rgba(244, 63, 94, 0.5)';
+      };
+      recognizer.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) sendTurn(transcript);
+      };
+      recognizer.onerror = () => {
+        btnMic.textContent = '🎙️ Mic';
+        btnMic.style.background = '';
+        btnMic.style.borderColor = '';
+      };
+      recognizer.onend = () => {
+        btnMic.textContent = '🎙️ Mic';
+        btnMic.style.background = '';
+        btnMic.style.borderColor = '';
+      };
+
+      btnMic.addEventListener('click', () => {
+        try {
+          recognizer.start();
+        } catch (err) {
+          recognizer.stop();
+        }
+      });
+    } else {
+      btnMic.style.display = 'none';
+    }
   </script>
 </body>
 </html>
