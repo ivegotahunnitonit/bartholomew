@@ -182,8 +182,8 @@
 
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 36px 28px;
@@ -367,6 +367,7 @@
     /* Enterprise Feature Highlights Strip */
     .flow-strip {
       background: rgba(13, 13, 18, 0.6);
+      -webkit-backdrop-filter: blur(20px);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -464,6 +465,7 @@
     }
     .faq-item {
       background: rgba(13, 13, 18, 0.6);
+      -webkit-backdrop-filter: blur(20px);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -568,12 +570,12 @@
             <li><span class="chk">&#10003;</span><span class="f-text">Sub-millisecond in-memory syntax evaluation</span></li>
             <li><span class="chk">&#10003;</span><span class="f-text">OWASP LLM02 secret &amp; credential scrubbing</span></li>
             <li><span class="chk">&#10003;</span><span class="f-text">Standard Model Context Protocol (MCP) proxy</span></li>
-            <li><span class="chk">&#10003;</span><span class="f-text">Native CrewAI, LangGraph, &amp; AutoGen adapters</span></li>
+            <li><span class="chk">&#10003;</span><span class="f-text">Native Cloudflare, Gemini 3.8, Claude 3.7, AutoGen &amp; OpenAI SDK adapters</span></li>
             <li><span class="chk">&#10003;</span><span class="f-text">Python distribution via PyPI (<code>pip install btp-guard</code>)</span></li>
           </ul>
         </div>
         <div class="card-bottom">
-          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer" class="btn btn-subtle">
+          <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer" class="btn btn-subtle">
             View on GitHub &rarr;
           </a>
         </div>
@@ -688,7 +690,7 @@
       <span>&copy; 2026 Bartholomew Trust Protocol &middot; Sovereign Agent Security Runtime</span>
       <div style="margin-top: 14px;">
         <a href="/">Runtime Home</a> &bull;
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer">GitHub Source</a> &bull;
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noopener noreferrer">GitHub Source</a> &bull;
         <a href="/SECURITY_WHITE_PAPER_AND_THREAT_MODEL.html" target="_blank">Security Architecture Spec</a> &bull;
         <a href="mailto:security@bartholomew.info">Enterprise Contact</a>
       </div>

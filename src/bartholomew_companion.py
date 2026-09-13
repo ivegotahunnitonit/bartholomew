@@ -126,13 +126,14 @@ class BartholomewCompanion:
                 {"id": "yandexgpt-5-lite", "desc": "High-speed operational assistant", "status": "GUARDED"},
                 {"id": "alice-ai-agent", "desc": "Consumer & robotics agent execution model", "status": "GUARDED"}
             ],
-            "Frameworks": [
-                {"name": "OpenAI Agents SDK", "wire_support": True, "adapter": "UniversalBTPModelGuard"},
-                {"name": "CrewAI", "wire_support": True, "adapter": "btp_crewai_tool"},
-                {"name": "LangGraph / LangChain", "wire_support": True, "adapter": "btp_langchain_tool"},
-                {"name": "Microsoft AutoGen", "wire_support": True, "adapter": "btp_autogen_guard"},
-                {"name": "LlamaIndex", "wire_support": True, "adapter": "btp_llamaindex_tool"},
-                {"name": "Anthropic Model Context Protocol (MCP)", "wire_support": True, "adapter": "btp_mcp_guard"}
+            "Frameworks & Orchestration": [
+                {"name": "Cloudflare Workers AI & Agents", "wire_support": True, "adapter": "UniversalBTPModelGuard"},
+                {"name": "Google Gemini 3.8 Thought & Tool Guard", "wire_support": True, "adapter": "GeminiFunctionCallingGuard"},
+                {"name": "Anthropic Claude 3.7 & MCP", "wire_support": True, "adapter": "btp_mcp_guard"},
+                {"name": "OpenAI Agents SDK & GPT-Astra", "wire_support": True, "adapter": "UniversalBTPModelGuard"},
+                {"name": "Microsoft AutoGen Swarm", "wire_support": True, "adapter": "btp_autogen_guard"},
+                {"name": "GitHub Copilot, Cursor & Windsurf", "wire_support": True, "adapter": "btp_ide_guard"},
+                {"name": "LlamaIndex", "wire_support": True, "adapter": "btp_llamaindex_tool"}
             ]
         }
 

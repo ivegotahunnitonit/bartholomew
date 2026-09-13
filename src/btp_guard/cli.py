@@ -39,7 +39,7 @@ def cmd_pricing(args):
     print("1. Community Tier (Free Forever):")
     print("   [+] Sub-35us local AST safety gating & secret scrubbing")
     print("   [+] Ed25519 offline local audit receipts & SQLite ledger")
-    print("   [+] Full support for CrewAI, LangGraph, AutoGen, Cursor & Claude Desktop")
+    print("   [+] Full support for Cloudflare, Gemini 3.8, Claude 3.7, AutoGen, Copilot/Cursor & OpenAI SDK")
     print("\n2. Bartholomew Pro ($49 / month):")
     print("   [+] Real-Time Cloud Telemetry Dashboard (https://bartholomew.info/cloud)")
     print("   [+] Instant Slack & Webhook threat incident alerts")
@@ -2644,8 +2644,8 @@ def main():
     init_parser.add_argument("--pair", type=str, help="Legacy framework target alias")
 
     # onboard
-    onboard_parser = subparsers.add_parser("onboard", help="Interactive 30-second developer fast-onboarding wizard for Cursor, LangGraph, CrewAI, OpenAI, and Escrows")
-    onboard_parser.add_argument("--target", "-t", choices=["cursor", "windsurf", "vscode", "langchain", "crewai", "openai", "escrow", "license"], help="Directly configure target setup")
+    onboard_parser = subparsers.add_parser("onboard", help="Interactive 30-second developer fast-onboarding wizard for Cursor, Cloudflare, Gemini, Claude, AutoGen, OpenAI, and Escrows")
+    onboard_parser.add_argument("--target", "-t", choices=["cursor", "windsurf", "vscode", "cloudflare", "gemini", "claude", "autogen", "openai", "langchain", "crewai", "escrow", "license"], help="Directly configure target setup")
 
     # daemon
     daemon_parser = subparsers.add_parser("daemon", help="Manage background guard daemon and autonomous M2M wire clearing")
@@ -3096,7 +3096,7 @@ def main():
     subparsers.add_parser("bartholomew", help="Display Bartholomew's sovereign sentinel introduction and guardian oath")
 
     # models (Frontier Model Protection Matrix)
-    subparsers.add_parser("models", help="List protected frontier models (GPT-Astra, Claude 3.7, Gemini 2.0, DeepSeek-R1)")
+    subparsers.add_parser("models", help="List protected frontier models (GPT-Astra, Claude 3.7, Gemini 3.8, DeepSeek-R1)")
 
     # companion (Interactive Sentinel Companion Session)
     comp_p = subparsers.add_parser("companion", help="Interactive terminal session conversing with Bartholomew Sentinel Companion")
