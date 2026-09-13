@@ -330,7 +330,7 @@ function runActivate(key) {
   console.log(`\nChoose a plan to upgrade your agent runtime:`);
   console.log(`  [1] Pro Developer Tier ($49/mo)      - Cloud Telemetry Dashboard & Instant Slack Alerts`);
   console.log(`      ${CYAN}${STRIPE_PRO_URL}${RESET}`);
-  console.log(`  [2] Enterprise Fleet Tier ($299/mo)  - Continuous SOC 2 Evidence Bundles & Multi-Tenant Workspaces`);
+  console.log(`  [2] Enterprise Fleet Tier ($199/mo)  - Continuous SOC 2 Evidence Bundles & Multi-Tenant Workspaces`);
   console.log(`      ${CYAN}${STRIPE_ENTERPRISE_URL}${RESET}`);
   console.log(`  [3] Official Storefront & Pricing:`);
   console.log(`      ${CYAN}${STORE_URL}${RESET}`);

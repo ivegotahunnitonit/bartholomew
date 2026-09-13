@@ -121,11 +121,11 @@ Bartholomew is fully open-source and offline for local developer workflows. For 
 |---|---|---|---|
 | **Community (OSS)** | **Free Forever** | Solo Devs & Local Scripts | In-process sub-35µs AST gate, offline Ed25519 receipts, secret scrubber, MIT license |
 | **Pro / Team** | **$49 / month** | Startups & Engineering Teams | [Cloud Telemetry Dashboard](https://bartholomew.info/cloud), instant Slack/Discord threat alerts, fleet API keys, policy sync |
-| **Enterprise** | **$299 / month** | Scale-ups, FinTech & Healthcare | Continuous 1-click SOC 2 Type II evidence bundles, multi-tenant workspace isolation, dedicated CISO ledger, priority SLA |
+| **Enterprise** | **$199 / month** | Scale-ups, FinTech & Healthcare | Continuous 1-click SOC 2 Type II evidence bundles, multi-tenant workspace isolation, dedicated CISO ledger, priority SLA |
 
 👉 **Get Started & Upgrade:**
 - **Pro Edition ($49/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
-- **Enterprise Edition ($299/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
+- **Enterprise Edition ($199/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
 - **CLI Activation:** Run `npx btp-guard activate <key>` or `btp-guard pricing`
 - **Pricing & Storefront:** [https://bartholomew.info/pricing](https://bartholomew.info/pricing)
 
