@@ -381,6 +381,7 @@ def test_gemini_voice_tool_declarations():
     """Verify function calling schemas registered for Gemini Live full-duplex session."""
     from src.voice.sales_persona import VOICE_TOOL_DECLARATIONS
     tool_names = [t["name"] for t in VOICE_TOOL_DECLARATIONS]
+    assert "check_framework_compatibility" in tool_names
     assert "dispatch_quickstart_email" in tool_names
     assert "log_detected_stack" in tool_names
     assert "schedule_followup" in tool_names
@@ -415,3 +416,56 @@ def test_modular_prompt_engine_stages():
         current_stage=ConversationStage.ACTION_DISPATCH
     )
     assert "CURRENT OBJECTIVE: OFFER LOW-FRICTION TECHNICAL ASSET" in p_dispatch
+
+
+def test_framework_compatibility_lookup():
+    """Verify sub-35 microsecond lookup and integration facts for AI frameworks."""
+    from src.voice.sales_persona import get_framework_compatibility_info
+
+    lg = get_framework_compatibility_info("LangGraph")
+    assert lg["supported"] is True
+    assert lg["latency_microseconds"] <= 35
+    assert "LangGraph" in lg["framework"]
+
+    cc = get_framework_compatibility_info("claude_code")
+    assert cc["supported"] is True
+    assert "AnthropicComputerUseGuard" in cc["integration"]
+
+    generic = get_framework_compatibility_info("custom_inhouse_agent")
+    assert generic["supported"] is True
+    assert generic["latency_microseconds"] == 35
+
+
+def test_build_natural_ssml():
+    """Verify SSML synthesis adds prosodic tags and escapes characters."""
+    from src.voice.sales_persona import build_natural_ssml
+
+    raw = "Hey, Alex here. We do AST filtering in under 35µs for your CLI tools..."
+    ssml = build_natural_ssml(raw)
+    assert "<prosody rate=\"103%\">" in ssml
+    assert "</prosody>" in ssml
+    assert '<say-as interpret-as="characters">AST</say-as>' in ssml
+    assert '<say-as interpret-as="characters">CLI</say-as>' in ssml
+    assert '<break time="150ms"/>' in ssml
+    assert "35 microseconds" in ssml
+
+
+def test_find_matching_objection_reply():
+    """Verify rapid detection and authoritative answers to developer curveballs."""
+    from src.voice.sales_persona import find_matching_objection_reply
+
+    r_ai = find_matching_objection_reply("Wait, are you an AI or a human?")
+    assert r_ai is not None
+    assert "Gemini Live" in r_ai
+
+    r_obs = find_matching_objection_reply("We already use LangSmith for tracing")
+    assert r_obs is not None
+    assert "tracing" in r_obs
+
+    r_ebpf = find_matching_objection_reply("Is this based on eBPF?")
+    assert r_ebpf is not None
+    assert "kernel" in r_ebpf
+
+    r_none = find_matching_objection_reply("The weather in Calgary is nice today")
+    assert r_none is None
+

@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Pause length="1"/>
-    <Say voice="Polly.Joey-Neural">
-        Hey! This is Alex from Bartholomew.
-        Saw your team is building with autonomous agents in production.
-        Did I catch you in the middle of something?
+    <Say voice="Google.en-US-Journey-D">
+        <prosody rate="103%">Hey, Alex here from Bartholomew. Saw you guys are building with AI agents — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?</prosody>
     </Say>
     <Pause length="3"/>
-    <Say voice="Polly.Joey-Neural">
-        We built Bartholomew, an open source in-process AST security runtime and firewall for AI agents.
-        When agents execute terminal, code, or SQL tools, prompt injections or hallucinations can run destructive commands like rm -rf or drop tables.
-        Our engine intercepts and blocks dangerous commands in under 35 microseconds before anything hits your operating system or database.
+    <Say voice="Google.en-US-Journey-D">
+        <prosody rate="103%">We built Bartholomew, an open-source in-process execution firewall for AI agents. It intercepts and blocks dangerous commands in under 35 microseconds before anything hits your operating system or database.</prosody>
     </Say>
     <Pause length="2"/>
-    <Say voice="Polly.Joey-Neural">
-        It integrates with CrewAI, LangGraph, or AutoGen in a single line of Python with pip install btp-guard.
-        Check out the code and documentation at bartholomew dot info.
-        Thanks for taking the call, and talk soon!
+    <Say voice="Google.en-US-Journey-D">
+        <prosody rate="103%">It integrates with LangGraph, CrewAI, AutoGen, and Cursor with a single line: pip install btp-guard. I'll shoot a 1-page quickstart over to your inbox. Have a great day!</prosody>
     </Say>
 </Response>

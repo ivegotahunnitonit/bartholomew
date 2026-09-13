@@ -24,7 +24,8 @@ from src.voice.sales_persona import (
     CallRecipientType,
     ConversationStage,
     LiveCallState,
-    VOICE_TOOL_DECLARATIONS
+    VOICE_TOOL_DECLARATIONS,
+    get_framework_compatibility_info
 )
 
 logger = logging.getLogger("btp.voice.gemini_live")
@@ -250,6 +251,12 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                                         time_pref = fc.args.get("preferred_time", "this week") if fc.args else "this week"
                                         email = fc.args.get("email", call_state.captured_email or "") if fc.args else ""
                                         result_data = {"status": "scheduled", "time_window": time_pref, "email": email}
+
+                                    elif fc.name == "check_framework_compatibility":
+                                        fw_name = fc.args.get("framework_name", "").lower().strip() if fc.args else ""
+                                        compat_info = get_framework_compatibility_info(fw_name)
+                                        call_state.detected_frameworks.add(compat_info.get("framework", fw_name))
+                                        result_data = compat_info
 
                                     elif fc.name == "drop_voicemail_and_hangup":
                                         call_state.recipient_type = CallRecipientType.VOICEMAIL

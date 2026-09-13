@@ -22,7 +22,10 @@ from .sales_persona import (
     OBJECTIONS,
     generate_session_instructions,
     generate_voicemail_text,
-    format_speech_for_natural_delivery
+    format_speech_for_natural_delivery,
+    build_natural_ssml,
+    find_matching_objection_reply,
+    get_framework_compatibility_info
 )
 from .lead_manager import LeadManager, Lead, LeadStatus
 from .realtime_session import RealtimeVoiceSession
@@ -112,7 +115,24 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
         except Exception as exc:
             logger.error(f"GenAI error: {exc}")
 
-    return "Fair enough! Are you guys currently letting agents run tools hands-free, or still having engineers manually approve every action?"
+    # High-signal fallback if API key missing or model unreachable:
+    objection_reply = find_matching_objection_reply(user_speech)
+    if objection_reply:
+        return format_speech_for_natural_delivery(objection_reply)
+
+    if call_state.detected_frameworks:
+        fw = list(call_state.detected_frameworks)[0]
+        fw_info = get_framework_compatibility_info(fw)
+        return format_speech_for_natural_delivery(
+            f"Oh 100%, we integrate with {fw_info['framework']} natively. {fw_info['key_feature']}. "
+            f"Are you guys currently seeing runaway spend or tool stalls in staging?"
+        )
+
+    speech_lower = user_speech.lower()
+    if any(w in speech_lower for w in ["yes", "sure", "send", "link", "email"]):
+        return "Awesome! What is the best email address to shoot the 1-page quickstart repo link over to?"
+
+    return "Fair play! Are you guys currently letting agents run tools hands-free, or still having engineers manually approve every action?"
 
 
 # ---------------------------------------------------------------------------
@@ -194,7 +214,7 @@ async def voice_voicemail_drop(request: Request):
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Pause length="1"/>
-    <Say voice="Polly.Joey-Neural">{voicemail_msg}</Say>
+    <Say voice="Google.en-US-Journey-D">{build_natural_ssml(voicemail_msg)}</Say>
     <Hangup/>
 </Response>"""
     return Response(content=twiml, media_type="application/xml")
@@ -256,11 +276,16 @@ async def voice_interactive_start(request: Request):
             public_base = config.public_base_url.rstrip("/")
 
     respond_url = f"{public_base}/voice/respond"
+    opener_text = (
+        "Hey, Alex here from Bartholomew. Saw you guys are building with AI agents — "
+        "quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?"
+    )
+    opener_ssml = build_natural_ssml(opener_text)
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
-        <Say voice="Google.en-US-Journey-D">Hey, Alex here from Bartholomew. Saw you guys are building with AI agents — quick question: are you letting them run shell tools freely, or still stuck babysitting every command with manual approvals?</Say>
+    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6" bargeIn="true" speechModel="phone_call">
+        <Say voice="Google.en-US-Journey-D">{opener_ssml}</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>""".strip()
@@ -305,8 +330,8 @@ async def voice_interactive_respond(request: Request):
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6">
-        <Say voice="Google.en-US-Journey-D">{reply}</Say>
+    <Gather input="speech dtmf" action="{respond_url}" method="POST" speechTimeout="auto" timeout="6" bargeIn="true" speechModel="phone_call">
+        <Say voice="Google.en-US-Journey-D">{build_natural_ssml(reply)}</Say>
     </Gather>
     <Redirect method="POST">{respond_url}</Redirect>
 </Response>"""
