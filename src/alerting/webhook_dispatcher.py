@@ -21,7 +21,7 @@ import urllib.request
 import urllib.error
 from enum import Enum
 from dataclasses import dataclass, field, asdict
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional, Callable, Union, Tuple
 
 
 class AlertSeverity(str, Enum):
