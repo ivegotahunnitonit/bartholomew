@@ -188,15 +188,16 @@ def test_massive_hermetic_path_containment(case_id, attack_path, tmp_path):
     os.makedirs(sandbox_root, exist_ok=True)
 
     # Sanitize and resolve target path
-    decoded_path = urllib.parse.unquote(attack_path)
+    decoded_path = urllib.parse.unquote(attack_path).replace("\\", "/")
     abs_target = os.path.abspath(os.path.join(sandbox_root, decoded_path))
     
     is_safe = False
     try:
         common = os.path.commonpath([sandbox_root, abs_target])
         if common == sandbox_root:
-            forbidden_names = [".env", "id_rsa", "id_ed25519", "sam", "system", "shadow", "credentials.json", "passwd", "private_key.pem"]
-            if os.path.basename(abs_target).lower() not in forbidden_names:
+            forbidden_names = {".env", "id_rsa", "id_ed25519", "sam", "system", "shadow", "credentials.json", "passwd", "private_key.pem", "credentials"}
+            target_parts = {p.lower() for p in os.path.normpath(abs_target).replace("\\", "/").split("/")}
+            if not target_parts.intersection(forbidden_names):
                 is_safe = True
     except ValueError:
         is_safe = False
