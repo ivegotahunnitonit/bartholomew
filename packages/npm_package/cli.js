@@ -180,8 +180,10 @@ app = guard.wrap_graph(workflow.compile())${RESET}`);
 guard = Guard()
 is_safe, violation = guard.check(command_or_sql)${RESET}`);
   }
-  console.log('='.repeat(65));
-  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.8!${RESET}\n`);
+  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.10!${RESET}`);
+  console.log(`\n${BOLD}💡 Need Fleet Monitoring or Live Threat Alerts?${RESET}`);
+  console.log(`  -> Cloud Console:   ${CYAN}https://bartholomew.info/cloud${RESET}`);
+  console.log(`  -> Team Editions:   ${CYAN}npx btp-guard pricing${RESET}  or  ${CYAN}https://bartholomew.info/pricing${RESET}\n`);
 }
 
 function runScrub(targetFile) {
@@ -326,11 +328,11 @@ function runActivate(key) {
   }
 
   console.log(`\nChoose a plan to upgrade your agent runtime:`);
-  console.log(`  [1] Pro Developer Tier ($49/mo)      - Unlimited local evals & cloud policy sync`);
+  console.log(`  [1] Pro Developer Tier ($49/mo)      - Cloud Telemetry Dashboard & Instant Slack Alerts`);
   console.log(`      ${CYAN}${STRIPE_PRO_URL}${RESET}`);
-  console.log(`  [2] Enterprise SOC 2 Tier ($199/mo)  - Continuous SOC 2 / ISO 27001 evidence bundles`);
+  console.log(`  [2] Enterprise Fleet Tier ($299/mo)  - Continuous SOC 2 Evidence Bundles & Multi-Tenant Workspaces`);
   console.log(`      ${CYAN}${STRIPE_ENTERPRISE_URL}${RESET}`);
-  console.log(`  [3] Official Storefront:`);
+  console.log(`  [3] Official Storefront & Pricing:`);
   console.log(`      ${CYAN}${STORE_URL}${RESET}`);
   console.log(`\nTo activate your key, run:`);
   console.log(`  ${BOLD}npx btp-guard activate <your-license-key>${RESET}\n`);

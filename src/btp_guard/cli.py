@@ -46,11 +46,12 @@ def cmd_pricing(args):
     print("   [+] Up to 10M agent tool evaluations / month")
     print("   [+] Priority MCP registry indexing & cloud policy sync")
     print("   -> Checkout: https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600")
-    print("\n3. Enterprise Fleet ($199 / month):")
+    print("\n3. Enterprise Fleet ($299 / month):")
     print("   [+] Multi-tenant workspace isolation & tenant role enforcement")
     print("   [+] Continuous 1-click SOC 2 Type II & ISO 27001 compliance evidence packs")
     print("   [+] eBPF kernel-level syscall tracing & dedicated CISO ledger")
     print("   -> Checkout: https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601")
+    print("\nPricing & Storefront: https://bartholomew.info/pricing")
     print("=" * 70 + "\n")
 
 

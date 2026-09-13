@@ -5,6 +5,8 @@
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
+[![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
+[![Pricing](https://img.shields.io/badge/Pricing-Plans-10b981)](https://bartholomew.info/pricing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-2837%20passing-brightgreen)](tests/)
 
@@ -111,6 +113,24 @@ Config examples for each IDE are in [`examples/ides/`](examples/ides/).
 
 ---
 
+## Editions & Cloud Console
+
+Bartholomew is fully open-source and offline for local developer workflows. For engineering teams deploying multi-agent swarms in production, the Cloud Console provides centralized fleet monitoring, instant threat alerts, and automated compliance reports:
+
+| Edition | Pricing | Ideal For | Core Capabilities |
+|---|---|---|---|
+| **Community (OSS)** | **Free Forever** | Solo Devs & Local Scripts | In-process sub-35µs AST gate, offline Ed25519 receipts, secret scrubber, MIT license |
+| **Pro / Team** | **$49 / month** | Startups & Engineering Teams | [Cloud Telemetry Dashboard](https://bartholomew.info/cloud), instant Slack/Discord threat alerts, fleet API keys, policy sync |
+| **Enterprise** | **$299 / month** | Scale-ups, FinTech & Healthcare | Continuous 1-click SOC 2 Type II evidence bundles, multi-tenant workspace isolation, dedicated CISO ledger, priority SLA |
+
+👉 **Get Started & Upgrade:**
+- **Pro Edition ($49/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
+- **Enterprise Edition ($299/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
+- **CLI Activation:** Run `npx btp-guard activate <key>` or `btp-guard pricing`
+- **Pricing & Storefront:** [https://bartholomew.info/pricing](https://bartholomew.info/pricing)
+
+---
+
 ## Architecture
 
 ```
@@ -189,21 +209,7 @@ pytest tests/ -o "pythonpath=src ." -q
 pip install ruff && ruff check src/ tests/
 ```
 
----
 
-## Editions
-
-| | Community | Pro | Enterprise |
-|---|---|---|---|
-| Price | Free | $49/mo | Contact sales |
-| In-process AST gate | ✓ | ✓ | ✓ |
-| Offline Ed25519 receipts | ✓ | ✓ | ✓ |
-| Cloud telemetry dashboard | — | ✓ | ✓ |
-| Multi-tenant fleet control | — | — | ✓ |
-| eBPF kernel tracing | — | — | ✓ |
-| Dedicated CISO audit ledger | — | — | ✓ |
-
-[Upgrade to Pro](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600) · [Enterprise](https://bartholomew.info/enterprise) · [Cloud Dashboard](https://bartholomew.info/cloud)
 
 ---
 
