@@ -22,7 +22,9 @@ from src.voice.sales_persona import (
     generate_voicemail_text,
     classify_recipient_intent,
     CallRecipientType,
-    LiveCallState
+    ConversationStage,
+    LiveCallState,
+    VOICE_TOOL_DECLARATIONS
 )
 
 logger = logging.getLogger("btp.voice.gemini_live")
@@ -32,7 +34,8 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
     """
     Handles bidirectional Twilio WebSocket MediaStream to Gemini Live.
     Extracts caller context, discriminates between live humans and voicemails,
-    and enforces AI-proofed professional conversation standards.
+    enforces AI-proofed professional conversation standards, and handles
+    autonomous in-call tool calling.
     """
     await websocket.accept()
     logger.info("Twilio Media Stream WebSocket accepted.")
@@ -54,11 +57,15 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
     client = genai.Client(api_key=api_key)
 
     # Compile dynamic prompt with prospect context and AI-proofing
+    call_state = LiveCallState(prospect_name=prospect_name, company_name=company_name)
     instruction_text = generate_session_instructions(
         prospect_name=prospect_name,
         company_name=company_name,
-        tech_stack=tech_stack
+        tech_stack=tech_stack,
+        current_stage=call_state.stage
     )
+
+    gemini_tools = [types.Tool(function_declarations=VOICE_TOOL_DECLARATIONS)]
 
     config = types.LiveConnectConfig(
         response_modalities=["AUDIO"],
@@ -71,7 +78,8 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
         ),
         system_instruction=types.Content(
             parts=[types.Part.from_text(text=instruction_text)]
-        )
+        ),
+        tools=gemini_tools
     )
 
     model = os.getenv("GEMINI_LIVE_MODEL", "gemini-2.5-flash-native-audio-latest")
@@ -195,6 +203,54 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                                                     "media": {"payload": b64_payload}
                                                 })
                                                 await websocket.send_text(msg)
+
+                            # Handle autonomous function/tool calls from Gemini Live
+                            if response.tool_call:
+                                for fc in response.tool_call.function_calls:
+                                    logger.info(f"[TOOL_CALL] Gemini invoked '{fc.name}' with args: {fc.args}")
+                                    call_state.dispatched_tools.append(fc.name)
+                                    result_data = {"status": "success"}
+
+                                    if fc.name == "dispatch_quickstart_email":
+                                        email = fc.args.get("email") if fc.args else None
+                                        if email:
+                                            call_state.captured_email = email
+                                            call_state.stage = ConversationStage.WRAP_UP
+                                            phone = query_params.get("phone")
+                                            if phone:
+                                                try:
+                                                    from src.voice.twilio_server import send_outbound_sms
+                                                    asyncio.create_task(send_outbound_sms(phone, email=email, lead_name=prospect_name))
+                                                except Exception as ex:
+                                                    logger.warning(f"SMS dispatch note: {ex}")
+                                        result_data = {
+                                            "status": "dispatched",
+                                            "message": f"Quickstart repository and architecture overview dispatched to {email}."
+                                        }
+
+                                    elif fc.name == "log_detected_stack":
+                                        frameworks = fc.args.get("frameworks", []) if fc.args else []
+                                        pains = fc.args.get("pain_points", []) if fc.args else []
+                                        call_state.detected_frameworks.update(frameworks)
+                                        call_state.detected_pains.update(pains)
+                                        result_data = {"status": "logged", "frameworks": list(frameworks)}
+
+                                    elif fc.name == "schedule_followup":
+                                        time_pref = fc.args.get("preferred_time", "this week") if fc.args else "this week"
+                                        email = fc.args.get("email", call_state.captured_email or "") if fc.args else ""
+                                        result_data = {"status": "scheduled", "time_window": time_pref, "email": email}
+
+                                    elif fc.name == "drop_voicemail_and_hangup":
+                                        call_state.recipient_type = CallRecipientType.VOICEMAIL
+                                        call_state.stage = ConversationStage.VOICEMAIL_DROP
+                                        result_data = {"status": "voicemail_ready"}
+
+                                    fn_response = types.FunctionResponse(
+                                        name=fc.name,
+                                        id=fc.id,
+                                        response=result_data
+                                    )
+                                    await session.send_tool_response(function_responses=[fn_response])
                     except (WebSocketDisconnect, RuntimeError):
                         logger.info("Twilio WebSocket closed during audio output.")
                         break

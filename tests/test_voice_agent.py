@@ -349,3 +349,70 @@ def test_fastapi_endpoints():
         if original_leads_content is not None:
             lead_mgr.storage_file.write_bytes(original_leads_content)
             lead_mgr._load_or_seed()
+
+
+def test_intent_driven_curiosity_and_objection_holding():
+    """Verify that technical inquiries hold the stage without prematurely rushing to close."""
+    state = LiveCallState(prospect_name="Elena", company_name="Sovereign AI Systems")
+    assert state.stage == ConversationStage.GREETING_AND_HOOK
+
+    # Turn 1: Acknowledge hook
+    s1 = state.advance_turn("Hey Alex, yeah I have 30 seconds. What's this about?")
+    assert s1 == ConversationStage.TECHNICAL_DISCOVERY
+
+    # Turn 2: Mention stack
+    s2 = state.advance_turn("We run LangGraph agents with custom tools on AWS.")
+    assert "langgraph" in state.detected_frameworks
+    assert s2 in (ConversationStage.PAIN_AMPLIFICATION, ConversationStage.SOLUTION_FRAMING)
+
+    # Turn 3: Technical inquiry - MUST hold in SOLUTION_FRAMING, not rush to close!
+    s3 = state.advance_turn("How does Bartholomew achieve sub-35us latency without calling an LLM guardrail?")
+    assert s3 == ConversationStage.SOLUTION_FRAMING
+
+    # Turn 4: Objection raised - transitions to OBJECTION_RESOLUTION
+    s4 = state.advance_turn("Wait, are you an AI or a real engineer?")
+    assert s4 == ConversationStage.OBJECTION_RESOLUTION
+
+    # Turn 5: Receptive consent given -> ACTION_DISPATCH
+    s5 = state.advance_turn("That's impressive. Sure, shoot me the quickstart repo link.")
+    assert s5 == ConversationStage.ACTION_DISPATCH
+
+
+def test_gemini_voice_tool_declarations():
+    """Verify function calling schemas registered for Gemini Live full-duplex session."""
+    from src.voice.sales_persona import VOICE_TOOL_DECLARATIONS
+    tool_names = [t["name"] for t in VOICE_TOOL_DECLARATIONS]
+    assert "dispatch_quickstart_email" in tool_names
+    assert "log_detected_stack" in tool_names
+    assert "schedule_followup" in tool_names
+    assert "drop_voicemail_and_hangup" in tool_names
+
+    email_tool = next(t for t in VOICE_TOOL_DECLARATIONS if t["name"] == "dispatch_quickstart_email")
+    assert "email" in email_tool["parameters"]["required"]
+    assert "recipient_name" in email_tool["parameters"]["properties"]
+
+
+def test_modular_prompt_engine_stages():
+    """Verify that dynamic stage instructions inject stage-specific technical objectives."""
+    p_discovery = generate_session_instructions(
+        prospect_name="Marcus",
+        company_name="Astra Labs",
+        current_stage=ConversationStage.TECHNICAL_DISCOVERY
+    )
+    assert "CURRENT OBJECTIVE: TECHNICAL DISCOVERY" in p_discovery
+    assert "Marcus" in p_discovery
+
+    p_solution = generate_session_instructions(
+        prospect_name="Marcus",
+        company_name="Astra Labs",
+        current_stage=ConversationStage.SOLUTION_FRAMING
+    )
+    assert "CURRENT OBJECTIVE: HIGH-SIGNAL ARCHITECTURAL INSIGHT" in p_solution
+    assert "35 microseconds" in p_solution
+
+    p_dispatch = generate_session_instructions(
+        prospect_name="Marcus",
+        company_name="Astra Labs",
+        current_stage=ConversationStage.ACTION_DISPATCH
+    )
+    assert "CURRENT OBJECTIVE: OFFER LOW-FRICTION TECHNICAL ASSET" in p_dispatch
