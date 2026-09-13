@@ -1,4 +1,4 @@
-# Bartholomew Trust Protocol (BTP Guard v5.4.4) — Kubernetes Deployment
+# Bartholomew Trust Protocol (BTP Guard v5.4.10) — Kubernetes Deployment
 
 Enterprise deployment package for running Bartholomew Guard as an in-process sidecar or cluster-wide Layer-7 execution gateway.
 
@@ -8,7 +8,7 @@ Enterprise deployment package for running Bartholomew Guard as an in-process sid
 [Agent Pod / Swarm Worker] 
         │
         ▼ (Local IPC / localhost:8080)
-[Bartholomew Guard Sidecar (v5.4.4)]  <── Sub-35µs AST Invariant Gate & Merkle Receipts
+[Bartholomew Guard Sidecar (v5.4.10)]  <── Sub-35µs AST Invariant Gate & Merkle Receipts
         │
         ├─► [ALLOW] ──► OS Syscall / External LLM API
         └─► [VETO]  ──► Drops execution, issues signed compliance receipt
@@ -21,7 +21,7 @@ Enterprise deployment package for running Bartholomew Guard as an in-process sid
 helm upgrade --install bartholomew-guard ./k8s \
   --namespace btp-security \
   --create-namespace \
-  --set image.tag="5.4.4" \
+  --set image.tag="5.4.10" \
   --set policy.spendCapUsd=500.00
 ```
 
@@ -48,7 +48,7 @@ docker run -d \
   -p 8080:8080 \
   -e BTP_STRICT_MODE=true \
   -e BTP_MAX_SPEND_CAP_USD=100.00 \
-  ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.4
+  ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.10
 ```
 
 ## Support & Enterprise Consultation
