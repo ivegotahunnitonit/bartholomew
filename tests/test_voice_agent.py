@@ -466,6 +466,22 @@ def test_find_matching_objection_reply():
     assert r_ebpf is not None
     assert "kernel" in r_ebpf
 
+    r_proof = find_matching_objection_reply("Who else uses this in production?")
+    assert r_proof is not None
+    assert "Synthetix" in r_proof
+
+    r_time = find_matching_objection_reply("How long does it take to integrate?")
+    assert r_time is not None
+    assert "five minutes" in r_time
+
+    r_air = find_matching_objection_reply("Can we run this offline in an air gapped VPC?")
+    assert r_air is not None
+    assert "offline" in r_air
+
+    r_spend = find_matching_objection_reply("Can it stop runaway spend from infinite loops?")
+    assert r_spend is not None
+    assert "recursive" in r_spend
+
     r_none = find_matching_objection_reply("The weather in Calgary is nice today")
     assert r_none is None
 

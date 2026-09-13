@@ -754,6 +754,31 @@ OBJECTIONS: List[ObjectionResponse] = [
         suggested_reply="We respect in-house tooling. Most internal implementations rely on regex patterns that are easily bypassed by LLM formatting variations, whereas Bartholomew performs bit-level AST validation.",
     ),
     ObjectionResponse(
+        category="social_proof",
+        keywords=["who else uses", "who uses you", "customers", "case studies", "references"],
+        suggested_reply="We protect autonomous pipelines across fintech and code-gen teams like Synthetix and VectorFlow, intercepting thousands of agent tool actions daily. Most teams drop it in as a single pre-flight decorator.",
+    ),
+    ObjectionResponse(
+        category="integration_time",
+        keywords=["how long does it take", "how hard to integrate", "setup time", "time to deploy", "onboarding"],
+        suggested_reply="Literally under five minutes -- it is pip install btp-guard, import the decorator, and wrap your tool dispatch. Zero schema changes or cloud dependencies required. What does your deployment pipeline look like?",
+    ),
+    ObjectionResponse(
+        category="air_gapped",
+        keywords=["offline", "air gapped", "air-gapped", "private cloud", "on prem", "on-premise", "vpc"],
+        suggested_reply="100% offline. The AST parsing is purely in-process in memory with zero external API calls or telemetry required unless you opt into signed audit receipts. Do you run air-gapped clusters?",
+    ),
+    ObjectionResponse(
+        category="proxy_vs_sdk",
+        keywords=["is this a proxy", "sdk or proxy", "sidecar or sdk", "middleware or proxy", "architecture"],
+        suggested_reply="It is an in-process SDK and decorator that executes right inside your runtime before syscalls hit the socket, plus we offer an HTTP sidecar proxy if you prefer a containerized sidecar. Which architecture fits your stack best?",
+    ),
+    ObjectionResponse(
+        category="spend_loop_control",
+        keywords=["runaway spend", "token burn", "infinite loop", "budget limits", "cost controls", "recursion"],
+        suggested_reply="Yes! We do deterministic sliding-window token burn and loop detection in-process, shutting down recursive runaways before they rack up surprise API bills. Ever had an agent get stuck in a recursive loop?",
+    ),
+    ObjectionResponse(
         category="wrong_person",
         keywords=["wrong person", "not me", "not my department", "talk to", "reach out to"],
         suggested_reply="Understood. Who on your engineering leadership team oversees autonomous agent infrastructure and tool safety?",
