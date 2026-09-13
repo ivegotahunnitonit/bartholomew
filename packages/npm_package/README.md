@@ -95,6 +95,24 @@ npx btp-guard scrub payload.json
 
 ---
 
+## Editions & Commercial Licensing
+
+`btp-guard` is free and open-source for local execution. For engineering teams deploying multi-agent swarms in staging or production:
+
+| Edition | Price | Ideal For | Core Capabilities |
+|---|---|---|---|
+| **Community (OSS)** | **Free Forever** | Solo Devs & Local Scripts | In-process sub-35µs AST gate, offline Ed25519 receipts, secret scrubber, MIT license |
+| **Pro / Team** | **$49 / month** | Startups & Engineering Teams | [Cloud Telemetry Dashboard](https://bartholomew.info/cloud), instant Slack/Discord threat alerts, fleet API keys, policy sync |
+| **Enterprise** | **$199 / month** | Scale-ups, FinTech & Healthcare | Continuous 1-click SOC 2 Type II evidence bundles, multi-tenant workspace isolation, dedicated CISO ledger, priority SLA |
+
+👉 **Checkout & Upgrades:**
+- **Pro Tier ($49/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600)
+- **Enterprise Tier ($199/mo):** [Direct Stripe Checkout](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
+- **CLI Activation:** Run `npx btp-guard activate <key>` or `npx btp-guard pricing`
+- **Pricing & Storefront:** [https://bartholomew.info/pricing](https://bartholomew.info/pricing)
+
+---
+
 ## Enterprise Quality & Compliance
 
 - **Zero External Dependencies**: Pure Node.js standard library. No supply chain exposure.
