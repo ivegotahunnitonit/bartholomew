@@ -1,7 +1,7 @@
 """
 AutoGen + BTP Guard: Multi-Agent GroupChat with Dynamic Consensus Rebalancing
 =============================================================================
-Demonstrates how AutoGen multi-agent group chats use AutoGenBTPInterceptor
+Demonstrates how AutoGen multi-agent group chats use BTP Interceptors
 and DynamicThresholdRebalancer to protect against Byzantine peer agents.
 
 Run:
@@ -11,13 +11,49 @@ Run:
 import sys
 import os
 import time
+from typing import Dict, Any, List
 
 # Add root directory to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from framework_adapters.autogen.autogen_btp_interceptor import AutoGenBTPInterceptor
 from src.ebpf_kernel_guard import DynamicThresholdRebalancer, KernelSyscallEvent
-from src.trust_protocol import BartholomewTrustAuthority
+from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+
+
+class AutoGenBTPInterceptor:
+    """
+    In-process message interceptor for AutoGen GroupChat Managers.
+    Validates cryptographic BTP attestations and drops untrusted/tampered messages.
+    """
+
+    def __init__(self, trusted_authorities: List[str], recipient_id: str):
+        self.trusted_authorities = trusted_authorities
+        self.recipient_id = recipient_id
+        self.verifier = IndependentTrustVerifier()
+
+    def intercept_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        envelope = message.get("btp_envelope")
+        if not envelope:
+            return {"status": "REJECTED", "reason": "Missing BTP attestation envelope"}
+
+        content = message.get("content", {})
+        valid, msg = self.verifier.verify_attestation(
+            envelope,
+            expected_payload=content,
+            trusted_root_pubkey=self.trusted_authorities[0]
+        )
+        if not valid:
+            return {"status": "REJECTED", "reason": msg}
+
+        # Check recipient routing
+        attestation = envelope.get("attestation", {})
+        if attestation.get("target_recipient") != self.recipient_id:
+            return {
+                "status": "REJECTED",
+                "reason": f"Recipient mismatch: expected {self.recipient_id}, got {attestation.get('target_recipient')}"
+            }
+
+        return {"status": "ACCEPTED", "message": message}
 
 
 def main():
