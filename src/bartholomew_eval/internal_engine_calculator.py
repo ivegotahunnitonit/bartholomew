@@ -103,7 +103,7 @@ class InternalEngineCalculator:
         actual_tokens: int = 420,
         unoptimized_latency_ms: float = 1200.0,
         actual_latency_ms: float = 0.0076,
-        sample_payload_text: str = "sk-proj-99887766554433221100"
+        sample_payload_text: str = "sk-proj-placeholder-00000000000000"
     ) -> Dict[str, Any]:
         """
         Generates full proprietary system assessment report including Bayesian Risk and Information Entropy.

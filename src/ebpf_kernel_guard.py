@@ -71,7 +71,12 @@ class KernelSecurityPolicy:
         if port in blocked_ports:
             return False, f"BTP-KERNEL-003: Network connection to blocked port {port} denied."
         if self.network_egress_restricted:
-            allowed_hosts = {"localhost", "127.0.0.1", "bartholomew.info", "api.anthropic.com", "api.openai.com"}
+            allowed_hosts = {
+                "localhost", "127.0.0.1", "bartholomew.info",
+                "api.anthropic.com", "api.openai.com",
+                "generativelanguage.googleapis.com", "api.cloudflare.com",
+                "api.github.com", "api.gpt-astra.com"
+            }
             if destination not in allowed_hosts:
                 return False, f"BTP-KERNEL-004: Restricted egress violated: '{destination}' not in whitelist."
         return True, None

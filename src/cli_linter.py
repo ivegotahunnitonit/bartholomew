@@ -202,7 +202,13 @@ def print_audit_report(results: Dict[str, Any]):
 
         if len(results["issues"]) > 15:
             print(f"... and {len(results['issues']) - 15} more issues.")
-        print("\n[TIP] Fix: Wrap vulnerable tool functions with `@secure_tool` from `btp_guard`.")
+        print("\n[RECOMMENDED FIXES & DROP-IN INVARIANTS]:")
+        print("  • Google Gemini 3.8:    Wrap tools with `@btp_gemini_38_tool()` from `src.framework_integrations`")
+        print("  • Anthropic Claude 3.7: Intercept tool_use blocks with `Claude37ToolGuard`")
+        print("  • OpenAI Agents SDK:    Wrap dispatchers with `OpenAIToolGuard` from `examples.being_built`")
+        print("  • Microsoft AutoGen:    Attach pre-execution filter with `wrap_autogen_execution(agent)`")
+        print("  • Cloudflare Agents:    Deploy `@ivegotahunnitonit/bartholomew` MCP gateway or WireGuard sidecar")
+        print("  • Cursor & Windsurf:    Run `npx btp-guard init` to generate `.cursorrules` & `.cursor/rules/btp-guard.mdc`")
     else:
         print("\n[OK] ZERO RISKS DETECTED: Codebase is 100% compliant with OWASP LLM & SOC 2 standards.")
 

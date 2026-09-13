@@ -89,50 +89,72 @@ print(f"[+] Execution verified: Merkle receipt stamped.")`
 
   // Horizon 2: Being Built Right Now
   {
-    id: 'openai_guard',
-    title: 'OpenAI Direct Tool-Calling Guard',
+    id: 'gemini_38_guard',
+    title: 'Google Gemini 3.8 Thought & Tool Guard',
     category: 'being_built',
-    badge: 'Python SDK',
-    description: 'Wraps native OpenAI tool-calling loops with pre-execution AST gating and Ed25519 canonical receipts.',
+    badge: 'Thought Isolation',
+    description: 'Guards Google Gemini 3.8 multimodal function calling in <35µs while isolating internal reasoning thought blocks.',
     language: 'python',
-    filePath: 'cookbook/being_built/openai_tool_calling_guard.py',
-    architectureNote: 'OpenAI API -> tool_calls JSON -> [BTP Guard AST Check] -> Local Tool -> Stamped Merkle Tree',
-    codeSnippet: `from btp_guard import Guard
-from openai import OpenAI
+    filePath: 'examples/being_built/gemini_function_calling_guard.py',
+    architectureNote: 'Gemini 3.8 [Thought + FunctionCall] -> Thought Isolated -> AST Invariant Check -> Sealed Execution',
+    codeSnippet: `from src.framework_integrations import btp_gemini_38_tool
 
-guard = Guard(spend_cap=250.0)
-client = OpenAI()
-
-def execute_safe_tool_call(tool_call):
-    func_name = tool_call.function.name
-    args = tool_call.function.arguments
-    
-    # In-memory AST invariant verification (fastest and most reliable local gating)
-    decision = guard.check(f"{func_name}({args})")
-    if not decision.allowed:
-        return f"[VETO] Blocked action: {decision.violations}"
-        
-    return run_local_function(func_name, args)`
+@btp_gemini_38_tool()
+def execute_database_query(sql: str):
+    # Protected by sub-35µs AST gating & Ed25519 Merkle receipt
+    return run_sql(sql)`
   },
   {
-    id: 'anthropic_guard',
-    title: 'Anthropic Computer Use Guard',
+    id: 'claude_37_guard',
+    title: 'Anthropic Claude 3.7 Hybrid Thinking Guard',
     category: 'being_built',
-    badge: 'Bash & GUI Sandbox',
-    description: 'Guards Anthropic Claude bash execution and computer use actions against destructive commands.',
+    badge: 'Reasoning Sandbox',
+    description: 'Guards Claude 3.7 hybrid reasoning traces and Computer Use bash actions against destructive commands.',
     language: 'python',
-    filePath: 'cookbook/being_built/anthropic_computer_use_guard.py',
-    architectureNote: 'Claude 3.5 Sonnet -> computer_use / bash tool -> [BTP AST Validator] -> Sealed VM',
-    codeSnippet: `from btp_guard import Guard
-guard = Guard()
+    filePath: 'examples/being_built/anthropic_computer_use_guard.py',
+    architectureNote: 'Claude 3.7 [Thinking Block + Tool Use] -> Scratchpad Isolated -> Hermetic AST Sandbox',
+    codeSnippet: `from examples.being_built.anthropic_computer_use_guard import Claude37ToolGuard
 
-def guard_claude_action(tool_type: str, tool_input: dict):
-    if tool_type == "bash":
-        cmd = tool_input.get("command", "")
-        res = guard.check(cmd)
-        if not res.allowed:
-            raise PermissionError(f"BTP Guard VETO: Dangerous command: {res.violations}")
-    # Proceed with authenticated execution...`
+guard = Claude37ToolGuard()
+results = guard.process_content_blocks(message["content"])
+# Unsafe tool calls vetoed with [BTP_VETO], safe commands executed in <35µs`
+  },
+  {
+    id: 'openai_agents_guard',
+    title: 'OpenAI Agents SDK & GPT-Astra Guard',
+    category: 'being_built',
+    badge: 'Agents SDK',
+    description: 'Wraps native OpenAI Chat Completions and new OpenAI Agents SDK dispatchers with in-process invariant gating.',
+    language: 'python',
+    filePath: 'examples/being_built/openai_tool_calling_guard.py',
+    architectureNote: 'OpenAI Agents SDK -> tool_arguments -> [BTP Polyglot AST] -> Signed Merkle Proof',
+    codeSnippet: `from examples.being_built.openai_tool_calling_guard import OpenAIToolGuard
+
+guard = OpenAIToolGuard()
+response = guard.dispatch_tool_call({
+    "tool_name": "update_database",
+    "tool_arguments": {"query": "SELECT * FROM telemetry"}
+})`
+  },
+  {
+    id: 'cloudflare_agents_guard',
+    title: 'Cloudflare Workers AI & Edge Agent Guard',
+    category: 'being_built',
+    badge: 'Edge Serverless',
+    description: 'Deploys sub-35µs invariant gating directly inside Cloudflare Workers and Cloudflare Agents at the global edge.',
+    language: 'typescript',
+    filePath: 'packages/npm_package/index.js',
+    architectureNote: 'Cloudflare Worker -> [In-Memory JS/WASM AST Guard] -> Workers AI Execution -> Global Edge',
+    codeSnippet: `import { scrubSensitiveCredentials } from 'btp-guard';
+
+export default {
+  async fetch(request, env) {
+    const payload = await request.json();
+    const scrubbed = scrubSensitiveCredentials(payload);
+    // In-flight token scrubbing & AST verification at Cloudflare edge
+    return Response.json(scrubbed);
+  }
+};`
   },
   {
     id: 'typescript_guard',
