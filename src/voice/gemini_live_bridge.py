@@ -203,21 +203,43 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                                     if stream_sid:
                                         clear_msg = json.dumps({"event": "clear", "streamSid": stream_sid})
                                         await websocket.send_text(clear_msg)
+                                    try:
+                                        from src.voice.twilio_server import broadcast_event
+                                        asyncio.create_task(broadcast_event("stream_interrupted", {"stream_sid": stream_sid}))
+                                    except Exception:
+                                        pass
 
                                 # Forward synthesized native audio chunks to Twilio
                                 if sc.model_turn:
                                     for part in sc.model_turn.parts:
+                                        if getattr(part, "text", None):
+                                            try:
+                                                from src.voice.twilio_server import broadcast_event
+                                                asyncio.create_task(broadcast_event("live_transcript", {
+                                                    "speaker": "alex",
+                                                    "text": part.text,
+                                                    "stream_sid": stream_sid
+                                                }))
+                                            except Exception:
+                                                pass
+
                                         if part.inline_data and part.inline_data.data:
                                             pcm24k = part.inline_data.data
                                             mulaw8k = pcm24k_to_mulaw8k(pcm24k)
                                             if mulaw8k and stream_sid:
-                                                b64_payload = base64.b64encode(mulaw8k).decode("ascii")
-                                                msg = json.dumps({
-                                                    "event": "media",
-                                                    "streamSid": stream_sid,
-                                                    "media": {"payload": b64_payload}
-                                                })
-                                                await websocket.send_text(msg)
+                                                # Send in smooth 320-byte (40ms) packets to prevent Twilio buffer jitter
+                                                chunk_size = 320
+                                                for i in range(0, len(mulaw8k), chunk_size):
+                                                    chunk = mulaw8k[i:i + chunk_size]
+                                                    b64_payload = base64.b64encode(chunk).decode("ascii")
+                                                    msg = json.dumps({
+                                                        "event": "media",
+                                                        "streamSid": stream_sid,
+                                                        "media": {"payload": b64_payload}
+                                                    })
+                                                    await websocket.send_text(msg)
+                                                    if len(mulaw8k) > chunk_size * 2:
+                                                        await asyncio.sleep(0.015)
 
                             # Handle autonomous function/tool calls from Gemini Live
                             if response.tool_call:
@@ -225,6 +247,16 @@ async def handle_twilio_gemini_stream(websocket: WebSocket):
                                     logger.info(f"[TOOL_CALL] Gemini invoked '{fc.name}' with args: {fc.args}")
                                     call_state.dispatched_tools.append(fc.name)
                                     result_data = {"status": "success"}
+
+                                    try:
+                                        from src.voice.twilio_server import broadcast_event
+                                        asyncio.create_task(broadcast_event("tool_invoked", {
+                                            "tool_name": fc.name,
+                                            "args": fc.args,
+                                            "stream_sid": stream_sid
+                                        }))
+                                    except Exception:
+                                        pass
 
                                     if fc.name == "dispatch_quickstart_email":
                                         email = fc.args.get("email") if fc.args else None

@@ -505,6 +505,22 @@ def test_find_matching_objection_reply():
     assert r_spend is not None
     assert "recursive" in r_spend
 
+    r_latency = find_matching_objection_reply("What is the latency overhead on tool calls?")
+    assert r_latency is not None
+    assert "35 microseconds" in r_latency
+
+    r_code = find_matching_objection_reply("Does this work with Claude Code or Cursor?")
+    assert r_code is not None
+    assert "Claude Code" in r_code
+
+    r_soc2 = find_matching_objection_reply("We need an audit log for SOC2 compliance")
+    assert r_soc2 is not None
+    assert "SOC2" in r_soc2
+
+    r_false = find_matching_objection_reply("What about false positives blocking developers?")
+    assert r_false is not None
+    assert "false positives" in r_false
+
     r_none = find_matching_objection_reply("The weather in Calgary is nice today")
     assert r_none is None
 
@@ -550,5 +566,38 @@ def test_voice_metrics_endpoint():
     assert data["status"] == "online"
     assert data["sub_35us_deterministic_gate"] is True
     assert data["default_voice"] == "Google.en-US-Journey-D"
+
+
+@pytest.mark.anyio
+async def test_sse_voice_events():
+    """Verify Server-Sent Events broadcasting to subscriber queues."""
+    import asyncio
+    from src.voice.twilio_server import broadcast_event, event_subscribers
+
+    q = asyncio.Queue()
+    event_subscribers.append(q)
+    try:
+        await broadcast_event("transcript", {"user_speech": "hello", "alex_reply": "hey"})
+        msg = await asyncio.wait_for(q.get(), timeout=1.0)
+        assert "event: transcript" in msg
+        assert "alex_reply" in msg
+    finally:
+        if q in event_subscribers:
+            event_subscribers.remove(q)
+
+
+def test_webhook_dispatch_endpoint():
+    """Verify CRM webhook test dispatch endpoint."""
+    from src.voice.twilio_server import app
+    client = TestClient(app)
+
+    resp = client.post("/api/webhook/test")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "status" in data
+    assert "configured_url" in data
+    assert data["test_payload"]["name"] == "Marcus Vance"
+
+
 
 

@@ -8,12 +8,14 @@ import asyncio
 import json
 import logging
 import os
+import time
 import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response, Form, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .voice_config import config, VoiceConfig
@@ -49,6 +51,58 @@ lead_mgr = LeadManager()
 active_sessions: Dict[str, RealtimeVoiceSession] = {}
 conversation_histories: Dict[str, List[Any]] = {}
 active_call_states: Dict[str, Any] = {}
+event_subscribers: List[asyncio.Queue] = []
+
+
+async def broadcast_event(event_type: str, data: Dict[str, Any]):
+    """Broadcasts real-time events to all active SSE browser subscribers."""
+    dead = []
+    payload = f"event: {event_type}\ndata: {json.dumps(data)}\n\n"
+    for q in list(event_subscribers):
+        try:
+            q.put_nowait(payload)
+        except Exception:
+            dead.append(q)
+    for d in dead:
+        if d in event_subscribers:
+            event_subscribers.remove(d)
+
+
+async def dispatch_crm_webhook(event_type: str, data: Dict[str, Any]):
+    """
+    Asynchronously broadcasts structured event notifications to external webhooks
+    (Slack, Discord, Zapier, Make, custom CRM) with non-blocking error resilience.
+    """
+    webhook_url = os.getenv("CRM_WEBHOOK_URL") or os.getenv("SLACK_WEBHOOK_URL") or os.getenv("DISCORD_WEBHOOK_URL")
+    if not webhook_url:
+        return
+
+    try:
+        payload = {
+            "event": event_type,
+            "timestamp": time.time(),
+            "source": "bartholomew_voice_ai",
+            "data": data
+        }
+        if "hooks.slack.com" in webhook_url or "discord.com/api/webhooks" in webhook_url:
+            lead_name = data.get("name", "Prospect")
+            company = data.get("company", "Company")
+            notes = data.get("notes") or data.get("user_speech") or data.get("tier", "")
+            payload = {
+                "text": f"🔥 *Bartholomew Voice Event: {event_type.upper()}*\n• *Lead:* {lead_name} ({company})\n• *Details:* {notes}"
+            }
+
+        req = urllib.request.Request(
+            webhook_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json", "User-Agent": "BTP-Voice-Agent/5.4"},
+            method="POST"
+        )
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, lambda: urllib.request.urlopen(req, timeout=5))
+        logger.info(f"Dispatched CRM webhook for '{event_type}'")
+    except Exception as e:
+        logger.warning(f"CRM webhook dispatch warning: {e}")
 
 
 def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
@@ -308,9 +362,24 @@ async def twilio_status_callback(request: Request):
 
         lead_mgr.save()
 
-    # Clean up call state memory
+        # Clean up call state memory
     active_call_states.pop(call_sid, None)
     conversation_histories.pop(call_sid, None)
+
+    asyncio.create_task(broadcast_event("call_completed", {
+        "call_sid": call_sid,
+        "call_status": call_status,
+        "duration": duration,
+        "lead_id": lead_id
+    }))
+    asyncio.create_task(dispatch_crm_webhook("call_completed", {
+        "call_sid": call_sid,
+        "call_status": call_status,
+        "duration": duration,
+        "lead_id": lead_id,
+        "name": target_lead.name if target_lead else "Prospect",
+        "company": target_lead.company if target_lead else ""
+    }))
 
     return {"status": "recorded", "call_sid": call_sid, "call_status": call_status, "duration": duration}
 
@@ -393,6 +462,19 @@ async def voice_interactive_respond(request: Request):
             lead = lead_mgr.get_next_pending()
             if lead:
                 lead_mgr.qualify_lead(lead.id, notes=f"Spoke on phone [{call_sid}]: {user_speech}")
+                asyncio.create_task(broadcast_event("lead_qualified", {"lead_id": lead.id, "name": lead.name}))
+                asyncio.create_task(dispatch_crm_webhook("lead_qualified", {
+                    "lead_id": lead.id,
+                    "name": lead.name,
+                    "company": lead.company,
+                    "speech": user_speech
+                }))
+
+        asyncio.create_task(broadcast_event("transcript", {
+            "call_sid": call_sid,
+            "user_speech": user_speech,
+            "alex_reply": reply
+        }))
 
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
@@ -661,6 +743,14 @@ async def qualify_lead_endpoint(lead_id: str, request: Request):
     lead = lead_mgr.qualify_lead(lead_id, notes=notes, email=email)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
+    asyncio.create_task(broadcast_event("lead_qualified", {"lead_id": lead.id, "name": lead.name}))
+    asyncio.create_task(dispatch_crm_webhook("lead_qualified", {
+        "lead_id": lead.id,
+        "name": lead.name,
+        "company": lead.company,
+        "notes": notes,
+        "email": email
+    }))
     return {"status": "qualified", "lead": lead.to_dict()}
 
 
@@ -677,6 +767,7 @@ async def send_proposal_endpoint(lead_id: str, request: Request):
     result = lead_mgr.send_proposal(lead_id, tier=tier, notes=notes)
     if not result:
         raise HTTPException(status_code=404, detail="Lead not found")
+    asyncio.create_task(dispatch_crm_webhook("proposal_sent", result))
     return {"status": "proposal_sent", "proposal": result}
 
 
@@ -694,6 +785,14 @@ async def close_deal_endpoint(lead_id: str, request: Request):
     lead = lead_mgr.close_deal(lead_id, tier=tier, deal_value_usd=deal_val, notes=notes)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
+    asyncio.create_task(dispatch_crm_webhook("deal_closed", {
+        "lead_id": lead.id,
+        "name": lead.name,
+        "company": lead.company,
+        "tier": tier,
+        "deal_value_usd": lead.deal_value_usd,
+        "notes": notes
+    }))
     return {"status": "closed_won", "lead": lead.to_dict()}
 
 
@@ -775,6 +874,42 @@ async def get_test_bench_html():
     return HTMLResponse("<h1>Bartholomew Voice AI Server Running.</h1>")
 
 
+@app.get("/api/voice/events")
+async def sse_voice_events(request: Request):
+    """
+    Server-Sent Events (SSE) stream for live in-call telemetry,
+    instant transcript broadcasting, and pipeline status updates.
+    """
+    import time
+    q: asyncio.Queue = asyncio.Queue()
+    event_subscribers.append(q)
+
+    async def event_generator():
+        try:
+            yield f"event: connected\ndata: {json.dumps({'status': 'streaming', 'time': time.time()})}\n\n"
+            while True:
+                if await request.is_disconnected():
+                    break
+                try:
+                    data = await asyncio.wait_for(q.get(), timeout=12.0)
+                    yield data
+                except asyncio.TimeoutError:
+                    yield ": ping\n\n"
+        finally:
+            if q in event_subscribers:
+                event_subscribers.remove(q)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"
+        }
+    )
+
+
 @app.get("/api/voice/metrics")
 async def voice_metrics_endpoint():
     """Returns active runtime telemetry, memory footprints, and call engine benchmarks."""
@@ -782,8 +917,27 @@ async def voice_metrics_endpoint():
         "status": "online",
         "active_call_states": len(active_call_states),
         "conversation_histories": len(conversation_histories),
+        "event_subscribers": len(event_subscribers),
         "framework_compatibility_count": len(FRAMEWORK_COMPATIBILITY_REGISTRY),
         "default_voice": "Google.en-US-Journey-D",
         "native_live_voice": os.getenv("GEMINI_VOICE_NAME", "Puck"),
         "sub_35us_deterministic_gate": True
+    }
+
+
+@app.post("/api/webhook/test")
+async def test_webhook_dispatch(request: Request):
+    """Triggers a simulated test webhook event for CRM/Slack integrations."""
+    webhook_url = os.getenv("CRM_WEBHOOK_URL") or os.getenv("SLACK_WEBHOOK_URL") or os.getenv("DISCORD_WEBHOOK_URL")
+    test_data = {
+        "name": "Marcus Vance",
+        "company": "Synthetix AI",
+        "role": "Head of AI Platform",
+        "notes": "Testing CRM webhook connection from Bartholomew Voice Agent."
+    }
+    await dispatch_crm_webhook("test_ping", test_data)
+    return {
+        "status": "dispatched" if webhook_url else "skipped_no_url",
+        "configured_url": bool(webhook_url),
+        "test_payload": test_data
     }

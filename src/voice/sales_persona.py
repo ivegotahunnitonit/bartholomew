@@ -752,17 +752,17 @@ OBJECTIONS: List[ObjectionResponse] = [
     ObjectionResponse(
         category="existing_guardrails",
         keywords=["openai guardrails", "system prompt", "llamaguard", "guardrails ai", "prompt moderation"],
-        suggested_reply="Prompt moderation layers add 300 milliseconds of latency and still get bypassed by jailbreaks. We do deterministic AST filtering in memory in under 35 microseconds.",
+        suggested_reply="Totally get that -- prompt moderation layers add 300 milliseconds of latency and still get bypassed by novel jailbreaks. We do deterministic AST filtering in memory in under 35 microseconds. Have you seen prompt rails fail in testing?",
     ),
     ObjectionResponse(
         category="observability_vs_enforcement",
         keywords=["langsmith", "langfuse", "phoenix", "arize", "datadog", "tracing", "observability"],
-        suggested_reply="LangSmith and Langfuse provide stellar post-execution tracing, but they don't stop a rogue table drop before it executes. Bartholomew is an active in-process AST gate. Ever had an agent trigger an unintended mutation?",
+        suggested_reply="LangSmith and Langfuse are fantastic for tracing and post-execution logs, but they don't stop a rogue table drop before it hits your database. Bartholomew is an active in-process AST gate. Ever had an agent trigger an unintended mutation?",
     ),
     ObjectionResponse(
         category="ebpf_kernel",
         keywords=["ebpf", "kernel module", "cilium", "syscall trace", "tetragon"],
-        suggested_reply="eBPF operates down at the kernel syscall layer with higher tracing overhead and zero LLM semantic context. We parse the syntax tree directly in user-space in under 35 microseconds before execve. What host OS are you running on?",
+        suggested_reply="Right on -- eBPF operates down at the kernel syscall layer with higher tracing overhead and zero LLM semantic context. We parse the syntax tree directly in user-space in under 35 microseconds before execve. What host OS are you running on?",
     ),
     ObjectionResponse(
         category="language_support",
@@ -772,12 +772,12 @@ OBJECTIONS: List[ObjectionResponse] = [
     ObjectionResponse(
         category="pricing",
         keywords=["pricing", "how much", "cost", "free", "commercial", "enterprise", "rates"],
-        suggested_reply="The core btp-guard library is 100% open-source under MIT. The Pro team tier is $49 a month, and our Enterprise tier with cryptographically signed Merkle receipts is $199 a month.",
+        suggested_reply="The core btp-guard engine is 100% open source under MIT. For teams wanting central policy management and signed audit receipts, it starts at $49 a month. Are you looking for open source or enterprise compliance?",
     ),
     ObjectionResponse(
         category="busy",
         keywords=["busy", "in a meeting", "outage", "fire", "call back later", "not a good time", "driving"],
-        suggested_reply="Totally get it, go take care of business! I'll shoot a quick note to your email so you have it handy.",
+        suggested_reply="Totally get that, go crush whatever you're working on! I'll shoot a quick note to your email so you have it handy. Have a great one!",
     ),
     ObjectionResponse(
         category="send_email",
@@ -787,27 +787,27 @@ OBJECTIONS: List[ObjectionResponse] = [
     ObjectionResponse(
         category="docker_sandbox",
         keywords=["docker", "sandbox", "gvisor", "container", "isolated vm", "e2b"],
-        suggested_reply="Containerization secures the host kernel, but internal volumes, databases, and credential files remain vulnerable to agent hallucinations. Bartholomew gates the execution seam before process launch.",
+        suggested_reply="Totally -- containers protect the host kernel, but inside the container an agent can still drop database tables or exfiltrate secret env vars. How do you guys gate what the agent executes inside the volume?",
     ),
     ObjectionResponse(
         category="no_bash_access",
         keywords=["no bash", "only python", "only sql", "api only", "no shell", "read only"],
-        suggested_reply="Prudent architecture. However, unauthorized SQL drop statements and credential exfiltration through Python kwargs present identical operational risks that our AST gate containment mitigates.",
+        suggested_reply="Fair point! But even without shell tools, agents can still run unintended SQL drops or exfiltrate env vars through Python arguments. How do you guys catch dangerous database queries?",
     ),
     ObjectionResponse(
         category="mcp_tools",
-        keywords=["mcp", "model context protocol", "claude code", "cursor"],
-        suggested_reply="We actively support MCP. Bartholomew provides an AST-enforced MCP sidecar that intercepts tool execution in under 35 microseconds before invoking local system tools.",
+        keywords=["mcp", "model context protocol", "mcp server", "mcp tools"],
+        suggested_reply="We love MCP! Bartholomew provides an AST-enforced MCP sidecar that intercepts tool execution in under 35 microseconds before invoking local system tools. Which MCP servers are you guys running?",
     ),
     ObjectionResponse(
         category="in_house",
         keywords=["built our own", "in-house", "internal tool", "custom wrapper"],
-        suggested_reply="We respect in-house tooling. Most internal implementations rely on regex patterns that are easily bypassed by LLM formatting variations, whereas Bartholomew performs bit-level AST validation.",
+        suggested_reply="Respect building in-house! Most custom wrappers rely on regex, which usually gets bypassed once models use multi-line strings or base64. We parse the full syntax tree in under 35 microseconds. What kind of rules are you guys checking?",
     ),
     ObjectionResponse(
         category="social_proof",
         keywords=["who else uses", "who uses you", "customers", "case studies", "references"],
-        suggested_reply="We protect autonomous pipelines across fintech and code-gen teams like Synthetix and VectorFlow, intercepting thousands of agent tool actions daily. Most teams drop it in as a single pre-flight decorator.",
+        suggested_reply="We protect autonomous pipelines across fintech and code-gen teams like Synthetix and VectorFlow, intercepting thousands of agent tool actions daily. Most teams drop it in as a single pre-flight decorator. What does your stack look like?",
     ),
     ObjectionResponse(
         category="integration_time",
@@ -832,7 +832,32 @@ OBJECTIONS: List[ObjectionResponse] = [
     ObjectionResponse(
         category="wrong_person",
         keywords=["wrong person", "not me", "not my department", "talk to", "reach out to"],
-        suggested_reply="Understood. Who on your engineering leadership team oversees autonomous agent infrastructure and tool safety?",
+        suggested_reply="Gotcha, appreciate you letting me know! Who on the team usually owns tool safety or AI infrastructure? I'll reach out directly.",
+    ),
+    ObjectionResponse(
+        category="false_positives",
+        keywords=["false positive", "false positives", "blocking developers", "dev friction", "breaking builds"],
+        suggested_reply="Fair question! We keep false positives near zero by only blocking destructive syntax like table drops and recursive deletes. Developers can also run in dry-run audit mode first. Want to see our default ruleset?",
+    ),
+    ObjectionResponse(
+        category="latency_overhead",
+        keywords=["latency", "slow down", "overhead", "benchmark", "how fast", "throughput"],
+        suggested_reply="Zero perceptible overhead -- AST gating runs in memory in under 35 microseconds, which is ten thousand times faster than an LLM API call. What is your target latency budget?",
+    ),
+    ObjectionResponse(
+        category="coding_agents",
+        keywords=["claude code", "cursor", "windsurf", "copilot", "coding agents", "swe bench"],
+        suggested_reply="100%! We wrap Claude Code and Cursor CLI tool execution so developers can run agentic coding without worrying about a hallucinated rm -rf. Are you guys rolling out coding agents internally?",
+    ),
+    ObjectionResponse(
+        category="cicd_deployment",
+        keywords=["github actions", "ci cd", "kubernetes", "k8s", "helm", "gitops"],
+        suggested_reply="Yeah, we run as a pre-flight CLI gate in CI/CD or a Kubernetes mutating admission webhook. Takes about three lines in your YAML. Where are your agents deployed?",
+    ),
+    ObjectionResponse(
+        category="compliance_soc2",
+        keywords=["soc2", "soc 2", "compliance", "audit log", "gdpr", "iso27001", "hipaa"],
+        suggested_reply="We generate cryptographically signed Ed25519 receipts for every executed or blocked tool call, giving your security team an immutable SOC2 audit trail out of the box. Do you need tamper-proof audit receipts?",
     ),
 ]
 

@@ -505,6 +505,10 @@
           Simulate Global Dial-Next (Autonomous)
         </button>
 
+        <button class="btn btn-secondary" id="btnTestWebhook" style="margin-top: 8px;">
+          🔔 Test CRM / Slack Webhook
+        </button>
+
         <!-- Waveform visualizer -->
         <div class="waveform-box">
           <canvas id="waveformCanvas"></canvas>
@@ -530,6 +534,8 @@
         <div class="feed-box" id="feedBox">
           <div class="msg-sys">Bartholomew Trust Protocol voice engine standing by. Click Start Consultation to begin live audio streaming.</div>
         </div>
+
+        <div id="detectedBadgesRow" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; min-height: 20px;"></div>
 
         <div class="input-row">
           <input type="text" id="spokenTextInput" placeholder="Simulate spoken response (e.g. 'We approve everything manually right now')">
@@ -584,6 +590,53 @@
       }
     }
     loadLeads();
+
+    // Live SSE Event Stream Connection
+    function connectLiveEvents() {
+      const evtSource = new EventSource('/api/voice/events');
+      evtSource.addEventListener('call_completed', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          addMessage('System', `Call ${data.call_sid} completed (${data.duration}s). Transcript saved.`);
+        } catch (err) {}
+      });
+      evtSource.addEventListener('lead_qualified', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          addMessage('System', `🌟 Lead Qualified: ${data.name}! Follow-up dispatched.`);
+        } catch (err) {}
+      });
+      evtSource.addEventListener('tool_invoked', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          addMessage('System', `🔧 Tool Executed: ${data.tool_name}(${JSON.stringify(data.args)})`);
+          addBadge(data.tool_name, '#a855f7');
+        } catch (err) {}
+      });
+      evtSource.addEventListener('live_transcript', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.text) addMessage(data.speaker === 'alex' ? 'Alex' : 'Prospect', data.text);
+        } catch (err) {}
+      });
+      evtSource.addEventListener('stream_interrupted', (e) => {
+        addMessage('System', `⚡ Interruption Barge-in detected: Twilio audio buffer cleared.`);
+      });
+      evtSource.onerror = () => {
+        evtSource.close();
+        setTimeout(connectLiveEvents, 4000);
+      };
+    }
+    connectLiveEvents();
+
+    function addBadge(label, color = '#10b981') {
+      const container = document.getElementById('detectedBadgesRow');
+      if (!container) return;
+      const span = document.createElement('span');
+      span.style.cssText = `font-size: 10px; font-family: 'JetBrains Mono', monospace; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.08); border: 1px solid ${color}; color: ${color};`;
+      span.textContent = label;
+      container.appendChild(span);
+    }
 
     // Waveform Animator
     const canvas = document.getElementById('waveformCanvas');
@@ -713,6 +766,24 @@
         addMessage('Alex', "Totally get that! Manual approval fatigue kills developer velocity. That's why we built Bartholomew to catch dangerous bash and SQL in 35 microseconds in-memory.");
       }
     });
+
+    const btnTestWebhook = document.getElementById('btnTestWebhook');
+    if (btnTestWebhook) {
+      btnTestWebhook.addEventListener('click', async () => {
+        addMessage('System', 'Testing CRM / Slack webhook connection...');
+        try {
+          const res = await fetch('/api/webhook/test', { method: 'POST' });
+          const data = await res.json();
+          if (data.configured_url) {
+            addMessage('System', `✅ CRM Webhook dispatched successfully! Event: test_ping`);
+          } else {
+            addMessage('System', 'ℹ️ No external CRM_WEBHOOK_URL currently configured in environment. Event simulated cleanly.');
+          }
+        } catch (err) {
+          addMessage('System', `❌ Webhook test failed: ${err.message}`);
+        }
+      });
+    }
 
     async function sendTurn(val) {
       if (!val) return;
