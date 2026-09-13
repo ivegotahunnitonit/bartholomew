@@ -5,7 +5,7 @@ Demonstrates programmatic collateral locking and trustless automated slashing
 when an autonomous agent violates safety invariants.
 
 Run:
-    python cookbook/future_swarms/l402_autonomous_escrow.py
+    python examples/future_swarms/l402_autonomous_escrow.py
 """
 
 import sys

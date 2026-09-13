@@ -1,7 +1,7 @@
 # BTP Guard — Cursor Agent Invariant Rules
 # Place this file in your project root as .cursorrules or in .cursor/rules/btp-guard.mdc
 
-You are an autonomous AI coding assistant supervised by the Bartholomew Trust Protocol (BTP Guard v5.4.4).
+You are an autonomous AI coding assistant supervised by the Bartholomew Trust Protocol (BTP Guard v5.4.11).
 You MUST adhere to the following non-negotiable security invariants on every action:
 
 1. ZERO DESTRUCTIVE SHELL COMMANDS:

@@ -319,3 +319,64 @@ def test_a2a_l402_payment_verification():
     )
     assert v_tamp is False
     assert "preimage does not match" in msg_tamp
+
+
+def test_l402_autonomous_escrow_slashing_and_indemnity_flow():
+    """Verifies collateral locking, release on clean execution, and proof-based slashing on invariant breach."""
+    from cryptography.hazmat.primitives.asymmetric import ed25519
+
+    pool = AutonomousEscrowPool(reserve_pool_usd=50_000.0)
+    owner_key = ed25519.Ed25519PrivateKey.generate()
+    owner_pubkey_hex = owner_key.public_key().public_bytes_raw().hex()
+
+    passport = SovereignAgentPassport(
+        agent_id="escrow-test-worker-42",
+        worker_model="Claude-3.7-Sonnet",
+        owner_pubkey=owner_pubkey_hex,
+        granted_capabilities=["db:write", "api:pay"]
+    )
+    passport.sign(owner_key)
+
+    # 1. Lock escrow for high-value action
+    deposit = pool.lock_escrow(
+        agent_id="escrow-test-worker-42",
+        action_type="HIGH_VALUE_SETTLEMENT",
+        amount_usd=1_500.0,
+        passport=passport,
+        settlement_rail="L402_LIGHTNING"
+    )
+    assert deposit.status == "LOCKED"
+    assert deposit.amount_usd == 1_500.0
+
+    # 2. Release escrow on clean execution
+    ok_rel, msg_rel = pool.release_escrow(deposit.escrow_id, agent_passport=passport)
+    assert ok_rel is True
+    assert "released" in msg_rel.lower()
+
+    # 3. Lock new escrow and trigger invariant violation slashing
+    deposit2 = pool.lock_escrow(
+        agent_id="escrow-test-worker-42",
+        action_type="HIGH_VALUE_SETTLEMENT",
+        amount_usd=2_000.0,
+        passport=passport,
+        settlement_rail="L402_LIGHTNING"
+    )
+    regression_proof = {
+        "type": "BTP_REGRESSION_PROOF",
+        "proof_signature": "sig_hex_998877",
+        "target_action": "HIGH_VALUE_SETTLEMENT",
+        "violated_invariant": "CATASTROPHIC_POLICY_ESCAPE: Arbitrary fund drain"
+    }
+    claimant_invoice = "lnbc2000000000satoshis_victim_payout"
+    ok_slash, msg_slash, slash_receipt = pool.claim_and_slash(
+        escrow_id=deposit2.escrow_id,
+        regression_proof=regression_proof,
+        payee_destination=claimant_invoice,
+        agent_passport=passport
+    )
+
+    assert ok_slash is True
+    assert passport.circuit_breaker_tripped is True
+    assert slash_receipt["status"] == "DISBURSED_AND_SETTLED"
+    assert slash_receipt["passport_tripped"] is True
+
