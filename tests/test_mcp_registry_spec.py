@@ -9,7 +9,9 @@ import os
 import sys
 
 def test_mcp_registry_entry():
-    path = os.path.abspath("mcp_registry_entry.json")
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "packages", "mcp_registry_entry.json"))
+    if not os.path.exists(path):
+        path = os.path.abspath("mcp_registry_entry.json")
     assert os.path.exists(path), f"Missing {path}"
     
     with open(path, "r", encoding="utf-8") as f:
@@ -25,7 +27,9 @@ def test_mcp_registry_entry():
     print("[PASS] mcp_registry_entry.json schema valid.")
 
 def test_smithery_yaml():
-    path = os.path.abspath("smithery.yaml")
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "packages", "metered_mcp", "smithery.yaml"))
+    if not os.path.exists(path):
+        path = os.path.abspath("smithery.yaml")
     assert os.path.exists(path), f"Missing {path}"
     
     with open(path, "r", encoding="utf-8") as f:

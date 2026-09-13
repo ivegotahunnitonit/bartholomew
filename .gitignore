@@ -54,6 +54,7 @@ MANIFEST
 .btp_marketplace.json
 .btp_usage_ledger.json
 .btp_webhooks.json
+SOC2_COMPLIANCE_EVIDENCE_PACK.json
 *.db
 *.db-shm
 *.db-wal

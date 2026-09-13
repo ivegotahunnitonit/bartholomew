@@ -222,7 +222,13 @@ class BartholomewMCPServer:
                             "type": "text",
                             "text": json.dumps({
                                 "protocol_version": "BTP/2.2",
-                                "active_roots": [self.authority.public_key_hex]
+                                "active_roots": [self.authority.public_key_hex],
+                                "registered_invariants": [
+                                    "RULE_NO_UNBOUNDED_EVAL",
+                                    "RULE_NO_RAW_SUBPROCESS",
+                                    "RULE_HERMETIC_PATH_CONTAINMENT",
+                                    "RULE_ED25519_ATTESTATION_REQUIRED"
+                                ]
                             }, indent=2)
                         }]
                     }
