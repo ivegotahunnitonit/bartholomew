@@ -180,23 +180,23 @@ class L402ProtocolEngine:
 
         return True, "L402 Macaroon verified valid.", parsed_caveats
 
-    def verify_authorization(
+    def verify_authorization_with_caveats(
         self,
         auth_header: str,
         expected_agent_id: Optional[str] = None,
         expected_action: Optional[str] = None
-    ) -> Tuple[bool, str]:
+    ) -> Tuple[bool, str, Dict[str, Any]]:
         """
-        Validates an incoming HTTP Authorization header in format:
+        Validates an incoming HTTP Authorization header and returns parsed caveats:
         `Authorization: L402 <macaroon_b64>:<preimage_hex>`
         """
         if not auth_header.startswith("L402 ") and not auth_header.startswith("LSAT "):
-            return False, "Invalid authorization scheme: expected L402"
+            return False, "Invalid authorization scheme: expected L402", {}
 
         token_body = auth_header.split(" ", 1)[1].strip()
         parts = token_body.split(":")
         if len(parts) != 2:
-            return False, "Malformed L402 credential: must be <macaroon>:<preimage>"
+            return False, "Malformed L402 credential: must be <macaroon>:<preimage>", {}
 
         macaroon_b64, preimage_hex = parts[0], parts[1]
 
@@ -207,14 +207,31 @@ class L402ProtocolEngine:
             expected_action=expected_action
         )
         if not valid_mac:
-            return False, f"Macaroon verification failed: {msg}"
+            return False, f"Macaroon verification failed: {msg}", caveats
 
         # 2. Verify Payment Preimage against Macaroon payment_hash caveat
         payment_hash = caveats.get("payment_hash")
         if not payment_hash:
-            return False, "Missing payment_hash caveat in macaroon."
+            return False, "Missing payment_hash caveat in macaroon.", caveats
 
         if not self.verify_preimage(payment_hash, preimage_hex):
-            return False, "Cryptographic payment preimage does not match payment_hash."
+            return False, "Cryptographic payment preimage does not match payment_hash.", caveats
 
-        return True, "L402 Authentication Successful: Paid & Authorized."
+        return True, "L402 Authentication Successful: Paid & Authorized.", caveats
+
+    def verify_authorization(
+        self,
+        auth_header: str,
+        expected_agent_id: Optional[str] = None,
+        expected_action: Optional[str] = None
+    ) -> Tuple[bool, str]:
+        """
+        Validates an incoming HTTP Authorization header in format:
+        `Authorization: L402 <macaroon_b64>:<preimage_hex>`
+        """
+        ok, msg, _ = self.verify_authorization_with_caveats(
+            auth_header=auth_header,
+            expected_agent_id=expected_agent_id,
+            expected_action=expected_action
+        )
+        return ok, msg

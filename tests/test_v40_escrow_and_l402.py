@@ -236,3 +236,86 @@ def test_guard_escrow_collateral_decorator():
 
     assert passport.circuit_breaker_tripped is True
     assert passport.violation_count == 1
+
+
+def test_a2a_l402_payment_verification():
+    from src.a2a_protocol import AgentToAgentProtocol
+    from src.trust_protocol import BartholomewTrustAuthority
+
+    authority_a = BartholomewTrustAuthority()
+    authority_b = BartholomewTrustAuthority()
+    l402_engine = L402ProtocolEngine()
+
+    challenge, preimage = l402_engine.create_challenge(
+        agent_id="agent-sender-alpha",
+        action_type="COMPUTE_TASK",
+        amount_satoshis=1000,
+        ttl_seconds=120
+    )
+    valid_l402_auth = f"L402 {challenge.macaroon_b64}:{preimage}"
+
+    # 1. Successful handoff with valid L402 payment
+    signed_packet = AgentToAgentProtocol.create_signed_handoff(
+        sender_authority=authority_a,
+        originating_agent="agent-sender-alpha",
+        target_agent="agent-receiver-beta",
+        task_action="COMPUTE_TASK",
+        task_payload={"task": "render_matrix"},
+        l402_auth=valid_l402_auth
+    )
+
+    valid, msg, envelope = AgentToAgentProtocol.verify_incoming_handoff(
+        signed_packet=signed_packet,
+        expected_recipient="agent-receiver-beta",
+        l402_engine=l402_engine,
+        required_satoshis=500
+    )
+    assert valid is True
+    assert "Verified Clean" in msg
+    assert envelope["l402_auth"] == valid_l402_auth
+
+    # 2. Rejection when payment is required but missing from envelope
+    packet_no_pay = AgentToAgentProtocol.create_signed_handoff(
+        sender_authority=authority_a,
+        originating_agent="agent-sender-alpha",
+        target_agent="agent-receiver-beta",
+        task_action="COMPUTE_TASK",
+        task_payload={"task": "render_matrix"}
+    )
+    v_no_pay, msg_no_pay, _ = AgentToAgentProtocol.verify_incoming_handoff(
+        signed_packet=packet_no_pay,
+        expected_recipient="agent-receiver-beta",
+        l402_engine=l402_engine,
+        required_satoshis=500
+    )
+    assert v_no_pay is False
+    assert "L402 Payment Required" in msg_no_pay
+
+    # 3. Rejection when payment amount is insufficient
+    v_insuf, msg_insuf, _ = AgentToAgentProtocol.verify_incoming_handoff(
+        signed_packet=signed_packet,
+        expected_recipient="agent-receiver-beta",
+        l402_engine=l402_engine,
+        required_satoshis=5000  # requires 5000, but only 1000 provided
+    )
+    assert v_insuf is False
+    assert "L402 Insufficient Payment" in msg_insuf
+
+    # 4. Rejection when preimage is fake/tampered
+    fake_auth = f"L402 {challenge.macaroon_b64}:00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    packet_tampered = AgentToAgentProtocol.create_signed_handoff(
+        sender_authority=authority_a,
+        originating_agent="agent-sender-alpha",
+        target_agent="agent-receiver-beta",
+        task_action="COMPUTE_TASK",
+        task_payload={"task": "render_matrix"},
+        l402_auth=fake_auth
+    )
+    v_tamp, msg_tamp, _ = AgentToAgentProtocol.verify_incoming_handoff(
+        signed_packet=packet_tampered,
+        expected_recipient="agent-receiver-beta",
+        l402_engine=l402_engine,
+        required_satoshis=500
+    )
+    assert v_tamp is False
+    assert "preimage does not match" in msg_tamp

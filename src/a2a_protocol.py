@@ -42,10 +42,12 @@ class AgentToAgentProtocol:
                               task_payload: Dict[str, Any],
                               capability_scope: Optional[List[str]] = None,
                               sender_passport: Optional[Any] = None,
-                              ttl_seconds: int = 60) -> Dict[str, Any]:
+                              ttl_seconds: int = 60,
+                              l402_auth: Optional[str] = None) -> Dict[str, Any]:
         """
         Agent A creates an RFC 8785 canonical signed handoff envelope for Agent B.
         If sender_passport is provided, verifies authorization and attaches signed passport.
+        If l402_auth is provided, attaches cryptographic L402 payment credential.
         """
         now = time.time()
         nonce = secrets.token_hex(16)
@@ -84,6 +86,8 @@ class AgentToAgentProtocol:
         }
         if passport_data:
             envelope_body["sender_passport"] = passport_data
+        if l402_auth:
+            envelope_body["l402_auth"] = l402_auth
 
         canonical_bytes = rfc8785_canonicalize(envelope_body)
         signature = sender_authority.private_key.sign(canonical_bytes).hex()
@@ -98,10 +102,13 @@ class AgentToAgentProtocol:
                                 signed_packet: Dict[str, Any],
                                 expected_recipient: str,
                                 trusted_sender_pubkey: Optional[str] = None,
-                                required_capability: Optional[str] = None) -> Tuple[bool, str, Dict[str, Any]]:
+                                required_capability: Optional[str] = None,
+                                l402_engine: Optional[Any] = None,
+                                required_satoshis: Optional[int] = None) -> Tuple[bool, str, Dict[str, Any]]:
         """
         Agent B verifies incoming A2A envelope before executing delegated task.
-        Validates envelope signature, expiration, recipient match, and sovereign passport.
+        Validates envelope signature, expiration, recipient match, sovereign passport,
+        and optional L402 Lightning micro-payment settlement credentials.
         """
         try:
             envelope = signed_packet["a2a_envelope"]
@@ -136,6 +143,26 @@ class AgentToAgentProtocol:
                 # Check required capability against passport
                 if required_capability and not passport.has_capability(required_capability):
                     return False, f"A2A Passport Missing Required Capability: '{required_capability}'", {}
+
+            # 5. L402 Lightning Micropayment Verification (if required or attached)
+            if l402_engine is not None or required_satoshis is not None:
+                auth_str = envelope.get("l402_auth")
+                if not auth_str:
+                    return False, "L402 Payment Required: Missing 'l402_auth' token in A2A envelope", {}
+
+                if l402_engine is not None:
+                    valid_auth, auth_msg, caveats = l402_engine.verify_authorization_with_caveats(
+                        auth_str,
+                        expected_agent_id=envelope.get("sender_agent_id"),
+                        expected_action=envelope.get("task_action")
+                    )
+                    if not valid_auth:
+                        return False, f"L402 Payment Verification Failed: {auth_msg}", {}
+
+                    if required_satoshis is not None:
+                        max_sats = int(caveats.get("max_satoshis", 0))
+                        if max_sats < required_satoshis:
+                            return False, f"L402 Insufficient Payment: Provided {max_sats} sats, required {required_satoshis} sats", {}
 
             return True, "A2A Cryptographic Handoff Verified Clean", envelope
 
