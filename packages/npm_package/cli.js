@@ -26,7 +26,7 @@ const command = args[0] || 'demo';
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
-║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.10) -- EXECUTION SENTINEL${CYAN}    ║
+║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.11) -- EXECUTION SENTINEL${CYAN}    ║
 ║   ${RESET}Sub-35us AST Safety Gating, Zero Leakage & SOC 2 Merkle Receipts   ${BOLD}${CYAN}║
 ╚══════════════════════════════════════════════════════════════════════╝${RESET}
 `);
@@ -111,6 +111,7 @@ function runInit(subargs = []) {
   
   if (/crewai/i.test(fileContent)) framework = 'crewai';
   else if (/langgraph/i.test(fileContent) || /langchain/i.test(fileContent)) framework = 'langgraph';
+  else if (/gemini|google-genai|google\.generativeai/i.test(fileContent) || subargs.includes('--gemini')) framework = 'gemini';
   else if (/autogen/i.test(fileContent) || /pyautogen/i.test(fileContent)) framework = 'autogen';
   else if (/openai/i.test(fileContent)) framework = 'openai';
   else if (/anthropic/i.test(fileContent)) framework = 'anthropic';
@@ -121,8 +122,8 @@ function runInit(subargs = []) {
   const btpDir = path.join(targetDir, '.btp');
   if (!fs.existsSync(btpDir)) fs.mkdirSync(btpDir, { recursive: true });
 
-  const policyYaml = `# Bartholomew Protocol (BTP v5.4.8) Project Policy
-version: "5.4.8"
+  const policyYaml = `# Bartholomew Protocol (BTP v5.4.11) Project Policy
+version: "5.4.11"
 framework: "${framework}"
 invariants:
   ast_gating:
@@ -145,7 +146,7 @@ invariants:
   fs.writeFileSync(path.join(btpDir, 'policy.yaml'), policyYaml, 'utf8');
   console.log(`  ${GREEN}+ Security Policy:${RESET}   .btp/policy.yaml (Sub-35us AST & Secret Scrubbing)`);
 
-  // 3. Configure Cursor / Claude if requested or available
+  // 3. Configure Cursor
   const cursorDir = path.join(targetDir, '.cursor');
   if (!fs.existsSync(cursorDir)) fs.mkdirSync(cursorDir, { recursive: true });
   const cursorMcp = {
@@ -159,10 +160,44 @@ invariants:
   fs.writeFileSync(path.join(cursorDir, 'mcp.json'), JSON.stringify(cursorMcp, null, 2), 'utf8');
   console.log(`  ${GREEN}+ Cursor IDE Config:${RESET} .cursor/mcp.json`);
 
+  // 3b. Configure Claude Desktop if requested or found
+  const isClaudeRequested = subargs.includes('--claude') || subargs.includes('--all');
+  const claudeConfigPath = process.platform === 'darwin'
+    ? path.join(os.homedir(), 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json')
+    : process.platform === 'win32'
+    ? path.join(process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json')
+    : path.join(os.homedir(), '.config', 'Claude', 'claude_desktop_config.json');
+
+  if (isClaudeRequested || fs.existsSync(path.dirname(claudeConfigPath))) {
+    try {
+      let claudeConfig = { mcpServers: {} };
+      if (fs.existsSync(claudeConfigPath)) {
+        claudeConfig = JSON.parse(fs.readFileSync(claudeConfigPath, 'utf8'));
+      }
+      claudeConfig.mcpServers = claudeConfig.mcpServers || {};
+      claudeConfig.mcpServers["bartholomew-guard"] = {
+        command: "npx",
+        args: ["-y", "btp-guard", "mcp"]
+      };
+      fs.mkdirSync(path.dirname(claudeConfigPath), { recursive: true });
+      fs.writeFileSync(claudeConfigPath, JSON.stringify(claudeConfig, null, 2), 'utf8');
+      console.log(`  ${GREEN}+ Claude Desktop Config:${RESET} ${claudeConfigPath}`);
+    } catch (e) {
+      console.log(`  ${YELLOW}! Claude Desktop Config Skipped:${RESET} ${e.message}`);
+    }
+  }
+
   // 4. Output snippet
   console.log(`\n${BOLD}${CYAN}READY-TO-USE INTEGRATION SNIPPET FOR ${framework.toUpperCase()}:${RESET}`);
   console.log('='.repeat(65));
-  if (framework === 'crewai') {
+  if (framework === 'gemini') {
+    console.log(`${YELLOW}from src.framework_integrations import btp_gemini_38_tool
+
+@btp_gemini_38_tool()
+def my_gemini_tool(param: str):
+    # Protected by Bartholomew Gemini 3.8 AST Gate & Thought Isolation in <35µs
+    return perform_operation(param)${RESET}`);
+  } else if (framework === 'crewai') {
     console.log(`${YELLOW}from btp_guard import secure_tool
 
 @secure_tool
@@ -180,7 +215,7 @@ app = guard.wrap_graph(workflow.compile())${RESET}`);
 guard = Guard()
 is_safe, violation = guard.check(command_or_sql)${RESET}`);
   }
-  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.10!${RESET}`);
+  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.11!${RESET}`);
   console.log(`\n${BOLD}💡 Need Fleet Monitoring or Live Threat Alerts?${RESET}`);
   console.log(`  -> Cloud Console:   ${CYAN}https://bartholomew.info/cloud${RESET}`);
   console.log(`  -> Team Editions:   ${CYAN}npx btp-guard pricing${RESET}  or  ${CYAN}https://bartholomew.info/pricing${RESET}\n`);

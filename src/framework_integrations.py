@@ -19,6 +19,7 @@ All executions inherit:
 import functools
 import inspect
 import time
+import json
 from typing import Dict, Any, Callable, Optional, Union, Tuple, List
 
 from src.trust_protocol import BartholomewTrustAuthority
@@ -206,4 +207,101 @@ def wrap_autogen_execution(agent: Any, authority: Optional[BartholomewTrustAutho
     if hasattr(agent, "register_reply"):
         agent.register_reply([agent], hook.filter_message)
     return hook
+
+
+class BartholomewGemini38Interceptor:
+    """
+    Multimodal tool and reasoning interceptor for Google Gemini 3.8.
+    Separates thought traces from actionable tool calls, applying AST gating in <35µs.
+    """
+    def __init__(self, authority: Optional[BartholomewTrustAuthority] = None, max_spend_usd: float = 50.0):
+        self.authority = authority or BartholomewTrustAuthority()
+        self.max_spend_usd = max_spend_usd
+
+    def intercept_candidate(self, candidate_payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processes candidate dictionary containing Gemini 3.8 'parts' (thought + functionCall).
+        Returns {'verdict': 'ALLOW' | 'DENY', 'thought_isolated': bool, 'receipt': dict}.
+        """
+        parts = candidate_payload.get("parts", [])
+        thought_isolated = False
+        function_calls = []
+
+        for p in parts:
+            if isinstance(p, dict):
+                if "thought" in p:
+                    thought_isolated = True
+                elif "functionCall" in p or "function_call" in p:
+                    fc = p.get("functionCall") or p.get("function_call")
+                    function_calls.append(fc)
+
+        for fc in function_calls:
+            name = fc.get("name", "gemini_tool")
+            args = fc.get("args", {})
+            query_str = json.dumps(args) if isinstance(args, dict) else str(args)
+            receipt = self.authority.evaluate_intent(
+                agent_id="gemini-3.8-agent",
+                action_type=name,
+                payload={"command": query_str, "sql": query_str, "args": args}
+            )
+            _GLOBAL_SIEM.emit_receipt(receipt)
+            if receipt.get("attestation", {}).get("verdict") == "DENY":
+                return {
+                    "verdict": "DENY",
+                    "reason": receipt.get("attestation", {}).get("reason", "Prohibited invariant breach"),
+                    "thought_isolated": thought_isolated,
+                    "receipt": receipt
+                }
+
+        return {
+            "verdict": "ALLOW",
+            "thought_isolated": thought_isolated,
+            "function_calls_evaluated": len(function_calls)
+        }
+
+
+def wrap_gemini_38_tool(
+    tool_fn: Callable[..., Any],
+    tool_name: Optional[str] = None,
+    agent_id: str = "gemini-3.8-agent",
+    authority: Optional[BartholomewTrustAuthority] = None
+) -> Callable[..., Any]:
+    """Wraps a Google Gemini 3.8 tool function with sub-35µs AST & invariant verification."""
+    auth = authority or BartholomewTrustAuthority()
+    t_name = tool_name or getattr(tool_fn, "__name__", "gemini_tool")
+
+    @functools.wraps(tool_fn)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        t0 = time.perf_counter()
+        payload_data = kwargs.copy()
+        if args:
+            payload_data["_args"] = list(args)
+        query_str = json.dumps(payload_data, default=str)
+        receipt = auth.evaluate_intent(
+            agent_id=agent_id,
+            action_type=t_name,
+            payload={"command": query_str, "sql": query_str, "payload": payload_data}
+        )
+        dt_us = (time.perf_counter() - t0) * 1_000_000
+        _GLOBAL_SIEM.emit_receipt(receipt)
+        if receipt.get("attestation", {}).get("verdict") == "DENY":
+            reason = receipt.get("attestation", {}).get("reason", "Prohibited destructive operation")
+            raise BTPViolationError(t_name, reason, receipt.get("signature", "veto"), dt_us)
+        return tool_fn(*args, **kwargs)
+
+    return wrapped
+
+
+def btp_gemini_38_tool(authority: Optional[BartholomewTrustAuthority] = None):
+    """
+    Decorator for Google Gemini 3.8 tool functions.
+    Usage:
+        @btp_gemini_38_tool()
+        def execute_query(sql: str):
+            ...
+    """
+    def decorator(fn: Callable[..., Any]):
+        return wrap_gemini_38_tool(fn, authority=authority)
+    return decorator
+
 

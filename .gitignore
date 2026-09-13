@@ -23,6 +23,8 @@ bin/*.vsix
 # Node modules (install via npm ci in CI)
 packages/node/node_modules/
 node_modules/
+frontend/web/dist/
+frontend/assets/
 
 # Python & Caches
 __pycache__/

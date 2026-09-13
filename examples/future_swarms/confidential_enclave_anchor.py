@@ -5,11 +5,12 @@ Demonstrates locking recursive ZK-Rollup batches into hardware PCR registers
 to guarantee untampered cloud enclave execution.
 
 Run:
-    python cookbook/future_swarms/confidential_enclave_anchor.py
+    python examples/future_swarms/confidential_enclave_anchor.py
 """
 
 import sys
 import os
+import copy
 
 # Add repository root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
@@ -53,13 +54,21 @@ def main():
     print(f"[+] PCR0 Golden Hash: {anchor['hardware_enclave_attestation']['measurements']['pcr0'][:24]}...")
 
     # 3. Verify Hardware Root of Trust
-    print("\n--- [3] Verifying Hardware Enclave Attestation Document ---")
+    print("\n--- [3] Verifying Authentic Hardware Enclave Attestation Document ---")
     is_valid, msg = EnclaveZKRollupAnchor.verify_hardware_anchor(anchor, enclave_engine=enclave_engine)
     print(f"Hardware Verification Result: {is_valid} ({msg})")
     assert is_valid is True
 
+    # 4. Verify Tamper-Detection Protection
+    print("\n--- [4] Verifying Tampered PCR0 Measurement Detection ---")
+    tampered_anchor = copy.deepcopy(anchor)
+    tampered_anchor["hardware_enclave_attestation"]["measurements"]["pcr0"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    is_tampered_valid, tamper_msg = EnclaveZKRollupAnchor.verify_hardware_anchor(tampered_anchor, enclave_engine=enclave_engine)
+    print(f"Tamper Verification Result: {is_tampered_valid} ({tamper_msg})")
+    assert is_tampered_valid is False
+
     print("\n" + "=" * 75)
-    print("  Hardware Enclave Anchor Complete: Root-of-Trust Attested")
+    print("  Hardware Enclave Anchor Complete: Root-of-Trust & Anti-Tamper Verified")
     print("=" * 75)
     return True
 
