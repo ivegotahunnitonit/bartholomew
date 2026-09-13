@@ -3,6 +3,18 @@
 .env.*
 !.env.example
 
+# Vendored binaries & large blobs (use package managers or CI download steps instead)
+bin/*.exe
+bin/*.whl
+bin/*.vsix
+*.whl
+*.vsix
+*.pdf
+*.wasm
+*.so
+*.dylib
+*.dll
+
 # Python & Caches
 __pycache__/
 *.py[cod]
