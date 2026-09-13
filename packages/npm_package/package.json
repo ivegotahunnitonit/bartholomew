@@ -48,7 +48,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivegotahunnitonit/bartholomew.git",
-    "directory": "npm_package"
+    "directory": "packages/npm_package"
   },
   "bugs": {
     "url": "https://github.com/ivegotahunnitonit/bartholomew/issues"

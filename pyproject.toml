@@ -47,7 +47,10 @@ btp-guard = "src.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*", "btp_guard*", "daemon*", "framework_adapters*"]
+include = ["src*", "btp_guard*"]
+
+[tool.setuptools.package-dir]
+"" = "."
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

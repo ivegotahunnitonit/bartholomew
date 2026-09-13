@@ -10,12 +10,17 @@ authors = [
 ]
 description = "BTP v5.4.10 Universal Cryptographic Trust Guard for Autonomous Agent Frameworks (LangGraph, AutoGen, CrewAI)"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
+license = { text = "MIT" }
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Topic :: Security :: Cryptography",
+    "Topic :: Security",
     "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 dependencies = [
@@ -23,7 +28,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://www.bartholomew.info"
-"Specification" = "https://github.com/ivegotahunnitonit/bartholomew/blob/main/BTP_PROTOCOL_SPECIFICATION.md"
-"Challenge Package" = "https://github.com/ivegotahunnitonit/bartholomew/blob/main/CHALLENGE_PACKAGE.md"
-"Bug Tracker" = "https://github.com/ivegotahunnitonit/bartholomew/issues"
+Homepage = "https://bartholomew.info"
+Documentation = "https://github.com/ivegotahunnitonit/bartholomew/tree/main/docs"
+Repository = "https://github.com/ivegotahunnitonit/bartholomew"
+Changelog = "https://github.com/ivegotahunnitonit/bartholomew/tree/main/docs/release-notes-v2.4.0.md"
+Tracker = "https://github.com/ivegotahunnitonit/bartholomew/issues"
