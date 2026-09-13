@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for changelog generation
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Collect commits since last tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges | head -30)
+          fi
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "BTP v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## What's Changed
+
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ---
+
+            **Install:**
+            ```bash
+            pip install btp-guard==${{ steps.version.outputs.VERSION }}
+            # or
+            npx btp-guard@${{ steps.version.outputs.VERSION }} init
+            ```
+
+            **Full Changelog:** https://github.com/${{ github.repository }}/compare/${{ steps.changelog.outputs.PREV_TAG }}...${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: false
