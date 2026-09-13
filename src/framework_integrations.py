@@ -19,7 +19,7 @@ All executions inherit:
 import functools
 import inspect
 import time
-from typing import Dict, Any, Callable, Optional, Union
+from typing import Dict, Any, Callable, Optional, Union, Tuple, List
 
 from src.trust_protocol import BartholomewTrustAuthority
 from src.client_wrapper import BTPViolationError

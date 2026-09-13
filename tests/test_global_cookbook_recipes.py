@@ -8,20 +8,20 @@ and Category 3 (Future Swarms) execute with 100% verified outcomes.
 import pytest
 
 # Category 1: Already Built
-from cookbook.already_built.http_sidecar_proxy import main as run_sidecar_proxy
-from cookbook.already_built.cli_process_gate import main as run_cli_gate
+from examples.already_built.http_sidecar_proxy import main as run_sidecar_proxy
+from examples.already_built.cli_process_gate import main as run_cli_gate
 
 # Category 2: Being Built Right Now
-from cookbook.being_built.openai_tool_calling_guard import main as run_openai_guard
-from cookbook.being_built.anthropic_computer_use_guard import main as run_anthropic_guard
-from cookbook.being_built.gemini_function_calling_guard import main as run_gemini_guard
+from examples.being_built.openai_tool_calling_guard import main as run_openai_guard
+from examples.being_built.anthropic_computer_use_guard import main as run_anthropic_guard
+from examples.being_built.gemini_function_calling_guard import main as run_gemini_guard
 
 # Category 3: Future Autonomous Swarms
-from cookbook.future_swarms.sovereign_agent_passport_mesh import main as run_passport_mesh
-from cookbook.future_swarms.zk_privacy_auditing import main as run_zk_auditing
-from cookbook.future_swarms.confidential_enclave_anchor import main as run_enclave_anchor
-from cookbook.future_swarms.l402_autonomous_escrow import main as run_l402_escrow
-from cookbook.container_defense.docker_agent_guard import main as run_docker_defense
+from examples.future_swarms.sovereign_agent_passport_mesh import main as run_passport_mesh
+from examples.future_swarms.zk_privacy_auditing import main as run_zk_auditing
+from examples.future_swarms.confidential_enclave_anchor import main as run_enclave_anchor
+from examples.future_swarms.l402_autonomous_escrow import main as run_l402_escrow
+from examples.container_defense.docker_agent_guard import main as run_docker_defense
 
 
 def test_category_1_already_built_recipes():
