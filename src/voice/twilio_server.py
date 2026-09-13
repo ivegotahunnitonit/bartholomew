@@ -43,48 +43,61 @@ app.add_middleware(
 
 lead_mgr = LeadManager()
 active_sessions: Dict[str, RealtimeVoiceSession] = {}
-conversation_histories: Dict[str, List[Dict[str, Any]]] = {}
+conversation_histories: Dict[str, List[Any]] = {}
+active_call_states: Dict[str, Any] = {}
 
 
 def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
-    """Queries conversational AI in real-time with sub-millisecond objection matching and model fallback."""
-    if call_sid not in conversation_histories:
-        conversation_histories[call_sid] = []
+    """Queries conversational AI in real-time with full multi-turn memory, entity tracking, and model fallback."""
+    from src.voice.sales_persona import (
+        classify_recipient_intent,
+        CallRecipientType,
+        generate_voicemail_text,
+        LiveCallState
+    )
 
-    # 1. Recipient Intent Classification: check if answering party is voicemail/IVR
-    from src.voice.sales_persona import classify_recipient_intent, CallRecipientType, generate_voicemail_text
+    if call_sid not in active_call_states:
+        active_call_states[call_sid] = LiveCallState()
+    call_state = active_call_states[call_sid]
+
+    # 1. Update FSM, extract frameworks, operational pains, and prospect name
+    stage = call_state.advance_turn(user_speech)
+
+    # 2. Check if answering party is voicemail/IVR
     rec_type, reason = classify_recipient_intent(user_speech)
     if rec_type in (CallRecipientType.VOICEMAIL, CallRecipientType.IVR):
         logger.info(f"Voicemail detected during speech analysis [{call_sid}]: {reason}")
-        reply = format_speech_for_natural_delivery(generate_voicemail_text("there", "your team"))
-        conversation_histories[call_sid].append({"role": "model", "parts": [{"text": reply}]})
+        reply = format_speech_for_natural_delivery(generate_voicemail_text(call_state.prospect_name, call_state.company_name))
         return reply
 
-    # 2. Query Gemini in real-time with Astra-level conversational prompt
+    if call_sid not in conversation_histories:
+        conversation_histories[call_sid] = []
+
+    # 3. Query Gemini with full multi-turn history and personalized system instruction
     key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if key:
-        prompt = generate_session_instructions("there")
+        stack_str = ", ".join(call_state.detected_frameworks) if call_state.detected_frameworks else None
+        system_prompt = generate_session_instructions(
+            prospect_name=call_state.prospect_name,
+            company_name=call_state.company_name,
+            tech_stack=stack_str,
+            current_stage=stage
+        )
         try:
             from google import genai
             from google.genai import types
 
             client = genai.Client(api_key=key)
             history = conversation_histories[call_sid]
-            history.append({"role": "user", "parts": [{"text": user_speech}]})
-
-            contents = (
-                f"{prompt}\n\n"
-                f"Prospect just said on phone: \"{user_speech}\"\n\n"
-                "Reply as Alex in 1 or 2 short, natural, conversational sentences (15-25 words max). "
-                "Speak like a fellow engineer/builder -- warm, sharp, totally unscripted, and directly addressing what they just said:"
-            )
+            history.append(types.Content(role="user", parts=[types.Part.from_text(text=user_speech)]))
 
             for model_name in ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-flash-latest"]:
                 try:
                     resp = client.models.generate_content(
                         model=model_name,
-                        contents=contents,
+                        contents=history,
                         config=types.GenerateContentConfig(
+                            system_instruction=system_prompt,
                             thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL),
                             max_output_tokens=300,
                             temperature=0.7
@@ -92,7 +105,7 @@ def get_gemini_alex_reply(user_speech: str, call_sid: str) -> str:
                     )
                     if resp and resp.text:
                         reply = format_speech_for_natural_delivery(resp.text.strip())
-                        history.append({"role": "model", "parts": [{"text": reply}]})
+                        history.append(types.Content(role="model", parts=[types.Part.from_text(text=reply)]))
                         return reply
                 except Exception as e:
                     logger.warning(f"Model {model_name} failed: {e}. Trying fallback...")

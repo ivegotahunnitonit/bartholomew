@@ -175,6 +175,25 @@ def extract_email_from_speech(speech: str) -> Optional[str]:
     return None
 
 
+def extract_name_from_speech(speech: str) -> Optional[str]:
+    """
+    Extracts prospect name from natural spoken introductions (e.g. 'This is Sarah', 'My name is Marcus').
+    """
+    if not speech:
+        return None
+    cleaned = speech.strip()
+    match = re.search(r"\b(?:my name is|i'm|i am|this is)\s+([A-Z][a-z]{1,15}|[a-z]{2,15})\b", cleaned, re.IGNORECASE)
+    if match:
+        name = match.group(1).capitalize()
+        false_positives = {
+            "fine", "good", "busy", "here", "not", "an", "the", "just", "sorry",
+            "driving", "okay", "alright", "tired", "swamped", "meeting", "ready"
+        }
+        if name.lower() not in false_positives:
+            return name
+    return None
+
+
 @dataclass
 class LiveCallState:
     """
@@ -200,6 +219,12 @@ class LiveCallState:
         """
         self.turn_count += 1
         speech_lower = user_speech.lower()
+
+        # 0. Extract prospect name if introduced
+        if self.prospect_name in ("there", ""):
+            discovered_name = extract_name_from_speech(user_speech)
+            if discovered_name:
+                self.prospect_name = discovered_name
 
         # 1. Update recipient classification if unestablished
         if self.recipient_type in (CallRecipientType.UNKNOWN, CallRecipientType.HUMAN):
