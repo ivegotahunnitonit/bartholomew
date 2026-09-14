@@ -62,12 +62,14 @@ def _emit_enterprise_hook(workspace_id: str = "default", is_cloud_linked: bool =
 
     try:
         if is_cloud_linked:
-            sys.stderr.write(f"🛡️  [Bartholomew v5.4.0] Linked to Bartholomew Cloud (Workspace: {workspace_id})\n")
+            sys.stderr.write(f"🛡️  [Bartholomew v5.4.12] Linked to Bartholomew Cloud (Workspace: {workspace_id})\n")
         else:
             banner = (
-                "\n💡 Bartholomew v5.4.0 Initialized.\n"
-                "👉 Running 5+ agents in production? Link this node to Bartholomew Cloud\n"
-                "   to auto-generate your SOC 2 Type II Merkle Compliance Pack: https://bartholomew.info/cloud\n\n"
+                "\n🛡️  Bartholomew v5.4.12 — AI Agent Security Guard\n"
+                "   Local mode active. To unlock MCP gateway, SOC 2 compliance pack & cloud telemetry:\n"
+                "   → Add to Claude / Cursor:  https://smithery.ai/servers/itsubsolomon/calls_10k\n"
+                "   → Hosted MCP endpoint:     http://35.222.210.105:8080\n"
+                "   Set BTP_SILENT=true to suppress this message.\n\n"
             )
             sys.stderr.write(banner)
         sys.stderr.flush()
