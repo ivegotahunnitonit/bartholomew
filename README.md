@@ -1,15 +1,18 @@
-# Bartholomew — BTP v5.4.10
+# Bartholomew — BTP v5.4.12
 
-**In-Process AI Agent Execution Gateway** — sub-35µs AST gating, secret scrubbing, and tamper-evident audit receipts for autonomous agent runtimes.
+**In-Process AI Agent Execution Gateway** — sub-35µs AST gating, secret scrubbing, eBPF kernel sandboxing, and L402 Lightning Network settlement for autonomous agent runtimes.
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
+[![Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Bartholomew%20Security%20Gate-2ea44f?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/bartholomew-ai-security-gate-soc-2-auditor)
+[![Smithery](https://img.shields.io/badge/Smithery.ai-Bartholomew%20MCP-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN3YxMGwxMCA1IDEwLTVWN0wxMiAyeiIvPjwvc3ZnPg==)](https://smithery.ai)
+[![Glama](https://img.shields.io/badge/Glama.ai-Bartholomew%20Registry-7C3AED)](https://glama.ai/mcp)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ivegotahunnitonit/bartholomew/tree/main/examples/future_swarms/cloudflare)
 [![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
 [![Pricing](https://img.shields.io/badge/Pricing-Plans-10b981)](https://bartholomew.info/pricing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-2872%20passing-brightgreen)](tests/)
-[![Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Bartholomew%20Security%20Gate-2ea44f?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/bartholomew-ai-security-gate-soc-2-auditor)
+[![Tests](https://img.shields.io/badge/tests-2879%20passing-brightgreen)](tests/)
 
 [![Gemini 3.8](https://img.shields.io/badge/Google%20Gemini-3.8%20Ultra-4285F4?logo=google&logoColor=white)](examples/README.md)
 [![Claude 3.7](https://img.shields.io/badge/Anthropic-Claude%203.7%20Sonnet-D97706?logo=anthropic&logoColor=white)](examples/README.md)
@@ -100,23 +103,54 @@ const receipt = guard.evaluateAction({
 // receipt.verdict === "DENY"  (blocked in ~11µs, Merkle receipt attached)
 ```
 
-### MCP — Claude Desktop, Cursor, Windsurf
+### MCP — Claude Desktop, Cursor, Windsurf, Smithery.ai & Glama.ai
 
 ```bash
-# Starts the BTP stdio/SSE proxy — all tool calls pass through it
-python -m src.mcp_server
+# 1-Click install via Smithery.ai CLI:
+npx -y @smithery/cli install bartholomew --client claude
+
+# Or run direct stdio MCP server proxy:
+python mcp_server.py
 ```
 
-Config examples for each IDE are in [`examples/ides/`](examples/ides/).
+### Cursor & VS Code Extension
 
-### GitHub Actions
+Install the official pre-built extension for real-time AST threat notifications in Cursor / VS Code:
+```bash
+code --install-extension packages/vscode-extension/bartholomew-guard-vscode-5.4.12.vsix
+```
 
+### Cloudflare Workers AI — Edge Security Proxy
+
+Deploy a sub-50µs AST security gate across Cloudflare's 300+ city global network with 1 click:
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ivegotahunnitonit/bartholomew/tree/main/examples/future_swarms/cloudflare)
+
+```bash
+cd examples/future_swarms/cloudflare
+npx wrangler deploy
+```
+
+### GitHub Actions (GitHub Marketplace)
+
+Add automated AST security audits and credential scanning to every pull request:
 ```yaml
-- name: BTP Security Gate
-  uses: ivegotahunnitonit/bartholomew@v5.4.10
+- name: Bartholomew AI Security Gate & SOC 2 Auditor
+  uses: ivegotahunnitonit/bartholomew@v5.4.12
   with:
     fail-on-violation: "true"
     generate-compliance-pack: "true"
+```
+
+### Bitcoin Lightning & L402 Swarm Settlements (Alby Hub)
+
+Manage your 24/7 self-custodial Lightning node and issue machine-to-machine micropayments:
+```bash
+# Check node health & spendable satoshi balance
+python cli.py lightning status
+python cli.py lightning balance
+
+# Mint a live Lightning Network invoice for tool audit fees
+python cli.py lightning invoice --sats 30000 --desc "Swarm AST Execution Pool"
 ```
 
 ---
