@@ -84,3 +84,20 @@ def test_cli_hook_lifecycle():
             assert not os.path.exists(hook_file)
         finally:
             os.chdir(orig_cwd)
+
+
+def test_cli_ebpf_commands():
+    from src.btp_guard.cli import cmd_ebpf_status, cmd_ebpf_test
+    class DummyArgs:
+        pass
+    args = DummyArgs()
+    cmd_ebpf_status(args)
+    cmd_ebpf_test(args)
+
+
+def test_cli_swarm_command():
+    from src.btp_guard.cli import cmd_swarm_status
+    class DummyArgs:
+        pass
+    args = DummyArgs()
+    cmd_swarm_status(args)

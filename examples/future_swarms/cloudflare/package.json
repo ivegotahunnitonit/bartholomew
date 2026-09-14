@@ -1,0 +1,27 @@
+{
+  "name": "btp-cloudflare-edge-guard",
+  "version": "5.4.12",
+  "description": "Bartholomew Sub-50us AST Security & A2A Cryptographic Nonce Gate for Cloudflare Workers AI & Agents",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers-ai",
+    "ai-agents",
+    "btp",
+    "security-gate",
+    "ast-analysis"
+  ],
+  "author": "Bartholomew Autonomous Systems",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260901.0",
+    "typescript": "^5.5.0",
+    "wrangler": "^3.100.0"
+  }
+}

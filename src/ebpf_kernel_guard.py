@@ -54,8 +54,9 @@ class KernelSecurityPolicy:
         self.network_egress_restricted = network_egress_restricted
 
     def evaluate_execve(self, binary_path: str) -> tuple[bool, Optional[str]]:
-        base_cmd = os.path.basename(binary_path).strip()
-        if binary_path in self.blocked_binaries or base_cmd in self.blocked_binaries:
+        cmd_part = binary_path.strip().split()[0] if binary_path.strip() else ""
+        base_cmd = os.path.basename(cmd_part).strip()
+        if binary_path in self.blocked_binaries or cmd_part in self.blocked_binaries or base_cmd in self.blocked_binaries:
             return False, f"BTP-KERNEL-001: Execution of '{binary_path}' blocked by kernel policy."
         return True, None
 
