@@ -53,3 +53,34 @@ def test_cli_linter_detects_hardcoded_credentials():
         assert results["files_scanned"] == 1
         assert any(i["type"] == "HARDCODED_SECRET" for i in results["issues"])
         assert results["score"] < 100
+
+
+def test_cli_hook_lifecycle():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        git_dir = os.path.join(tmpdir, ".git")
+        os.makedirs(git_dir, exist_ok=True)
+
+        orig_cwd = os.getcwd()
+        try:
+            os.chdir(tmpdir)
+            from src.btp_guard.cli import cmd_hook_install, cmd_hook_status, cmd_hook_uninstall
+            class DummyArgs:
+                pass
+            args = DummyArgs()
+
+            # 1. Install hook
+            cmd_hook_install(args)
+            hook_file = os.path.join(git_dir, "hooks", "pre-commit")
+            assert os.path.exists(hook_file)
+            with open(hook_file, "r", encoding="utf-8") as f:
+                content = f.read()
+            assert "Bartholomew" in content
+
+            # 2. Status check
+            cmd_hook_status(args)
+
+            # 3. Uninstall hook
+            cmd_hook_uninstall(args)
+            assert not os.path.exists(hook_file)
+        finally:
+            os.chdir(orig_cwd)

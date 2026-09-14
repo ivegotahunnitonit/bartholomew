@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "5.4.11"
+version = "5.4.12"
 authors = [
   { name="Itsub Alemayehu", email="security@bartholomew.info" },
 ]
-description = "BTP v5.4.10 Universal Cryptographic Trust Guard for Autonomous Agent Frameworks (LangGraph, AutoGen, CrewAI)"
+description = "BTP v5.4.12 Universal Cryptographic Trust Guard for Frontier Swarms (Cloudflare, Gemini 3.8, Claude 3.7, GPT-Astra, AutoGen, Copilot)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
