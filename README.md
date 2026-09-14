@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
 [![Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Bartholomew%20Security%20Gate-2ea44f?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/bartholomew-ai-security-gate-soc-2-auditor)
-[![Smithery](https://img.shields.io/badge/Smithery.ai-Bartholomew%20MCP-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN3YxMGwxMCA1IDEwLTVWN0wxMiAyeiIvPjwvc3ZnPg==)](https://smithery.ai)
+[![smithery badge](https://smithery.ai/badge/itsubsolomon/calls_10k)](https://smithery.ai/servers/itsubsolomon/calls_10k)
 [![Glama](https://img.shields.io/badge/Glama.ai-Bartholomew%20Registry-7C3AED)](https://glama.ai/mcp)
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ivegotahunnitonit/bartholomew/tree/main/examples/future_swarms/cloudflare)
 [![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
