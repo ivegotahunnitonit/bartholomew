@@ -8,7 +8,14 @@
 [![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
 [![Pricing](https://img.shields.io/badge/Pricing-Plans-10b981)](https://bartholomew.info/pricing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-2837%20passing-brightgreen)](tests/)
+[![Tests](https://img.shields.io/badge/tests-2872%20passing-brightgreen)](tests/)
+
+[![Gemini 3.8](https://img.shields.io/badge/Google%20Gemini-3.8%20Ultra-4285F4?logo=google&logoColor=white)](examples/README.md)
+[![Claude 3.7](https://img.shields.io/badge/Anthropic-Claude%203.7%20Sonnet-D97706?logo=anthropic&logoColor=white)](examples/README.md)
+[![GPT-Astra](https://img.shields.io/badge/OpenAI-GPT--Astra%20%2F%20Agents%20SDK-10A37F?logo=openai&logoColor=white)](examples/README.md)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Workers%20AI%20%2F%20Agents-F38020?logo=cloudflare&logoColor=white)](examples/README.md)
+[![AutoGen](https://img.shields.io/badge/Microsoft-AutoGen%20Swarm-00A4EF?logo=microsoft&logoColor=white)](examples/README.md)
+[![Copilot / Cursor](https://img.shields.io/badge/IDE-Copilot%20%2F%20Cursor%20%2F%20Windsurf-7C3AED?logo=githubcopilot&logoColor=white)](examples/README.md)
 
 ---
 
@@ -153,19 +160,19 @@ docs/                     # Specs: threat-model.md, btp-protocol-spec.md, quicks
 
 ---
 
-## Framework adapters
+## Framework & Frontier Partner Adapters
 
-| Framework | Import |
-|---|---|
-| LangChain | `from src.framework_adapters.langchain_guard import BTPLangChainGuard` |
-| LangGraph | `from src.framework_adapters.langgraph_guard import BTPLangGraphGuard` |
-| AutoGen | `from src.framework_adapters.autogen_guard import BTPAutoGenGuard` |
-| CrewAI | `from src.framework_adapters.crewai_guard import BTPCrewAIGuard` |
-| Semantic Kernel | `from src.framework_adapters.semantic_kernel_guard import BTPSemanticKernelGuard` |
-| Raw OpenAI | `from src.framework_adapters.universal import UniversalBTPModelGuard` |
-| Raw Anthropic | `from src.framework_adapters.universal import UniversalBTPModelGuard` |
+| Frontier Partner / Swarm | Integration Guard | Recipe Path |
+|---|---|---|
+| **Google Gemini 3.8 Ultra** | `@btp_gemini_38_tool()` / Thought Scratchpad Gate | [`examples/being_built/google_gemini38_guard.py`](examples/being_built/google_gemini38_guard.py) |
+| **Anthropic Claude 3.7 Sonnet** | `Claude37ToolGuard` / Hybrid Thinking Interceptor | [`examples/being_built/anthropic_claude37_guard.py`](examples/being_built/anthropic_claude37_guard.py) |
+| **GPT-Astra / OpenAI Agents SDK** | `OpenAIToolGuard` / Dynamic Schema Verifier | [`examples/being_built/openai_agents_sdk_guard.py`](examples/being_built/openai_agents_sdk_guard.py) |
+| **Cloudflare Workers AI & Agents** | Sub-50µs Edge AST Gate & KV Replay Defense | [`examples/future_swarms/cloudflare_edge_agent_guard.ts`](examples/future_swarms/cloudflare_edge_agent_guard.ts) |
+| **Microsoft AutoGen Swarm** | `@btp_autogen_guard` / Consensus Quorum & AWU Barter | [`examples/future_swarms/autogen_swarm_consensus.py`](examples/future_swarms/autogen_swarm_consensus.py) |
+| **GitHub Copilot / Cursor / Windsurf** | MCP Stdio Proxy / `.cursorrules` / `.mdc` Sentry | [`examples/ides/`](examples/ides/) & [`mcp_server.py`](mcp_server.py) |
+| **Universal Swarm (A2A)** | `UniversalSwarmDelegator` (Ed25519 + L402 Rails) | [`examples/future_swarms/universal_swarm_delegation.py`](examples/future_swarms/universal_swarm_delegation.py) |
 
-Full recipes in [`examples/`](examples/).
+Full documentation and quickstarts in the [Master Cookbook](examples/README.md).
 
 ---
 
