@@ -19,13 +19,13 @@ const FAQS: FAQItem[] = [
     question: 'Does Bartholomew require a background proxy daemon (Confused Deputy Risk)?',
     category: 'ARCHITECTURE',
     shortAnswer: 'No. Bartholomew runs 100% in-process as an embedded library with zero daemons, zero sockets, and zero IPC.',
-    detailedAnswer: 'Running a local background proxy daemon creates a potential attack surface. Bartholomew is designed as an embedded in-process library. When integrated with LangGraph, CrewAI, or Python scripts, the invariant evaluator executes directly in caller memory with near-zero latency, zero inter-process communication, zero open network sockets, and zero background daemons.'
+    detailedAnswer: 'Running a local background proxy daemon creates a potential attack surface. Bartholomew is designed as an embedded in-process library. When integrated with Claude, OpenAI, AutoGen, or Python scripts, the invariant evaluator executes directly in caller memory with near-zero latency, zero inter-process communication, zero open network sockets, and zero background daemons.'
   },
   {
     question: 'Why not rely solely on Claude Desktop native human confirmation popups?',
     category: 'COMPARISON',
     shortAnswer: 'Native popups fail under alert fatigue, cannot run in unattended swarms, and provide zero cryptographic proof.',
-    detailedAnswer: 'Native dialog popups are useful for casual desktop exploration, but break down in production for 4 reasons: (1) Alert Fatigue: Humans blindly click "Allow" after dozens of prompts, missing destructive payloads. (2) Unattended Swarms: High-velocity autonomous agents (LangGraph, AutoGen, CI/CD bots) run thousands of actions/hour where manual clicking is impossible. (3) Absence of Invariant Mathematics: Popups cannot enforce exponential loop decay (LDMU), spend caps, or Coulomb concurrency backoffs. (4) Zero Non-Repudiation: Native popups generate no signed Ed25519 receipts for downstream databases or SOC 2 compliance auditors.'
+    detailedAnswer: 'Native dialog popups are useful for casual desktop exploration, but break down in production for 4 reasons: (1) Alert Fatigue: Humans blindly click "Allow" after dozens of prompts, missing destructive payloads. (2) Unattended Swarms: High-velocity autonomous agents (Claude, OpenAI, AutoGen, CI/CD bots) run thousands of actions/hour where manual clicking is impossible. (3) Absence of Invariant Mathematics: Popups cannot enforce exponential loop decay (LDMU), spend caps, or Coulomb concurrency backoffs. (4) Zero Non-Repudiation: Native popups generate no signed Ed25519 receipts for downstream databases or SOC 2 compliance auditors.'
   },
   {
     question: 'How does Bartholomew protect against supply-chain poisoning in agent dependencies?',

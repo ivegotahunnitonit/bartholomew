@@ -59,7 +59,7 @@ const ROLE_PROFILES: RoleProfile[] = [
       'BTP Target Resource Execution Adapter (POSIX / Linux)'
     ],
     suggestedIntegrations: [
-      { name: 'CrewAI / AutoGen Multi-Agent Hook', type: 'Framework Adapter', benefit: 'Binds swarm objective cycles directly to BTP authority proofs', status: 'RECOMMENDED' },
+      { name: 'Claude / AutoGen Multi-Agent Hook', type: 'Framework Adapter', benefit: 'Binds swarm objective cycles directly to BTP authority proofs', status: 'RECOMMENDED' },
       { name: 'DePIN Compute Exchange Gateway', type: 'Marketplace', benefit: 'Automates inter-node compute buying and barter settlement', status: 'AVAILABLE' }
     ],
     allowedSandboxActions: [

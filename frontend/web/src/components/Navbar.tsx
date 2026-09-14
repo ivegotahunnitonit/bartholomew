@@ -33,25 +33,27 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Monospace Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-mono font-semibold text-[#a1a1aa]">
-          <a href="/#quickstart" className="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+        {/* Clean Modern SaaS Nav Links */}
+        <nav className="hidden md:flex items-center gap-7 text-sm font-sans font-medium text-zinc-300">
+          <a href="/#quickstart" className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>[QUICKSTART]</span>
+            <span>Quickstart</span>
           </a>
-          <a href="/#threat-model" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [THREAT MODEL]
+          <a href="/#threat-model" className="hover:text-white transition-colors">
+            Threat Model
           </a>
-          <Link to="/cookbook" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [COOKBOOK]
+          <Link to="/cookbook" className="hover:text-white transition-colors">
+            Cookbook
           </Link>
-          <Link to="/compliance" className="hover:text-[#ffffff] transition hover:text-[#10b981]">
-            [COMPLIANCE]
+          <Link to="/compliance" className="hover:text-white transition-colors">
+            Compliance
           </Link>
-
-          <Link to="/cloud" className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">
+          <a href="/#pricing" className="hover:text-white transition-colors">
+            Pricing
+          </a>
+          <Link to="/cloud" className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span>[CLOUD SAAS]</span>
+            <span>Cloud SaaS</span>
           </Link>
         </nav>
 
@@ -136,31 +138,37 @@ export default function Navbar() {
           <a
             href="/#threat-model"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-sans font-medium text-zinc-300 hover:text-white"
           >
-            [THREAT MODEL &amp; FAQ]
+            Threat Model &amp; FAQ
           </a>
           <Link
             to="/cookbook"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-sans font-medium text-zinc-300 hover:text-white"
           >
-            [UNIVERSAL COOKBOOK]
+            Universal Cookbook
           </Link>
           <Link
             to="/compliance"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-[#d4d4d8] hover:text-[#ffffff]"
+            className="block text-sm font-sans font-medium text-zinc-300 hover:text-white"
           >
-            [COMPLIANCE TIMELINE]
+            Compliance &amp; SOC 2
           </Link>
-
+          <a
+            href="/#pricing"
+            onClick={() => setMobileOpen(false)}
+            className="block text-sm font-sans font-medium text-zinc-300 hover:text-white"
+          >
+            Pricing &amp; Plans
+          </a>
           <Link
             to="/cloud"
             onClick={() => setMobileOpen(false)}
-            className="block text-sm font-mono text-cyan-400 hover:text-cyan-300"
+            className="block text-sm font-sans font-medium text-cyan-400 hover:text-cyan-300"
           >
-            [CLOUD SAAS CONSOLE]
+            Cloud SaaS Console
           </Link>
           <div className="pt-3 border-t border-[#222222] flex flex-col gap-2.5">
             <a

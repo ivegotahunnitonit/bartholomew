@@ -28,7 +28,7 @@ const APPLICATIONS = [
   {
     title: 'Multi-Agent Swarm Orchestration',
     pipeline: 'PERCEIVE → PLAN → EXECUTE → VERIFY → ADAPT',
-    desc: 'Governs multi-agent teams (LangChain, AutoGen, CrewAI) with Bayesian risk scoring and Ed25519 cryptographic consensus before state transitions.',
+    desc: 'Governs multi-agent teams (Claude, AutoGen, OpenAI) with Bayesian risk scoring and Ed25519 cryptographic consensus before state transitions.',
     icon: Layers,
     color: 'text-amber-400',
     bg: 'bg-amber-500/10'

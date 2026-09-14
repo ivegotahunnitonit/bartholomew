@@ -119,7 +119,7 @@ function EcosystemGatewayBanner() {
               <span>&rarr;</span>
             </div>
             <div className="text-white font-bold text-sm mb-1">Universal Recipes</div>
-            <div className="text-zinc-500 text-xs leading-relaxed">Tested recipes for CrewAI, AutoGen, LangGraph, and LlamaIndex.</div>
+            <div className="text-zinc-500 text-xs leading-relaxed">Tested recipes for Claude, OpenAI, Gemini, and AutoGen.</div>
           </Link>
 
           <Link

@@ -64,7 +64,7 @@ const UPCOMING_MILESTONES: VersionMilestone[] = [
     status: 'LIVE',
     title: 'Multi-Framework Adapters & Container Defense-in-Depth',
     highlights: [
-      'Native drop-in framework adapters for CrewAI (BTPTaskGuard), LangGraph (StateGraph gates), and AutoGen.',
+      'Native drop-in framework adapters for Claude (Computer Use), OpenAI (Agents SDK), and AutoGen.',
       'Claude Desktop and AI IDE tool gate proxy supporting standard Model Context Protocol (MCP).',
       'Defense-in-depth container sandboxing: pairs Layer-7 semantic AST gates with Docker and gVisor isolation.',
       'Fastest and most reliable local AST safety gating with 100% clean automated test suite passes.'
@@ -165,7 +165,7 @@ export default function Founder() {
                   <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30 font-mono font-bold">CURRENT PRODUCTION RUNTIME</span>
                 </span>
                 <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                  With <strong>BTP v5.4</strong>, we delivered the definitive sovereign security runtime for autonomous AI agents. We unified the fastest and most reliable in-memory local AST safety gating, zero prompt leakage, cryptographic agent passports, and native framework adapters for CrewAI, LangGraph, AutoGen, and Claude MCP—with <strong>100% clean test passes across comprehensive automated regression suites</strong>.
+                  With <strong>BTP v5.4</strong>, we delivered the definitive sovereign security runtime for autonomous AI agents. We unified the fastest and most reliable in-memory local AST safety gating, zero prompt leakage, cryptographic agent passports, and native framework adapters for Claude, OpenAI, AutoGen, and Cloudflare Workers—with <strong>100% clean test passes across comprehensive automated regression suites</strong>.
                 </p>
               </div>
 

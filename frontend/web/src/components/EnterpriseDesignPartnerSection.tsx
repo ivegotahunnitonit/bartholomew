@@ -37,7 +37,7 @@ export default function EnterpriseDesignPartnerSection() {
 
           <div className="flex items-center gap-3 shrink-0">
             <a
-              href="mailto:enterprise@bartholomew.info?subject=Bartholomew%20Enterprise%20Design%20Partner%20Inquiry&body=Hi%20Bartholomew%20Team%2C%0A%0AWe%20are%20building%20autonomous%20agentic%20workflows%20using%20%5BLangChain%20%2F%20CrewAI%20%2F%20AutoGen%5D%20and%20would%20like%20to%20apply%20for%20the%2014-day%20assisted%20enterprise%20pilot.%0A%0AOrganization%3A%20%0ATeam%20Size%3A%20%0APrimary%20Use%20Case%3A%20%0A"
+              href="mailto:enterprise@bartholomew.info?subject=Bartholomew%20Enterprise%20Design%20Partner%20Inquiry&body=Hi%20Bartholomew%20Team%2C%0A%0AWe%20are%20building%20autonomous%20agentic%20workflows%20using%20%5BClaude%20%2F%20OpenAI%20%2F%20AutoGen%5D%20and%20would%20like%20to%20apply%20for%20the%2014-day%20assisted%20enterprise%20pilot.%0A%0AOrganization%3A%20%0ATeam%20Size%3A%20%0APrimary%20Use%20Case%3A%20%0A"
               className="px-5 py-3 bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-black font-mono font-bold text-xs rounded-xl transition-all duration-200 flex items-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.3)] active:scale-95"
             >
               <span>APPLY FOR 14-DAY PILOT</span>
@@ -56,7 +56,7 @@ export default function EnterpriseDesignPartnerSection() {
               </div>
               <h3 className="font-mono text-sm font-bold text-white mb-2.5 group-hover:text-[#10b981] transition-colors">Native Framework Adapters</h3>
               <p className="text-xs text-[#a1a1aa] leading-relaxed font-sans">
-                Drop-in wrappers for LangChain (<code className="text-[#10b981] bg-[#10b981]/10 px-1 py-0.5 rounded">BartholomewLangChainTool</code>), CrewAI (<code className="text-[#10b981] bg-[#10b981]/10 px-1 py-0.5 rounded">@btp_crewai_tool</code>), AutoGen, and LlamaIndex. Enforce security without re-architecting your agents.
+                Drop-in wrappers for Claude (<code className="text-[#10b981] bg-[#10b981]/10 px-1 py-0.5 rounded">guard.check(tool_input)</code>), OpenAI (<code className="text-[#10b981] bg-[#10b981]/10 px-1 py-0.5 rounded">btp_guard.auto_patch()</code>), Gemini, and AutoGen. Enforce security without re-architecting your agents.
               </p>
             </div>
             <div className="mt-5 pt-3.5 border-t border-[#27272a]/60 text-[11px] font-mono text-[#10b981] flex items-center gap-1.5">

@@ -13,32 +13,26 @@ interface PartnerLogo {
 export default function EnterpriseEcosystemBanner() {
   const partners: PartnerLogo[] = [
     {
-      name: 'CrewAI',
-      label: 'Native BTPTaskGuard & WrapTools',
-      category: 'MULTI-AGENT FRAMEWORK',
-      badge: 'Drop-In Guard',
-      color: '#f59e0b',
+      name: 'Cloudflare Workers AI',
+      label: 'Serverless Edge Invariant Gate',
+      category: 'EDGE RUNTIME',
+      badge: 'Zero Cold Start',
+      color: '#f38020',
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3L4 7.5v9L12 21l8-4.5v-9L12 3z" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="9" cy="11" r="1.5" fill="#f59e0b" />
-          <circle cx="15" cy="11" r="1.5" fill="#f59e0b" />
-          <path d="M9 15h6" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M19.5 13.5c-.3-1.6-1.4-2.8-2.8-3.2-.3-.1-.6-.1-.9-.1h-1.3V8.7h-2.2v1.5h-1.5V8.7H8.6v1.5H7.1V8.7H4.9v1.5H3.7c-2.8 0-5.1 1.9-5.6 4.7-.5 2.6.8 5.1 3.2 6.1 3.6 1.5 7.7 1.3 11.2-.5 3.3-1.7 5.9-4.8 6.8-8.5z" stroke="#f38020" strokeWidth="1.6" />
         </svg>
       )
     },
     {
-      name: 'LangGraph & LangChain',
-      label: 'StateGraph Invariant Node Gates',
-      category: 'GRAPH ORCHESTRATION',
-      badge: 'State Interceptor',
-      color: '#10b981',
+      name: 'xAI Grok 3',
+      label: 'Real-Time Frontier Wire Interceptor',
+      category: 'REASONING RUNTIME',
+      badge: 'Grok Guarded',
+      color: '#ffffff',
       icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-          <circle cx="6" cy="6" r="3" fill="#10b981" />
-          <circle cx="18" cy="6" r="3" fill="#10b981" />
-          <circle cx="12" cy="18" r="3" fill="#10b981" />
-          <path d="M8.5 7.5l7 0M7.5 8.5l3.5 7M16.5 8.5l-3.5 7" stroke="#10b981" strokeWidth="1.75" strokeLinecap="round" />
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.8">
+          <path d="M4 4l16 16M4 20L20 4" strokeLinecap="round" />
         </svg>
       )
     },
@@ -191,7 +185,7 @@ export default function EnterpriseEcosystemBanner() {
             <span>[ UNIVERSAL AGENT FRAMEWORKS &amp; RUNTIMES ]</span>
           </div>
           <p className="text-xs text-zinc-400 font-sans max-w-2xl mx-auto">
-            Zero-friction interoperability. Protects CrewAI, LangGraph, AutoGen, Claude, and OpenAI tool dispatches with deterministic in-process AST invariant gating before execution hits the operating system or database.
+            Zero-friction interoperability. Protects Claude, OpenAI, Gemini, Cloudflare, Grok, and AutoGen tool dispatches with deterministic in-process AST invariant gating before execution hits the operating system or database.
           </p>
         </div>
 

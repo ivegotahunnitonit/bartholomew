@@ -91,90 +91,90 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
           {/* Free Tier */}
-          <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-8 flex flex-col justify-between hover:border-[#333333] transition-all relative">
+          <div className="bg-zinc-950/70 border border-white/[0.08] backdrop-blur-xl rounded-2xl p-8 flex flex-col justify-between hover:border-white/20 transition-all relative">
             <div>
-              <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#71717a] mb-2">
+              <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">
                 BUILDER / OSS
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-extrabold">$0</span>
-                <span className="text-[#71717a] text-sm">/ forever</span>
+                <span className="text-4xl font-extrabold text-white">$0</span>
+                <span className="text-zinc-400 text-sm">/ forever</span>
               </div>
-              <p className="text-sm text-[#a1a1aa] mb-6">
+              <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
                 Open-source safety kernel for solo developers, indie hackers, and local CLI testing.
               </p>
-              <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
+              <ul className="space-y-3.5 text-sm text-zinc-200 mb-8">
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Sub-35µs In-Process AST Safety Engine</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Unlimited local evaluations (Free Forever)</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Cursor, VS Code & Windsurf Rules</span>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Cursor, VS Code &amp; Claude Rules</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>Community Discord & GitHub Support</span>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Community Discord &amp; GitHub Support</span>
                 </li>
               </ul>
             </div>
             <button
               onClick={handleFreeKey}
-              className="w-full py-3 px-4 bg-[#18181b] hover:bg-[#27272a] text-white font-medium rounded-xl text-sm transition-all border border-[#27272a] flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded-xl text-sm transition-all border border-zinc-700/60 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              <Key className="w-4 h-4" />
+              <Key className="w-4 h-4 text-zinc-400" />
               <span>{copiedKey ? 'API Key Copied!' : 'Generate Free API Key'}</span>
             </button>
           </div>
 
           {/* Pro Builder */}
-          <div className="bg-[#0c0c0e] border-2 border-[#10b981] rounded-2xl p-8 flex flex-col justify-between shadow-[0_0_40px_rgba(16,185,129,0.15)] relative scale-105 z-20">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-0.5 bg-[#10b981] text-black text-xs font-bold font-mono tracking-wider rounded-full uppercase">
-              POPULAR FOR STARTUPS
+          <div className="bg-gradient-to-b from-emerald-950/20 via-zinc-950/90 to-black border-2 border-emerald-500 rounded-2xl p-8 flex flex-col justify-between shadow-[0_0_50px_rgba(16,185,129,0.2)] relative scale-105 z-20 backdrop-blur-xl">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500 text-black text-xs font-bold font-mono tracking-wider rounded-full uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+              ★ MOST POPULAR FOR STARTUPS
             </div>
             <div>
-              <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#10b981] mb-2">
+              <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 mb-2">
                 PRO STARTUP / BUILDER
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-extrabold">$49</span>
-                <span className="text-[#71717a] text-sm">/ month</span>
+                <span className="text-4xl font-extrabold text-white">$49</span>
+                <span className="text-zinc-400 text-sm">/ month</span>
               </div>
-              <p className="text-sm text-[#a1a1aa] mb-6">
-                For fast-moving startups and small teams shipping autonomous agents without fear of production breaks.
+              <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
+                For fast-moving startups and engineering teams shipping autonomous agents without fear of production breaks.
               </p>
-              <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span><strong>1,000,000</strong> evaluations/month</span>
+              <ul className="space-y-3.5 text-sm text-zinc-100 mb-8">
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span><strong>1,000,000</strong> evaluations / month</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Real-time API Key &amp; Secret Scrubber</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Runaway Spend Caps ($ bounds on retry loops)</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
-                  <span>CrewAI, LangGraph, AutoGen &amp; OpenAI Guards</span>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Claude, OpenAI, Gemini, Grok &amp; AutoGen Guards</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#10b981] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Live Cloud Telemetry &amp; Slack Threat Alerts</span>
                 </li>
               </ul>
             </div>
             <button
               onClick={() => handleCheckout('Pro Agent Builder', '$49')}
-              className="w-full py-3 px-4 bg-[#10b981] hover:bg-[#059669] text-black font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#10b981]/20"
+              className="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.35)] cursor-pointer"
             >
               <span>Subscribe to Pro ($49/mo)</span>
               <ArrowRight className="w-4 h-4" />
@@ -182,37 +182,37 @@ export default function Pricing() {
           </div>
 
           {/* Enterprise & Bonded Warranty */}
-          <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-8 flex flex-col justify-between hover:border-[#333333] transition-all relative">
+          <div className="bg-zinc-950/70 border border-purple-500/30 backdrop-blur-xl rounded-2xl p-8 flex flex-col justify-between hover:border-purple-500/50 transition-all relative">
             <div>
-              <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#a855f7] mb-2">
+              <div className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400 mb-2">
                 TEAM FLEET &amp; ENTERPRISE
               </div>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-4xl font-extrabold">$199</span>
-                <span className="text-[#71717a] text-sm">/ month</span>
+                <span className="text-4xl font-extrabold text-white">$199</span>
+                <span className="text-zinc-400 text-sm">/ month</span>
               </div>
-              <p className="text-sm text-[#a1a1aa] mb-6">
+              <p className="text-sm text-zinc-300 mb-6 leading-relaxed">
                 For scaling startups, agencies, and growing teams needing multi-tenant workspaces and SOC 2 audit evidence.
               </p>
-              <ul className="space-y-3 text-sm text-[#d4d4d8] mb-8">
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#a855f7] shrink-0" />
+              <ul className="space-y-3.5 text-sm text-zinc-200 mb-8">
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-purple-400 shrink-0" />
                   <span><strong>$10,000 Bonded Execution Warranty</strong></span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#a855f7] shrink-0" />
-                  <span>20,000,000 evaluations/month</span>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-purple-400 shrink-0" />
+                  <span>20,000,000 evaluations / month</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#a855f7] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-purple-400 shrink-0" />
                   <span>SOC 2 Type II Certified Merkle Tree</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#a855f7] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-purple-400 shrink-0" />
                   <span>Private AWS VPC / CDK Sidecar</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#a855f7] shrink-0" />
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-purple-400 shrink-0" />
                   <span>24/7 Dedicated Solutions Engineer</span>
                 </li>
               </ul>
@@ -220,16 +220,16 @@ export default function Pricing() {
             <div className="space-y-2.5">
               <button
                 onClick={() => handleCheckout('Enterprise & Bonded Warranty', '$199')}
-                className="w-full py-3 px-4 bg-[#18181b] hover:bg-[#27272a] text-white font-medium rounded-xl text-sm transition-all border border-[#27272a] flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl text-sm transition-all border border-zinc-700/60 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
-                <Shield className="w-4 h-4 text-[#a855f7]" />
+                <Shield className="w-4 h-4 text-purple-400" />
                 <span>Get Enterprise License ($199/mo)</span>
               </button>
               <button
                 onClick={() => { setModalOpen(true); setLeadSubmitted(false); }}
-                className="w-full py-2.5 px-4 bg-[#a855f7]/10 hover:bg-[#a855f7]/20 text-[#c084fc] font-semibold rounded-xl text-xs transition-all border border-[#a855f7]/30 flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-semibold rounded-xl text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5 text-[#a855f7]" />
+                <FileText className="w-3.5 h-3.5 text-purple-400" />
                 <span>Request SOC 2 Dossier &amp; Custom PoC</span>
               </button>
             </div>

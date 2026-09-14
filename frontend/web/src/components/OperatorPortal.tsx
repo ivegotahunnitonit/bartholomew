@@ -259,7 +259,7 @@ export default function OperatorPortal() {
             {ledger?.active_peer_agents || 7} <span className="text-sm text-cyan-400 font-normal">Nodes</span>
           </div>
           <div className="text-[11px] font-mono text-zinc-400">
-            CrewAI • LangGraph • AutoGen • LlamaIndex
+            Claude • OpenAI • Gemini • AutoGen
           </div>
         </div>
 

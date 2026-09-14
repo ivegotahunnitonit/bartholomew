@@ -106,7 +106,7 @@ export default function ExecutiveSummary() {
                   <span className="text-violet-400 font-mono">Sovereign Consensus</span>
                 </div>
                 <p className="text-slate-400">
-                  Multi-agent teams (LangChain, CrewAI, AutoGen) run through Bayesian risk scoring to reach cryptographic consensus before executing financial or system-level transactions.
+                  Multi-agent swarms (Claude, OpenAI, AutoGen) run through Bayesian risk scoring to reach cryptographic consensus before executing financial or system-level transactions.
                 </p>
               </div>
             </div>
