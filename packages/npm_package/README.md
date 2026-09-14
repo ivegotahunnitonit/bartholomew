@@ -11,7 +11,10 @@ Deterministic In-Process Invariant Gate & Cryptographic Attestation Protocol for
 
 ## Overview
 
-`btp-guard` is a sub-35 microsecond in-process deterministic invariant gate and cryptographic attestation engine implementing the Bartholomew Trust Protocol (BTP v5.4.10).
+`btp-guard` is a sub-35 microsecond in-process deterministic invariant gate and cryptographic attestation engine implementing the Bartholomew Trust Protocol (BTP v5.4.12).
+
+- **Smithery MCP Registry:** [https://smithery.ai/servers/itsubsolomon/calls_10k](https://smithery.ai/servers/itsubsolomon/calls_10k) (100/100 Verified)
+- **Hosted MCP Endpoint:** `http://35.222.210.105:8080` (L402 Lightning Enabled)
 
 It evaluates proposed AI agent tool actions (Bash executions, SQL queries, HTTP calls, MCP tool calls) in caller memory before execution, blocking catastrophic operations (`rm -rf`, `DROP TABLE`, destructive disk overwrites) and redacting high-entropy secrets (OpenAI, Anthropic, AWS, GitHub) while generating FIPS 186-5 Ed25519 verifiable receipts.
 

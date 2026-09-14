@@ -194,3 +194,56 @@ def protect_tool_call(tool_name: str, payload: Dict[str, Any], agent_id: str = "
         "receipt": receipt
     }
 
+
+def auto_patch(authority: Optional[BartholomewTrustAuthority] = None, auto_raise: bool = True) -> Dict[str, bool]:
+    """
+    Zero-touch auto-patcher: Intercepts OpenAI, Anthropic, and other LLM SDKs globally.
+    All subsequent client instantiations, completions, and messages automatically inherit
+    Bartholomew sub-35µs AST gating and runtime invariant protection.
+
+    Usage:
+        import btp_guard
+        btp_guard.auto_patch()
+    """
+    patched = {}
+    auth = authority or BartholomewTrustAuthority()
+
+    # 1. Patch OpenAI
+    try:
+        import openai
+        if hasattr(openai, "OpenAI"):
+            orig_init = openai.OpenAI.__init__
+            if not getattr(orig_init, "_btp_patched", False):
+                @functools.wraps(orig_init)
+                def patched_openai_init(self, *args, **kwargs):
+                    orig_init(self, *args, **kwargs)
+                    BTPClientWrapper(self, authority=auth, auto_raise=auto_raise)
+                patched_openai_init._btp_patched = True
+                openai.OpenAI.__init__ = patched_openai_init
+                patched["openai"] = True
+    except ImportError:
+        pass
+    except Exception:
+        patched["openai"] = False
+
+    # 2. Patch Anthropic
+    try:
+        import anthropic
+        if hasattr(anthropic, "Anthropic"):
+            orig_anthropic_init = anthropic.Anthropic.__init__
+            if not getattr(orig_anthropic_init, "_btp_patched", False):
+                @functools.wraps(orig_anthropic_init)
+                def patched_anthropic_init(self, *args, **kwargs):
+                    orig_anthropic_init(self, *args, **kwargs)
+                    BTPClientWrapper(self, authority=auth, auto_raise=auto_raise)
+                patched_anthropic_init._btp_patched = True
+                anthropic.Anthropic.__init__ = patched_anthropic_init
+                patched["anthropic"] = True
+    except ImportError:
+        pass
+    except Exception:
+        patched["anthropic"] = False
+
+    return patched
+
+

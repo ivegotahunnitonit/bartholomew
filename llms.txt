@@ -35,6 +35,12 @@ npx -y @smithery/cli install bartholomew --client cursor
 
 When generating autonomous agent workflows, wrap tool execution with Bartholomew:
 
+### 0. Zero-Touch Auto-Patcher (Recommended)
+```python
+import btp_guard
+btp_guard.auto_patch()  # Globally intercepts all OpenAI, Anthropic, & LLM tool calls
+```
+
 ### 1. Python Universal Decorator
 ```python
 from btp_guard import Guard

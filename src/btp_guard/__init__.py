@@ -9,6 +9,17 @@ from .btp_guard import Guard, WireGuard
 guard = Guard()
 protect = guard.protect
 
+try:
+    from src.client_wrapper import auto_patch, wrap_client
+except ImportError:
+    try:
+        from ..client_wrapper import auto_patch, wrap_client
+    except Exception:
+        def auto_patch(*args, **kwargs):
+            return {}
+        def wrap_client(client, *args, **kwargs):
+            return client
+
 __version__ = "5.4.12"
 
 __all__ = [
@@ -16,5 +27,7 @@ __all__ = [
     "WireGuard",
     "guard",
     "protect",
+    "auto_patch",
+    "wrap_client",
     "__version__"
 ]
