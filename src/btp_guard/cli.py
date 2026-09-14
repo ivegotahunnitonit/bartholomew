@@ -303,6 +303,70 @@ def cmd_swarm_status(args):
     print("=" * 80 + "\n")
 
 
+def cmd_lightning_status(args):
+    """Checks connection and status of self-custodial Alby Hub node via Nostr Wallet Connect."""
+    from src.settlement.alby_client import AlbyNWCClient
+    client = AlbyNWCClient()
+    if not client.is_configured():
+        print("[-] ALBY_NWC_URL is not configured in .env or environment.")
+        return
+    print("\n" + "=" * 76)
+    print("      BARTHOLOMEW BTP v5.4.12 -- ALBY HUB LIGHTNING NODE STATUS")
+    print("=" * 76)
+    try:
+        info = client.get_info()
+        balance_sats = client.get_balance_sats()
+        print(f"  [*] Node Alias:       {info.get('alias', 'NWC')}")
+        print(f"  [*] Network:          {info.get('network', 'mainnet')}")
+        print(f"  [*] Block Height:     {info.get('block_height', 'N/A')}")
+        print(f"  [*] Lightning Pubkey: {info.get('pubkey')}")
+        print(f"  [*] Lightning Address:{info.get('lud16', 'N/A')}")
+        print(f"  [*] Spendable Balance:{balance_sats:,} Satoshis")
+        print(f"  [*] Supported Methods:{', '.join(info.get('methods', []))}")
+        print("  [+] Connection Status: HEALTHY (24/7 Google Cloud Compute Engine)")
+    except Exception as e:
+        print(f"  [-] Node Connection Error: {e}")
+    print("=" * 76 + "\n")
+
+
+def cmd_lightning_balance(args):
+    """Displays spendable balance from connected Alby Hub."""
+    from src.settlement.alby_client import AlbyNWCClient
+    client = AlbyNWCClient()
+    if not client.is_configured():
+        print("[-] ALBY_NWC_URL is not configured.")
+        return
+    try:
+        balance_sats = client.get_balance_sats()
+        print(f"\n[+] Alby Hub Spendable Balance: {balance_sats:,} Satoshis\n")
+    except Exception as e:
+        print(f"[-] Failed to fetch balance: {e}")
+
+
+def cmd_lightning_invoice(args):
+    """Mints a real Lightning Network invoice on the connected Alby Hub."""
+    from src.settlement.alby_client import AlbyNWCClient
+    client = AlbyNWCClient()
+    if not client.is_configured():
+        print("[-] ALBY_NWC_URL is not configured.")
+        return
+    sats = getattr(args, "sats", 30000) or 30000
+    desc = getattr(args, "desc", "Bartholomew AST Audit Fee") or "Bartholomew AST Audit Fee"
+    print(f"\n[*] Generating {sats:,} satoshi invoice on Alby Hub...")
+    try:
+        inv = client.make_invoice(sats, desc)
+        print("\n" + "=" * 76)
+        print("      BARTHOLOMEW BTP v5.4.12 -- LIGHTNING INVOICE GENERATED")
+        print("=" * 76)
+        print(f"  Amount:        {sats:,} sats")
+        print(f"  Description:   {desc}")
+        print(f"  Payment Hash:  {inv.get('payment_hash')}")
+        print(f"\n  Lightning Payment Request (bolt11):\n  {inv.get('invoice')}")
+        print("=" * 76 + "\n")
+    except Exception as e:
+        print(f"[-] Failed to generate invoice: {e}")
+
+
 def cmd_leads_list(args):
     """Fetches and displays live inbound enterprise leads, visitor telemetry, and pilot requests."""
     print("=" * 76)
@@ -3330,6 +3394,15 @@ def main():
     swarm_sub.add_parser("status", help="Display registered sovereign agent passports, multi-rail escrows, and barter reserves")
     swarm_sub.add_parser("mesh", help="Display sovereign agent passport mesh topology")
 
+    # lightning (Alby Hub Self-Custodial Node & L402 Invoicing)
+    ln_parser = subparsers.add_parser("lightning", help="Manage connected Alby Hub Lightning node and L402 micropayments")
+    ln_sub = ln_parser.add_subparsers(dest="lightning_cmd", help="Lightning actions")
+    ln_sub.add_parser("status", help="Display Alby Hub node info, pubkey, network, and spendable balance")
+    ln_sub.add_parser("balance", help="Display spendable satoshis on connected Alby Hub")
+    ln_inv = ln_sub.add_parser("invoice", help="Mint a live Lightning invoice on Alby Hub")
+    ln_inv.add_argument("--sats", "-s", type=int, default=30000, help="Amount in satoshis (default: 30000)")
+    ln_inv.add_argument("--desc", "-d", type=str, default="Bartholomew AST Audit Fee", help="Invoice description")
+
     args = parser.parse_args()
 
     if args.command in ("whoami", "bartholomew"):
@@ -3349,7 +3422,17 @@ def main():
         else:
             cmd_ebpf_status(args)
     elif args.command == "swarm":
-        cmd_swarm_status(args)
+        if getattr(args, "swarm_cmd", None) == "mesh":
+            cmd_daemon_mesh(args)
+        else:
+            cmd_swarm_status(args)
+    elif args.command == "lightning":
+        if getattr(args, "lightning_cmd", None) == "balance":
+            cmd_lightning_balance(args)
+        elif getattr(args, "lightning_cmd", None) == "invoice":
+            cmd_lightning_invoice(args)
+        else:
+            cmd_lightning_status(args)
     elif args.command == "dossier":
         cmd_dossier(args)
     elif args.command == "hud":

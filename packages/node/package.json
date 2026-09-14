@@ -12,8 +12,9 @@
   "dependencies": {
     "@cosmjs/proto-signing": "^0.39.0",
     "@cosmjs/stargate": "^0.39.0",
+    "@getalby/sdk": "^8.0.3",
     "bitcoinjs-lib": "^7.0.1",
-    "btp-guard": "^5.4.12",
+    "btp-guard": "file:../npm_package",
     "dotenv": "^17.4.2",
     "ecpair": "^3.0.1",
     "ethers": "^6.17.0",
