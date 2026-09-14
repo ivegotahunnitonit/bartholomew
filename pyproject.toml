@@ -11,7 +11,7 @@ authors = [
     { name = "Itsub Alemayehu", email = "security@bartholomew.info" }
 ]
 license = { text = "MIT" }
-keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "ed25519", "rfc8785", "mcp", "claude-desktop", "cursor", "frost", "zk-proofs"]
+keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "agent-security", "prompt-injection-defense", "tool-call-validation", "mcp-guard", "autonomous-agents", "llm-security", "mcp", "claude-desktop", "cursor", "langchain", "crewai", "openai-agents", "ed25519", "l402", "lightning-network"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
