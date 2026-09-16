@@ -81,7 +81,7 @@ class AuthorizationGate:
         if not effective_policy.allow_destructive and self._matches_any(command, self.DESTRUCTIVE_SHELL_PATTERNS):
             violations.append(("BTP-SHELL-001", "Destructive shell pattern detected"))
 
-        if self._matches_any(query, self.DANGEROUS_SQL_PATTERNS):
+        if self._matches_any(query, self.DANGEROUS_SQL_PATTERNS) or self._matches_any(command, self.DANGEROUS_SQL_PATTERNS):
             violations.append(("BTP-SQL-001", "Dangerous SQL mutation detected"))
 
         if self._matches_any(combined_text, self.SECRET_PATTERNS):

@@ -12,6 +12,9 @@
 [![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
 [![Pricing](https://img.shields.io/badge/Pricing-Plans-10b981)](https://bartholomew.info/pricing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
+[![Socket.dev](https://img.shields.io/badge/Socket.dev-Verified%20Supply%20Chain-10b981)](https://socket.dev)
+[![L402 Enabled](https://img.shields.io/badge/L402-Lightning%20Settled-F7931A?logo=bitcoin&logoColor=white)](https://lightning.engineering)
 [![Tests](https://img.shields.io/badge/tests-2879%20passing-brightgreen)](tests/)
 
 [![Gemini 3.8](https://img.shields.io/badge/Google%20Gemini-3.8%20Ultra-4285F4?logo=google&logoColor=white)](examples/README.md)
