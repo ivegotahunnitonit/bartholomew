@@ -1,10 +1,10 @@
-# Smithery.ai MCP Registry Configuration for Bartholomew (BTP v5.4.12)
+# Smithery.ai MCP Registry Configuration for Bartholomew (BTP v5.4.14)
 # https://smithery.ai/docs/config#smitheryyaml
 
 version: 1.0.0
 name: "bartholomew"
 displayName: "Bartholomew AI Security Guard & SOC 2 Auditor"
-description: "Sub-35µs in-process AST security gate, eBPF kernel sandbox, secret scrubber, and L402 Lightning settlement for AI agent swarms (Claude 3.7, Gemini 3.8, Cursor, AutoGen, Cloudflare)."
+description: "Sub-35µs in-process AST security gate, machine discovery manifest (.well-known/btp.json), secret scrubber, delegation chains, dispute arbitration, and L402 Lightning settlement for AI agent swarms."
 homepage: "https://bartholomew.info"
 repository: "https://github.com/ivegotahunnitonit/bartholomew"
 icon: "https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/web/public/shield-icon.png"
