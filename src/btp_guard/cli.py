@@ -106,6 +106,18 @@ def cmd_status(args):
         print("Meter: autonomous_action_allowed ($0.01 per allowed action)")
 
 
+def cmd_manifest(args):
+    from src.btp_manifest import generate_manifest
+    manifest = generate_manifest()
+    print(json.dumps(manifest, indent=2))
+
+
+def cmd_benchmark(args):
+    from examples.benchmark_m2m_transaction_flow import run_m2m_transaction_benchmark
+    count = getattr(args, "count", 1000)
+    run_m2m_transaction_benchmark(total_transactions=count)
+
+
 def cmd_whoami(args):
     """Prints Bartholomew's companion introduction and sentinel oath."""
     try:
@@ -2945,6 +2957,9 @@ def main():
     status_parser = subparsers.add_parser("status", help="Display local license and metering status")
     status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status")
 
+    # manifest
+    manifest_parser = subparsers.add_parser("manifest", help="Emit machine-readable service discovery manifest (btp.json)")
+
     # init
     init_parser = subparsers.add_parser("init", help="10-second interactive project initialization & framework detection")
     init_parser.add_argument("--dir", "-d", default=".", help="Target project directory")
@@ -3245,6 +3260,8 @@ def main():
     b_chaos_p.add_argument("--concurrency", "-c", type=int, default=4, help="Worker thread concurrency")
     b_chaos_p.add_argument("--collateral", type=float, default=250.0, help="Collateral per action in USD")
     b_chaos_p.add_argument("--out", "-o", help="Output benchmark report JSON file path")
+    b_m2m_p = bench_sub.add_parser("m2m", help="Run M2M autonomous agent transaction flow benchmark")
+    b_m2m_p.add_argument("--count", "-c", type=int, default=1000, help="Number of simulated M2M transactions (default: 1000)")
 
     # settlement (BTP v4.3 Multi-Chain EVM & L402 Settlement Gateway)
     settle_p = subparsers.add_parser("settlement", help="BTP Multi-Chain Settlement & Contract Deployment")
@@ -3511,6 +3528,13 @@ def main():
         cmd_pricing(args)
     elif args.command == "status":
         cmd_status(args)
+    elif args.command == "manifest":
+        cmd_manifest(args)
+    elif args.command == "benchmark":
+        if getattr(args, "benchmark_cmd", None) == "m2m":
+            cmd_benchmark(args)
+        else:
+            cmd_benchmark(args)
     elif args.command == "activate":
         cmd_activate(args)
     elif args.command == "init":
