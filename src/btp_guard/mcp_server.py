@@ -37,6 +37,28 @@ class BartholomewMCPServer:
         
         self.tools_schema = [
             {
+                "name": "btp_get_manifest",
+                "description": "Returns machine-readable BTP v5.4.14 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "manifest_version": {"type": "string"},
+                        "identity": {"type": "object"},
+                        "capabilities": {"type": "array"}
+                    }
+                }
+            },
+            {
                 "name": "btp_execute_command",
                 "description": "Executes a shell command inside a hermetic workspace boundary after AST pre-flight safety evaluation. Blocks destructive commands (rm -rf, chmod 777, curl | bash) in under 35 microseconds before any syscall is made. Returns an Ed25519-signed Merkle execution receipt.",
                 "annotations": {
@@ -475,6 +497,13 @@ class BartholomewMCPServer:
         return True
 
     def handle_tool_call(self, name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        if name in ["btp_get_manifest", "btp_manifest"]:
+            from src.btp_manifest import generate_manifest
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(generate_manifest(), indent=2)}]
+            }
+
         if name == "btp_execute_command":
             cmd = arguments.get("command", "").strip()
             cwd_rel = arguments.get("cwd", ".")

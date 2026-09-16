@@ -23,6 +23,7 @@ import uvicorn
 sys.path.insert(0, os.path.abspath("."))
 from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
 from src.declarative_policy_engine import DeclarativePolicyEngine
+from src.btp_manifest import generate_manifest
 
 app = FastAPI(
     title="Bartholomew Public Agent Gateway",
@@ -54,6 +55,12 @@ class VerifyRequest(BaseModel):
     attestation_receipt: Dict[str, Any]
     candidate_payload: Dict[str, Any]
     trusted_root_pubkey: Optional[str] = None
+
+@app.get("/.well-known/btp.json")
+@app.get("/v1/manifest")
+def get_manifest():
+    """Serves machine-readable service discovery manifest for autonomous agents."""
+    return generate_manifest()
 
 @app.get("/")
 @app.get("/healthz")

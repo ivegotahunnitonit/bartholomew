@@ -33,6 +33,27 @@ def cmd_version(args):
 
 
 def cmd_pricing(args):
+    if getattr(args, "json", False):
+        print(json.dumps({
+            "community": {"price_usd_month": 0, "capability": "local_execution_gate"},
+            "pro": {
+                "price_usd_month": 49,
+                "checkout_url": "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600",
+                "capabilities": ["cloud_policy_sync", "fleet_telemetry", "threat_alerts"]
+            },
+            "enterprise": {
+                "price_usd_month": 199,
+                "checkout_url": "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601",
+                "capabilities": ["multi_tenant_isolation", "compliance_evidence", "dedicated_ledger"]
+            },
+            "meter": {"event": "autonomous_action_allowed", "unit_price_usd": 0.01, "billing_unit": "allowed_action"},
+            "activation": {
+                "command": "btp-guard activate --key <license-key>",
+                "store_url": "https://bartholomew.info/pricing"
+            }
+        }, sort_keys=True))
+        return
+
     print("\n" + "=" * 70)
     print("      BARTHOLOMEW (BTP v5.4) COMMERCIAL EDITIONS & PRICING")
     print("=" * 70)
@@ -53,6 +74,36 @@ def cmd_pricing(args):
     print("   -> Checkout: https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601")
     print("\nPricing & Storefront: https://bartholomew.info/pricing")
     print("=" * 70 + "\n")
+
+
+def cmd_status(args):
+    from src.usage_tracker import load_license, get_btp_dir
+
+    license_info = load_license()
+    metrics_path = get_btp_dir() / "metrics.json"
+    metrics = {}
+    if metrics_path.exists():
+        try:
+            with open(metrics_path, "r", encoding="utf-8") as handle:
+                metrics = json.load(handle)
+        except (OSError, json.JSONDecodeError):
+            metrics = {}
+
+    status = {
+        "tier": license_info.get("tier", "COMMUNITY"),
+        "licensed": bool(license_info.get("licensed", False)),
+        "status": license_info.get("status", "FREE"),
+        "evaluation_count": int(metrics.get("evaluation_count", 0)),
+        "meter": "autonomous_action_allowed",
+        "unit_price_usd": 0.01
+    }
+    if getattr(args, "json", False):
+        print(json.dumps(status, sort_keys=True))
+    else:
+        print(f"Tier: {status['tier']} ({status['status']})")
+        print(f"Licensed: {'yes' if status['licensed'] else 'no'}")
+        print(f"Evaluations: {status['evaluation_count']}")
+        print("Meter: autonomous_action_allowed ($0.01 per allowed action)")
 
 
 def cmd_whoami(args):
@@ -2887,7 +2938,12 @@ def main():
     upg_p.add_argument("--tier", "-t", choices=["pro", "enterprise"], default="pro", help="Target commercial subscription tier (default: pro)")
 
     # pricing
-    subparsers.add_parser("pricing", help="Display commercial tiers, fleet features, and direct Stripe checkout links")
+    pricing_parser = subparsers.add_parser("pricing", help="Display commercial tiers, fleet features, and direct Stripe checkout links")
+    pricing_parser.add_argument("--json", action="store_true", help="Emit machine-readable plan and meter details")
+
+    # status
+    status_parser = subparsers.add_parser("status", help="Display local license and metering status")
+    status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status")
 
     # init
     init_parser = subparsers.add_parser("init", help="10-second interactive project initialization & framework detection")
@@ -3453,6 +3509,8 @@ def main():
         cmd_upgrade(args)
     elif args.command == "pricing":
         cmd_pricing(args)
+    elif args.command == "status":
+        cmd_status(args)
     elif args.command == "activate":
         cmd_activate(args)
     elif args.command == "init":

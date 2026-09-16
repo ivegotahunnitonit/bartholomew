@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "5.4.12"
-description = "Bartholomew Autonomous Trust Protocol (BTP v5.4.12) -- Sovereign Sentinel Companion & Autonomous AI Agent Execution Gateway: Sub-35us AST Gating, Frontier Swarm Wire Protection for Cloudflare, Gemini 3.8, Claude 3.7, GPT-Astra, AutoGen, and Copilot/Cursor."
+version = "5.4.14"
+description = "Bartholomew Autonomous Trust Protocol (BTP v5.4.14) -- Sovereign Sentinel Companion & Autonomous AI Agent Execution Gateway: Sub-35us AST Gating, Frontier Swarm Wire Protection for Cloudflare, Gemini 3.8, Claude 3.7, GPT-Astra, AutoGen, and Copilot/Cursor."
 readme = "README.md"
 authors = [
     { name = "Itsub Alemayehu", email = "security@bartholomew.info" }

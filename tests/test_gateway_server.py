@@ -33,13 +33,21 @@ def test_gateway_server_endpoints():
     assert r1.status_code == 200
     assert r1.json()["status"] == "HEALTHY"
 
-    # 2. Test Trust Root
+    # 2. Test Trust Root & Manifest
     r2 = client.get("/v1/trust-root")
     print(f"\n[TEST 2: Trust Root Endpoint]")
     print(f"  * Policy ID   : {r2.json()['policy_id']}")
     print(f"  * Active Rules: {r2.json()['active_rules_count']}")
     assert r2.status_code == 200
     assert "authority_pubkey" in r2.json()
+
+    # 2b. Test Machine-Readable Manifest Endpoint
+    r2b = client.get("/.well-known/btp.json")
+    print(f"\n[TEST 2b: Machine-Readable Manifest Endpoint]")
+    print(f"  * Service Name: {r2b.json()['identity']['name']}")
+    print(f"  * Capabilities: {len(r2b.json()['capabilities'])} active capabilities")
+    assert r2b.status_code == 200
+    assert r2b.json()["identity"]["name"] == "Bartholomew Trust Protocol"
 
     # 3. Test Evaluate (Safe Payload)
     safe_payload = {"command": "git status", "amount_usd": 49.0}

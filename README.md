@@ -1,6 +1,6 @@
-# Bartholomew — BTP v5.4.12
+# Bartholomew — Authorization Gate MVP
 
-**In-Process AI Agent Execution Gateway** — sub-35µs AST gating, secret scrubbing, eBPF kernel sandboxing, and L402 Lightning Network settlement for autonomous agent runtimes.
+**Authorization and policy layer for autonomous agents** — gate risky actions before execution, record proof of the decision, and emit telemetry for downstream policy and billing layers.
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
@@ -25,22 +25,85 @@
 
 ## What it does
 
-Traditional guardrails operate on prompt text — they are blind to what happens when an autonomous agent invokes real-world tools. Bartholomew closes that gap by sitting **inside the agent's memory space**, inspecting raw tool arguments and AST syntax trees in **under 35 microseconds** before actions reach the OS, a database, or an external API.
+Bartholomew is the execution gate for autonomous agents.
 
-```
-Prompt rails (NeMo, Guardrails AI)   ~80–2500ms  ─┐
-                                                    ├─ BLIND SPOT
-Bartholomew in-process gate          <35µs       ──┤  ← fills here
-                                                    │
-OS / container boundary (Docker)     kernel-level ──┘
+It sits between an agent and a real-world action and decides whether the action should be allowed before it runs. The current MVP is intentionally narrow and focused on the action boundary:
+
+- evaluate an action before execution
+- inspect the payload for policy violations and risky patterns
+- enforce allow / deny decisions with a clear rule id
+- return a receipt hash for auditability
+- emit telemetry for observability and downstream governance
+
+This is the foundation for a trusted authorization layer for autonomous systems.
+
+**Current policy checks include:**
+- destructive shell commands (`rm -rf`, `mkfs`, `dd`)
+- dangerous SQL mutations (`DROP TABLE`, `TRUNCATE`)
+- credential exfiltration (`sk-*`, `ghp_*`, `AKIA*`)
+- prompt-injection attempts
+- blocked action types and spend caps under policy
+
+**Positioning:** Bartholomew is not a broad platform story. It is the authorization layer that decides whether an autonomous agent can act.
+
+---
+
+## MVP quickstart
+
+```python
+from src.btp_guard.authorization_gate import AuthorizationGate
+
+policy = {
+    "allow_destructive": False,
+    "max_spend_usd": 5.0,
+    "allowed_action_types": ["shell", "read", "search"],
+}
+
+gate = AuthorizationGate(policy=policy)
+
+safe = gate.evaluate({
+    "agent_id": "worker-1",
+    "action_type": "shell",
+    "payload": {"command": "ls -la /tmp"},
+    "policy": policy,
+})
+
+unsafe = gate.evaluate({
+    "agent_id": "worker-1",
+    "action_type": "shell",
+    "payload": {"command": "rm -rf /tmp/data"},
+    "policy": policy,
+})
+
+print(safe)
+print(unsafe)
 ```
 
-**What it blocks:**
-- Destructive shell commands (`rm -rf`, `mkfs`, `dd`)
-- Destructive SQL mutations (`DROP TABLE`, `TRUNCATE`)
-- Credential exfiltration (`sk-*`, `ghp_*`, `AKIA*`) in thought logs or tool args
-- Runaway token spend loops beyond configured USD caps
-- Prompt-injection-driven tool hijacks across multi-agent swarms
+Example output:
+
+```json
+{
+  "verdict": "ALLOW",
+  "reason": "No policy violations detected",
+  "rule_id": null,
+  "latency_ms": 0.047,
+  "timestamp": "2026-09-15T22:07:07.752116+00:00",
+  "receipt_sha256": "71754d8ac4339c2aaa9a71bb4d8337439cafcb81dcef72e6e7a3fc48141fed93"
+}
+```
+
+```json
+{
+  "verdict": "DENY",
+  "reason": "Destructive shell pattern detected",
+  "rule_id": "BTP-SHELL-001",
+  "latency_ms": 0.025,
+  "timestamp": "2026-09-15T22:07:07.752206+00:00",
+  "receipt_sha256": "7808a40a1b7afafc2575e0f23c26c574eacca562ba7cf2a7a2fa5be8ee2e17d1"
+}
+```
+
+This is the execution guard MVP for the bartholomew strategy.
 
 ---
 

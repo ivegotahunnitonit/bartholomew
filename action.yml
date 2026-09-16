@@ -23,6 +23,22 @@ inputs:
     description: "Whether to fail the CI build if security score is below 80 or critical violations found"
     required: false
     default: "true"
+  action-command:
+    description: "Optional autonomous action command to evaluate through the execution gate"
+    required: false
+    default: ""
+  action-type:
+    description: "Action type for action-command"
+    required: false
+    default: "shell"
+  agent-id:
+    description: "Agent identity recorded in the authorization receipt"
+    required: false
+    default: "github-actions"
+  fail-on-action-deny:
+    description: "Whether to fail the workflow when action-command is denied"
+    required: false
+    default: "true"
 
 outputs:
   audit-status:
@@ -34,6 +50,15 @@ outputs:
   merkle-root:
     description: "Cryptographic Merkle root hash of verified trajectory"
     value: ${{ steps.run-audit.outputs.merkle_root }}
+  action-verdict:
+    description: "ALLOW or DENY result for action-command"
+    value: ${{ steps.run-action.outputs.verdict }}
+  action-rule:
+    description: "Rule ID that produced the action verdict"
+    value: ${{ steps.run-action.outputs.rule_id }}
+  action-receipt:
+    description: "SHA-256 authorization receipt for action-command"
+    value: ${{ steps.run-action.outputs.receipt_sha256 }}
 
 runs:
   using: "composite"
@@ -48,6 +73,43 @@ runs:
       run: |
         python -m pip install --upgrade pip
         pip install cryptography pyyaml || true
+
+    - name: "Evaluate Autonomous Action"
+      id: run-action
+      if: ${{ inputs.action-command != '' }}
+      shell: bash
+      env:
+        BTP_ACTION_COMMAND: ${{ inputs.action-command }}
+        BTP_ACTION_TYPE: ${{ inputs.action-type }}
+        BTP_AGENT_ID: ${{ inputs.agent-id }}
+        BTP_POLICY_FILE: ${{ inputs.policy-file }}
+        BTP_FAIL_ON_DENY: ${{ inputs.fail-on-action-deny }}
+      run: |
+        set +e
+        policy_args=()
+        if [ -n "$BTP_POLICY_FILE" ] && [ -f "$BTP_POLICY_FILE" ]; then
+          policy_args=(--policy-file "$BTP_POLICY_FILE")
+        fi
+        python scripts/evaluate_action.py \
+          --command "$BTP_ACTION_COMMAND" \
+          --action-type "$BTP_ACTION_TYPE" \
+          --agent-id "$BTP_AGENT_ID" \
+          "${policy_args[@]}" > action-result.json
+        action_exit=$?
+        cat action-result.json
+        python - <<'PY'
+        import json, os
+        from pathlib import Path
+        result = json.loads(Path('action-result.json').read_text())
+        output = os.environ.get('GITHUB_OUTPUT')
+        if output:
+            with open(output, 'a', encoding='utf-8') as handle:
+                for key in ('verdict', 'rule_id', 'receipt_sha256'):
+                    handle.write(f"{key}={result.get(key) or ''}\n")
+        if result.get('verdict') == 'DENY' and os.environ.get('BTP_FAIL_ON_DENY') == 'true':
+            raise SystemExit(1)
+        PY
+        if [ "$action_exit" -ne 0 ] && [ "$BTP_FAIL_ON_DENY" = "true" ]; then exit "$action_exit"; fi
 
     - name: "Execute Bartholomew Codebase Audit & SOC 2 Verification"
       id: run-audit

@@ -95,6 +95,24 @@ class MCPProxyGateway:
         tool_name = params.get("name", "unknown_tool")
         arguments = params.get("arguments", {})
 
+        # Handle native btp_get_manifest query directly
+        if tool_name in ["btp_get_manifest", "btp_manifest"]:
+            from src.btp_manifest import generate_manifest
+            manifest_data = generate_manifest()
+            manifest_response = {
+                "jsonrpc": "2.0",
+                "id": req_id,
+                "result": {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": json.dumps(manifest_data, indent=2)
+                        }
+                    ]
+                }
+            }
+            return False, req, manifest_response
+
         # 1. High-Entropy Secret Masking on Tool Arguments
         sanitized_args, redactions_count, _ = SecretVaultMasker.sanitize_payload(arguments)
         if redactions_count > 0:
@@ -285,6 +303,20 @@ class MCPProxyGateway:
         sanitized_resp, redactions_count, _ = SecretVaultMasker.sanitize_payload(resp)
         if redactions_count > 0:
             self.total_redacted += redactions_count
+
+        # Auto-inject btp_get_manifest tool if this is a tools/list response
+        if isinstance(sanitized_resp, dict) and "result" in sanitized_resp and isinstance(sanitized_resp["result"], dict) and "tools" in sanitized_resp["result"]:
+            tools = sanitized_resp["result"]["tools"]
+            if isinstance(tools, list) and not any(isinstance(t, dict) and t.get("name") == "btp_get_manifest" for t in tools):
+                tools.append({
+                    "name": "btp_get_manifest",
+                    "description": "Returns machine-readable BTP v5.4.14 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                })
+
         return sanitized_resp if isinstance(sanitized_resp, dict) else resp
 
     def _issue_chained_receipt(self, tool_name: str, sanitized_args: Dict[str, Any]) -> Dict[str, Any]:

@@ -54,6 +54,25 @@ def test_mcp_tools_list(mcp_server):
     assert "btp_get_security_status" in tool_names
 
 
+def test_mcp_btp_get_manifest(mcp_server):
+    manifest_req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 99,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_get_manifest",
+            "arguments": {}
+        }
+    })
+    res_str = mcp_server.process_message(manifest_req)
+    assert res_str is not None
+    res = json.loads(res_str)
+    assert res["id"] == 99
+    content_text = res["result"]["content"][0]["text"]
+    assert "Bartholomew Trust Protocol" in content_text
+    assert "autonomous_action_allowed" in content_text
+
+
 def test_mcp_execute_command_allowed(mcp_server):
     exec_req = json.dumps({
         "jsonrpc": "2.0",

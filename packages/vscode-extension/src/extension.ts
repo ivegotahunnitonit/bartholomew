@@ -5,9 +5,42 @@ declare function clearInterval(intervalId: any): void;
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const execFile = require('child_process').execFile;
 
 export interface ExtensionContext {
   subscriptions: { push: (...items: any[]) => void };
+}
+
+function resolveGuardScript(workspaceRoot: string): string | undefined {
+  const candidates = [
+    path.join(__dirname, '..', 'scripts', 'evaluate_action.py'),
+    path.join(workspaceRoot, 'scripts', 'evaluate_action.py'),
+    path.join(process.cwd(), 'scripts', 'evaluate_action.py'),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+}
+
+function runGuardAction(workspaceRoot: string, command: string, callback: (error: any, result?: any) => void) {
+  const runner = resolveGuardScript(workspaceRoot);
+  if (!runner) {
+    callback(new Error('Bartholomew guard runner script was not found in the workspace or extension bundle.'));
+    return;
+  }
+
+  execFile('python', [runner, '--command', command], { cwd: workspaceRoot }, (error: any, stdout: string) => {
+    let result: any = undefined;
+    try {
+      result = JSON.parse(stdout.trim());
+    } catch {}
+    callback(error, result);
+  });
 }
 
 export function activate(context: ExtensionContext) {
@@ -93,11 +126,31 @@ export function activate(context: ExtensionContext) {
   });
 
   const validatePolicyCmd = vscode.commands.registerCommand('bartholomew.validatePolicy', () => {
-    vscode.window.showInformationMessage('BTP Declarative Policy: Invariant assertions validated with 0 errors.');
+    const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '.';
+    runGuardAction(rootPath, 'echo bartholomew-policy-check', (error: any, result: any) => {
+      if (error && !result) {
+        vscode.window.showErrorMessage(`Bartholomew policy validation failed: ${error.message}`);
+        return;
+      }
+      const verdict = result?.verdict || 'ERROR';
+      vscode.window.showInformationMessage(`Bartholomew policy validation: ${verdict} | ${result?.reason || 'No result'} | ${result?.latency_ms ?? '?'} ms`);
+    });
   });
 
   const dryRunTraceCmd = vscode.commands.registerCommand('bartholomew.dryRunTrace', () => {
-    vscode.window.showInformationMessage('BTP Policy Simulator: Executed synthetic trace dry-run. Verdict: ALLOW (0 violations, 24.2 µs latency).');
+    vscode.window.showInputBox({ prompt: 'Action command to evaluate', value: 'echo bartholomew-dry-run' }).then((command: string | undefined) => {
+      if (!command) return;
+      const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '.';
+      runGuardAction(rootPath, command, (error: any, result: any) => {
+        if (error && !result) {
+          vscode.window.showErrorMessage(`Bartholomew dry run failed: ${error.message}`);
+          return;
+        }
+        const message = `Verdict: ${result?.verdict || 'ERROR'} | Rule: ${result?.rule_id || 'none'} | ${result?.reason || 'No result'} | Receipt: ${(result?.receipt_sha256 || '').slice(0, 16)}`;
+        if (result?.verdict === 'DENY') vscode.window.showWarningMessage(message);
+        else vscode.window.showInformationMessage(message);
+      });
+    });
   });
 
   const generateComplianceEvidenceCmd = vscode.commands.registerCommand('bartholomew.generateComplianceEvidence', () => {

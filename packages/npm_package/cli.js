@@ -23,6 +23,21 @@ const DIM = "\x1b[2m";
 const args = process.argv.slice(2);
 const command = args[0] || 'demo';
 
+function showFirstUseUpgradeOffer() {
+  if (!process.stdout.isTTY || process.env.BTP_QUIET === 'true' || process.env.CI === 'true') return;
+
+  const markerDir = path.join(os.homedir(), '.btp');
+  const markerPath = path.join(markerDir, 'npm-onboarding.json');
+  if (fs.existsSync(markerPath)) return;
+
+  fs.mkdirSync(markerDir, { recursive: true });
+  fs.writeFileSync(markerPath, JSON.stringify({ shown_at: Date.now() }, null, 2));
+  console.log(`${BOLD}${CYAN}BTP Guard is running in Community mode.${RESET}`);
+  console.log(`  Pro ($49/mo):      https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600`);
+  console.log(`  Enterprise ($199): https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601`);
+  console.log(`  View plans anytime: ${BOLD}npx btp-guard pricing${RESET}\n`);
+}
+
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
@@ -95,6 +110,7 @@ function runDemo() {
   console.log(`  • Setup Claude Desktop: ${BOLD}npx btp-guard init${RESET}`);
   console.log(`  • Scrub any file/pipe:  ${BOLD}npx btp-guard scrub <payload.json>${RESET}`);
   console.log(`  • Online Command Center: ${CYAN}https://acn-fastapi-backend-322603900775.us-central1.run.app/dashboard${RESET}\n`);
+  showFirstUseUpgradeOffer();
 }
 
 function runInit(subargs = []) {
@@ -333,6 +349,25 @@ function runMcp(subargs = []) {
 }
 
 function runActivate(key) {
+  if (key === '--json') {
+    console.log(JSON.stringify({
+      community: { price_usd_month: 0, capability: 'local_execution_gate' },
+      pro: {
+        price_usd_month: 49,
+        checkout_url: 'https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600',
+        capabilities: ['cloud_policy_sync', 'fleet_telemetry', 'threat_alerts']
+      },
+      enterprise: {
+        price_usd_month: 199,
+        checkout_url: 'https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601',
+        capabilities: ['multi_tenant_isolation', 'compliance_evidence', 'dedicated_ledger']
+      },
+      meter: { event: 'autonomous_action_allowed', unit_price_usd: 0.01, billing_unit: 'allowed_action' },
+      activation: { command: 'btp-guard activate <license-key>', store_url: 'https://bartholomew.info/pricing' }
+    }));
+    return;
+  }
+
   console.log(`\n${BOLD}[BTP GUARD] BARTHOLOMEW PROTOCOL (BTP v3.0) LICENSE ACTIVATION${RESET}`);
   console.log('='.repeat(65));
 
@@ -379,6 +414,19 @@ switch (command) {
   case 'activate':
     runActivate(args[1]);
     break;
+  case 'status': {
+    const licensePath = path.join(os.homedir(), '.btp', 'license.json');
+    const license = fs.existsSync(licensePath) ? JSON.parse(fs.readFileSync(licensePath, 'utf8')) : {};
+    const status = {
+      tier: license.tier || 'COMMUNITY',
+      licensed: license.status === 'ACTIVE',
+      status: license.status || 'FREE',
+      meter: 'autonomous_action_allowed',
+      unit_price_usd: 0.01
+    };
+    console.log(args[1] === '--json' ? JSON.stringify(status) : `Tier: ${status.tier} (${status.status})\nMeter: ${status.meter} ($${status.unit_price_usd} per allowed action)`);
+    break;
+  }
   case 'demo':
     runDemo();
     break;

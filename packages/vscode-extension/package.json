@@ -2,8 +2,9 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Autonomous AI Guard",
   "description": "Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
-  "version": "5.4.12",
+  "version": "5.4.15",
   "publisher": "itsubsolomon",
+  "icon": "icon.png",
   "license": "Apache-2.0",
   "galleryBanner": {
     "color": "#0f0f1a",
@@ -55,6 +56,10 @@
       {
         "command": "bartholomew.generateComplianceEvidence",
         "title": "Bartholomew: Generate SOC 2 / ISO 27001 Evidence Pack"
+      },
+      {
+        "command": "bartholomew.installMcp",
+        "title": "Bartholomew: Install MCP Server"
       }
     ]
   },

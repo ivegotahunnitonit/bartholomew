@@ -32,6 +32,7 @@ from src.secret_masker import SecretVaultMasker
 from src.trust_protocol import BartholomewTrustAuthority
 from src.marketplace.sla_contract import ZKTaskCompletionProof
 from src.daemon.m2m_wire_daemon import GLOBAL_M2M_LEDGER
+from src.btp_manifest import generate_manifest
 
 logger = logging.getLogger("btp.cloud_engine")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -49,6 +50,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/.well-known/btp.json")
+@app.get("/api/v1/manifest")
+def get_service_manifest():
+    """Serves machine-readable service discovery manifest for autonomous agents."""
+    return generate_manifest()
 
 
 # ---------------------------------------------------------------------------

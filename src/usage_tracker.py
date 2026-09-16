@@ -19,6 +19,7 @@ FREE_TIER_CALL_LIMIT = 1000
 STRIPE_PRO_URL = "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
 STRIPE_ENTERPRISE_URL = "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601"
 STORE_URL = "https://bartholomew.info/store/"
+FIRST_USE_NOTICE_KEY = "upgrade_notice_shown"
 
 # Primary config paths
 USER_BTP_DIR = Path.home() / ".btp"
@@ -109,6 +110,7 @@ def record_evaluation() -> Tuple[bool, str]:
     metrics_path = btp_dir / "metrics.json"
 
     count = 0
+    data = {}
     try:
         if metrics_path.exists():
             with open(metrics_path, "r", encoding="utf-8") as f:
@@ -118,12 +120,17 @@ def record_evaluation() -> Tuple[bool, str]:
         count = 0
 
     count += 1
+    first_use_notice = ""
 
     try:
+        metrics = {
+            "evaluation_count": count,
+            "last_active": time.time()
+        }
         with open(metrics_path, "w", encoding="utf-8") as f:
             json.dump({
-                "evaluation_count": count,
-                "last_active": time.time()
+                **metrics,
+                FIRST_USE_NOTICE_KEY: True if count == 1 else data.get(FIRST_USE_NOTICE_KEY, False)
             }, f)
     except Exception:
         pass
@@ -142,6 +149,19 @@ def record_evaluation() -> Tuple[bool, str]:
     # Check if in interactive terminal before printing any notice
     is_interactive = hasattr(sys.stderr, "isatty") and sys.stderr.isatty()
 
+    if count == 1 and is_interactive:
+        first_use_notice = (
+            "\n[BTP GUARD] You are running the free local execution gate.\n"
+            f"For team policy sync and telemetry, Pro is $49/month: {STRIPE_PRO_URL}\n"
+            f"For enterprise controls and compliance evidence, Enterprise is $199/month: {STRIPE_ENTERPRISE_URL}\n"
+            f"Run `btp-guard pricing` anytime to view plans.\n"
+        )
+        try:
+            sys.stderr.write(first_use_notice)
+            sys.stderr.flush()
+        except Exception:
+            pass
+
     if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION and is_interactive:
         _ALERT_SHOWN_THIS_SESSION = True
         notice = (
@@ -154,9 +174,9 @@ def record_evaluation() -> Tuple[bool, str]:
             sys.stderr.flush()
         except Exception:
             pass
-        return False, notice
+        return False, first_use_notice + notice
 
-    return True, ""
+    return True, first_use_notice
 
 def save_license(license_key: str) -> Dict[str, Any]:
     """Saves license key to local config file."""

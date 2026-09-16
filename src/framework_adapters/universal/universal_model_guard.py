@@ -275,11 +275,15 @@ class UniversalBTPModelGuard:
         elif self._guard is not None or PolyglotASTValidator is not None:
             for k, val in arguments.items():
                 if isinstance(val, str) and len(val) > 2:
-                    if self._guard is not None:
+                    if hasattr(self._guard, "evaluate_ast"):
                         res = self._guard.evaluate_ast(val)
-                    else:
+                    elif hasattr(self._guard, "check"):
+                        res = self._guard.check(val)
+                    elif PolyglotASTValidator is not None:
                         safe_ast, r_ast, _ = PolyglotASTValidator.validate_code(val)
                         res = {"allowed": safe_ast, "reason": r_ast, "rule_id": "BTP-AST-001"}
+                    else:
+                        res = {"allowed": True}
                     if not res.get("allowed", True):
                         is_safe = False
                         violation_rule = res.get("rule_id", "BTP-AST-001")

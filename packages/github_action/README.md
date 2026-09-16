@@ -1,4 +1,4 @@
-#  ACN Agentic Security & Secret Scanner (GitHub Action)
+# Bartholomew Agent Security Gate (GitHub Action)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8.svg)](https://go.dev)
@@ -28,21 +28,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Run ACN Security & Secret Audit
-        uses: ./github_action
+      - name: Run Bartholomew Security Gate
+        uses: ivegotahunnitonit/bartholomew@main
         with:
-          scan-path: '.'
-          fail-on-leak: 'true'
+          audit-path: '.'
+          action-command: 'python scripts/run_agent.py'
+          action-type: 'shell'
+          agent-id: 'github-actions'
+          fail-on-action-deny: 'true'
 ```
 
 ---
 
-##  Key Features
+## Key Features
 
-1. **Automated Secret Leak Prevention:** Detects OpenAI (`sk-`), GitHub (`ghp_`), AWS (`AKIA`), and custom tokens in commits.
-2. **Trajectory & Error Fallback Checks:** Identifies unhandled exceptions and silent null returns in step dispatchers.
-3. **CI/CD Build Enforcer:** Automatically fails builds if critical credential leaks are introduced in a Pull Request.
-4. **SHA-256 Cryptographic Checksums:** Generates an attestation hash for every audit run.
+1. **Automated Secret Leak Prevention:** Audits the repository for credential exposure.
+2. **Execution Gate:** Evaluates `action-command` through Bartholomew and returns `ALLOW` or `DENY`.
+3. **CI/CD Build Enforcer:** Fails the workflow when the configured action is denied.
+4. **Receipts:** Exposes the rule ID and SHA-256 authorization receipt as action outputs.
 
 ---
 

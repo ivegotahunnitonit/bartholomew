@@ -1,0 +1,12 @@
+{
+  "allow_destructive": false,
+  "max_spend_usd": 5.0,
+  "allowed_action_types": ["shell", "read", "search"],
+  "require_receipt": true,
+  "blocked_rules": [
+    "BTP-SHELL-001",
+    "BTP-SQL-001",
+    "BTP-SECRET-001",
+    "BTP-INJECT-001"
+  ]
+}

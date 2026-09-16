@@ -278,9 +278,12 @@ def btp_crewai_tool(
                         guard_instance = None
 
             def _check(value: str, label: str) -> None:
-                if not guard_instance:
-                    return
-                res = guard_instance.evaluate_ast(value)
+                if hasattr(guard_instance, "evaluate_ast"):
+                    res = guard_instance.evaluate_ast(value)
+                elif hasattr(guard_instance, "check"):
+                    res = guard_instance.check(value)
+                else:
+                    res = {"allowed": True}
                 if isinstance(res, tuple):
                     allowed = res[0]
                     reason = res[1] if len(res) > 1 else "Unknown"
