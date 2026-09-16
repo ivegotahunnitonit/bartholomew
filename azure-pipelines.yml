@@ -11,25 +11,24 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-  - job: Python311
-    displayName: Python 3.11 security gate
-    timeoutInMinutes: 15
-    steps:
-      - checkout: self
+strategy:
+  matrix:
+    Python310:
+      python.version: '3.10'
+    Python311:
+      python.version: '3.11'
 
-      - task: UsePythonVersion@0
-        displayName: Use Python 3.11
-        inputs:
-          versionSpec: '3.11'
-          addToPath: true
-          architecture: 'x64'
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
 
-      - script: |
-          python -m pip install --upgrade pip
-          python -m pip install cryptography pyyaml pytest pytest-timeout fastapi httpx requests uvicorn
-        displayName: Install dependencies
+- script: |
+    python -m pip install --upgrade pip
+    python -m pip install cryptography pyyaml pytest pytest-timeout fastapi httpx requests uvicorn
+  displayName: 'Install dependencies'
 
-      - script: |
-          python -m pytest tests/test_usage_and_activation.py tests/test_authorization_gate_mvp.py tests/test_simple_guard.py -q
-        displayName: Run focused guard and billing tests
+- script: |
+    python -m pytest tests/test_authorization_gate_mvp.py tests/test_v31_agent_passport_and_discovery.py tests/test_m2m_benchmark_and_manifest.py tests/test_delegation_and_reputation.py tests/test_dispute_and_replay.py -q
+  displayName: 'Run Bartholomew BTP test suite'
