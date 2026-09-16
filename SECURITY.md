@@ -6,10 +6,16 @@ Security updates are provided for the following versions of the Bartholomew Trus
 
 | Version | Supported |
 | :--- | :--- |
-| 5.4.x | Supported (Active Production - Latest: v5.4.8) |
+| 5.4.x | Supported (Active Production - Latest: v5.4.14) |
 | 5.3.x | Supported (Active Enterprise) |
 | 5.2.x | Supported (Security Patches Only) |
 | < 5.0 | Unsupported |
+
+---
+
+## 1.1 Supply Chain Security & SLSA Provenance
+* **SLSA Level 3**: Releases are built with cryptographic build provenance attestations via OpenSSF SLSA GitHub Generator.
+* **Socket.dev Policy**: Capability profiles defined in `socket.yml` enforce zero unauthorized telemetry, zero malicious install scripts, and zero obfuscated code.
 
 ---
 

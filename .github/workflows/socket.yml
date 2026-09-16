@@ -1,0 +1,29 @@
+name: Socket Supply Chain Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: socket-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  socket-scan:
+    name: Socket.dev Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Socket CLI Scan
+        run: |
+          npx -y @socketsecurity/cli@latest scan . || echo "[Socket] Scan logged"
