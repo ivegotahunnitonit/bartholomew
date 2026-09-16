@@ -25,11 +25,12 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP) v5.4.6 -- Autonomous AI Agent Execution Gateway")
+    print("Bartholomew Protocol (BTP) v5.4.14 -- Autonomous AI Agent Execution Gateway")
     print("Engine: In-Process AST Gating, In-Flight Secret Scrubber & SOC 2 Merkle Receipts")
     print("Latency: Sub-35 microseconds (in-process) | Throughput: 1.05M evals/sec")
     print("Status: Community Free Tier active (Local AST Gating)")
-    print("[+] Unlock Cloud Fleet Telemetry & Slack Threat Alerts: run 'python cli.py upgrade'")
+    print("[+] Upgrade to Bartholomew Pro ($49/mo) for Cloud Fleet Telemetry & L402 Swarm Settlement:")
+    print("    https://bartholomew.info/cloud | https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600")
 
 
 def cmd_pricing(args):
@@ -1419,6 +1420,9 @@ def cmd_check(args):
             print("[*] Diagnostics   :")
             for issue in issues:
                 print(f"    - {issue}")
+        print("=" * 70)
+        print("[+] Sync policy & compliance evidence to Cloud Audit Vault:")
+        print("    Run 'btp pricing' or visit https://bartholomew.info/cloud")
         print("=" * 70)
         if not is_valid:
             sys.exit(1)

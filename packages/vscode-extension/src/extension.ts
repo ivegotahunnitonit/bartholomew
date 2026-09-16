@@ -55,7 +55,7 @@ export function activate(context: ExtensionContext) {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'bartholomew.viewStatus';
   statusBarItem.text = `$(shield) BTP: ACTIVE (<25µs)`;
-  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4) - Free Tier | Click to View Status or Upgrade to Pro`;
+  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4.14) - Free Tier | Click to View Status or Upgrade to Pro ($49/mo)`;
   context.subscriptions.push(statusBarItem);
   statusBarItem.show();
 
@@ -73,6 +73,7 @@ export function activate(context: ExtensionContext) {
             if (blocked > 0) {
               statusBarItem.text = `$(shield) BTP: ${blocked} BLOCKED (${avgLat}µs)`;
               statusBarItem.color = '#ef4444';
+              statusBarItem.tooltip = `BTP v5.4.14: ${blocked} threat(s) blocked! Click to view Cloud Audit Vault.`;
             } else {
               statusBarItem.text = `$(shield) BTP: ACTIVE (${avgLat}µs)`;
               statusBarItem.color = '#10b981';
@@ -97,14 +98,14 @@ export function activate(context: ExtensionContext) {
     const isConfigured = fs.existsSync(btpDir);
 
     const message = isConfigured
-      ? `Bartholomew Autonomous AI Guard (BTP v5.4)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
-      : `Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
+      ? `Bartholomew Autonomous AI Guard (BTP v5.4.14)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n• L402 Lightning Settlements: READY\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
+      : `Bartholomew BTP v5.4.14 is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
 
-    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($49/mo)', 'Open Web Dashboard', 'Validate Policy').then((selection: any) => {
+    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($49/mo)', 'Open Cloud Vault', 'Validate Policy').then((selection: any) => {
       if (selection === 'Upgrade to Pro ($49/mo)') {
         vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
-      } else if (selection === 'Open Web Dashboard') {
-        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info'));
+      } else if (selection === 'Open Cloud Vault') {
+        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info/cloud'));
       } else if (selection === 'Validate Policy') {
         vscode.commands.executeCommand('bartholomew.validatePolicy');
       }
