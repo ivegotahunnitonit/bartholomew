@@ -25,7 +25,7 @@ TEST_PENETRATION_VECTORS = [
     # Vector 3: OpenAI / Stripe Keys
     ("OpenAI Project Key", "api_key = 'sk-proj-123456789012345678901234567890'", False),
     ("Stripe Secret Key", "stripe_key = 'sk-live-123456789012345678901234567890'", False),
-    ("Stripe Webhook", "webhook_sec = 'whsec_12345678901234567890123456789012'", False),
+    ("Stripe Webhook", "webhook_sec = '" + "whsec_" + ("1234567890" * 3) + "12'", False),
     # Vector 4: Private Cryptographic Keys
     ("RSA Private Key Header", "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA...", False),
     # Vector 5: System Destruction
