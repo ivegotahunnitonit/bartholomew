@@ -14,10 +14,10 @@ import json
 import urllib.request
 import hashlib
 
-# Ensure parent directory in path
-parent_dir = os.path.dirname(os.path.abspath(__file__))
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
+# Ensure repository root is in path
+repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
 
 from src.trust_protocol import BartholomewTrustAuthority
 from src.declarative_policy_engine import DeclarativePolicyEngine

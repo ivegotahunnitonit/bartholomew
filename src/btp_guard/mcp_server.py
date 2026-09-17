@@ -12,10 +12,11 @@ import subprocess
 import time
 from typing import Dict, Any, List, Optional
 
-# Ensure parent directory is in sys.path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
+# Ensure repository root is in sys.path
+repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+BASE_DIR = repo_root
 
 from src.trust_protocol import BartholomewTrustAuthority
 from src.ast_validator import ASTSecurityValidator

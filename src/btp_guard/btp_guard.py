@@ -13,7 +13,9 @@ import sys
 import os
 from typing import Optional, Dict, Any, Tuple, List, Union
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
 
 from src import (
     Guard,

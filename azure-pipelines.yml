@@ -9,26 +9,39 @@ pr:
       - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-strategy:
-  matrix:
-    Python310:
-      python.version: '3.10'
-    Python311:
-      python.version: '3.11'
+jobs:
+  - job: BartholomewSecurityGate
+    displayName: 'Bartholomew Security Gate (Python 3.11)'
+    timeoutInMinutes: 10
+    steps:
+      - checkout: self
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+      - task: UsePythonVersion@0
+        displayName: 'Use Python 3.11'
+        inputs:
+          versionSpec: '3.11'
+          addToPath: true
+          architecture: 'x64'
 
-- script: |
-    python -m pip install --upgrade pip
-    python -m pip install cryptography pyyaml pytest pytest-timeout fastapi httpx requests uvicorn
-  displayName: 'Install dependencies'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m pip install cryptography pyyaml pytest pytest-timeout fastapi httpx requests uvicorn
+          pip install -e .
+        displayName: 'Install dependencies'
 
-- script: |
-    python -m pytest tests/test_authorization_gate_mvp.py tests/test_v31_agent_passport_and_discovery.py tests/test_m2m_benchmark_and_manifest.py tests/test_delegation_and_reputation.py tests/test_dispute_and_replay.py -q
-  displayName: 'Run Bartholomew BTP test suite'
+      - script: |
+          python -m pytest \
+            tests/test_authorization_gate_mvp.py \
+            tests/test_v31_agent_passport_and_discovery.py \
+            tests/test_m2m_benchmark_and_manifest.py \
+            tests/test_delegation_and_reputation.py \
+            tests/test_dispute_and_replay.py \
+            tests/test_framework_integrations.py \
+            tests/test_community_integrations.py \
+            tests/test_compliance_dossier_export.py \
+            tests/test_enterprise_polish_and_metering.py \
+            -o "pythonpath=src ." \
+            -q
+        displayName: 'Run Bartholomew BTP test suite'
