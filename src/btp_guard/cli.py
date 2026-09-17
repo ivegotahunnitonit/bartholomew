@@ -16,6 +16,7 @@ import hashlib
 
 # Ensure repository root is in path
 repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+parent_dir = repo_root
 if repo_root not in sys.path:
     sys.path.insert(0, repo_root)
 
