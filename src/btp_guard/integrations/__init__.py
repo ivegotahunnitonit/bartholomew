@@ -1,0 +1,10 @@
+"""
+Bartholomew Trust Protocol (BTP v5.4.14) - Framework Integrations
+================================================================
+First-class adapters for CrewAI, LangChain, LangGraph, and AutoGen.
+"""
+
+from .crewai import BtpCrewAIGuard
+from .langchain import BtpCallbackHandler, BtpToolGuard
+
+__all__ = ["BtpCrewAIGuard", "BtpCallbackHandler", "BtpToolGuard"]

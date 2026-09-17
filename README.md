@@ -145,6 +145,29 @@ except BTPViolationError as e:
     #  "reason": "Destructive SQL mutation detected", "latency_us": 18.4}
 ```
 
+### CrewAI Multi-Agent Swarm Guard
+
+```python
+from btp_guard.integrations.crewai import BtpCrewAIGuard
+
+# Wrap any CrewAI tool with sub-35µs in-process AST gating & loop fatigue defense:
+guarded_tool = BtpCrewAIGuard(tool=my_custom_tool, spend_cap=25.0, max_retries=3)
+agent = Agent(role="Security Auditor", tools=[guarded_tool])
+```
+
+### LangChain & LangGraph Swarm Guard
+
+```python
+from btp_guard.integrations.langchain import BtpCallbackHandler, BtpToolGuard
+
+# 1. As a global Agent / Graph CallbackHandler:
+agent = create_react_agent(model, tools, callbacks=[BtpCallbackHandler(spend_cap=25.0)])
+
+# 2. Or wrap individual tools:
+@BtpToolGuard(spend_cap=10.0)
+def execute_database_operation(sql: str): ...
+```
+
 ### Python — inline check
 
 ```python
