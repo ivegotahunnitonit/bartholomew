@@ -65,7 +65,7 @@ class Guard:
         return wrapper
 
 
-__version__ = "5.4.14"
+__version__ = "5.4.15"
 __all__ = ["Guard", "WireGuard", "AuthorizationGate", "BillableLedger", "Policy", "StripeMeterBridge", "TelemetryEmitter"]
 
 __all__ = ["AuthorizationGate", "Guard", "Policy", "TelemetryEmitter", "BillableLedger", "StripeMeterBridge", "WireGuard", "__version__"]

@@ -3,7 +3,7 @@
   "name": "bartholomew",
   "displayName": "Bartholomew Autonomous AI Guard",
   "description": "Sub-35µs in-process AST security gate, machine discovery manifest (.well-known/btp.json), secret scrubber, delegation chains, dispute arbitration, and L402 Lightning settlement for AI agent swarms.",
-  "version": "5.4.14",
+  "version": "5.4.15",
   "homepage": "https://bartholomew.info",
   "repository": "https://github.com/ivegotahunnitonit/bartholomew",
   "categories": ["security", "developer-tools", "ai-safety"],
