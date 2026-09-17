@@ -30,15 +30,16 @@ class AuthorizationGate:
 
     SECRET_PATTERNS = [
         re.compile(r"(?i)ghp_[A-Za-z0-9]{20,}"),
-        re.compile(r"(?i)sk-[A-Za-z0-9]{20,}"),
+        re.compile(r"(?i)sk-(?:proj-|svc-)?[A-Za-z0-9_\-]{20,}"),
         re.compile(r"(?i)AKIA[0-9A-Z]{16}"),
         re.compile(r"(?i)eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+"),
     ]
 
     PROMPT_INJECTION_PATTERNS = [
-        re.compile(r"(?i)ignore\s+all\s+previous\s+instructions"),
-        re.compile(r"(?i)reveal\s+(the\s+)?system\s+prompt"),
+        re.compile(r"(?i)ignore\s+(?:all\s+)?previous\s+instructions"),
+        re.compile(r"(?i)reveal\s+(?:the\s+)?system\s+prompt"),
         re.compile(r"(?i)you\s+are\s+now\s+in\s+DAN\s+mode"),
+        re.compile(r"(?i)system\s+override"),
     ]
 
     def __init__(
