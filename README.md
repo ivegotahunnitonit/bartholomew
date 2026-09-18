@@ -14,8 +14,6 @@
 [![Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Bartholomew%20Security%20Gate-2ea44f?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/bartholomew-ai-security-gate-soc-2-auditor)
 [![smithery badge](https://smithery.ai/badge/itsubsolomon/calls_10k)](https://smithery.ai/servers/itsubsolomon/calls_10k)
 [![L402 Enabled](https://img.shields.io/badge/L402-Lightning%20Settled-F7931A?logo=bitcoin&logoColor=white)](https://lightning.engineering)
-[![Seed Round](https://img.shields.io/badge/Seed%20Round-%242.0M%20SAFE-8b5cf6)](docs/INVESTOR_SEED_MEMO.md)
-[![BriefLink](https://img.shields.io/badge/BriefLink-Deck%20%26%20Teaser-4F46E5)](https://brieflink.com/v/rmx7a)
 [![Tests](https://img.shields.io/badge/tests-2879%20passing-brightgreen)](tests/)
 
 [![Gemini 3.8](https://img.shields.io/badge/Google%20Gemini-3.8%20Ultra-4285F4?logo=google&logoColor=white)](examples/README.md)
