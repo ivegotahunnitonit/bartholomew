@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "title": "Bartholomew Trust Protocol (BTP v5.4): Sub-35 Microsecond In-Process Execution Gating, Cryptographic Merkle Attestation, and Autonomous L402 Lightning Settlement for Frontier Multi-Agent Swarms",
+    "upload_type": "publication",
+    "publication_type": "article",
+    "description": "Bartholomew is a sovereign, in-process security and economic execution gateway engineered specifically for autonomous agent swarms (OpenAI Agents SDK, Claude Desktop, CrewAI, AutoGen, LangGraph). Operating entirely within host agent process memory, Bartholomew achieves deterministic sub-35 microsecond AST and policy gating, dropping destructive terminal commands (rm -rf, mkfs), unauthorized SQL mutations (DROP TABLE, TRUNCATE), and credential leaks (sk-*, ghp_*, AKIA*) before physical OS kernel dispatch. Furthermore, BTP establishes the first unified Machine-to-Machine (M2M) Autonomous Economy Protocol: combining RFC 8785 deterministic canonicalization, Ed25519 append-only cryptographic Merkle receipts, RFC L402 Lightning Network invoice verification ($0.01/allowed action), multi-agent non-escalating delegation chains, and automated Merkle-evidence dispute arbitration.",
+    "creators": [
+      {
+        "name": "Alemayehu, Itsub",
+        "affiliation": "Autonomous Circularity Labs"
+      }
+    ],
+    "access_right": "open",
+    "license": "apache-2.0",
+    "keywords": [
+      "AI Security",
+      "Autonomous Agents",
+      "Tool Calling Guardrails",
+      "Bartholomew Trust Protocol",
+      "Model Context Protocol",
+      "L402",
+      "Lightning Network",
+      "Ed25519",
+      "Merkle Tree",
+      "Multi-Agent Systems",
+      "Rice's Theorem"
+    ],
+    "communities": [
+      {
+        "identifier": "zenodo"
+      }
+    ],
+    "notes": "Autonomous Circularity Labs Research Publication. Source code and live verification suite available at https://github.com/ivegotahunnitonit/bartholomew",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/ivegotahunnitonit/bartholomew",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ]
+  }
+}

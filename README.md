@@ -1,28 +1,29 @@
-# Bartholomew — Authorization Gate MVP
+<p align="center">
+  <img src="packages/vscode-extension/icon.png" width="140" alt="Bartholomew Shield Logo" />
+</p>
 
-**Authorization and policy layer for autonomous agents** — gate risky actions before execution, record proof of the decision, and emit telemetry for downstream policy and billing layers.
+# Bartholomew (BTP v5.4) — The In-Process Runtime Execution Gateway for Autonomous AI Agent Swarms
+
+**Sub-35µs In-Process Tool Execution Gateway, AST Policy Invariant Gating, Cryptographic Merkle Attestation, and L402 Lightning Micropayments for Frontier AI Swarms.**
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.15-blue?logo=visualstudiocode)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
+[![Zenodo DOI](https://img.shields.io/badge/Zenodo%20Paper-10.5281%2Fzenodo.bartholomew-blue)](docs/zenodo-paper-v5.4.md)
 [![Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Bartholomew%20Security%20Gate-2ea44f?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/bartholomew-ai-security-gate-soc-2-auditor)
 [![smithery badge](https://smithery.ai/badge/itsubsolomon/calls_10k)](https://smithery.ai/servers/itsubsolomon/calls_10k)
-[![Glama](https://img.shields.io/badge/Glama.ai-Bartholomew%20Registry-7C3AED)](https://glama.ai/mcp)
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ivegotahunnitonit/bartholomew/tree/main/examples/future_swarms/cloudflare)
-[![Cloud Console](https://img.shields.io/badge/Cloud-Console-8b5cf6)](https://bartholomew.info/cloud)
-[![Pricing](https://img.shields.io/badge/Pricing-Plans-10b981)](https://bartholomew.info/pricing)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
-[![Socket.dev](https://img.shields.io/badge/Socket.dev-Verified%20Supply%20Chain-10b981)](https://socket.dev)
 [![L402 Enabled](https://img.shields.io/badge/L402-Lightning%20Settled-F7931A?logo=bitcoin&logoColor=white)](https://lightning.engineering)
+[![Seed Round](https://img.shields.io/badge/Seed%20Round-%242.0M%20SAFE-8b5cf6)](docs/INVESTOR_SEED_MEMO.md)
+[![BriefLink](https://img.shields.io/badge/BriefLink-Deck%20%26%20Teaser-4F46E5)](https://brieflink.com/v/rmx7a)
 [![Tests](https://img.shields.io/badge/tests-2879%20passing-brightgreen)](tests/)
 
 [![Gemini 3.8](https://img.shields.io/badge/Google%20Gemini-3.8%20Ultra-4285F4?logo=google&logoColor=white)](examples/README.md)
 [![Claude 3.7](https://img.shields.io/badge/Anthropic-Claude%203.7%20Sonnet-D97706?logo=anthropic&logoColor=white)](examples/README.md)
 [![GPT-Astra](https://img.shields.io/badge/OpenAI-GPT--Astra%20%2F%20Agents%20SDK-10A37F?logo=openai&logoColor=white)](examples/README.md)
-[![Cloudflare](https://img.shields.io/badge/Cloudflare-Workers%20AI%20%2F%20Agents-F38020?logo=cloudflare&logoColor=white)](examples/README.md)
+[![CrewAI](https://img.shields.io/badge/CrewAI-Multi--Agent%20Swarm-FF4B4B)](examples/README.md)
 [![AutoGen](https://img.shields.io/badge/Microsoft-AutoGen%20Swarm-00A4EF?logo=microsoft&logoColor=white)](examples/README.md)
-[![Copilot / Cursor](https://img.shields.io/badge/IDE-Copilot%20%2F%20Cursor%20%2F%20Windsurf-7C3AED?logo=githubcopilot&logoColor=white)](examples/README.md)
+[![Copilot / Cursor](https://img.shields.io/badge/IDE-Cursor%20%2F%20VS%20Code-7C3AED?logo=githubcopilot&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 
 ---
 
