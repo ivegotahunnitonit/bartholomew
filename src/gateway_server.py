@@ -27,7 +27,7 @@ from pydantic import BaseModel, Field
 import uvicorn
 
 sys.path.insert(0, os.path.abspath("."))
-from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier
+from src.trust_protocol import BartholomewTrustAuthority, IndependentTrustVerifier, rfc8785_canonicalize
 from src.declarative_policy_engine import DeclarativePolicyEngine
 from src.polyglot_ast_validator import PolyglotASTValidator
 from src.secret_masker import SecretVaultMasker
@@ -173,6 +173,8 @@ def evaluate_bot_action(
     )
     receipt["attestation"]["verdict"] = verdict
     receipt["attestation"]["reason"] = reason
+    canonical_bytes = rfc8785_canonicalize(receipt["attestation"])
+    receipt["signature"] = authority.private_key.sign(canonical_bytes).hex()
 
     dt_us = (time.perf_counter() - t0) * 1_000_000
 

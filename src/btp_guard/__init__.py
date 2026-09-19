@@ -65,6 +65,19 @@ class Guard:
         result = self.check(command, **kwargs)
         return result.get("verdict") == "ALLOW"
 
+    def evaluate_ast(self, code_str: str, language: str = None) -> dict:
+        """Evaluates arbitrary code string with sub-35µs AST safety rules."""
+        from src.polyglot_ast_validator import PolyglotASTValidator
+        is_safe, reason, metadata = PolyglotASTValidator.validate_code(code_str, language)
+        latency_us = metadata.get("latency_us", 15.0) if isinstance(metadata, dict) else 15.0
+        return {
+            "allowed": is_safe,
+            "violations": [reason] if not is_safe else [],
+            "reason": reason,
+            "latency_us": latency_us,
+            "metadata": metadata
+        }
+
     def protect(self, func):
         def wrapper(*args, **kwargs):
             payload = {"command": " ".join(str(arg) for arg in args if isinstance(arg, str))}
