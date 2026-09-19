@@ -10,11 +10,18 @@ docs/TARGET_SEED_INVESTORS.md
 docs/Y_COMBINATOR_APPLICATION_KIT.md
 docs/NFX_SIGNAL_APPLICATION_KIT.md
 docs/FOUNDER_PITCH_BATTLECARD.md
+docs/ENTERPRISE_PILOT_OUTREACH_KIT.md
+docs/COMMUNITY_DISTRIBUTION_SHOW_HN_REDDIT.md
+docs/PRODUCT_HUNT_RESPONSE_PLAYBOOK.md
+docs/dossiers/
 scripts/compile_seed_one_pager.py
+scripts/generate_investor_materials.py
 scripts/investor_*
 scripts/dispatch_cycle_runner.py
+scripts/dispatch_wave_1_outreach.py
 scripts/generate_gmail_compose_urls.py
 scripts/gmail_compose_urls.json
+assets/logo.png
 
 # Vendored binaries & large blobs (use package managers or CI download steps instead)
 bin/*.exe
