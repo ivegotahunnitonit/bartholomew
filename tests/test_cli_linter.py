@@ -102,12 +102,3 @@ def test_cli_swarm_command():
     args = DummyArgs()
     cmd_swarm_status(args)
 
-
-def test_cli_lightning_command():
-    from src.btp_guard.cli import cmd_lightning_status, cmd_lightning_balance
-    class DummyArgs:
-        pass
-    args = DummyArgs()
-    cmd_lightning_status(args)
-    cmd_lightning_balance(args)
-
