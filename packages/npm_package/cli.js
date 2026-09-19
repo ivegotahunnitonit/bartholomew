@@ -409,6 +409,37 @@ function runActivate(key) {
 }
 
 switch (command) {
+  case 'trial': {
+    const email = args[1] || 'developer@company.com';
+    const trialHash = crypto.createHash('sha256').update(`${email}:btp_npm_trial:${Date.now()}`).digest('hex').slice(0, 16);
+    const key = `btp_pro_trial_${trialHash}`;
+    const markerDir = path.join(os.homedir(), '.btp');
+    fs.mkdirSync(markerDir, { recursive: true });
+    const payload = {
+      key,
+      email,
+      tier: 'PRO',
+      status: 'ACTIVE_TRIAL',
+      activated_at: Date.now(),
+      expires_at: Date.now() + (14 * 86400 * 1000),
+      features: ['unlimited_evals', 'cloud_policy_sync', 'team_slack_webhooks']
+    };
+    fs.writeFileSync(path.join(markerDir, 'license.json'), JSON.stringify(payload, null, 2));
+    console.log(`[BTP GUARD] 14-Day Pro Trial Activated for ${email}`);
+    console.log(`License Key: ${key}`);
+    console.log(`Status: ACTIVE_TRIAL (Expires in 14 days)`);
+    console.log(`Unlocked: Cloud policy sync, team webhook routing, and unlimited evaluations.`);
+    break;
+  }
+  case 'export-compliance': {
+    const outPath = args[1] || 'BARTHOLOMEW_COMPLIANCE_DOSSIER.md';
+    const content = `# Bartholomew Trust Protocol (BTP v5.4.16) Compliance Dossier\nStatus: COMMUNITY PREVIEW (UNCERTIFIED)\n\nTo unlock an auditor-signed SOC 2 Type II compliance pack, upgrade to Enterprise ($199/mo): https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601\n`;
+    fs.writeFileSync(outPath, content, 'utf8');
+    console.log(`[BTP GUARD] Compliance Dossier exported to: ${outPath}`);
+    console.log(`Audit Status: COMMUNITY PREVIEW (UNCERTIFIED)`);
+    console.log(`To unlock auditor-signed SOC 2 Type II packs: https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601`);
+    break;
+  }
   case 'upgrade':
   case 'pricing':
   case 'activate':
