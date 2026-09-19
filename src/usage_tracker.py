@@ -15,7 +15,7 @@ import hashlib
 from pathlib import Path
 from typing import Dict, Any, Tuple
 
-FREE_TIER_CALL_LIMIT = 1000
+FREE_TIER_CALL_LIMIT = None  # Unlimited local evaluations under REAPER-style fair developer model
 STRIPE_PRO_URL = "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600"
 STRIPE_ENTERPRISE_URL = "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601"
 STORE_URL = "https://bartholomew.info/store/"
@@ -157,19 +157,21 @@ def record_evaluation() -> Tuple[bool, str]:
         except Exception:
             pass
 
-    if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION:
+    # Periodic fair notice every 1,000 calls (never blocks execution)
+    if count > 0 and count % 1000 == 0 and not _ALERT_SHOWN_THIS_SESSION:
         _ALERT_SHOWN_THIS_SESSION = True
         notice = (
-            f"\n[BTP GUARD] Core Local Engine: Free forever for open-source development.\n"
-            "To unlock multi-agent cloud sync, team SIEM streaming, and certified SOC 2 auditor packs:\n"
-            f"-> Run: btp-guard activate (or visit {STORE_URL})\n"
+            f"\n[BTP GUARD] Evaluated {count:,} agent tool calls in-process.\n"
+            "Bartholomew is fully functional and free forever for individual developers.\n"
+            "If your team is deploying commercial agents in production, support the project with a Team license:\n"
+            f"-> Run: btp-guard upgrade (or visit {STORE_URL})\n"
         )
         try:
             sys.stderr.write(notice)
             sys.stderr.flush()
         except Exception:
             pass
-        return False, first_use_notice + notice
+        return True, first_use_notice + notice
 
     return True, first_use_notice
 

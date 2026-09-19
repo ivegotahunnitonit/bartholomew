@@ -49,7 +49,8 @@ class BTPManifestBuilder:
                 "community": {
                     "tier": "COMMUNITY",
                     "price_usd_month": 0,
-                    "description": "Local in-process execution gate"
+                    "description": "Unlimited local in-process execution gate and evaluation",
+                    "unlimited_evaluations": True
                 },
                 "pro": {
                     "tier": "PRO",
@@ -67,7 +68,7 @@ class BTPManifestBuilder:
                     "event": "autonomous_action_allowed",
                     "unit_price_usd": 0.01,
                     "currency": "USD",
-                    "free_tier_actions": 1000
+                    "free_tier_actions": "unlimited_local_evaluation"
                 }
             },
             "security": {
