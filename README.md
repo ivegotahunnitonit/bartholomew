@@ -7,7 +7,7 @@
 **Sub-35µs In-Process Tool Execution Gateway, AST Policy Invariant Gating, Cryptographic Merkle Attestation, and L402 Lightning Micropayments for Frontier AI Swarms.**
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.15-blue?logo=visualstudiocode)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.16-blue?logo=visualstudiocode)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo%20Paper-10.5281%2Fzenodo.bartholomew-blue)](docs/zenodo-paper-v5.4.md)

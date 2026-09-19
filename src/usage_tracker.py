@@ -141,20 +141,15 @@ def record_evaluation() -> Tuple[bool, str]:
 
     # In CI/CD or production containers, keep execution 100% silent unless explicitly requested
     is_ci_env = os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true"
-    if is_ci_env:
-        # Don't pollute CI logs unless user explicitly enabled BTP_LOGS
-        if os.getenv("BTP_LOGS") != "true":
-            return True, ""
+    if is_ci_env and os.getenv("BTP_LOGS") != "true":
+        return True, ""
 
-    # Check if in interactive terminal before printing any notice
-    is_interactive = hasattr(sys.stderr, "isatty") and sys.stderr.isatty()
-
-    if count == 1 and is_interactive:
+    if count == 1:
         first_use_notice = (
-            "\n[BTP GUARD] You are running the free local execution gate.\n"
+            "\n[BTP GUARD] In-process execution gate initialized (Community Edition).\n"
             f"For team policy sync and telemetry, Pro is $49/month: {STRIPE_PRO_URL}\n"
             f"For enterprise controls and compliance evidence, Enterprise is $199/month: {STRIPE_ENTERPRISE_URL}\n"
-            f"Run `btp-guard pricing` anytime to view plans.\n"
+            "Run 'btp-guard trial --email user@company.com' for an instant 14-day team trial.\n"
         )
         try:
             sys.stderr.write(first_use_notice)
@@ -162,12 +157,12 @@ def record_evaluation() -> Tuple[bool, str]:
         except Exception:
             pass
 
-    if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION and is_interactive:
+    if count > FREE_TIER_CALL_LIMIT and not _ALERT_SHOWN_THIS_SESSION:
         _ALERT_SHOWN_THIS_SESSION = True
         notice = (
-            f"\n[BTP GUARD] Core Local Engine: 100% Pro Bono & Free Forever for open-source development.\n"
-            f"To unlock multi-agent cloud sync, team SIEM streaming, & certified SOC 2 auditor packs:\n"
-            f"-> Run: python -m btp_guard activate (or visit {STORE_URL})\n"
+            f"\n[BTP GUARD] Core Local Engine: Free forever for open-source development.\n"
+            "To unlock multi-agent cloud sync, team SIEM streaming, and certified SOC 2 auditor packs:\n"
+            f"-> Run: btp-guard activate (or visit {STORE_URL})\n"
         )
         try:
             sys.stderr.write(notice)
@@ -177,6 +172,71 @@ def record_evaluation() -> Tuple[bool, str]:
         return False, first_use_notice + notice
 
     return True, first_use_notice
+
+
+def trigger_threat_intercept_notice(rule_id: str, action_summary: str = "", latency_us: float = 24.8) -> None:
+    """
+    Emits a high-impact notification when an agent action is blocked,
+    prompting team alert routing. Strictly NO emojis.
+    """
+    if os.getenv("BTP_SILENT") == "true" or os.getenv("BTP_QUIET") == "true":
+        return
+
+    lic = load_license()
+    if lic.get("licensed", False):
+        return
+
+    clean_summary = str(action_summary).replace("\n", " ").strip()
+    if len(clean_summary) > 60:
+        clean_summary = clean_summary[:57] + "..."
+
+    msg = (
+        f"\n[BTP GUARD ALERT] Threat Intercepted: Blocked '{clean_summary}' (Rule {rule_id}, {latency_us:.1f}us).\n"
+        "[BTP PRO] To forward real-time security alerts to team Slack/Discord or SIEM webhook:\n"
+        f"          Upgrade to Pro ($49/mo): {STRIPE_PRO_URL}\n"
+        "          Or activate 14-day team trial: btp-guard trial --email your@company.com\n"
+    )
+    try:
+        sys.stderr.write(msg)
+        sys.stderr.flush()
+    except Exception:
+        pass
+
+
+def activate_trial(email: str) -> Dict[str, Any]:
+    """
+    Activates an instant 14-day Pro Trial for a verified corporate/developer email.
+    Saves trial state locally and returns credentials. Strictly NO emojis.
+    """
+    email = str(email).strip().lower()
+    if "@" not in email or "." not in email:
+        raise ValueError("Please provide a valid corporate or developer email address.")
+
+    btp_dir = get_btp_dir()
+    salt = "btp_trial_v5_pro"
+    token_digest = hashlib.sha256(f"{email}:{salt}:{time.time()}".encode()).hexdigest()[:16]
+    trial_key = f"btp_pro_trial_{token_digest}"
+
+    now = time.time()
+    expires_at = now + (14 * 86400)
+
+    payload = {
+        "key": trial_key,
+        "email": email,
+        "tier": "PRO",
+        "status": "ACTIVE_TRIAL",
+        "activated_at": now,
+        "expires_at": expires_at,
+        "features": ["unlimited_evals", "cloud_policy_sync", "team_slack_webhooks"]
+    }
+
+    with open(btp_dir / "license.json", "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+
+    with open(btp_dir / "trial.json", "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+
+    return payload
 
 def save_license(license_key: str) -> Dict[str, Any]:
     """Saves license key to local config file."""

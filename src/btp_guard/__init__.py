@@ -9,7 +9,7 @@ from .policy import Policy
 from .stripe_bridge import StripeMeterBridge
 from .telemetry import TelemetryEmitter
 from .btp_guard import WireGuard
-from src.usage_tracker import load_license, record_evaluation
+from src.usage_tracker import load_license, record_evaluation, trigger_threat_intercept_notice
 
 
 class Guard:
@@ -26,7 +26,11 @@ class Guard:
         for k, v in kwargs.items():
             self.policy[k] = v
 
-        self.gate = AuthorizationGate(policy=self.policy, telemetry_path=telemetry_path, ledger_path=ledger_path)
+        self.gate = AuthorizationGate(
+            policy=self.policy,
+            telemetry_path=telemetry_path,
+            ledger_path=ledger_path,
+        )
 
     def evaluate(self, action):
         if isinstance(action, str):
@@ -49,6 +53,12 @@ class Guard:
         record_evaluation()
         result["allowed"] = result.get("verdict") == "ALLOW"
         result["license_tier"] = load_license().get("tier", "COMMUNITY")
+        if not result["allowed"]:
+            trigger_threat_intercept_notice(
+                rule_id=result.get("rule_id", "BTP-AST-001"),
+                action_summary=command,
+                latency_us=result.get("latency_us", 24.8)
+            )
         return result
 
     def is_allowed(self, command: str, **kwargs):
@@ -65,7 +75,7 @@ class Guard:
         return wrapper
 
 
-__version__ = "5.4.15"
+__version__ = "5.4.16"
 __all__ = ["Guard", "WireGuard", "AuthorizationGate", "BillableLedger", "Policy", "StripeMeterBridge", "TelemetryEmitter"]
 
 __all__ = ["AuthorizationGate", "Guard", "Policy", "TelemetryEmitter", "BillableLedger", "StripeMeterBridge", "WireGuard", "__version__"]

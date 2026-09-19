@@ -55,7 +55,7 @@ export function activate(context: ExtensionContext) {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'bartholomew.viewStatus';
   statusBarItem.text = `$(shield) BTP: ACTIVE (<25µs)`;
-  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4.14) - Free Tier | Click to View Status or Upgrade to Pro ($49/mo)`;
+  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4.16) - Free Tier | Click to View Status or Upgrade to Pro ($49/mo)`;
   context.subscriptions.push(statusBarItem);
   statusBarItem.show();
 
@@ -73,7 +73,7 @@ export function activate(context: ExtensionContext) {
             if (blocked > 0) {
               statusBarItem.text = `$(shield) BTP: ${blocked} BLOCKED (${avgLat}µs)`;
               statusBarItem.color = '#ef4444';
-              statusBarItem.tooltip = `BTP v5.4.14: ${blocked} threat(s) blocked! Click to view Cloud Audit Vault.`;
+              statusBarItem.tooltip = `BTP v5.4.16: ${blocked} threat(s) blocked. Click to view Cloud Audit Vault.`;
             } else {
               statusBarItem.text = `$(shield) BTP: ACTIVE (${avgLat}µs)`;
               statusBarItem.color = '#10b981';
@@ -98,8 +98,8 @@ export function activate(context: ExtensionContext) {
     const isConfigured = fs.existsSync(btpDir);
 
     const message = isConfigured
-      ? `Bartholomew Autonomous AI Guard (BTP v5.4.14)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n• L402 Lightning Settlements: READY\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
-      : `Bartholomew BTP v5.4.14 is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
+      ? `Bartholomew Autonomous AI Guard (BTP v5.4.16)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n• L402 Lightning Settlements: READY\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
+      : `Bartholomew BTP v5.4.16 is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
 
     vscode.window.showInformationMessage(message, 'Upgrade to Pro ($49/mo)', 'Open Cloud Vault', 'Validate Policy').then((selection: any) => {
       if (selection === 'Upgrade to Pro ($49/mo)') {
@@ -148,8 +148,19 @@ export function activate(context: ExtensionContext) {
           return;
         }
         const message = `Verdict: ${result?.verdict || 'ERROR'} | Rule: ${result?.rule_id || 'none'} | ${result?.reason || 'No result'} | Receipt: ${(result?.receipt_sha256 || '').slice(0, 16)}`;
-        if (result?.verdict === 'DENY') vscode.window.showWarningMessage(message);
-        else vscode.window.showInformationMessage(message);
+        if (result?.verdict === 'DENY') {
+          vscode.window.showWarningMessage(
+            `[BTP ALERT] Threat Intercepted: [${result?.rule_id || 'DENY'}] ${result?.reason || 'Policy violation'}. Forward real-time alerts to team Slack?`,
+            'Connect Slack (Pro)',
+            'Dismiss'
+          ).then((sel: any) => {
+            if (sel === 'Connect Slack (Pro)') {
+              vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
+            }
+          });
+        } else {
+          vscode.window.showInformationMessage(message);
+        }
       });
     });
   });

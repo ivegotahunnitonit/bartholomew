@@ -14,6 +14,10 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
+src_path = os.path.join(BASE_DIR, "src")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
 pypi_path = os.path.join(BASE_DIR, "pypi_package")
 if pypi_path not in sys.path:
     sys.path.insert(0, pypi_path)

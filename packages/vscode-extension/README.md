@@ -2,7 +2,7 @@
 
 Sub-25µs in-process tool execution gateway, AST policy dry-run linter, and offline Merkle compliance receipts for Cursor and VS Code.
 
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.15-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.16-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 ---
