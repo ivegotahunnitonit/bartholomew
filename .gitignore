@@ -11,6 +11,10 @@ docs/Y_COMBINATOR_APPLICATION_KIT.md
 docs/NFX_SIGNAL_APPLICATION_KIT.md
 docs/FOUNDER_PITCH_BATTLECARD.md
 scripts/compile_seed_one_pager.py
+scripts/investor_*
+scripts/dispatch_cycle_runner.py
+scripts/generate_gmail_compose_urls.py
+scripts/gmail_compose_urls.json
 
 # Vendored binaries & large blobs (use package managers or CI download steps instead)
 bin/*.exe
