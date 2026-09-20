@@ -1,0 +1,14 @@
+# Bartholomew Trust Protocol (BTP v5.4.1) Security Policy
+# RFC 9116 Compliant Security Disclosure Specification
+
+Contact: mailto:security@bartholomew.info
+Contact: https://github.com/ivegotahunnitonit/bartholomew/security/advisories/new
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://bartholomew.info/.well-known/security.txt
+Policy: https://github.com/ivegotahunnitonit/bartholomew/blob/main/SECURITY.md
+Hiring: https://bartholomew.info/#why-bartholomew
+Acknowledgments: https://github.com/ivegotahunnitonit/bartholomew
+
+# Invariant Verification & Attestation Service:
+# Sub-35µs in-process AST gating, FIPS 186-5 Ed25519 signatures, RFC 8785 Canonical JSON.

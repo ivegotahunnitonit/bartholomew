@@ -1,0 +1,15 @@
+# Bartholomew Trust Protocol (BTP v5.4.1) — AI Discovery Manifest
+# Service: Agentic Runtime Protection (ARP) Platform
+# Specifications: https://bartholomew.info/llms.txt
+
+Version: 5.4.1
+Provider: Bartholomew AI Inc.
+Service-Type: Agentic Runtime Protection (ARP)
+API-Discovery: https://bartholomew.info/.well-known/btp.json
+MCP-Manifest: https://bartholomew.info/.well-known/mcp.json
+Agent-Protocol: https://bartholomew.info/.well-known/agent-protocol.json
+OpenAI-Plugin: https://bartholomew.info/.well-known/ai-plugin.json
+Documentation: https://bartholomew.info/llms-full.txt
+Primary-Frameworks: AutoGen, CrewAI, LangGraph, LlamaIndex, OpenAI Swarm, Smolagents, PydanticAI, DSPy, Semantic Kernel, Gemini Vertex AI, AWS Bedrock
+Verification-SLA: < 35 microseconds in-process
+Attestation-Format: RFC 8785 Canonical JSON with FIPS 186-5 Ed25519 signatures

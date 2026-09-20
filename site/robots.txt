@@ -1,28 +1,104 @@
+# Bartholomew Trust Protocol (BTP v5.4.1) — Machine & Crawler Access Policy
+# Open access for autonomous agents, research indexers, and LLM swarms.
+
 User-agent: *
 Allow: /
 Allow: /.well-known/
 Allow: /llms.txt
 Allow: /llms-full.txt
+Allow: /ai.txt
+Allow: /sitemap.xml
 
+# OpenAI Frontier Crawlers
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic Claude & Research Bots
 User-agent: ClaudeBot
 Allow: /
 
 User-agent: anthropic-ai
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity AI Search & Swarms
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-Search
+Allow: /
+
+# Google Gemini, Vertex & Search
 User-agent: Google-Extended
 Allow: /
 
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Meta LLaMA & External Agents
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Mistral AI & Cohere
+User-agent: MistralBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Microsoft Bing & Copilot
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# Amazon & AWS Bedrock
+User-agent: Amazonbot
+Allow: /
+
+# Apple Intelligence
 User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# DeepSeek & Open AI Research
+User-agent: DeepSeekBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
 Allow: /
 
 User-agent: CCBot
 Allow: /
 
+# Sitemaps & Machine Specifications
 Sitemap: https://bartholomew.info/sitemap.xml

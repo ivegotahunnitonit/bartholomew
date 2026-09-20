@@ -305,3 +305,22 @@ def btp_gemini_38_tool(authority: Optional[BartholomewTrustAuthority] = None):
     return decorator
 
 
+# Re-export expanded modern framework adapters
+from src.framework_adapters_expansion import (
+    BartholomewSwarmGuard,
+    wrap_openai_swarm_tool,
+    BartholomewSmolagentsGuard,
+    wrap_smolagent_tool,
+    BartholomewPydanticAIGuard,
+    btp_pydanticai_tool,
+    wrap_pydanticai_tool,
+    BartholomewDSPyGuard,
+    wrap_dspy_predict,
+    BartholomewSemanticKernelFilter,
+    wrap_kernel_function,
+    BartholomewMCPToolFilter,
+    btp_mcp_tool,
+)
+
+
+

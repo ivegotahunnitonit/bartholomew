@@ -1,34 +1,99 @@
-# Bartholomew Trust Protocol (BTP v5.4) — Full Technical Reference for Autonomous Agents
+# Bartholomew Trust Protocol (BTP v5.4.1) — Full Technical Reference for Autonomous Agents
 
 ## Overview
 Bartholomew is the Agentic Runtime Protection (ARP) platform. It provides sovereign, deterministic, in-process execution gating for autonomous AI agents. Unlike remote LLM-as-a-judge evaluators (which incur 300ms+ network roundtrips and are themselves susceptible to indirect prompt injection), Bartholomew compiles syntax tree invariants into a sub-35 microsecond memory boundary.
 
 ## Technical Invariants
-1. BTP-AST-001: Destructive Command Injection Prevention (rm -rf, DROP TABLE, mkfs) -> Immediate DENY.
-2. BTP-SEC-001: High-Entropy Secret Masking (sk-proj, ghp_, AWS secrets) -> Immediate MASK and SCRUB before tool dispatch.
+1. BTP-AST-001: Destructive Command Injection Prevention (rm -rf, DROP TABLE, mkfs, format) -> Immediate DENY.
+2. BTP-SEC-001: High-Entropy Secret Masking (sk-proj, ghp_, AWS Access Keys, private keys) -> Immediate MASK and SCRUB before tool dispatch.
 3. BTP-LOOP-001: Infinite Recursion & Spend Exhaustion -> Circuit breaker trip with exponential backoff hook.
-4. BTP-EVAL-001: Obfuscated Dynamic Execution (eval, exec, __import__) -> Dual-stage AST semantic clamp.
+4. BTP-EVAL-001: Obfuscated Dynamic Execution (eval, exec, __import__, base64 decoders) -> Dual-stage AST semantic clamp.
 5. BTP-NHI-001: Non-Human Identity Step Verification -> FIPS 186-5 Ed25519 digital signature over RFC 8785 canonical JSON hash.
+6. BTP-SWARM-001: Swarm Delegation & Privilege Escalation Invariants -> Validates agent-to-agent task delegation and spend limits.
 
 ## Framework Integration Examples
-### Microsoft AutoGen
+
+### 1. OpenAI Swarm & Agents SDK
 ```python
-from btp_guard.adapters.autogen import btp_autogen_guard
-@btp_autogen_guard
-def tool_dispatch(agent, tool_call):
-    return execute_safely(tool_call)
+from btp_guard.integrations.swarm import BtpSwarmGuard
+
+guard = BtpSwarmGuard(spend_cap=50.0)
+guarded_tool = guard.protect_tool(transfer_funds)
+# Validates handoff between specialized swarm agents:
+guard.validate_handoff("TriageAgent", "EscrowAgent")
 ```
 
-### OpenAI Agents SDK / Function Calling
+### 2. Hugging Face Smolagents
 ```python
-from btp_guard import audit_step
-verdict = audit_step(tool_name="search_db", arguments={"query": "SELECT * FROM users"})
-assert verdict.is_allowed
+from btp_guard.integrations.smolagents import BtpSmolagentsGuard
+
+guard = BtpSmolagentsGuard()
+# Pre-execution AST gate for Python code executed by CodeAgent:
+guard.validate_code("import math; result = math.sqrt(144)")
+```
+
+### 3. PydanticAI
+```python
+from btp_guard.integrations.pydanticai import BtpPydanticAIGuard
+
+guard = BtpPydanticAIGuard(spend_cap=100.0)
+
+@guard.tool
+def execute_sql(query: str):
+    return db.run(query)
+```
+
+### 4. Stanford DSPy
+```python
+from src.framework_integrations import wrap_dspy_predict
+
+predictor = dspy.Predict("question -> answer")
+guarded_predictor = wrap_dspy_predict(predictor)
+response = guarded_predictor(question="Audit this transaction")
+```
+
+### 5. Microsoft Semantic Kernel
+```python
+from src.framework_integrations import wrap_kernel_function
+
+guarded_func = wrap_kernel_function(my_native_kernel_plugin)
+```
+
+### 6. Anthropic Model Context Protocol (MCP)
+```python
+from src.framework_integrations import btp_mcp_tool
+
+@btp_mcp_tool()
+def read_resource_file(uri: str):
+    return filesystem.read(uri)
+```
+
+### 7. Microsoft AutoGen
+```python
+from src.framework_integrations import wrap_autogen_execution
+
+hook = wrap_autogen_execution(user_proxy_agent)
+```
+
+### 8. LangChain & LangGraph
+```python
+from btp_guard.integrations.langchain import BtpToolGuard
+
+guarded_tool = BtpToolGuard(web_search_tool, max_spend_usd=25.0)
+```
+
+### 9. CrewAI
+```python
+from btp_guard.integrations.crewai import BtpCrewAIGuard
+
+guarded_tool = BtpCrewAIGuard(tool=database_tool, spend_cap=50.0)
 ```
 
 ## Discovery Endpoints
-- Manifest: https://bartholomew.info/.well-known/btp.json
+- Service Discovery Manifest: https://bartholomew.info/.well-known/btp.json
 - Agent Protocol: https://bartholomew.info/.well-known/agent-protocol.json
 - MCP Config: https://bartholomew.info/.well-known/mcp.json
 - AI Plugin: https://bartholomew.info/.well-known/ai-plugin.json
+- Security Disclosure (RFC 9116): https://bartholomew.info/.well-known/security.txt
+- AI Manifest: https://bartholomew.info/ai.txt
 - GitHub: https://github.com/ivegotahunnitonit/bartholomew
