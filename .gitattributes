@@ -2,6 +2,7 @@
 # Ensures GitHub correctly classifies this repository as a high-performance Python/TypeScript security engine
 
 docs/** linguist-documentation
+site/** linguist-documentation
 tests/** linguist-detectable=false
 *.md linguist-documentation
 *.png binary

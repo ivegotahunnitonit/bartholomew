@@ -27,6 +27,14 @@ def test_gateway_health_check(client):
     assert len(data["authority_public_key"]) == 64
 
 
+def test_gateway_landing_page_html(client):
+    response = client.get("/", headers={"accept": "text/html,application/xhtml+xml"})
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "Bartholomew" in response.text
+    assert "BTP v1.0.0" in response.text
+
+
 def test_manifest_discovery_endpoint(client):
     response = client.get("/.well-known/btp.json")
     assert response.status_code == 200

@@ -1,0 +1,121 @@
+{
+  "hosting": [
+    {
+      "site": "acn-26670",
+      "public": "site",
+      "cleanUrls": true,
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/.well-known/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/v1/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/cloud-health",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/**",
+          "run": {
+            "serviceId": "acn-fastapi-backend",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/verify/**",
+          "run": {
+            "serviceId": "acn-fastapi-backend",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "site": "acn-26670-ac55f",
+      "public": "site",
+      "cleanUrls": true,
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/v1/**",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/cloud-health",
+          "run": {
+            "serviceId": "bartolomew-cloud-engine",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/**",
+          "run": {
+            "serviceId": "acn-fastapi-backend",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/verify/**",
+          "run": {
+            "serviceId": "acn-fastapi-backend",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

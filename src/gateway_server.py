@@ -220,9 +220,18 @@ def get_ai_plugin_manifest():
     }
 
 
+from fastapi.responses import FileResponse
+
 @app.get("/")
 @app.get("/healthz")
-def get_health():
+@app.get("/status")
+def get_health(request: Request):
+    accept_header = request.headers.get("accept", "")
+    if (request.url.path == "/" or request.url.path == "/index.html") and "text/html" in accept_header:
+        site_index = os.path.abspath("site/index.html")
+        if os.path.exists(site_index):
+            return FileResponse(site_index, media_type="text/html")
+
     uptime = time.time() - node_start_time
     return {
         "status": "HEALTHY",
@@ -235,6 +244,22 @@ def get_health():
         "uptime_seconds": round(uptime, 2),
         "metrics": metrics_counters
     }
+
+
+@app.get("/logo.png")
+def get_logo():
+    logo_path = os.path.abspath("site/logo.png")
+    if os.path.exists(logo_path):
+        return FileResponse(logo_path, media_type="image/png")
+    raise HTTPException(status_code=404, detail="Logo not found")
+
+
+@app.get("/badge.svg")
+def get_badge():
+    badge_path = os.path.abspath("site/badge.svg")
+    if os.path.exists(badge_path):
+        return FileResponse(badge_path, media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="Badge not found")
 
 
 @app.get("/v1/trust-root")
