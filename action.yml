@@ -134,16 +134,16 @@ runs:
         if summary_path:
             with open(summary_path, 'a', encoding='utf-8') as f:
                 f.write(f'''
-        ### 🛡️ [Bartholomew Protocol v5.4.6] Codebase Security & SOC 2 Audit
+        ### [Bartholomew Protocol v5.4.6] Codebase Security & SOC 2 Audit
 
         | Metric | Value | Status |
         | :--- | :--- | :---: |
-        | **Security Score** | **{score}/100 (A+)** | {'✅ PASSED' if score >= 80 else '❌ FAILED'} |
-        | **Files Analyzed** | {scanned:,} files | ✅ |
-        | **Lines Scanned** | {lines:,} lines | ✅ |
-        | **Audit Execution Time** | {ms:.2f} ms | ⚡ SUB-SECOND |
-        | **OWASP LLM01 / LLM02** | Zero Unshielded Executions | ✅ COMPLIANT |
-        | **SOC 2 Type II Readiness** | Trust Services CC6.1, CC6.6 | ✅ READY |
+        | **Security Score** | **{score}/100 (A+)** | {'[PASSED]' if score >= 80 else '[FAILED]'} |
+        | **Files Analyzed** | {scanned:,} files | [VERIFIED] |
+        | **Lines Scanned** | {lines:,} lines | [VERIFIED] |
+        | **Audit Execution Time** | {ms:.2f} ms | SUB-SECOND |
+        | **OWASP LLM01 / LLM02** | Zero Unshielded Executions | [COMPLIANT] |
+        | **SOC 2 Type II Readiness** | Trust Services CC6.1, CC6.6 | [READY] |
 
         *Deterministic AST Guarding &bull; Sub-35µs Latency &bull; Zero Remote Token Spend*
         ''')

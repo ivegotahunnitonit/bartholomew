@@ -1,0 +1,8 @@
+- id: btp-guard-check
+  name: Bartholomew BTP Invariant & AST Security Auditor
+  description: Sub-35µs deterministic AST invariant verification and secret scrubbing for autonomous AI agents and codebases.
+  entry: python -m src.cli_linter
+  language: python
+  types: [python]
+  stages: [pre-commit, pre-push]
+  pass_filenames: false

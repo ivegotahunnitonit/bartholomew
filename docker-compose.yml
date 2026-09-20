@@ -1,20 +1,47 @@
 version: '3.8'
 
 services:
+  # Bartholomew ARP Invariant Firewall & REST/gRPC Gateway
   btp-gateway:
-    image: bartholomew/btp-gateway:1.0.0
+    image: bartholomew/btp-gateway:5.4.0
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bartholomew-cloud-gateway
+    container_name: btp-enterprise-gateway
     restart: unless-stopped
     ports:
       - "8080:8080"
     environment:
       - PORT=8080
       - PYTHONUNBUFFERED=1
+      - BTP_STRICT_INVARIANTS=true
+      - BTP_POLICY_FILE=/etc/btp/policies/default_security_policy.yaml
+      - BTP_LEDGER_PATH=/var/lib/btp/btp_audit_ledger.db
+    volumes:
+      - ./policies:/etc/btp/policies:ro
+      - btp_data:/var/lib/btp
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
-      interval: 15s
-      timeout: 5s
+      interval: 10s
+      timeout: 3s
       retries: 3
+
+  # Bartholomew Central Telemetry Stream & Alert Dispatcher
+  btp-telemetry:
+    image: bartholomew/btp-gateway:5.4.0
+    container_name: btp-telemetry-worker
+    restart: unless-stopped
+    command: ["python", "-m", "src.telemetry_exporter"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - BTP_LEDGER_PATH=/var/lib/btp/btp_audit_ledger.db
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+      - PAGERDUTY_ROUTING_KEY=${PAGERDUTY_ROUTING_KEY:-}
+    volumes:
+      - btp_data:/var/lib/btp
+    depends_on:
+      - btp-gateway
+
+volumes:
+  btp_data:
+    driver: local

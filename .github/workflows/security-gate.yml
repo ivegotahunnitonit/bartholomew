@@ -1,0 +1,22 @@
+name: Bartholomew Runtime Protection & AST Invariant Gate
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  bartholomew-security-audit:
+    name: "BTP v5.4 AST Invariant & Compliance Gate"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Bartholomew Security Gate
+        uses: ivegotahunnitonit/bartholomew@main
+        with:
+          audit-path: "."
+          policy-file: "policies/default_security_policy.yaml"
+          fail-on-violation: "true"

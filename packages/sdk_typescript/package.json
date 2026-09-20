@@ -1,7 +1,7 @@
 {
   "name": "@bartholomew/btp-guard",
-  "version": "2.2.0",
-  "description": "Sub-millisecond cryptographic execution guard for autonomous AI agents.",
+  "version": "5.4.0",
+  "description": "Sub-35µs cryptographic execution firewall & AST invariant gate for Vercel AI SDK, LangChain.js, and Anthropic MCP.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,10 +11,13 @@
   "keywords": [
     "ai-agents",
     "security",
-    "cryptography",
+    "vercel-ai-sdk",
+    "langchainjs",
     "mcp",
-    "langchain",
-    "autogen",
+    "model-context-protocol",
+    "ast-guard",
+    "cryptography",
+    "fips-186-5",
     "btp"
   ],
   "author": "Bartholomew Autonomous Trust Network",

@@ -75,3 +75,22 @@ from src.framework_integrations import btp_mcp_tool
 def handle_tool_call(query: str):
     ...
 ```
+
+### 5. TypeScript / Vercel AI SDK Integration
+```typescript
+import { BartholomewGuard } from '@bartholomew/btp-guard';
+
+const guard = new BartholomewGuard({ maxSpendUsd: 500.0 });
+const protectedTool = guard.wrapVercelAITool('query_db', myVercelTool);
+```
+
+### 6. Zero-Config GitHub Action
+```yaml
+- uses: ivegotahunnitonit/bartholomew@main
+  with:
+    strict-invariants: true
+```
+
+## Interactive Web Demonstrations
+- Interactive Red Team Simulation Lab: https://bartholomew.info/sim-lab.html
+- Enterprise Control Plane Portal: https://bartholomew.info/control-plane.html
