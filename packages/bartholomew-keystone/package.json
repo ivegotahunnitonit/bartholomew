@@ -1,0 +1,57 @@
+{
+  "name": "bartholomew-keystone",
+  "displayName": "Bartholomew Keystone — Agent Capability Passkey",
+  "description": "Cryptographically signed clearance tokens granting autonomous AI agents scoped access across IDEs, programs, and web searches.",
+  "version": "1.0.0",
+  "publisher": "Bartholomew",
+  "icon": "icon.png",
+  "license": "Apache-2.0",
+  "categories": [
+    "Machine Learning",
+    "Security",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "agents",
+    "guardrails",
+    "passkey",
+    "security",
+    "capabilities",
+    "cursor",
+    "copilot"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "keystone.issuePasskey",
+        "title": "Keystone: Issue Agent Capability Passkey",
+        "icon": "$(key)"
+      },
+      {
+        "command": "keystone.inspectClearance",
+        "title": "Keystone: Inspect Active Agent Clearance",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "keystone.revokePasskey",
+        "title": "Keystone: Revoke Current Agent Passkey",
+        "icon": "$(close)"
+      },
+      {
+        "command": "keystone.validateAction",
+        "title": "Keystone: Validate Agent Action against Passkey"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "build": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.3.0"
+  }
+}
