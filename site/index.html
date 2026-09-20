@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Bartholomew (BTP v5.4) — The Agentic Runtime Protection (ARP) Platform</title>
   <meta name="description" content="Sub-millisecond trajectory observability and deterministic execution firewalls for autonomous AI agents. Real-time OWASP kill-switches, Non-Human Identity (NHI), and Ed25519 cryptographic attestations.">
   
@@ -55,10 +55,12 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
@@ -67,6 +69,7 @@
       font-family: var(--font-sans);
       line-height: 1.6;
       overflow-x: hidden;
+      width: 100%;
       background-image: 
         radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.09), transparent 50%),
         radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.05), transparent 45%);
@@ -78,6 +81,7 @@
     }
 
     .container {
+      width: 100%;
       max-width: 1180px;
       margin: 0 auto;
       padding: 0 24px;
@@ -88,9 +92,11 @@
       border-bottom: 1px solid var(--border-subtle);
       background: rgba(5, 9, 20, 0.88);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       position: sticky;
       top: 0;
       z-index: 50;
+      width: 100%;
     }
 
     .nav-inner {
@@ -106,6 +112,7 @@
       gap: 12px;
       text-decoration: none;
       color: var(--text-main);
+      flex-shrink: 0;
     }
 
     .brand-icon-box {
@@ -118,6 +125,7 @@
       align-items: center;
       justify-content: center;
       color: var(--emerald);
+      flex-shrink: 0;
     }
 
     .brand-title {
@@ -137,6 +145,8 @@
       border: 1px solid rgba(16, 185, 129, 0.25);
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      font-family: var(--font-mono);
+      white-space: nowrap;
     }
 
     .nav-right-items {
@@ -145,31 +155,8 @@
       gap: 14px;
     }
 
-    .btn-investor-nav {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 15px;
-      border-radius: var(--radius-sm);
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: #d8b4fe;
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-investor-nav:hover {
-      background: rgba(168, 85, 247, 0.24);
-      color: #ffffff;
-      border-color: #c084fc;
-      transform: translateY(-1px);
-    }
-
     .nav-github-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 7px;
       font-size: 0.86rem;
@@ -180,6 +167,7 @@
       padding: 8px 12px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
+      white-space: nowrap;
     }
 
     .nav-github-link:hover {
@@ -197,12 +185,13 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       transition: var(--transition);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
       border: none;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .btn-sandbox-nav:hover {
@@ -212,38 +201,19 @@
 
     /* Hero Section */
     section.hero {
-      padding: 80px 0 45px;
+      padding: 70px 0 45px;
       text-align: center;
     }
 
-    .pill-hero {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: var(--radius-full);
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      color: #cbd5e1;
-      font-size: 0.82rem;
-      font-weight: 500;
-      margin-bottom: 24px;
-    }
-
-    .pill-speed-tag {
-      color: var(--emerald);
-      font-family: var(--font-mono);
-      font-weight: 700;
-    }
-
     h1.hero-title {
-      font-size: clamp(2.3rem, 5.2vw, 3.8rem);
+      font-size: clamp(2.1rem, 5.2vw, 3.8rem);
       font-weight: 900;
       letter-spacing: -0.03em;
       line-height: 1.15;
       max-width: 1040px;
       margin: 0 auto 24px;
       color: #ffffff;
+      word-break: break-word;
     }
 
     .gradient-text {
@@ -254,7 +224,7 @@
 
     p.hero-desc {
       color: var(--text-muted);
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      font-size: clamp(1.02rem, 2vw, 1.25rem);
       max-width: 840px;
       margin: 0 auto 36px;
       line-height: 1.65;
@@ -280,6 +250,7 @@
       transition: var(--transition);
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
       border: none;
@@ -303,6 +274,7 @@
       transition: var(--transition);
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
     }
 
@@ -321,16 +293,13 @@
       text-align: left;
     }
 
-    @media (max-width: 768px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       padding: 20px;
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       transition: var(--transition);
     }
 
@@ -353,6 +322,7 @@
       font-weight: 900;
       font-family: var(--font-mono);
       margin-bottom: 4px;
+      line-height: 1.2;
     }
 
     .stat-val.emerald { color: var(--emerald); }
@@ -367,7 +337,7 @@
 
     /* Dedicated Traction & Seed Metrics Section */
     section.traction-sec {
-      padding: 30px 0 50px;
+      padding: 25px 0 45px;
     }
 
     .traction-card {
@@ -378,6 +348,7 @@
       max-width: 1060px;
       margin: 0 auto;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .traction-header {
@@ -400,6 +371,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-family: var(--font-mono);
     }
 
     .traction-status-badge {
@@ -417,10 +389,6 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-    }
-
-    @media (max-width: 768px) {
-      .traction-grid { grid-template-columns: 1fr; }
     }
 
     .traction-item {
@@ -458,6 +426,7 @@
       border-bottom: 1px solid #1f1f23;
       overflow: hidden;
       position: relative;
+      width: 100%;
     }
 
     .ecosystem-sec::before {
@@ -627,7 +596,7 @@
     }
 
     h2.section-title {
-      font-size: 2.1rem;
+      font-size: clamp(1.7rem, 4vw, 2.1rem);
       font-weight: 900;
       letter-spacing: -0.025em;
       color: #ffffff;
@@ -645,10 +614,6 @@
       gap: 24px;
     }
 
-    @media (max-width: 860px) {
-      .sandbox-grid { grid-template-columns: 1fr; }
-    }
-
     .panel-box {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -657,6 +622,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-width: 0;
     }
 
     .panel-header {
@@ -664,6 +630,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .panel-title {
@@ -695,7 +663,7 @@
       padding: 16px;
       color: #e2e8f0;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 14px;
       line-height: 1.5;
       resize: vertical;
       outline: none;
@@ -822,6 +790,8 @@
       font-size: 0.8rem;
       font-weight: 700;
       color: #fecdd3;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
     .violation-pill {
@@ -873,10 +843,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
       margin-top: 36px;
-    }
-
-    @media (max-width: 860px) {
-      .defensibility-grid { grid-template-columns: 1fr; }
     }
 
     .defensibility-card {
@@ -964,13 +930,6 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 18px;
       margin-top: 40px;
-    }
-
-    @media (max-width: 960px) {
-      .funnel-steps-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 580px) {
-      .funnel-steps-grid { grid-template-columns: 1fr; }
     }
 
     .funnel-card {
@@ -1166,6 +1125,7 @@
       padding: 60px 0 36px;
       color: var(--text-dim);
       font-size: 0.85rem;
+      width: 100%;
     }
 
     .footer-seals-box {
@@ -1213,10 +1173,6 @@
       gap: 40px;
       padding-bottom: 40px;
       border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-    }
-
-    @media (max-width: 768px) {
-      .footer-main-grid { grid-template-columns: 1fr; }
     }
 
     .footer-brand-title {
@@ -1317,11 +1273,12 @@
       top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(3, 6, 13, 0.88);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 20px;
+      padding: 16px;
     }
 
     .modal-overlay.active {
@@ -1343,12 +1300,14 @@
 
     .modal-close-x {
       position: absolute;
-      top: 20px; right: 20px;
+      top: 16px; right: 16px;
       background: none;
       border: none;
       color: var(--text-dim);
       font-size: 1.6rem;
       cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
     }
 
     .modal-close-x:hover { color: #ffffff; }
@@ -1387,6 +1346,7 @@
       align-items: center;
       gap: 8px;
       margin-bottom: 10px;
+      font-family: var(--font-mono);
     }
 
     .roadmap-body {
@@ -1402,10 +1362,6 @@
       margin-top: 10px;
     }
 
-    @media (max-width: 640px) {
-      .deck-checklist-grid { grid-template-columns: 1fr; }
-    }
-
     .deck-item {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
@@ -1416,6 +1372,241 @@
 
     .deck-item strong {
       color: var(--emerald);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE BREAKPOINTS: Mobile, iPad, Tablet, Android & Ultra-Wide
+       ========================================================================== */
+
+    /* 1. Medium Tablets & Small Laptops (<= 1024px) */
+    @media (max-width: 1024px) {
+      .funnel-steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
+
+    /* 2. Tablets & iPads (<= 860px) */
+    @media (max-width: 860px) {
+      .sandbox-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .defensibility-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .traction-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+      .footer-main-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .investor-callout-card {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left;
+        padding: 28px 22px;
+      }
+      .btn-vc-cta {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* 3. Phablets & Large Phones (<= 640px) */
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 16px;
+      }
+      header.navbar {
+        height: auto;
+      }
+      .nav-inner {
+        height: 64px;
+      }
+      .brand-title {
+        font-size: 1.05rem;
+      }
+      .badge-protocol {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+      }
+      .nav-right-items {
+        gap: 8px;
+      }
+      .nav-github-link {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+      .btn-sandbox-nav {
+        font-size: 0.8rem;
+        padding: 7px 12px;
+      }
+
+      section.hero {
+        padding: 48px 0 32px;
+      }
+      h1.hero-title {
+        font-size: clamp(1.85rem, 7vw, 2.5rem);
+        margin-bottom: 16px;
+      }
+      p.hero-desc {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        margin-bottom: 28px;
+      }
+      .hero-cta-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+      .btn-primary-hero, .btn-action-hero {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.92rem;
+        padding: 13px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .stat-card {
+        padding: 14px 12px;
+      }
+      .stat-val {
+        font-size: 1.3rem;
+      }
+      .stat-label {
+        font-size: 0.68rem;
+      }
+      .stat-foot {
+        font-size: 0.7rem;
+      }
+
+      .traction-card {
+        padding: 20px 16px;
+      }
+      .traction-item-num {
+        font-size: 1.55rem;
+      }
+
+      .ecosystem-head {
+        margin-bottom: 18px;
+      }
+      .ecosystem-desc {
+        font-size: 0.78rem;
+      }
+      .regulatory-row {
+        gap: 8px 12px;
+        font-size: 0.7rem;
+      }
+
+      section.sandbox-sec {
+        padding: 50px 0 60px;
+      }
+      h2.section-title {
+        font-size: 1.65rem;
+      }
+      p.section-sub {
+        font-size: 0.85rem;
+      }
+      .panel-box {
+        padding: 18px 14px;
+      }
+      textarea.code-editor {
+        font-size: 14px; /* Prevents auto-zoom on iOS safari */
+        height: 250px;
+        padding: 12px;
+      }
+      .metrics-summary-bar {
+        gap: 8px;
+        padding: 10px 8px;
+      }
+      .msb-val {
+        font-size: 1.15rem;
+      }
+
+      section.defensibility-sec {
+        padding: 50px 0;
+      }
+      .defensibility-card {
+        padding: 22px 16px;
+      }
+      .def-card-title {
+        font-size: 1.15rem;
+      }
+
+      section.funnel-sec {
+        padding: 50px 0 60px;
+      }
+      .funnel-steps-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .funnel-card {
+        padding: 22px 18px;
+      }
+
+      .investor-callout-card {
+        padding: 24px 16px;
+      }
+      .investor-callout-title {
+        font-size: 1.25rem;
+      }
+
+      footer.site-footer {
+        padding: 45px 0 28px;
+      }
+      .footer-seals-box {
+        padding-bottom: 24px;
+        margin-bottom: 30px;
+      }
+      .seals-grid {
+        gap: 8px;
+      }
+      .seal-badge {
+        font-size: 0.68rem;
+        padding: 6px 10px;
+      }
+
+      .modal-card {
+        padding: 24px 16px;
+        max-height: 88vh;
+      }
+      .modal-headline {
+        font-size: 1.45rem;
+      }
+      .roadmap-section {
+        padding: 16px 12px;
+      }
+      .deck-checklist-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 4. Small Smartphones & Compact Android / iPhone SE (<= 400px) */
+    @media (max-width: 400px) {
+      .badge-protocol {
+        display: none; /* Hide secondary badge on very narrow screens to prevent wrap */
+      }
+      .stats-grid {
+        grid-template-columns: 1fr; /* 1 col layout on ultra-narrow phones */
+      }
+      .btn-primary-hero, .btn-action-hero {
+        font-size: 0.88rem;
+        padding: 12px 16px;
+      }
+      .partner-pill {
+        padding: 8px 14px;
+      }
+      .partner-name {
+        font-size: 0.78rem;
+      }
     }
   </style>
 </head>
@@ -1450,11 +1641,6 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="pill-hero">
-          <svg width="14" height="14" fill="currentColor" color="var(--emerald)" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          Category-Defining Security Primitive (<span class="pill-speed-tag">&lt; 35µs In-Process AST Gate</span>)
-        </div>
-
         <h1 class="hero-title">
           The Agentic Runtime Protection <br><span class="gradient-text">(ARP) Platform</span>
         </h1>
@@ -1555,7 +1741,7 @@
         </p>
       </div>
 
-      <!-- Marquee Track with Duplicate Items for Infinite Loop -->
+      <!-- Marquee Track with Duplicate Items for Seamless Loop -->
       <div class="marquee-track-wrap">
         <div class="marquee-track">
           <!-- Microsoft AutoGen -->
@@ -1829,7 +2015,7 @@
       <div class="container">
         <div class="section-head">
           <div class="ecosystem-pill" style="margin-bottom:12px;">
-            <span>[ TECHNICAL DEFICIENCY &amp; DILIGENCE MOAT ]</span>
+            <span>[ TECHNICAL DEFICIENT &amp; DILIGENCE MOAT ]</span>
           </div>
           <h2 class="section-title">Architectural Defensibility &amp; Edge-Case Security</h2>
           <p class="section-sub">How Bartholomew prevents runtime bypasses, eval() obfuscations, and identity spoofing under strict &lt; 0.5ms SLA budgets.</p>
@@ -2162,7 +2348,7 @@
       <!-- 1. Category Framing & TAM -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>🚀</span> 1. Category Framing: The Agentic Runtime Protection (ARP) Primitive
+          1. Category Framing: The Agentic Runtime Protection (ARP) Primitive
         </div>
         <div class="roadmap-body">
           <p><strong>The "Why Now" Shift:</strong> AI agents are transitioning from conversational chat experiments to production tool execution (direct SQL mutations, shell command execution, file modifications, and autonomous API billing). This opens critical unmanaged attack surfaces across the OWASP LLM Top 10.</p>
@@ -2173,7 +2359,7 @@
       <!-- 2. Technical Defensibility & Product Moat -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>🛡️</span> 2. Technical Defensibility &amp; Proprietary Moat
+          2. Technical Defensibility &amp; Proprietary Moat
         </div>
         <div class="roadmap-body">
           <ul style="list-style:none; display:flex; flex-direction:column; gap:6px;">
@@ -2189,7 +2375,7 @@
       <!-- 3. Go-To-Market & Pricing -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>📈</span> 3. Go-To-Market (GTM) &amp; Distribution Strategy
+          3. Go-To-Market (GTM) &amp; Distribution Strategy
         </div>
         <div class="roadmap-body">
           <p><strong>PLG Developer Flywheel:</strong> Bottom-up open-source adoption (<code>pip install btp-guard</code>, GitHub Actions) $\rightarrow$ Developer advocacy within AI teams $\rightarrow$ Top-down enterprise DevSecOps sales.</p>
@@ -2200,7 +2386,7 @@
       <!-- 4. Traction & Case Studies -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>📊</span> 4. Traction Indicators &amp; Real-World Case Studies
+          4. Traction Indicators &amp; Real-World Case Studies
         </div>
         <div class="roadmap-body">
           <ul style="list-style:none; display:flex; flex-direction:column; gap:6px;">
@@ -2215,7 +2401,7 @@
       <!-- 5. 18-Month Use of Funds ($2.5M - $4M Seed) -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>💰</span> 5. 18-Month Seed Financial Plan &amp; The Ask
+          5. 18-Month Seed Financial Plan &amp; The Ask
         </div>
         <div class="roadmap-body">
           <p><strong>Capital Target:</strong> Raising <strong>$2.5M – $4M Seed</strong> to fund an 18-month operational runway from current pilot baseline to <strong>$1M+ ARR</strong> prior to Series A.</p>
@@ -2232,7 +2418,7 @@
       <!-- 6. Founder Authority & Advisory Board -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>👤</span> 6. Founder Authority &amp; Strategic Advisory Board
+          6. Founder Authority &amp; Strategic Advisory Board
         </div>
         <div class="roadmap-body">
           <p><strong>Founder:</strong> Itsub Alemayehu (Autonomous Systems Laboratory). Domain expertise in compiler construction, in-process AST gating engines, and zero-trust cryptography.</p>
@@ -2243,7 +2429,7 @@
       <!-- 7. Seed Pitch Deck Checklist -->
       <div class="roadmap-section">
         <div class="roadmap-sec-title">
-          <span>📑</span> 7. Seed Pitch Deck Index (8 Slides)
+          7. Seed Pitch Deck Index (8 Slides)
         </div>
         <div class="deck-checklist-grid">
           <div class="deck-item"><strong>Slide 1:</strong> Vision &amp; Summary (Sovereign Execution Firewall)</div>
