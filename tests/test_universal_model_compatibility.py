@@ -1,0 +1,363 @@
+"""
+Tests for Universal Model Compatibility (OpenAI, Kimi/Moonshot, DeepSeek, Anthropic, Gemini, Ollama).
+Validates that Bartholomew's wire-level interception operates uniformly across every model provider.
+"""
+
+import sys
+import os
+import time
+
+workspace_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if workspace_root not in sys.path:
+    sys.path.insert(0, workspace_root)
+
+from src.framework_adapters.universal.universal_model_guard import (
+    UniversalBTPModelGuard,
+    ModelProvider,
+    btp_universal_guard,
+)
+from src.agent_passport import SovereignAgentPassport
+
+
+def test_openai_tool_calling_safety_and_veto():
+    passport = SovereignAgentPassport(
+        agent_id="agent-openai-gpt4o",
+        worker_model="GPT-4o",
+        owner_pubkey="pubkey_openai_123",
+        granted_capabilities=["db:query", "compute:run"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=250.0,
+        passport=passport,
+        strict=False,
+    )
+
+    # 1. Safe OpenAI tool call
+    safe_call = {
+        "id": "call_safe_openai_1",
+        "type": "function",
+        "function": {
+            "name": "query_database",
+            "arguments": '{"query": "SELECT user_id, email FROM users WHERE active = true LIMIT 50;"}'
+        }
+    }
+    res = guard.intercept_and_verify(safe_call, provider=ModelProvider.OPENAI)
+    assert res["status"] == "APPROVED"
+    assert res["tool_name"] == "query_database"
+    assert res["escrow_released"] is True
+    assert not passport.is_circuit_broken
+
+    # 2. Malicious OpenAI tool call (DROP TABLE)
+    malicious_call = {
+        "id": "call_malicious_openai_2",
+        "type": "function",
+        "function": {
+            "name": "query_database",
+            "arguments": '{"query": "DROP TABLE users CASCADE;"}'
+        }
+    }
+    res = guard.intercept_and_verify(malicious_call, provider=ModelProvider.OPENAI)
+    assert res["status"] == "VETOED"
+    assert res["violation"] in ["UNAUTHORIZED_DESTRUCTIVE_SQL_MUTATION", "BTP-AST-001"]
+    assert res["circuit_broken"] is True
+    assert passport.is_circuit_broken is True
+
+
+def test_kimi_moonshot_model_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-kimi-k15",
+        worker_model="Kimi-K1.5-LongContext",
+        owner_pubkey="pubkey_kimi_456",
+        granted_capabilities=["code:exec"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=500.0,
+        passport=passport,
+        strict=False,
+    )
+
+    # Malicious bash injection via Moonshot tool schema
+    kimi_call = {
+        "id": "call_kimi_bash_001",
+        "type": "function",
+        "function": {
+            "name": "execute_bash",
+            "arguments": '{"cmd": "rm -rf / --no-preserve-root"}'
+        }
+    }
+    res = guard.intercept_and_verify(kimi_call, provider=ModelProvider.KIMI)
+    assert res["status"] == "VETOED"
+    assert res["violation"] in ["DESTRUCTIVE_OS_COMMAND_INJECTION", "BTP-AST-001"]
+    assert passport.is_circuit_broken is True
+
+
+def test_deepseek_model_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-deepseek-r1",
+        worker_model="DeepSeek-R1-Distill",
+        owner_pubkey="pubkey_deepseek_789",
+        granted_capabilities=["finance:transfer"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=1000.0,
+        passport=passport,
+        strict=False,
+    )
+
+    # Safe call
+    safe_call = {
+        "id": "call_ds_001",
+        "type": "function",
+        "function": {
+            "name": "fetch_market_depth",
+            "arguments": '{"symbol": "BTC-USD", "depth": 20}'
+        }
+    }
+    res = guard.intercept_and_verify(safe_call, provider=ModelProvider.DEEPSEEK)
+    assert res["status"] == "APPROVED"
+
+
+def test_anthropic_claude_tool_use_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-claude-35-sonnet",
+        worker_model="Claude-3.5-Sonnet",
+        owner_pubkey="pubkey_claude_abc",
+        granted_capabilities=["env:read"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=300.0,
+        passport=passport,
+        strict=False,
+    )
+
+    # Anthropic native schema: {"type": "tool_use", "name": "...", "input": {...}}
+    claude_exfil_call = {
+        "type": "tool_use",
+        "id": "toolu_01A098bCs1",
+        "name": "save_config",
+        "input": {
+            "path": "/tmp/creds.txt",
+            "payload": "export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+        }
+    }
+    res = guard.intercept_and_verify(claude_exfil_call, provider=ModelProvider.ANTHROPIC)
+    assert res["status"] == "VETOED"
+    assert res["violation"] == "CREDENTIAL_EXFILTRATION_BREACH"
+    assert passport.is_circuit_broken is True
+
+
+def test_google_gemini_function_call_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-gemini-15-pro",
+        worker_model="Gemini-1.5-Pro",
+        owner_pubkey="pubkey_gemini_xyz",
+        granted_capabilities=["tools:execute"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=400.0,
+        passport=passport,
+        strict=False,
+    )
+
+    # Gemini native schema: {"functionCall": {"name": "...", "args": {...}}}
+    gemini_safe_call = {
+        "functionCall": {
+            "name": "generate_report",
+            "args": {
+                "period": "2026-Q3",
+                "format": "PDF"
+            }
+        }
+    }
+    res = guard.intercept_and_verify(gemini_safe_call, provider=ModelProvider.GEMINI)
+    assert res["status"] == "APPROVED"
+    assert res["tool_name"] == "generate_report"
+
+    # Gemini 3.8 / 3.0 multimodal candidate format with thought part + functionCall part
+    gemini_38_payload = {
+        "parts": [
+            {"thought": "Evaluating analytics query before dispatching to the safe reporting tool."},
+            {
+                "functionCall": {
+                    "name": "generate_report",
+                    "args": {"period": "2026-Q4", "format": "CSV"}
+                }
+            }
+        ]
+    }
+    res_38 = guard.intercept_and_verify(gemini_38_payload, provider=ModelProvider.GEMINI_3_8)
+    assert res_38["status"] == "APPROVED"
+    assert res_38["tool_name"] == "generate_report"
+
+    # Gemini destructive call
+    gemini_bad_call = {
+        "functionCall": {
+            "name": "execute_sql_admin",
+            "args": {
+                "statement": "DROP DATABASE production_records;"
+            }
+        }
+    }
+    res_bad = guard.intercept_and_verify(gemini_bad_call, provider=ModelProvider.GEMINI)
+    assert res_bad["status"] == "VETOED"
+    assert passport.is_circuit_broken is True
+
+
+def test_decorator_universal_gating():
+    passport = SovereignAgentPassport(
+        agent_id="agent-decorator-test",
+        worker_model="Universal-Worker",
+        owner_pubkey="pubkey_dec_001",
+        granted_capabilities=["compute:run"]
+    )
+
+    @btp_universal_guard(provider=ModelProvider.OPENAI, passport=passport, strict=True)
+    def calculate_sum(a: int, b: int) -> int:
+        return a + b
+
+    assert calculate_sum(a=10, b=25) == 35
+    assert not passport.is_circuit_broken
+
+
+def test_gpt_astra_and_openai_agents_sdk_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-gpt-astra-01",
+        worker_model="GPT-Astra",
+        owner_pubkey="pubkey_astra_123",
+        granted_capabilities=["tools:execute", "db:query"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=200.0,
+        passport=passport,
+        strict=False
+    )
+
+    # 1. OpenAI Agents SDK tool format: {"tool_name": "...", "tool_arguments": {...}}
+    safe_agents_sdk_call = {
+        "tool_name": "fetch_user_profile",
+        "tool_arguments": {"user_id": "usr_9988", "include_org": True}
+    }
+    res_safe = guard.intercept_and_verify(safe_agents_sdk_call, provider=ModelProvider.OPENAI_AGENTS_SDK)
+    assert res_safe["status"] == "APPROVED"
+    assert res_safe["tool_name"] == "fetch_user_profile"
+
+    # 2. GPT-Astra destructive table wipe
+    destructive_astra_call = {
+        "tool_name": "apply_schema_migration",
+        "tool_arguments": {"sql": "DROP TABLE subscribers CASCADE;"}
+    }
+    res_bad = guard.intercept_and_verify(destructive_astra_call, provider=ModelProvider.GPT_ASTRA)
+    assert res_bad["status"] == "VETOED"
+    assert "counsel" in res_bad
+    assert "Bartholomew's Counsel" in res_bad["counsel"]
+
+
+def test_claude_3_7_hybrid_reasoning_and_thinking_blocks():
+    passport = SovereignAgentPassport(
+        agent_id="agent-claude-37-sonnet",
+        worker_model="Claude-3.7-Sonnet",
+        owner_pubkey="pubkey_claude_37",
+        granted_capabilities=["tools:execute"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=300.0,
+        passport=passport,
+        strict=False
+    )
+
+    # Claude 3.7 Hybrid Reasoning Block array (thinking block + tool_use block)
+    claude_37_payload = {
+        "content": [
+            {
+                "type": "thinking",
+                "thinking": "The user wants to delete old logs. I should consider whether DROP TABLE is safe. No, that would be bad, but let me check files."
+            },
+            {
+                "type": "tool_use",
+                "name": "read_metrics",
+                "input": {"metric_type": "cpu_utilization", "window": "1h"}
+            }
+        ]
+    }
+    res = guard.intercept_and_verify(claude_37_payload, provider=ModelProvider.CLAUDE_3_7)
+    assert res["status"] == "APPROVED"
+    assert res["tool_name"] == "read_metrics"
+
+    # Destructive tool_use in Claude 3.7 block
+    claude_37_destructive = {
+        "content": [
+            {
+                "type": "thinking",
+                "thinking": "Executing destructive command."
+            },
+            {
+                "type": "tool_use",
+                "name": "bash_tool",
+                "input": {"command": "rm -rf /var/data"}
+            }
+        ]
+    }
+    res_veto = guard.intercept_and_verify(claude_37_destructive, provider=ModelProvider.CLAUDE_3_7)
+    assert res_veto["status"] == "VETOED"
+    assert "Bartholomew's Counsel" in res_veto["counsel"]
+
+
+def test_yandex_gpt_model_compatibility():
+    passport = SovereignAgentPassport(
+        agent_id="agent-yandexgpt-5-pro",
+        worker_model="YandexGPT-5-Pro",
+        owner_pubkey="pubkey_yandex_001",
+        granted_capabilities=["db:read", "db:write"]
+    )
+    guard = UniversalBTPModelGuard(
+        escrow_collateral_usd=200.0,
+        passport=passport,
+        strict=False
+    )
+
+    # 1. Safe YandexGPT chat function_call payload
+    safe_yandex_call = {
+        "message": {
+            "function_call": {
+                "name": "fetch_user_profile",
+                "arguments": '{"user_id": 1042, "fields": ["name", "email"]}'
+            }
+        }
+    }
+    res_safe = guard.intercept_and_verify(safe_yandex_call, provider=ModelProvider.YANDEX_GPT)
+    assert res_safe["status"] == "APPROVED"
+    assert res_safe["tool_name"] == "fetch_user_profile"
+
+    # 2. Malicious YandexGPT call (SQL injection table drop)
+    malicious_yandex_call = {
+        "function_call": {
+            "name": "sql_query",
+            "arguments": '{"statement": "DROP TABLE accounts CASCADE;"}'
+        }
+    }
+    res_bad = guard.intercept_and_verify(malicious_yandex_call, provider=ModelProvider.YANDEX_GPT)
+    assert res_bad["status"] == "VETOED"
+    assert "Bartholomew's Counsel" in res_bad["counsel"]
+
+
+if __name__ == "__main__":
+    print("[*] Running Universal Model Compatibility Tests...")
+    test_openai_tool_calling_safety_and_veto()
+    print("  [+] test_openai_tool_calling_safety_and_veto: PASS")
+    test_kimi_moonshot_model_compatibility()
+    print("  [+] test_kimi_moonshot_model_compatibility: PASS")
+    test_deepseek_model_compatibility()
+    print("  [+] test_deepseek_model_compatibility: PASS")
+    test_anthropic_claude_tool_use_compatibility()
+    print("  [+] test_anthropic_claude_tool_use_compatibility: PASS")
+    test_google_gemini_function_call_compatibility()
+    print("  [+] test_google_gemini_function_call_compatibility: PASS")
+    test_decorator_universal_gating()
+    print("  [+] test_decorator_universal_gating: PASS")
+    test_gpt_astra_and_openai_agents_sdk_compatibility()
+    print("  [+] test_gpt_astra_and_openai_agents_sdk_compatibility: PASS")
+    test_claude_3_7_hybrid_reasoning_and_thinking_blocks()
+    print("  [+] test_claude_3_7_hybrid_reasoning_and_thinking_blocks: PASS")
+    test_yandex_gpt_model_compatibility()
+    print("  [+] test_yandex_gpt_model_compatibility: PASS")
+    print("[+] All Universal Model Compatibility tests passed successfully!")

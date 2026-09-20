@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Upstream Service (e.g. Enterprise Database API)
+  database-api:
+    image: python:3.11-slim
+    command: python -c "import http.server; http.server.HTTPServer(('0.0.0.0', 8000), http.server.SimpleHTTPRequestHandler).serve_forever()"
+    expose:
+      - "8000"
+
+  # Bartholomew Runtime Execution Sidecar (Network Gate)
+  bartholomew-sidecar:
+    build:
+      context: ..
+      dockerfile: sidecar/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - UPSTREAM_TARGET=http://database-api:8000
+      - MAX_SPEND_THRESHOLD_USD=500.0
+    depends_on:
+      - database-api
