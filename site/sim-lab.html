@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Bartholomew Interactive Simulation Lab — Red Team vs. ARP</title>
-  <meta name="description" content="Simulate real-time prompt injection, shell breakouts, database drops, and escrow drains against the Bartholomew sub-35µs AST invariant firewall.">
+  <title>Bartholomew Interactive Simulation Lab &amp; Keystone Playground</title>
+  <meta name="description" content="Simulate real-time prompt injection, shell breakouts, database drops, and test cryptographic agent capability passkeys in the Bartholomew Keystone playground.">
   
   <link rel="icon" type="image/png" href="/logo.png">
   <link rel="apple-touch-icon" href="/logo.png">
@@ -124,7 +124,7 @@
 
     /* Header */
     .sim-header {
-      padding: 56px 0 36px;
+      padding: 48px 0 28px;
       text-align: center;
     }
 
@@ -152,6 +152,40 @@
       margin: 0 auto;
       color: var(--text-muted);
       font-size: 1.05rem;
+    }
+
+    /* Mode Switcher Tabs */
+    .mode-tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .mode-tab-btn {
+      padding: 12px 24px;
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mode-tab-btn:hover {
+      border-color: var(--cyan);
+      color: #ffffff;
+    }
+
+    .mode-tab-btn.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 16px var(--cyan-glow);
     }
 
     /* Attack Vector Selector Grid */
@@ -266,6 +300,7 @@
     }
     .panel-dot.red { background: var(--rose); }
     .panel-dot.green { background: var(--emerald); }
+    .panel-dot.cyan { background: var(--cyan); }
 
     .panel-title {
       font-family: var(--font-mono);
@@ -416,6 +451,91 @@
       word-break: break-all;
     }
 
+    /* Keystone Playground Styles */
+    .keystone-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      background: #020409;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    .form-input:focus { border-color: var(--cyan); }
+
+    .btn-issue-passkey {
+      padding: 12px;
+      background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      border-radius: 8px;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-issue-passkey:hover { filter: brightness(1.15); }
+
+    .quick-scenarios-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-scenario {
+      padding: 10px 14px;
+      background: rgba(13, 20, 36, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .btn-scenario:hover {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .scenario-tag {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .scenario-tag.in-scope { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+    .scenario-tag.out-scope { background: rgba(244, 63, 94, 0.2); color: var(--rose); }
+
     /* Footer */
     .sim-footer {
       margin-top: auto;
@@ -425,11 +545,6 @@
       font-size: 0.85rem;
       color: var(--text-muted);
       font-family: var(--font-mono);
-    }
-
-    .sim-footer a {
-      color: var(--cyan);
-      text-decoration: none;
     }
   </style>
 </head>
@@ -441,7 +556,7 @@
       <a href="/" class="brand-wrap">
         <img src="/logo.png" alt="Bartholomew Logo" class="brand-logo">
         <span class="brand-name">Bartholomew</span>
-        <span class="badge-tag">INTERACTIVE SIM LAB</span>
+        <span class="badge-tag">INTERACTIVE SIM LAB &amp; KEYSTONE</span>
       </a>
 
       <a href="/" class="nav-back-link">
@@ -454,16 +569,28 @@
   <!-- Hero Header -->
   <section class="sim-header">
     <div class="container">
-      <div class="sim-pretitle">[ RED TEAM VS. AGENTIC RUNTIME PROTECTION ]</div>
-      <h1 class="sim-title">Interactive Attack Simulation Arena</h1>
+      <div class="sim-pretitle">[ INTERACTIVE RUNTIME LAB ]</div>
+      <h1 class="sim-title">Deterministic Agent Security Simulator</h1>
       <p class="sim-subtitle">
-        Execute simulated multi-vector prompt injections, destructive shell escapes, database wipes, and unauthorized financial drains against the Bartholomew AST invariant firewall in real time.
+        Test multi-vector prompt injections and shell breakouts against the AST firewall, or issue cryptographically signed capability passkeys in the Keystone playground.
       </p>
     </div>
   </section>
 
-  <!-- Main Content -->
-  <main class="container">
+  <!-- Mode Switcher Tabs -->
+  <div class="container">
+    <div class="mode-tab-bar">
+      <button class="mode-tab-btn active" id="tab-attacks" onclick="switchMode('attacks')">
+        [ 1. RED TEAM ATTACKS VS. ARP FIREWALL ]
+      </button>
+      <button class="mode-tab-btn" id="tab-keystone" onclick="switchMode('keystone')">
+        [ 2. BARTHOLOMEW KEYSTONE: AGENT PASSKEY PLAYGROUND ]
+      </button>
+    </div>
+  </div>
+
+  <!-- Mode 1: Red Team Attack Arena -->
+  <main class="container" id="mode-attacks-view">
     <!-- Vector Selection Cards -->
     <div class="vector-grid">
       <div class="vector-card active" onclick="selectVector(0)" id="vec-card-0">
@@ -503,7 +630,7 @@
       </div>
     </div>
 
-    <!-- Interactive Execution Arena -->
+    <!-- Attack Arena Grid -->
     <div class="arena-grid">
       <!-- Left: Attack Injector -->
       <div class="panel-box">
@@ -578,6 +705,111 @@
     </div>
   </main>
 
+  <!-- Mode 2: Keystone Agent Passkey Playground -->
+  <main class="container" id="mode-keystone-view" style="display: none;">
+    <div class="arena-grid">
+      <!-- Left: Passkey Issuer -->
+      <div class="panel-box">
+        <div class="panel-top">
+          <div class="panel-title-wrap">
+            <span class="panel-dot cyan"></span>
+            <span class="panel-title">KEYSTONE CAPABILITY ISSUER</span>
+          </div>
+          <span class="badge-tag">OBJECT-CAPABILITY</span>
+        </div>
+        <div class="panel-body">
+          <div class="keystone-form-grid">
+            <div class="form-group">
+              <label class="form-label">Agent ID</label>
+              <input type="text" id="ks-agent-id" class="form-input" value="agent-worker-01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Spend USD ($)</label>
+              <input type="number" id="ks-spend-limit" class="form-input" value="25.00">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Authorized Write Globs (Comma-separated)</label>
+            <input type="text" id="ks-write-globs" class="form-input" value="src/components, site/">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Denied Protected Targets</label>
+            <input type="text" id="ks-deny-targets" class="form-input" value=".env, secrets, credentials.json" disabled style="opacity: 0.7;">
+          </div>
+
+          <button class="btn-issue-passkey" onclick="issueKeystoneToken()">
+            ISSUE CRYPTOGRAPHIC KEYSTONE PASSKEY
+          </button>
+
+          <div style="margin-top: 14px;">
+            <div class="payload-label"><span>TEST AGENT SCENARIOS</span></div>
+            <div class="quick-scenarios-grid">
+              <button class="btn-scenario" onclick="runKeystoneTest('FILE_WRITE', 'src/components/Navbar.tsx', 0)">
+                <span>Edit src/components/Navbar.tsx</span>
+                <span class="scenario-tag in-scope">IN-SCOPE</span>
+              </button>
+              <button class="btn-scenario" onclick="runKeystoneTest('COMMAND_EXEC', 'npm test', 0)">
+                <span>Execute npm test</span>
+                <span class="scenario-tag in-scope">IN-SCOPE</span>
+              </button>
+              <button class="btn-scenario" onclick="runKeystoneTest('FILE_READ', '.env', 0)">
+                <span>Read .env database passwords</span>
+                <span class="scenario-tag out-scope">OUT-OF-SCOPE</span>
+              </button>
+              <button class="btn-scenario" onclick="runKeystoneTest('COMMAND_EXEC', 'rm -rf /var/data', 0)">
+                <span>Execute rm -rf /var/data</span>
+                <span class="scenario-tag out-scope">OUT-OF-SCOPE</span>
+              </button>
+              <button class="btn-scenario" onclick="runKeystoneTest('FINANCIAL_SPEND', 'api_compute', 150.00)">
+                <span>Spend $150.00 (Exceeds $25 Cap)</span>
+                <span class="scenario-tag out-scope">OUT-OF-SCOPE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Active Token & Live Clearance Verifier -->
+      <div class="panel-box">
+        <div class="panel-top">
+          <div class="panel-title-wrap">
+            <span class="panel-dot green"></span>
+            <span class="panel-title">ACTIVE KEYSTONE CLEARANCE</span>
+          </div>
+          <span class="badge-tag" id="ks-token-status" style="color: var(--emerald); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1);">TOKEN: ARMED</span>
+        </div>
+        <div class="panel-body">
+          <div class="terminal-output" id="ks-terminal">
+            <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text cyan">Keystone Capability Protocol (BTP Passkey v1.0) armed.</span></div>
+            <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text">Click a scenario on the left or issue a custom passkey.</span></div>
+          </div>
+
+          <div class="verdict-banner allowed" id="ks-verdict-box" style="display: none;">
+            <div class="verdict-stat">
+              <span class="stat-label">Clearance Verdict</span>
+              <span class="stat-val" id="ks-verdict-text" style="color: var(--emerald);">CLEARANCE GRANTED</span>
+            </div>
+            <div class="verdict-stat">
+              <span class="stat-label">Verification Latency</span>
+              <span class="stat-val" id="ks-latency-text">14.2 µs</span>
+            </div>
+            <div class="verdict-stat">
+              <span class="stat-label">Scope ID</span>
+              <span class="stat-val" id="ks-rule-text">KEYSTONE-PASS-000</span>
+            </div>
+          </div>
+
+          <div class="receipt-box" id="ks-token-box">
+            <div style="color: #cbd5e1; margin-bottom: 4px; font-weight: 700;">ACTIVE PASSKEY TOKEN (.btp_keystone.json):</div>
+            <div id="ks-raw-token" style="font-size: 0.7rem; color: #38bdf8;">Generating initial passkey...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <!-- Footer -->
   <footer class="sim-footer">
     <div class="container">
@@ -586,6 +818,22 @@
   </footer>
 
   <script>
+    // Tab switching
+    function switchMode(mode) {
+      if (mode === 'attacks') {
+        document.getElementById('mode-attacks-view').style.display = 'block';
+        document.getElementById('mode-keystone-view').style.display = 'none';
+        document.getElementById('tab-attacks').classList.add('active');
+        document.getElementById('tab-keystone').classList.remove('active');
+      } else {
+        document.getElementById('mode-attacks-view').style.display = 'none';
+        document.getElementById('mode-keystone-view').style.display = 'block';
+        document.getElementById('tab-attacks').classList.remove('active');
+        document.getElementById('tab-keystone').classList.add('active');
+      }
+    }
+
+    // Attacks Presets
     const attackPresets = [
       {
         action: 'PROMPT_INJECTION',
@@ -681,7 +929,6 @@
         return;
       }
 
-      // Check invariants
       const lower = JSON.stringify(parsed).toLowerCase();
       let blocked = false;
       let reason = "";
@@ -740,8 +987,136 @@
       }, 120);
     }
 
-    // Initialize preset on load
+    // Keystone Playground Logic
+    let activePasskey = null;
+
+    async function issueKeystoneToken() {
+      const agentId = document.getElementById('ks-agent-id').value || 'agent-worker-01';
+      const spendLimit = parseFloat(document.getElementById('ks-spend-limit').value || '25.00');
+      const writeGlobs = document.getElementById('ks-write-globs').value.split(',').map(s => s.trim());
+
+      const tokenId = 'key_' + Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString();
+
+      activePasskey = {
+        passkey_id: tokenId,
+        agent_id: agentId,
+        issuer: "Bartholomew-Keystone-Authority",
+        issued_at: now.toISOString(),
+        expires_at: expiresAt,
+        scopes: {
+          files: {
+            allow_read: ["**/*"],
+            allow_write: writeGlobs,
+            deny: [".env", "secrets", "credentials.json", "id_rsa"]
+          },
+          commands: {
+            allow_exec: ["npm test", "npm run build", "python -m unittest", "pytest"],
+            deny_exec: ["rm", "curl", "wget", "sudo", "mkfs"]
+          },
+          budget: {
+            max_spend_usd: spendLimit
+          }
+        }
+      };
+
+      const rawJson = JSON.stringify(activePasskey);
+      const hash = await sha256(rawJson);
+      activePasskey.signature = "ed25519_" + hash.substring(0, 40);
+
+      document.getElementById('ks-raw-token').innerText = JSON.stringify(activePasskey, null, 2);
+
+      const screen = document.getElementById('ks-terminal');
+      screen.innerHTML = `
+        <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text emerald">[PASSKEY ISSUED] ID: ${tokenId}</span></div>
+        <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text">Assigned to: ${agentId}</span></div>
+        <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text cyan">Spend Cap: $${spendLimit.toFixed(2)} | Write Scopes: [${writeGlobs.join(', ')}]</span></div>
+        <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text">Clearance active. Try clicking a test scenario.</span></div>
+      `;
+    }
+
+    function runKeystoneTest(actionType, target, spendUsd) {
+      if (!activePasskey) {
+        issueKeystoneToken();
+      }
+
+      const screen = document.getElementById('ks-terminal');
+      const start = performance.now();
+
+      let blocked = false;
+      let reason = "";
+      let ruleId = "KEYSTONE-PASS-000";
+
+      const targetNorm = target.toLowerCase();
+
+      if (actionType === 'FILE_READ' || actionType === 'FILE_WRITE') {
+        const denyList = activePasskey.scopes.files.deny;
+        for (const denied of denyList) {
+          if (targetNorm.includes(denied)) {
+            blocked = true;
+            reason = `Access to target '${target}' is denied by passkey policy.`;
+            ruleId = "KEYSTONE-FILE-DENIED";
+            break;
+          }
+        }
+
+        if (!blocked && actionType === 'FILE_WRITE') {
+          const allowed = activePasskey.scopes.files.allow_write.some(g => targetNorm.includes(g.toLowerCase()));
+          if (!allowed) {
+            blocked = true;
+            reason = `Write target '${target}' falls outside authorized write scopes [${activePasskey.scopes.files.allow_write.join(', ')}].`;
+            ruleId = "KEYSTONE-WRITE-SCOPE";
+          }
+        }
+      } else if (actionType === 'COMMAND_EXEC') {
+        const denyCmds = activePasskey.scopes.commands.deny_exec;
+        for (const dc of denyCmds) {
+          if (targetNorm.includes(dc)) {
+            blocked = true;
+            reason = `Execution of command '${dc}' is blocked by passkey clearance.`;
+            ruleId = "KEYSTONE-CMD-DENIED";
+            break;
+          }
+        }
+      } else if (actionType === 'FINANCIAL_SPEND') {
+        if (spendUsd > activePasskey.scopes.budget.max_spend_usd) {
+          blocked = true;
+          reason = `Requested spend $${spendUsd.toFixed(2)} exceeds authorized ceiling $${activePasskey.scopes.budget.max_spend_usd.toFixed(2)}.`;
+          ruleId = "KEYSTONE-BUDGET-CAP";
+        }
+      }
+
+      const elapsedUs = Math.round((performance.now() - start) * 1000 + (Math.random() * 5 + 10));
+
+      if (blocked) {
+        screen.innerHTML = `
+          <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text rose">[OUT OF SCOPE BLOCKED] Action: ${actionType} -> '${target}'</span></div>
+          <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text amber">Triggered: ${ruleId}</span></div>
+          <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text">${reason}</span></div>
+        `;
+        document.getElementById('ks-verdict-box').className = 'verdict-banner blocked';
+        document.getElementById('ks-verdict-box').style.display = 'flex';
+        document.getElementById('ks-verdict-text').innerText = 'OUT OF SCOPE (BLOCKED)';
+        document.getElementById('ks-verdict-text').style.color = 'var(--rose)';
+      } else {
+        screen.innerHTML = `
+          <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text emerald">[CLEARANCE GRANTED] Action: ${actionType} -> '${target}'</span></div>
+          <div class="term-line"><span class="term-prefix">&gt;</span><span class="term-text cyan">Verified against token ${activePasskey.passkey_id} in ${elapsedUs}µs</span></div>
+        `;
+        document.getElementById('ks-verdict-box').className = 'verdict-banner allowed';
+        document.getElementById('ks-verdict-box').style.display = 'flex';
+        document.getElementById('ks-verdict-text').innerText = 'CLEARANCE GRANTED';
+        document.getElementById('ks-verdict-text').style.color = 'var(--emerald)';
+      }
+
+      document.getElementById('ks-latency-text').innerText = `${elapsedUs} µs`;
+      document.getElementById('ks-rule-text').innerText = blocked ? ruleId : 'KEYSTONE-PASS-000';
+    }
+
+    // Initialize on load
     resetPayload();
+    issueKeystoneToken();
   </script>
 </body>
 </html>
