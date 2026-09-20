@@ -193,6 +193,9 @@
       white-space: nowrap;
     }
 
+    .badge-text-full { display: inline; }
+    .badge-text-short { display: none; }
+
     .nav-right-items {
       display: flex;
       align-items: center;
@@ -649,11 +652,10 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 10px 14px;
       margin-top: 24px;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-family: var(--font-mono);
-      color: var(--text-dim);
       position: relative;
       z-index: 2;
     }
@@ -661,13 +663,26 @@
     .reg-item {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: var(--transition);
+      white-space: nowrap;
     }
 
-    .reg-item.emerald { color: var(--emerald-light); }
-    .reg-item.cyan { color: var(--cyan); }
-    .reg-item.amber { color: var(--gold-light); }
-    .reg-item.purple { color: var(--purple); }
+    .reg-item:hover {
+      border-color: rgba(16, 185, 129, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .reg-item.emerald { color: var(--emerald-light); border-color: rgba(16, 185, 129, 0.35); }
+    .reg-item.cyan { color: var(--cyan); border-color: rgba(6, 182, 212, 0.35); }
+    .reg-item.amber { color: var(--gold-light); border-color: rgba(234, 179, 8, 0.35); }
+    .reg-item.purple { color: #d8b4fe; border-color: rgba(168, 85, 247, 0.35); }
 
     /* ==========================================================================
        NEW: WHY BARTHOLOMEW (Strategic Rationale & Ecosystem Necessity)
@@ -1632,104 +1647,184 @@
     }
 
     /* ==========================================================================
-       RESPONSIVE BREAKPOINTS: Mobile, iPad, Tablet, Android & Ultra-Wide
+       UNIVERSAL RESPONSIVE ARCHITECTURE (MOBILE, TABLET, IPAD, ANDROID, DESKTOP)
        ========================================================================== */
-    @media (max-width: 1024px) {
+
+    /* 1. Large Desktops & Laptops (<= 1200px) */
+    @media (max-width: 1200px) {
+      .container { padding: 0 20px; }
       .funnel-steps-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-      .why-grid { grid-template-columns: repeat(2, 1fr); }
-      .why-card.featured-why { grid-column: span 2; }
     }
 
+    /* 2. Tablets in Landscape & Smaller Laptops (<= 1024px) */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .traction-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .why-card.featured-why { grid-column: span 2; }
+      .steps-container { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .footer-main-grid { grid-template-columns: 1.5fr 1fr 1fr; gap: 28px; }
+      .badge-text-full { display: none; }
+      .badge-text-short { display: inline; }
+    }
+
+    /* 3. Tablets in Portrait & Large Foldables (<= 860px) */
     @media (max-width: 860px) {
       .sandbox-grid { grid-template-columns: 1fr; gap: 20px; }
       .defensibility-grid { grid-template-columns: 1fr; gap: 20px; }
-      .traction-grid { grid-template-columns: 1fr; gap: 18px; }
+      .traction-grid { grid-template-columns: 1fr; gap: 16px; }
       .steps-container { grid-template-columns: 1fr; gap: 14px; }
-      .why-grid { grid-template-columns: 1fr; gap: 16px; }
+      .why-grid { grid-template-columns: 1fr; gap: 14px; }
       .why-card.featured-why { grid-column: span 1; }
-      .footer-main-grid { grid-template-columns: 1fr; gap: 32px; }
+      
+      .footer-main-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+      .footer-brand-col { grid-column: span 2; }
+
       .investor-callout-card {
         flex-direction: column;
         align-items: stretch;
         text-align: left;
         padding: 28px 22px;
+        gap: 20px;
       }
       .btn-vc-cta { width: 100%; justify-content: center; }
+      
+      .hero-cta-buttons {
+        gap: 12px;
+      }
     }
 
-    @media (max-width: 640px) {
+    /* 4. Small Tablets & Large Phones / Phablets (<= 720px) */
+    @media (max-width: 720px) {
+      .badge-protocol { display: none; }
+      .hero-cta-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto 36px;
+        gap: 12px;
+      }
+      .btn-primary-hero, .btn-action-hero {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.94rem;
+        padding: 13px 20px;
+      }
+      .funnel-steps-grid { grid-template-columns: 1fr; gap: 16px; }
+      .regulatory-row { gap: 8px 10px; font-size: 0.72rem; }
+    }
+
+    /* 5. Standard Smartphones: iPhone 12/13/14/15/16, Galaxy S-series, Pixel (<= 580px) */
+    @media (max-width: 580px) {
       .container { padding: 0 16px; }
       header.navbar { height: auto; }
-      .nav-inner { height: 64px; }
+      .nav-inner { height: 60px; }
+      .brand-wrap { gap: 8px; }
       .brand-title { font-size: 1.05rem; }
-      .badge-protocol { font-size: 0.65rem; padding: 2px 8px; }
-      .nav-right-items { gap: 8px; }
-      .nav-github-link { font-size: 0.8rem; padding: 6px 10px; }
-      .btn-sandbox-nav { font-size: 0.8rem; padding: 7px 12px; }
+      .brand-logo-img { width: 32px; height: 32px; border-radius: 6px; }
+      .nav-github-label { display: none; }
+      .nav-github-link {
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+      .btn-sandbox-nav {
+        font-size: 0.8rem;
+        padding: 7px 12px;
+        gap: 6px;
+      }
 
-      section.hero { padding: 44px 0 28px; }
-      .hero-shield-img { width: 80px; height: 80px; }
-      h1.hero-title { font-size: clamp(1.85rem, 7vw, 2.5rem); margin-bottom: 16px; }
-      p.hero-desc { font-size: 0.95rem; line-height: 1.55; margin-bottom: 28px; }
-      .hero-cta-buttons { flex-direction: column; width: 100%; gap: 12px; margin-bottom: 36px; }
-      .btn-primary-hero, .btn-action-hero { width: 100%; justify-content: center; font-size: 0.92rem; padding: 13px 20px; }
+      section.hero { padding: 36px 0 24px; }
+      .hero-shield-img { width: 72px; height: 72px; }
+      .hero-shield-showcase::before { width: 100px; height: 100px; }
+      h1.hero-title { font-size: clamp(1.7rem, 6.8vw, 2.3rem); margin-bottom: 14px; }
+      p.hero-desc { font-size: 0.9rem; line-height: 1.55; margin-bottom: 24px; }
 
-      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .stat-card { padding: 14px 12px; }
-      .stat-val { font-size: 1.3rem; }
-      .stat-label { font-size: 0.68rem; }
-      .stat-foot { font-size: 0.7rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .stat-card { padding: 12px 10px; }
+      .stat-val { font-size: 1.25rem; }
+      .stat-label { font-size: 0.65rem; }
+      .stat-foot { font-size: 0.68rem; }
 
-      .traction-card { padding: 20px 16px; }
+      .traction-card { padding: 18px 14px; }
+      .traction-header { flex-direction: column; align-items: flex-start; gap: 8px; }
       .traction-item-num { font-size: 1.55rem; }
+      .traction-item:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+      }
 
-      .ecosystem-head { margin-bottom: 18px; }
+      .ecosystem-sec { padding: 36px 0; }
       .ecosystem-desc { font-size: 0.78rem; }
-      .regulatory-row { gap: 8px 12px; font-size: 0.7rem; }
+      .partner-pill { padding: 8px 12px; gap: 8px; }
+      .partner-logo-box { width: 30px; height: 30px; }
+      .partner-name { font-size: 0.76rem; }
+      .partner-label { font-size: 0.68rem; }
 
-      section.why-sec { padding: 50px 0 40px; }
-      .why-card { padding: 20px 16px; }
+      section.why-sec { padding: 45px 0 30px; }
+      .why-card { padding: 18px 14px; }
       .why-title { font-size: 1.05rem; }
+      .why-desc { font-size: 0.8rem; }
+      .who-benefits-list { gap: 10px; font-size: 0.78rem; }
 
-      section.how-sec { padding: 40px 0 10px; }
-      .step-card { padding: 18px 16px; }
+      section.how-sec { padding: 35px 0 10px; }
+      .step-card { padding: 18px 14px; }
+      .step-title { font-size: 1rem; }
+      .step-desc { font-size: 0.8rem; }
 
-      section.sandbox-sec { padding: 30px 0 50px; }
-      h2.section-title { font-size: 1.65rem; }
-      p.section-sub { font-size: 0.85rem; }
-      .panel-box { padding: 18px 14px; }
-      textarea.code-editor { font-size: 14px; height: 250px; padding: 12px; }
-      .metrics-summary-bar { gap: 8px; padding: 10px 8px; }
+      section.sandbox-sec { padding: 25px 0 45px; }
+      h2.section-title { font-size: 1.55rem; }
+      p.section-sub { font-size: 0.82rem; }
+      .panel-box { padding: 16px 12px; }
+      textarea.code-editor { font-size: 13px; height: 220px; padding: 10px; }
+      .metrics-summary-bar { gap: 6px; padding: 8px 6px; }
       .msb-val { font-size: 1.15rem; }
+      .msb-label { font-size: 0.64rem; }
+      .btn-run-audit { font-size: 0.88rem; padding: 12px; }
 
-      section.defensibility-sec { padding: 50px 0; }
-      .defensibility-card { padding: 22px 16px; }
-      .def-card-title { font-size: 1.15rem; }
+      section.defensibility-sec { padding: 45px 0; }
+      .defensibility-card { padding: 20px 14px; }
+      .def-card-title { font-size: 1.12rem; }
+      .def-card-body { font-size: 0.82rem; }
 
-      section.funnel-sec { padding: 50px 0 60px; }
-      .funnel-steps-grid { grid-template-columns: 1fr; gap: 16px; }
-      .funnel-card { padding: 22px 18px; }
+      section.funnel-sec { padding: 45px 0 50px; }
+      .funnel-card { padding: 20px 16px; }
+      .funnel-card-sub { min-height: auto; }
 
-      .investor-callout-card { padding: 24px 16px; }
-      .investor-callout-title { font-size: 1.25rem; }
+      .investor-callout-card { padding: 22px 14px; }
+      .investor-callout-title { font-size: 1.2rem; }
+      .investor-callout-desc { font-size: 0.82rem; }
+      .btn-vc-cta { font-size: 0.88rem; padding: 12px 16px; }
 
-      footer.site-footer { padding: 45px 0 28px; }
-      .footer-seals-box { padding-bottom: 24px; margin-bottom: 30px; }
-      .seals-grid { gap: 8px; }
-      .seal-badge { font-size: 0.68rem; padding: 6px 10px; }
+      footer.site-footer { padding: 38px 0 24px; }
+      .footer-seals-box { padding-bottom: 20px; margin-bottom: 24px; }
+      .seals-grid { gap: 6px; }
+      .seal-badge { font-size: 0.66rem; padding: 5px 9px; }
+      .footer-main-grid { grid-template-columns: 1fr; gap: 24px; }
+      .footer-brand-col { grid-column: span 1; }
+      .footer-bottom-bar { flex-direction: column; text-align: center; gap: 10px; }
 
-      .modal-card { padding: 24px 16px; max-height: 88vh; }
-      .modal-headline { font-size: 1.45rem; }
-      .roadmap-section { padding: 16px 12px; }
+      .modal-card { padding: 20px 14px; max-height: 90vh; }
+      .modal-headline { font-size: 1.35rem; }
+      .roadmap-section { padding: 14px 10px; }
       .deck-checklist-grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 400px) {
-      .badge-protocol { display: none; }
+    /* 6. Ultra-Compact Devices: iPhone SE, Galaxy Z Flip cover, 320px - 360px */
+    @media (max-width: 360px) {
+      .brand-title { font-size: 0.95rem; }
+      .brand-wrap { gap: 6px; }
+      .brand-logo-img { width: 28px; height: 28px; }
+      .btn-sandbox-nav { font-size: 0.74rem; padding: 6px 9px; }
       .stats-grid { grid-template-columns: 1fr; }
-      .btn-primary-hero, .btn-action-hero { font-size: 0.88rem; padding: 12px 16px; }
-      .partner-pill { padding: 8px 14px; }
-      .partner-name { font-size: 0.78rem; }
+      .stat-card { padding: 10px; }
+      .btn-primary-hero, .btn-action-hero { font-size: 0.85rem; padding: 11px 14px; }
+      .metrics-summary-bar { grid-template-columns: 1fr; gap: 6px; }
     }
   </style>
 </head>
@@ -1741,17 +1836,20 @@
       <a href="#" class="brand-wrap">
         <img src="/logo.png" alt="Bartholomew Shield Logo" class="brand-logo-img" width="36" height="36">
         <span class="brand-title">Bartholomew</span>
-        <span class="badge-protocol">BTP v5.4 • ARP ENGINE</span>
+        <span class="badge-protocol">
+          <span class="badge-text-full">BTP v5.4 • ARP ENGINE</span>
+          <span class="badge-text-short">v5.4</span>
+        </span>
       </a>
 
       <div class="nav-right-items">
-        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link">
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link" title="GitHub Repository">
           <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>GitHub Action</span>
+          <span class="nav-github-label">GitHub</span>
         </a>
 
-        <button onclick="document.getElementById('sandbox').scrollIntoView({ behavior: 'smooth' })" class="btn-sandbox-nav">
-          Live Sandbox
+        <button onclick="document.getElementById('sandbox').scrollIntoView({ behavior: 'smooth' })" class="btn-sandbox-nav" title="Launch Interactive Sandbox">
+          <span class="btn-sandbox-label">Sandbox</span>
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </div>
@@ -2041,19 +2139,16 @@
       <div class="regulatory-row container">
         <span class="reg-item emerald">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-          <span>SOC 2 Type II AI Control Framework</span>
+          <span>SOC 2 Type II Control Framework</span>
         </span>
-        <span>•</span>
         <span class="reg-item cyan">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
           <span>EU AI Act Art. 14 &amp; 15 Circuit Breaker</span>
         </span>
-        <span>•</span>
         <span class="reg-item amber">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          <span>Fastest &amp; Most Reliable Sub-35µs AST Invariant Gating</span>
+          <span>Sub-35µs AST Invariant Gating</span>
         </span>
-        <span>•</span>
         <span class="reg-item purple">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
           <span>Docker &amp; Container In-Process Defense</span>
@@ -2496,7 +2591,7 @@
       <!-- Main Footer Grid -->
       <div class="footer-main-grid">
         <!-- Brand Info with Official Shield Logo -->
-        <div>
+        <div class="footer-brand-col">
           <div class="footer-brand-title">
             <img src="/logo.png" alt="Bartholomew Shield Logo" width="32" height="32" style="border-radius:6px;">
             <span>Bartholomew Trust Protocol</span>
