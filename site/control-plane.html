@@ -544,7 +544,7 @@
       <div class="container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <span style="color: var(--cyan); font-weight: 700;">CLOUD GATEWAY URL:</span>
-          <input type="text" id="gateway-endpoint-input" value="https://bartolomew-cloud-engine-26670.a.run.app" style="background: rgba(13, 20, 36, 0.9); border: 1px solid var(--border-color); color: #fff; padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.75rem; width: 340px;">
+          <input type="text" id="gateway-endpoint-input" value="https://bartolomew-cloud-engine-322603900775.us-central1.run.app" style="background: rgba(13, 20, 36, 0.9); border: 1px solid var(--border-color); color: #fff; padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.75rem; width: 440px;">
           <button onclick="connectLiveGateway()" style="background: var(--cyan); color: #000; border: none; padding: 4px 12px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; cursor: pointer;">CONNECT LIVE</button>
           <button onclick="useSimulationMode()" style="background: rgba(255,255,255,0.08); color: var(--text-muted); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer;">USE SIMULATION</button>
         </div>
@@ -940,13 +940,8 @@
       }, 4000);
     }
 
-    function dispatchTestAlert() {
-      const alert = document.getElementById('reload-alert');
-      const text = document.getElementById('reload-alert-text');
-      text.innerText = "SOC 2 Type II Test Alert dispatched to Slack & PagerDuty webhook endpoints.";
-      alert.style.display = 'flex';
-      setTimeout(() => { alert.style.display = 'none'; }, 4000);
-    }
+    // Attempt auto-connect to live Cloud Run instance on load
+    connectLiveGateway();
   </script>
 </body>
 </html>
