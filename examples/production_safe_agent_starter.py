@@ -1,5 +1,5 @@
 """
-Bartholomew Trust Protocol (BTP v5.4.14) - Production Safe Agent Starter
+Bartholomew Trust Protocol (BTP v1.0.0) - Production Safe Agent Starter
 =======================================================================
 A 1-click, ready-to-deploy template for building autonomous AI agents
 with in-process sub-35µs AST safety gating and L402 micro-settlement.
@@ -41,7 +41,7 @@ def execute_system_command(command: str) -> str:
 
 def main():
     print("=" * 70)
-    print("  BARTHOLOMEW BTP v5.4.14 -- PRODUCTION SAFE AGENT STARTER")
+    print("  BARTHOLOMEW BTP v1.0.0 -- PRODUCTION SAFE AGENT STARTER")
     print("=" * 70)
     print("  Status   : In-Process AST Gate ACTIVE (<35µs)")
     print("  Pricing  : Free Local Tier | Pro Cloud Sync: https://bartholomew.info/cloud")

@@ -1,5 +1,5 @@
 """
-Bartholomew Agent Reputation & Evidence Engine (BTP v5.4.14)
+Bartholomew Agent Reputation & Evidence Engine (BTP v1.0.0)
 =============================================================
 Generates machine-readable, cryptographically verifiable reputation reports
 from audit trail logs, execution receipts, and settlement history.

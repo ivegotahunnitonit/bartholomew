@@ -1,0 +1,9 @@
+# GitHub Linguist Language Overrides
+# Ensures GitHub correctly classifies this repository as a high-performance Python/TypeScript security engine
+
+docs/** linguist-documentation
+tests/** linguist-detectable=false
+*.md linguist-documentation
+*.png binary
+*.jpg binary
+*.svg binary

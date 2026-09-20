@@ -1,0 +1,80 @@
+{
+  "frost_keygen": {
+    "3-of-4": {
+      "median_us": 18188.4,
+      "n": 4,
+      "t": 2
+    },
+    "5-of-7": {
+      "median_us": 29098.4,
+      "n": 7,
+      "t": 4
+    },
+    "7-of-10": {
+      "median_us": 39720.7,
+      "n": 10,
+      "t": 6
+    },
+    "11-of-15": {
+      "median_us": 58126.5,
+      "n": 15,
+      "t": 10
+    }
+  },
+  "frost_signing": {
+    "3-of-4": {
+      "sign_median_us": 27341.0,
+      "verify_median_us": 4768.7,
+      "pass_rate": "50/50"
+    },
+    "5-of-7": {
+      "sign_median_us": 63409.8,
+      "verify_median_us": 4684.6,
+      "pass_rate": "50/50"
+    },
+    "7-of-10": {
+      "sign_median_us": 105491.1,
+      "verify_median_us": 4750.2,
+      "pass_rate": "50/50"
+    }
+  },
+  "frost_forgery": {
+    "sub_threshold_rejection": "100.0%",
+    "tamper_rejection": "100.0%",
+    "wrong_message_rejection": "100.0%",
+    "rogue_key_rejection": "100.0%"
+  },
+  "zk_proofs": {
+    "single call": {
+      "calls": 1,
+      "prove_med_us": 13898.0,
+      "verify_med_us": 4742.8,
+      "pass_rate": "100/100"
+    },
+    "5-call session": {
+      "calls": 5,
+      "prove_med_us": 33834.1,
+      "verify_med_us": 4882.8,
+      "pass_rate": "100/100"
+    },
+    "10-call session": {
+      "calls": 10,
+      "prove_med_us": 55143.1,
+      "verify_med_us": 4739.3,
+      "pass_rate": "100/100"
+    },
+    "20-call session": {
+      "calls": 20,
+      "prove_med_us": 101174.5,
+      "verify_med_us": 4760.9,
+      "pass_rate": "100/100"
+    }
+  },
+  "privacy_clean": true,
+  "end_to_end": {
+    "median_ms": 98.48,
+    "p99_ms": 146.18,
+    "throughput": 10,
+    "iterations": 30
+  }
+}

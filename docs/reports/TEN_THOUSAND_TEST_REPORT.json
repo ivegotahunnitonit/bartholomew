@@ -1,0 +1,35 @@
+{
+  "benchmark_id": "BTP_10K_DEEP_INVARIANT_FUZZ",
+  "total_actions_evaluated": 10000,
+  "total_duration_seconds": 0.445,
+  "actions_per_second_throughput": 22459.4,
+  "latency_percentiles_us": {
+    "p50": 38.2,
+    "p95": 119.2,
+    "p99": 164.0,
+    "mean": 43.1
+  },
+  "category_breakdown": {
+    "ast_injection": {
+      "total": 2500,
+      "blocked": 2500,
+      "allowed": 0
+    },
+    "path_composition": {
+      "total": 2500,
+      "blocked": 2500,
+      "allowed": 0
+    },
+    "spend_governance": {
+      "total": 2500,
+      "blocked": 1198,
+      "allowed": 1302
+    },
+    "legitimate_actions": {
+      "total": 2500,
+      "blocked": 0,
+      "allowed": 2500
+    }
+  },
+  "attack_interception_rate_percent": 100.0
+}

@@ -1,0 +1,23 @@
+[Unit]
+Description=Bartholomew Protocol (BTP v5.4.6) Standing Mesh Daemon
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bartholomew
+ExecStart=/usr/local/bin/python cli.py daemon mesh --interval 10.0
+Restart=always
+RestartSec=5s
+Environment=PYTHONUNBUFFERED=1
+Environment=BTP_WIRE_GATEWAY=https://bartolomew-cloud-engine-322603900775.us-central1.run.app
+Environment=BTP_NODE_ID=node_systemd_sentinel
+
+# Security sandboxing
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

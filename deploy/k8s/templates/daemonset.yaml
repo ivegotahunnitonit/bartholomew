@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: btp-kernel-daemon
+  labels:
+    app.kubernetes.io/name: btp-kernel-daemon
+    app.kubernetes.io/part-of: bartholomew-trust-protocol
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: btp-kernel-daemon
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: btp-kernel-daemon
+      annotations:
+        prometheus.io/scrape: "{{ .Values.prometheus.enabled }}"
+        prometheus.io/port: "{{ .Values.prometheus.port }}"
+        prometheus.io/path: "{{ .Values.prometheus.path }}"
+    spec:
+      hostNetwork: false
+      hostPID: true
+      containers:
+        - name: btp-daemon
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python", "-m", "src.daemon.btp_daemon", "--host", "0.0.0.0", "--port", "{{ .Values.prometheus.port }}"]
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.prometheus.port }}
+              protocol: TCP
+          securityContext:
+            capabilities:
+              add:
+                {{- range .Values.daemon.containerSecurityContext.capabilities.add }}
+                - {{ . }}
+                {{- end }}
+          volumeMounts:
+            - name: sys-kernel-debug
+              mountPath: /sys/kernel/debug
+              readOnly: true
+            - name: host-proc
+              mountPath: /host/proc
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.prometheus.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.prometheus.port }}
+            initialDelaySeconds: 2
+            periodSeconds: 5
+      volumes:
+        - name: sys-kernel-debug
+          hostPath:
+            path: /sys/kernel/debug
+        - name: host-proc
+          hostPath:
+            path: /proc

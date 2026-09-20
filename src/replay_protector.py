@@ -1,5 +1,5 @@
 """
-Bartholomew Replay & Fraud Protection Engine (BTP v5.4.14)
+Bartholomew Replay & Fraud Protection Engine (BTP v1.0.0)
 ===========================================================
 Prevents replay attacks, transaction duplication, and fraudulent receipt reuse across autonomous swarms:
   1. Nonce & Idempotency Key Vault: Ensures each transaction/receipt is processed exactly once.

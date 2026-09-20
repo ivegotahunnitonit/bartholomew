@@ -1,5 +1,5 @@
 """
-Bartholomew Guard for LangChain & LangGraph (BTP v5.4.14)
+Bartholomew Guard for LangChain & LangGraph (BTP v1.0.0)
 =========================================================
 First-class CallbackHandler and Tool Decorator providing sub-35µs AST gating,
 spend caps, and cryptographic execution receipts for LangChain and LangGraph swarms.

@@ -1,0 +1,14 @@
+{
+  "dataset_name": "ACN Agentic QA & Code Remediation Instruction Dataset",
+  "version": "1.0.0",
+  "total_records": 150,
+  "format": "JSONL (OpenAI / Hugging Face Compatible)",
+  "license": "Commercial / MIT Sample",
+  "generated_at": "2026-07-31T03:29:53Z",
+  "categories": [
+    "SECRET_SCRUBBING",
+    "ERROR_HANDLING",
+    "RECURSION_GUARD"
+  ],
+  "target_valuation": "$500 - $2,500 per enterprise lab license"
+}

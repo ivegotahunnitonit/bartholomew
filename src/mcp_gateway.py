@@ -310,7 +310,7 @@ class MCPProxyGateway:
             if isinstance(tools, list) and not any(isinstance(t, dict) and t.get("name") == "btp_get_manifest" for t in tools):
                 tools.append({
                     "name": "btp_get_manifest",
-                    "description": "Returns machine-readable BTP v5.4.14 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
+                    "description": "Returns machine-readable BTP v1.0.0 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
                     "inputSchema": {
                         "type": "object",
                         "properties": {}

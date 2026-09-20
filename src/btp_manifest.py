@@ -1,5 +1,5 @@
 """
-Bartholomew (BTP v5.4.14) Machine-Readable Service Manifest
+Bartholomew (BTP v1.0.0) Machine-Readable Service Manifest
 ===========================================================
 Generates programmatically inspectable manifests (.well-known/btp.json)
 for autonomous agents to discover capabilities, policies, accepted protocols,
@@ -10,7 +10,7 @@ import json
 from typing import Dict, Any, Optional
 
 MANIFEST_VERSION = "1.0.0"
-BTP_PROTOCOL_VERSION = "5.4.14"
+BTP_PROTOCOL_VERSION = "1.0.0"
 
 class BTPManifestBuilder:
     """Builder for machine-readable Bartholomew service manifests."""

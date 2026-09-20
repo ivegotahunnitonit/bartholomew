@@ -1,0 +1,199 @@
+Network Working Group                                      B. AI Architect
+Internet-Draft                                          Bartholomew Autonomous
+Intended status: Standards Track                               August 20, 2026
+Expires: February 21, 2027
+
+
+                Bartholomew Trust Protocol (BTP) Version 2.2
+                        draft-bartholomew-btp-00
+
+Abstract
+
+   This document specifies the Bartholomew Trust Protocol (BTP)
+   version 2.2, an open, vendor-neutral cryptographic protocol for
+   offline-verifiable action attestation and capability containment in
+   autonomous multi-agent systems.  BTP provides deterministic JSON
+   canonicalization conforming to RFC 8785, digital signatures over
+   Edwards-curve Digital Signature Algorithm (Ed25519), strict
+   contextual binding, and sub-millisecond offline verification without
+   centralized runtime dependencies.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+Table of Contents
+
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
+   2.  Terminology and Conventions  . . . . . . . . . . . . . . . . .  2
+   3.  Protocol Overview  . . . . . . . . . . . . . . . . . . . . . .  3
+   4.  Wire Format Specification  . . . . . . . . . . . . . . . . . .  3
+       4.1.  Attestation Statement Object . . . . . . . . . . . . . .  4
+       4.2.  Signature Envelope . . . . . . . . . . . . . . . . . . .  5
+   5.  Canonicalization and Hashing (RFC 8785)  . . . . . . . . . . .  5
+   6.  Cryptographic Signature Scheme . . . . . . . . . . . . . . . .  6
+   7.  Security Invariants & Offline Verification . . . . . . . . . .  6
+   8.  Security Considerations  . . . . . . . . . . . . . . . . . . .  7
+   9.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  8
+   10. References . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . .  8
+
+1.  Introduction
+
+   Autonomous agent architectures increasingly execute multi-turn tool
+   invocations, code modifications, and cross-framework delegations.
+   Traditional perimeter security and prompt-based guardrails fail to
+   provide mathematical non-repudiation, tamper-resistance, or confused-
+   deputy mitigation.
+
+   BTP v2.2 establishes an open wire standard for cryptographically
+   verifiable agent delegation.  Receiving nodes verify incoming
+   attestations 100% offline in under 200 microseconds against their
+   own recognized root keys.
+
+2.  Terminology and Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   *  Attestation: A signed statement asserting the evaluated validity
+      and capability bounds of a candidate action.
+   *  Authority: An entity possessing an Ed25519 private key authorized
+      to evaluate intent and issue attestations.
+   *  Recipient: A receiving agent or execution environment that validates
+      attestations offline prior to executing code or tools.
+
+3.  Protocol Overview
+
+   The BTP exchange follows a four-stage lifecycle:
+
+      [Originating Agent]
+              |
+              |  1. Candidate Action Payload
+              v
+      [Trust Authority / Sandbox Engine]
+              |
+              |  2. Pre-Flight Verification & Attestation Issuance
+              v
+      [Attestation Packet: Statement + Ed25519 Signature]
+              |
+              |  3. Wire Transmission
+              v
+      [Recipient Execution Node]
+              |
+              |  4. 100% Offline Cryptographic Verification (~175 µs)
+              v
+      [Execution Permitted / Halted]
+
+4.  Wire Format Specification
+
+4.1.  Attestation Statement Object
+
+   The attestation object MUST contain the following fields:
+
+   {
+     "protocol_version": "BTP/2.2",
+     "authority": "BTP-Root-Authority-v2.2",
+     "authority_pubkey": "<64-hex-char-ed25519-public-key>",
+     "nonce": "<32-hex-char-csprng-nonce>",
+     "issued_at_unix": 1771500000.0,
+     "expires_at_unix": 1771500300.0,
+     "originating_agent": "Agent-LangGraph-01",
+     "target_recipient": "Agent-AutoGen-02",
+     "action_type": "DEPLOY_PATCH",
+     "action_payload_hash": "<64-hex-char-sha256-payload-digest>",
+     "policy_id": "urn:btp:policy:owasp-agentic-v2026.1",
+     "policy_hash": "<64-hex-char-sha256-policy-digest>",
+     "capability_scope": ["AST_MAX_DELTA_5", "FS_WRITE_RESTRICTED"],
+     "verdict": "ALLOW",
+     "reason": "Deterministic pre-flight verification passed."
+   }
+
+4.2.  Signature Envelope
+
+   The complete transmission envelope MUST be structured as:
+
+   {
+     "attestation": { ... },
+     "signature": "<128-hex-char-ed25519-signature>"
+   }
+
+5.  Canonicalization and Hashing (RFC 8785)
+
+   All cryptographic digests (payload hash and attestation signature)
+   MUST be computed over the canonical octet sequence produced by the
+   JSON Canonicalization Scheme (JCS) specified in [RFC8785]:
+
+   1.  Object keys MUST be sorted strictly by UTF-16 code units.
+   2.  Whitespace MUST NOT be present between tokens.
+   3.  Floating-point numbers MUST follow IEEE 754 representations, with
+       negative zero serialized as "0".
+   4.  Strings MUST use minimal standard escape sequences.
+
+6.  Cryptographic Signature Scheme
+
+   Signatures MUST use PureEdDSA over Curve25519 (Ed25519) as defined
+   in [RFC8032] and [FIPS186-5].  The signature is calculated over:
+
+       Signature = Sign( AuthorityPrivKey, RFC8785( Attestation ) )
+
+7.  Security Invariants & Offline Verification
+
+   Conforming recipients MUST verify the following invariants offline:
+
+   *  BTP-SEC-001 (Payload Tamper-Resistance): Candidate payload hash
+      MUST match "action_payload_hash".
+   *  BTP-SEC-002 (Context Isolation): "target_recipient" MUST match the
+      evaluating recipient's identifier.
+   *  BTP-SEC-003 (Temporal Validity): "issued_at_unix" <= Now + 60s,
+      and Now <= "expires_at_unix".
+   *  BTP-SEC-004 (Root Pinning): "authority_pubkey" MUST match a key in
+      the recipient's local trusted root store.
+   *  BTP-SEC-005 (Capability Containment): "capability_scope" MUST NOT
+      exceed the recipient's authorized permission bounds.
+   *  BTP-SEC-007 (Replay Immunity): Nonces MUST NOT be replayed within
+      the temporal validity window.
+
+8.  Security Considerations
+
+   BTP v2.2 eliminates confused-deputy attacks by cryptographically
+   binding target recipients and capability bounds.  Private signing
+   keys MUST be protected within Hardware Security Modules (HSMs) or
+   secure enclaves.
+
+9.  IANA Considerations
+
+   This document requests registration of the media type
+   "application/btp+json" and the URI scheme "urn:btp:policy:".
+
+10. References
+
+   [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
+             Requirement Levels", BCP 14, RFC 2119, March 1997.
+   [RFC8032] Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
+             Signature Algorithm (EdDSA)", RFC 8032, January 2017.
+   [RFC8785] Rundgren, A., Jordan, B., and S. Erdtman, "JSON
+             Canonicalization Scheme (JCS)", RFC 8785, June 2020.
+   [FIPS186-5] NIST, "Digital Signature Standard (DSS)", FIPS 186-5,
+             February 2023.
+
+Authors' Addresses
+
+   Bartholomew Autonomous Systems
+   Standards Track Architecture Group
+   Email: help@bartholomew.info
+   URI:   https://www.bartholomew.info

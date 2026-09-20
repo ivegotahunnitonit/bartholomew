@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   btp-gateway:
-    image: bartholomew/btp-gateway:5.4.16
+    image: bartholomew/btp-gateway:1.0.0
     build:
       context: .
       dockerfile: Dockerfile

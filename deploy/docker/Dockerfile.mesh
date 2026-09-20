@@ -1,0 +1,20 @@
+# Bartholomew Protocol (BTP v5.4.6) -- Autonomous Standing Mesh Daemon Container
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install python requirements
+COPY pyproject.toml .
+RUN pip install --no-cache-dir btp-guard==5.4.6 cryptography pyyaml requests
+
+# Copy source files
+COPY . .
+
+# Run standing mesh daemon
+CMD ["python", "cli.py", "daemon", "mesh", "--interval", "10.0"]

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://smithery.ai/schema/server-card.json",
+  "name": "Bartholomew AI Security Gate",
+  "displayName": "Bartholomew AI Security Gate",
+  "display_name": "Bartholomew AI Security Gate",
+  "title": "Bartholomew AI Security Gate",
+  "version": "5.4.3",
+  "description": "Sub-35µs in-process AI agent security gate. Evaluates every tool call before execution — blocks rm -rf, DROP TABLE, secret exfiltration, and path traversal. Generates Ed25519 Merkle receipts for SOC 2 compliance. Pay $0.005 per check or flat-rate ($49/mo Pro, $199/mo Enterprise).",
+  "homepage": "https://bartholomew.info",
+  "homepageUrl": "https://bartholomew.info",
+  "website": "https://bartholomew.info",
+  "icon": "https://bartholomew.info/bartholomew_logo_4k.png",
+  "iconUrl": "https://bartholomew.info/bartholomew_logo_4k.png",
+  "icons": [
+    {
+      "src": "https://bartholomew.info/bartholomew_logo_4k.png",
+      "mimeType": "image/png"
+    },
+    {
+      "src": "https://bartholomew.info/favicon.svg",
+      "mimeType": "image/svg+xml"
+    }
+  ],
+  "serverInfo": {
+    "name": "bartholomew-metered-mcp-gateway",
+    "displayName": "Bartholomew AI Security Gate",
+    "display_name": "Bartholomew AI Security Gate",
+    "title": "Bartholomew AI Security Gate",
+    "version": "5.4.3",
+    "description": "Sub-35µs in-process AI agent security gate. Evaluates every tool call before execution — blocks rm -rf, DROP TABLE, secret exfiltration, and path traversal. Generates Ed25519 Merkle receipts for SOC 2 compliance. Pay $0.005 per check or flat-rate ($49/mo Pro, $199/mo Enterprise).",
+    "homepage": "https://bartholomew.info",
+    "homepageUrl": "https://bartholomew.info",
+    "website": "https://bartholomew.info",
+    "icon": "https://bartholomew.info/bartholomew_logo_4k.png",
+    "iconUrl": "https://bartholomew.info/bartholomew_logo_4k.png"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "experimental": {
+      "l402_monetization": true,
+      "price_usd": 0.005
+    }
+  }
+}

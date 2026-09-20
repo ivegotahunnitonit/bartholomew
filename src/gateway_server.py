@@ -1,5 +1,5 @@
 """
-Bartholomew Live Public Agent Gateway & Zero-Install Cloud Interceptor (BTP v5.4.16)
+Bartholomew Live Public Agent Gateway & Zero-Install Cloud Interceptor (BTP v1.0.0)
 ===================================================================================
 Production-ready FastAPI cloud gateway supporting:
   - `POST /v1/eval`: Zero-install cloud evaluation endpoint for Grok bot, Muse, Meta AI,
@@ -35,7 +35,7 @@ from src.btp_manifest import generate_manifest
 
 app = FastAPI(
     title="Bartholomew Zero-Install Cloud Gateway",
-    version="5.4.16",
+    version="1.0.0",
     description="Zero-install cloud execution gateway and AST invariant interceptor for Grok bot, Muse, Meta AI, and autonomous agent swarms."
 )
 
@@ -227,7 +227,7 @@ def get_health():
     return {
         "status": "HEALTHY",
         "service": "Bartholomew Cloud Execution Gateway",
-        "protocol": "BTP/5.4.16",
+        "protocol": "BTP/1.0.0",
         "supported_bots": ["grok", "muse", "meta_ai", "openai", "claude"],
         "authority_public_key": authority.public_key_hex,
         "policy_id": policy_engine.policy_id,
@@ -240,7 +240,7 @@ def get_health():
 @app.get("/v1/trust-root")
 def get_trust_root():
     return {
-        "protocol_version": "BTP/5.4.16",
+        "protocol_version": "BTP/1.0.0",
         "authority_pubkey": authority.public_key_hex,
         "ttl_seconds": authority.ttl_seconds,
         "policy_id": policy_engine.policy_id,
@@ -416,7 +416,7 @@ async def chat_completions_proxy(request: Request):
                 func["arguments"] = json.dumps({
                     "error": f"Bartholomew Security Gate blocked execution: {blocked_reason}",
                     "allowed": False,
-                    "blocked_by": "Bartholomew BTP v5.4.16"
+                    "blocked_by": "Bartholomew BTP v1.0.0"
                 })
             else:
                 receipt = eval_res["receipt"]
@@ -429,7 +429,7 @@ async def chat_completions_proxy(request: Request):
     response_headers = {
         "X-BTP-Verdict": overall_verdict,
         "X-BTP-Latency-US": str(round(dt_us, 2)),
-        "X-BTP-Protocol": "BTP/5.4.16"
+        "X-BTP-Protocol": "BTP/1.0.0"
     }
     if blocked_reason:
         response_headers["X-BTP-Violation"] = blocked_reason

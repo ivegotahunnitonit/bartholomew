@@ -39,7 +39,7 @@ class BartholomewMCPServer:
         self.tools_schema = [
             {
                 "name": "btp_get_manifest",
-                "description": "Returns machine-readable BTP v5.4.14 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
+                "description": "Returns machine-readable BTP v1.0.0 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
                 "annotations": {
                     "destructiveHint": False,
                     "readOnlyHint": True,

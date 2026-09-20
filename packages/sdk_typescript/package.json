@@ -1,0 +1,22 @@
+{
+  "name": "@bartholomew/btp-guard",
+  "version": "2.2.0",
+  "description": "Sub-millisecond cryptographic execution guard for autonomous AI agents.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node test_ts_sdk.js"
+  },
+  "keywords": [
+    "ai-agents",
+    "security",
+    "cryptography",
+    "mcp",
+    "langchain",
+    "autogen",
+    "btp"
+  ],
+  "author": "Bartholomew Autonomous Trust Network",
+  "license": "Apache-2.0"
+}

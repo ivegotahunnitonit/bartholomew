@@ -1,5 +1,5 @@
 """
-Bartholomew Guard for CrewAI (BTP v5.4.14)
+Bartholomew Guard for CrewAI (BTP v1.0.0)
 =========================================
 Wraps CrewAI Tools and Agent Tasks with sub-35µs in-process AST gating,
 infinite retry loop dampening, and cryptographic Merkle execution receipts.

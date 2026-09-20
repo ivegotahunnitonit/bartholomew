@@ -1,5 +1,5 @@
 # OpenAI Agents SDK & Function Calling Security Seam
-**Bartholomew Trust Protocol (BTP v5.4.16)**
+**Bartholomew Trust Protocol (BTP v1.0.0)**
 
 The OpenAI Agents SDK and OpenAI function calling orchestrate autonomous agent loops, tool dispatch, and multi-agent swarms. Bartholomew sits directly on the execution seam to verify AST safety, enforce spend limits, and block destructive operations before they reach your databases, shell, or file systems.
 

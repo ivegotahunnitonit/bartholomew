@@ -1,0 +1,180 @@
+# Environment / Secrets (NEVER commit)
+.env
+.env.*
+!.env.example
+
+# Fundraising & Private Investor Materials
+docs/INVESTOR_SEED_MEMO.md
+docs/SEED_PITCH_DECK.md
+docs/TARGET_SEED_INVESTORS.md
+docs/Y_COMBINATOR_APPLICATION_KIT.md
+docs/NFX_SIGNAL_APPLICATION_KIT.md
+docs/FOUNDER_PITCH_BATTLECARD.md
+docs/ENTERPRISE_PILOT_OUTREACH_KIT.md
+docs/COMMUNITY_DISTRIBUTION_SHOW_HN_REDDIT.md
+docs/PRODUCT_HUNT_RESPONSE_PLAYBOOK.md
+docs/dossiers/
+scripts/compile_seed_one_pager.py
+scripts/generate_investor_materials.py
+scripts/investor_*
+scripts/dispatch_cycle_runner.py
+scripts/dispatch_wave_1_outreach.py
+scripts/generate_gmail_compose_urls.py
+scripts/gmail_compose_urls.json
+assets/logo.png
+
+# Vendored binaries & large blobs (use package managers or CI download steps instead)
+bin/*.exe
+bin/*.whl
+bin/*.vsix
+*.whl
+*.vsix
+*.pdf
+*.wasm
+*.so
+*.dylib
+*.dll
+
+# Go compiled binaries
+**/*.exe
+**/bartholomew_daemon
+**/go_security_service
+
+# Node modules (install via npm ci in CI)
+packages/node/node_modules/
+node_modules/
+frontend/web/dist/
+frontend/assets/
+
+# Python & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Runtime state & ledgers (generated at runtime, never commit)
+.btp_workspaces.json
+.btp_bridge_ledger.json
+.btp_gossip_ledger.json
+.btp_marketplace.json
+.btp_usage_ledger.json
+.btp_webhooks.json
+SOC2_COMPLIANCE_EVIDENCE_PACK.json
+*.db
+*.db-shm
+*.db-wal
+
+# Scratch & ephemeral working dirs
+scratch/
+audit_evidence/
+generated_evidence_artifacts/
+archived_legacy_data/
+DELIVERABLES_BUNDLE/
+REAL_GOOGLE_OSS_PATCH/
+acquire_flip_package/
+*.pdf
+*.vsix
+helm-rendered.yaml
+sbom.json
+
+# Virtual Environments
+.env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+.btp_webhooks.json
+.btp_marketplace.json
+.btp_usage_ledger.json
+.btp_gossip_ledger.json
+.btp_bridge_ledger.json
+.btp_mesh_heartbeat.json
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Private Capital & Funding Dossiers
+GLOBAL_CAPITAL_AND_GRANTS_PIPELINE.md
+YC_APPLICATION_DOSSIER.md
+scripts/submit_capital_application.py
+
+# Private Outreach & Leads Databases
+OUTREACH_MASTER_QUEUE.md
+OUTBOUND_TECHNICAL_LEADS.md
+scripts/master_ai_startups_100.json
+scripts/autonomous_agent_builders.json
+scripts/startup_leads_50.json
+scripts/multi_channel_launch.py
+scripts/reach_out_agent_builders.py
+scripts/send_outbound_emails.py
+scripts/outbound_agent_handshake.py
+scripts/test_sesv2_send.py
+scripts/million_payload_stress_test.py
+scripts/live_benchmark.py
+scripts/raw_local_proof.py
+scripts/live_danger_test.py
+
+
+
+# Database & Logs
+*.db
+*.sqlite3
+*.log
+
+# Node & Frontend
+node_modules/
+web/dist/
+web/node_modules/
+.npm
+*.tgz
+*.zip
+
+# BTP Runtime Local Cache
+.archive/
+scratch/
+.btp/
+.firebase/
+.terraform/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Workspace Sandbox
+workspace/
+
+# VS Code extension binary builds
+vscode-extension/*.vsix
+
+# IDE Cursor rules
+.cursor/
+.cursorrules

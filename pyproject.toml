@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "btp-guard"
+version = "1.0.0"
+description = "Bartholomew Trust Protocol (BTP v1.0.0) - Sub-35us in-process execution gating, AST inspection, cryptographic audit trails, and tool-call security for autonomous AI agents."
+readme = "README.md"
+authors = [
+    { name = "Itsub Alemayehu", email = "security@bartholomew.info" }
+]
+license = { text = "MIT" }
+keywords = ["ai-safety", "agent-guardrails", "security", "ast-analysis", "agent-security", "prompt-injection-defense", "tool-call-validation", "mcp-guard", "autonomous-agents", "llm-security", "mcp", "claude", "cursor", "langchain", "crewai", "autogen", "openai-agents", "ed25519"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+requires-python = ">=3.10"
+dependencies = [
+    "cryptography>=42.0.0",
+    "pyyaml>=6.0"
+]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.100.0", "uvicorn>=0.22.0"]
+test = ["pytest>=7.0.0"]
+
+[project.urls]
+Homepage = "https://bartholomew.info"
+Documentation = "https://bartholomew.info#sdk"
+Repository = "https://github.com/bartholomew-ai/bartholomew"
+Tracker = "https://github.com/bartholomew-ai/bartholomew/issues"
+
+[project.scripts]
+bartholomew = "src.cli:main"
+btp-guard = "src.cli:main"
+btp = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "btp_guard*"]
+
+[tool.setuptools.package-dir]
+"" = "."
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+norecursedirs = ["workspace*", "target-project*", "dist*", "build*", "node_modules*", "packages*"]
+
+[tool.pyright]
+extraPaths = ["."]
+executionEnvironments = [
+  { root = "." }
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]
+
+

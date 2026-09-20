@@ -1,0 +1,30 @@
+{
+  "$schema": "https://smithery.ai/docs/config/schema.json",
+  "name": "bartholomew",
+  "displayName": "Bartholomew MCP Security Gate",
+  "version": "2.5.0",
+  "description": "Sub-microsecond (0.95µs) OS computer-use gating, Copy-on-Write rollbacks, and in-flight credential leak protection for Claude Desktop, Cursor, and MCP clients.",
+  "author": "Bartholomew Autonomous Systems <itsub@bartholomew.info>",
+  "homepage": "https://bartholomew.info",
+  "repository": "https://github.com/bartholomew-ai/bartholomew",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mcp",
+    "security",
+    "claude-desktop",
+    "cursor",
+    "guardrails",
+    "computer-use",
+    "rollback",
+    "ai-safety"
+  ],
+  "command": {
+    "type": "stdio",
+    "executable": "python",
+    "args": [
+      "-m",
+      "src.mcp_gateway"
+    ]
+  },
+  "installInstructions": "Install into Claude Desktop or Cursor via npx: npx -y @smithery/cli install @bartholomew-ai/bartholomew --client claude"
+}

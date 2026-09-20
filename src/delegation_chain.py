@@ -1,5 +1,5 @@
 """
-Bartholomew Verifiable Delegation Chain Protocol (BTP v5.4.14)
+Bartholomew Verifiable Delegation Chain Protocol (BTP v1.0.0)
 ==============================================================
 Models multi-agent authority delegation:
   Agent A (Grantor) -> Delegates Authority -> Agent B -> Delegates Sub-Authority -> Agent C

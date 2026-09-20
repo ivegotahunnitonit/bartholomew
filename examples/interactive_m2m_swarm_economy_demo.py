@@ -1,5 +1,5 @@
 """
-Bartholomew Autonomous M2M Machine Economy Interactive Demo (BTP v5.4.14)
+Bartholomew Autonomous M2M Machine Economy Interactive Demo (BTP v1.0.0)
 ========================================================================
 Demonstrates the full autonomous Machine-to-Machine execution & trust lifecycle:
   1. Discovery: Agent A fetches & parses Bartholomew's machine manifest (btp.json).
@@ -32,7 +32,7 @@ from src.dispute_resolver import AutomatedDisputeResolver
 
 def run_interactive_m2m_demo():
     print("\n" + "=" * 80)
-    print("   BARTHOLOMEW (BTP v5.4.14) AUTONOMOUS M2M MACHINE ECONOMY SWARM DEMO")
+    print("   BARTHOLOMEW (BTP v1.0.0) AUTONOMOUS M2M MACHINE ECONOMY SWARM DEMO")
     print("=" * 80 + "\n")
 
     # Step 1: Discovery & Manifest Inspection

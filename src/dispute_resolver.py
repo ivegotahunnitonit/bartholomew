@@ -1,5 +1,5 @@
 """
-Bartholomew Automated M2M Dispute Resolution Engine (BTP v5.4.14)
+Bartholomew Automated M2M Dispute Resolution Engine (BTP v1.0.0)
 ===================================================================
 Implements machine-readable dispute evaluation and arbitrated escrow settlement:
   1. Ingests disputed transaction receipts, execution evidence, and active policy hashes.
@@ -104,7 +104,7 @@ class AutomatedDisputeResolver:
 
         receipt_verdict = execution_receipt.get("verdict") or execution_receipt.get("status")
         rule_id = execution_receipt.get("rule_id") or execution_receipt.get("violation")
-        policy_version = str(execution_receipt.get("policy_version", "5.4.14"))
+        policy_version = str(execution_receipt.get("policy_version", "1.0.0"))
         evidence_hash = str(execution_receipt.get("receipt_sha256") or execution_receipt.get("receipt_hash") or "NO_HASH")
 
         # Decision Matrix based on mathematical audit trail evidence

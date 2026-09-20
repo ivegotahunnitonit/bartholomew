@@ -1,0 +1,77 @@
+{
+  "name": "bartholomew-guard-vscode",
+  "displayName": "Bartholomew Autonomous AI Guard",
+  "description": "Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
+  "version": "1.0.0",
+  "publisher": "Bartholomew",
+  "icon": "icon.png",
+  "license": "Apache-2.0",
+  "galleryBanner": {
+    "color": "#0f0f1a",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bartholomew-ai/bartholomew.git"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Linters",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "ai", "security", "agent", "mcp", "trust", "guardrails", "cursor", "copilot"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bartholomew.viewStatus",
+        "title": "Bartholomew: View Security Status & Trust Roots",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "bartholomew.upgradePro",
+        "title": "Bartholomew: Upgrade to Pro (Cloud Telemetry & Slack Alerts)",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "bartholomew.openDashboard",
+        "title": "Bartholomew: Open Visual Policy Editor"
+      },
+      {
+        "command": "bartholomew.validatePolicy",
+        "title": "Bartholomew: Validate & Lint Workspace Security Policy"
+      },
+      {
+        "command": "bartholomew.dryRunTrace",
+        "title": "Bartholomew: Dry-Run Policy against Synthetic Agent Trace"
+      },
+      {
+        "command": "bartholomew.generateComplianceEvidence",
+        "title": "Bartholomew: Generate SOC 2 / ISO 27001 Evidence Pack"
+      },
+      {
+        "command": "bartholomew.installMcp",
+        "title": "Bartholomew: Install MCP Server"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "build": "npm run compile",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.3.0"
+  }
+}

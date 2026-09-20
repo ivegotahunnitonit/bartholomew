@@ -22,7 +22,7 @@ def test_dispute_resolution_denied_receipt_claimant_wins():
         "verdict": "DENY",
         "rule_id": "BTP-SQL-001",
         "receipt_sha256": "abcdef1234567890",
-        "policy_version": "5.4.14"
+        "policy_version": "1.0.0"
     }
 
     verdict = resolver.arbitrate(
@@ -47,7 +47,7 @@ def test_dispute_resolution_allowed_receipt_respondent_wins():
         "verdict": "ALLOW",
         "rule_id": None,
         "receipt_sha256": "1234567890abcdef",
-        "policy_version": "5.4.14"
+        "policy_version": "1.0.0"
     }
 
     verdict = resolver.arbitrate(

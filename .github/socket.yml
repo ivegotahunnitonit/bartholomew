@@ -1,0 +1,38 @@
+# Socket.dev Configuration for Bartholomew Trust Protocol (BTP)
+# https://docs.socket.dev/docs/socket-yaml
+
+version: 2
+
+projectIgnorePaths:
+  - "tests/**"
+  - "examples/**"
+  - "dist/**"
+  - "build/**"
+  - "node_modules/**"
+  - "packages/**"
+  - ".venv/**"
+  - "docs/**"
+
+# Policy rules & capability exemptions for BTP in-process security gateway:
+issueRules:
+  # Legitimate capabilities required for agent AST parsing and security gate execution:
+  networkAccess: true
+  shellAccess: true
+  filesystemAccess: true
+  environmentVariableAccess: true
+  dynamicExecution: true
+  eval: true
+
+  # Block genuine supply chain risks:
+  unclearLicense: false
+  hasInstallScript: false
+  telemetry: false
+  typosquat: false
+  obfuscatedCode: false
+  trollPackage: false
+  cve: false
+
+# Workspace metadata
+metadata:
+  repository: "https://github.com/bartholomew-ai/bartholomew"
+  description: "Bartholomew Autonomous Trust Protocol (BTP) - In-process AST execution gate and settlement engine"

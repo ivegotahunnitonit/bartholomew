@@ -1,0 +1,43 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/bartholomew-ai/bartholomew-sidecar
+  pullPolicy: IfNotPresent
+  tag: "5.4.10"
+
+service:
+  type: ClusterIP
+  port: 8080
+  daemonPort: 9090
+
+prometheus:
+  enabled: true
+  path: /metrics
+  port: 9090
+  scrapeInterval: 15s
+
+daemon:
+  enabled: true
+  hostTracepoints: true
+  mountDebugfs: true
+  containerSecurityContext:
+    privileged: false
+    capabilities:
+      add:
+        - BPF
+        - SYS_ADMIN
+
+policy:
+  id: "urn:btp:policy:k8s-cluster-default"
+  spendCapUsd: 500.00
+  enableAstValidation: true
+  enableLdmuThrottling: true
+  ldmuDecayRate: 0.35
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

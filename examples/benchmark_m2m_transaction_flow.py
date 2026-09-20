@@ -27,7 +27,7 @@ from src.btp_guard.authorization_gate import AuthorizationGate
 
 def run_m2m_transaction_benchmark(total_transactions: int = 1000):
     print("\n" + "=" * 75)
-    print(f"   BARTHOLOMEW (BTP v5.4.14) M2M AGENT TRANSACTION FLOW BENCHMARK")
+    print(f"   BARTHOLOMEW (BTP v1.0.0) M2M AGENT TRANSACTION FLOW BENCHMARK")
     print("=" * 75 + "\n")
 
     # 1. Discover Capability & Inspect Machine Manifest

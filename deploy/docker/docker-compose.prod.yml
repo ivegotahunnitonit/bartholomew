@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  agentic-eval-one-stop:
+    build:
+      context: .
+      dockerfile: Dockerfile.standalone
+    container_name: agentic_eval_production
+    ports:
+      - "8000:8000"
+      - "8085:8085"
+    environment:
+      - PORT=8000
+      - ACN_ENCRYPTION_KEY=ACNENC_secret_master_key_production
+    restart: always

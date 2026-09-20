@@ -1,0 +1,48 @@
+version: "2.2.0"
+policy_id: "urn:btp:policy:enterprise-declarative-v1"
+description: "Default declarative security policy for autonomous agent execution."
+
+rules:
+  - id: "RULE_SPEND_CAP"
+    name: "Financial Transaction Limit"
+    field: "amount_usd"
+    type: "max_threshold"
+    value: 500.00
+    action: "DENY"
+    message: "Requested amount exceeds maximum policy threshold of $500.00"
+
+  - id: "RULE_DIMINISHING_MARGINAL_UTILITY"
+    name: "Law of Diminishing Marginal Utility Action Fatigue Limiter"
+    type: "diminishing_marginal_utility"
+    decay_rate: 0.35
+    min_utility_threshold: 0.15
+    action: "DENY"
+    message: "Diminishing marginal utility threshold breached. Repeated low-entropy actions throttled."
+
+  - id: "RULE_DESTRUCTIVE_PATTERNS"
+    name: "Destructive Command Filter"
+    type: "forbidden_substrings"
+    patterns:
+      - "drop table"
+      - "drop schema"
+      - "drop database"
+      - "truncate table"
+      - "/etc/shadow"
+      - "rm -rf"
+      - "aws_secret_access_key"
+      - "sk-live"
+      - "eval("
+      - "exec("
+    action: "DENY"
+    message: "Destructive pattern or forbidden credential path detected in payload."
+
+  - id: "RULE_ALLOWED_RECIPIENTS"
+    name: "Approved Recipient Allowlist"
+    field: "recipient"
+    type: "disallowed_values"
+    disallowed:
+      - "untrusted_wallet"
+      - "malicious_sink"
+      - "anonymous_endpoint"
+    action: "DENY"
+    message: "Recipient is disallowed by security policy."

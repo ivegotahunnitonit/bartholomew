@@ -1,5 +1,5 @@
 """
-Bartholomew Trust Protocol (BTP v5.4.14) - Framework Integrations
+Bartholomew Trust Protocol (BTP v1.0.0) - Framework Integrations
 ================================================================
 First-class adapters for CrewAI, LangChain, LangGraph, and AutoGen.
 """

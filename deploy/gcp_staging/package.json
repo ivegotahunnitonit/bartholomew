@@ -1,0 +1,21 @@
+{
+  "name": "autonomous-circularity-network",
+  "version": "1.0.0",
+  "description": "Decentralized autonomous resource circularity agent network",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "agy-node --experimental-strip-types src/index.ts",
+    "test": "agy-node --experimental-strip-types src/test-runner.ts",
+    "deploy:netlify": "netlify deploy --dir=netlify-ad-world --prod"
+  },
+  "dependencies": {
+    "bitcoinjs-lib": "^7.0.1",
+    "dotenv": "^17.4.2",
+    "ecpair": "^3.0.1",
+    "ethers": "^6.17.0",
+    "node-fetch": "^3.3.2",
+    "tiny-secp256k1": "^2.2.2",
+    "uuid": "^14.0.1"
+  }
+}

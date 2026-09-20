@@ -1,5 +1,5 @@
 """
-Bartholomew Trust Protocol (BTP v5.4.16) — OpenAI Agents SDK & Tool Calling Seam
+Bartholomew Trust Protocol (BTP v1.0.0) — OpenAI Agents SDK & Tool Calling Seam
 ================================================================================
 Protects OpenAI Agents SDK, Swarms, and OpenAI function calling loops by
 evaluating tool execution requests with sub-millisecond AST policy verification,
@@ -26,7 +26,7 @@ from src.client_wrapper import BTPClientWrapper, BTPViolationError, protect_tool
 
 def run_openai_agents_sdk_demo():
     print("\n" + "=" * 75)
-    print("  BARTHOLOMEW (BTP v5.4.16) — OPENAI AGENTS SDK / FUNCTION CALLING SEAM")
+    print("  BARTHOLOMEW (BTP v1.0.0) — OPENAI AGENTS SDK / FUNCTION CALLING SEAM")
     print("=" * 75)
 
     # --------------------------------------------------------------------------

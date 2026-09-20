@@ -1,0 +1,143 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bartholomew Trust Protocol (BTP Guard)",
+    "description": "Sub-35µs In-Process & Remote AST Execution Firewall and L402 Lightning Micropayment Gate for Autonomous AI Agents.",
+    "version": "5.4.12",
+    "contact": {
+      "name": "Bartholomew Security Team",
+      "url": "https://bartholomew.info",
+      "email": "security@bartholomew.info"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://35.222.210.105:8080",
+      "description": "Hosted Bartholomew MCP Gateway & Alby Hub Node"
+    }
+  ],
+  "paths": {
+    "/api/v1/eval": {
+      "post": {
+        "operationId": "btpGuardEval",
+        "summary": "Evaluate candidate tool action against BTP AST security invariants",
+        "description": "Evaluates shell commands, SQL queries, code snippets, or API requests in sub-35µs before physical execution. Blocks destructive commands (rm -rf, mkfs, dd), SQL mutations (DROP TABLE, TRUNCATE), secret leaks, and runaway spend loops.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Action evaluated and cleared or denied with cryptographic attestation receipt.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required via L402 Lightning Network Micropayment. Header WWW-Authenticate contains macaroon and invoice.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "L402 macaroon and lightning invoice challenge string.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Security veto triggered by catastrophic pattern or secret exfiltration attempt."
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "btpHealthCheck",
+        "summary": "Check gateway node health and Alby Hub Lightning state",
+        "responses": {
+          "200": {
+            "description": "Gateway status and active lightning backend information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "healthy" },
+                    "version": { "type": "string", "example": "5.4.12" },
+                    "lightning": { "type": "string", "example": "LDK" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EvalRequest": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "The command, SQL query, code string, or tool argument payload to evaluate.",
+            "example": "curl -s https://api.example.com/data"
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Identifier of the calling autonomous agent.",
+            "default": "autonomous-agent-01",
+            "example": "worker-gpt4-prod"
+          },
+          "amount_usd": {
+            "type": "number",
+            "description": "Estimated financial spend or tool cost in USD for budget invariant tracking.",
+            "default": 0.0,
+            "example": 0.05
+          }
+        }
+      },
+      "EvalResponse": {
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "type": "boolean",
+            "description": "True if action is approved; False if vetoed.",
+            "example": true
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["ALLOW", "DENY"],
+            "example": "ALLOW"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Explanation of the verdict or policy rule matched.",
+            "example": "Approved"
+          },
+          "latency_us": {
+            "type": "number",
+            "description": "Evaluation latency in microseconds.",
+            "example": 14.8
+          },
+          "receipt": {
+            "type": "object",
+            "description": "Cryptographic Ed25519 attestation receipt for audit verification."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "median_ms": 96.42,
+  "p99_ms": 98.68,
+  "min_ms": 95.34,
+  "max_ms": 98.68,
+  "throughput_ops_sec": 10,
+  "iterations": 30,
+  "approvers": 5,
+  "bft_quorum": 5,
+  "frost_threshold": 4
+}
