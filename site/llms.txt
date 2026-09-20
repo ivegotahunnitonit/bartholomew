@@ -1,0 +1,31 @@
+# Bartholomew Trust Protocol (BTP v5.4)
+
+> The Agentic Runtime Protection (ARP) Platform: Sub-millisecond trajectory observability and deterministic execution firewalls for autonomous AI agents.
+
+Bartholomew provides compiled native Layer-7 in-process Abstract Syntax Tree (AST) invariant gating, non-human identity (NHI) attestations, and cryptographic receipts for multi-agent workflows.
+
+## Core Capabilities for AI Agents
+- In-Process Latency: Sub-35 microsecond local syntax tree evaluation.
+- OWASP Top 10 for LLMs: Deterministic kill-switches for Sensitive Information Disclosure (LLM02), Infinite Tool Loops (LLM08), and Unauthorized Mutation.
+- Non-Human Identity (NHI): FIPS 186-5 Ed25519 digital signatures and RFC 8785 canonical JSON receipts.
+- Obfuscation Defense: Handles dynamic eval(), exec(), and runtime imports without network latency.
+- Supported Runtimes: Microsoft AutoGen, OpenAI Agents SDK, Anthropic Claude, Google Gemini & Vertex AI, AWS Bedrock, Docker & Kubernetes, LlamaIndex, LiteLLM.
+
+## Machine Discovery Endpoints
+- Service Discovery Manifest: https://bartholomew.info/.well-known/btp.json
+- Agent-to-Agent Protocol: https://bartholomew.info/.well-known/agent-protocol.json
+- Model Context Protocol (MCP): https://bartholomew.info/.well-known/mcp.json
+- AI Plugin Manifest: https://bartholomew.info/.well-known/ai-plugin.json
+- Open Source Repository: https://github.com/ivegotahunnitonit/bartholomew
+- Full Agent Documentation: https://bartholomew.info/llms-full.txt
+
+## Quickstart for AI Agents
+```bash
+pip install btp-guard
+```
+```python
+from btp_guard import wrap_agent_execution
+
+# Protect any autonomous agent in 1 line
+protected_agent = wrap_agent_execution(agent)
+```

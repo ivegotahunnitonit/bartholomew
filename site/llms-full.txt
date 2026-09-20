@@ -1,0 +1,34 @@
+# Bartholomew Trust Protocol (BTP v5.4) — Full Technical Reference for Autonomous Agents
+
+## Overview
+Bartholomew is the Agentic Runtime Protection (ARP) platform. It provides sovereign, deterministic, in-process execution gating for autonomous AI agents. Unlike remote LLM-as-a-judge evaluators (which incur 300ms+ network roundtrips and are themselves susceptible to indirect prompt injection), Bartholomew compiles syntax tree invariants into a sub-35 microsecond memory boundary.
+
+## Technical Invariants
+1. BTP-AST-001: Destructive Command Injection Prevention (rm -rf, DROP TABLE, mkfs) -> Immediate DENY.
+2. BTP-SEC-001: High-Entropy Secret Masking (sk-proj, ghp_, AWS secrets) -> Immediate MASK and SCRUB before tool dispatch.
+3. BTP-LOOP-001: Infinite Recursion & Spend Exhaustion -> Circuit breaker trip with exponential backoff hook.
+4. BTP-EVAL-001: Obfuscated Dynamic Execution (eval, exec, __import__) -> Dual-stage AST semantic clamp.
+5. BTP-NHI-001: Non-Human Identity Step Verification -> FIPS 186-5 Ed25519 digital signature over RFC 8785 canonical JSON hash.
+
+## Framework Integration Examples
+### Microsoft AutoGen
+```python
+from btp_guard.adapters.autogen import btp_autogen_guard
+@btp_autogen_guard
+def tool_dispatch(agent, tool_call):
+    return execute_safely(tool_call)
+```
+
+### OpenAI Agents SDK / Function Calling
+```python
+from btp_guard import audit_step
+verdict = audit_step(tool_name="search_db", arguments={"query": "SELECT * FROM users"})
+assert verdict.is_allowed
+```
+
+## Discovery Endpoints
+- Manifest: https://bartholomew.info/.well-known/btp.json
+- Agent Protocol: https://bartholomew.info/.well-known/agent-protocol.json
+- MCP Config: https://bartholomew.info/.well-known/mcp.json
+- AI Plugin: https://bartholomew.info/.well-known/ai-plugin.json
+- GitHub: https://github.com/ivegotahunnitonit/bartholomew

@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Bartholomew ARP",
+  "name_for_model": "bartholomew_agentic_runtime_protection",
+  "description_for_human": "Sub-millisecond trajectory observability and deterministic execution firewalls for autonomous AI agents.",
+  "description_for_model": "Bartholomew Trust Protocol (BTP v5.4) provides sub-35us in-process AST invariant gating, real-time OWASP kill-switches, secret credential scrubbing, and Ed25519 cryptographic receipts for autonomous AI agents. Use this service to audit trajectories, verify tool calls before execution, sanitize credentials, and generate non-human identity (NHI) passports.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://bartholomew.info/.well-known/btp.json"
+  },
+  "logo_url": "https://bartholomew.info/logo.png",
+  "contact_email": "security@bartholomew.info",
+  "legal_info_url": "https://github.com/ivegotahunnitonit/bartholomew/blob/main/LICENSE"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp.json",
+  "name": "bartholomew-arp-gateway",
+  "version": "5.4.0",
+  "description": "Model Context Protocol (MCP) in-process safety and trajectory execution firewall for autonomous agents.",
+  "transport": "sse",
+  "tools": [
+    {
+      "name": "btp_audit_trajectory",
+      "description": "Evaluates raw agent tool calls and step trajectory in sub-35 microseconds against OWASP LLM Top 10 invariants."
+    },
+    {
+      "name": "btp_scrub_credentials",
+      "description": "Scrubs high-entropy API secrets (sk-proj, ghp_, AWS keys) from agent thought streams and arguments."
+    },
+    {
+      "name": "btp_sign_step_receipt",
+      "description": "Generates a FIPS 186-5 Ed25519 signature over RFC 8785 canonical JSON trajectory proof."
+    }
+  ],
+  "server": {
+    "url": "https://bartholomew.info",
+    "docs": "https://bartholomew.info/llms.txt"
+  }
+}

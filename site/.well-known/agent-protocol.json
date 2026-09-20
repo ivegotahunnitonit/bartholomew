@@ -1,0 +1,24 @@
+{
+  "agent_protocol_version": "1.0.0",
+  "name": "Bartholomew Trust Protocol",
+  "version": "5.4.0",
+  "category": "Agentic Runtime Protection (ARP)",
+  "website": "https://bartholomew.info",
+  "manifest": "https://bartholomew.info/.well-known/btp.json",
+  "description": "Deterministic trajectory observability, in-process AST gating, and cryptographic non-human identity (NHI) passports for autonomous AI agent swarms.",
+  "endpoints": {
+    "manifest": "https://bartholomew.info/.well-known/btp.json",
+    "docs": "https://bartholomew.info#why-bartholomew",
+    "repository": "https://github.com/ivegotahunnitonit/bartholomew",
+    "llms_spec": "https://bartholomew.info/llms.txt"
+  },
+  "capabilities": [
+    "ast_invariant_gating",
+    "secret_scrubbing",
+    "trajectory_audit",
+    "fips186_5_signing",
+    "rfc8785_canonical_json",
+    "owasp_kill_switch",
+    "loop_breaker"
+  ]
+}
