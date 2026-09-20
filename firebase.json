@@ -6,17 +6,10 @@
       "cleanUrls": true,
       "ignore": [
         "firebase.json",
-        "**/.*",
+        "!**/.well-known/**",
         "**/node_modules/**"
       ],
       "rewrites": [
-        {
-          "source": "/.well-known/**",
-          "run": {
-            "serviceId": "bartolomew-cloud-engine",
-            "region": "us-central1"
-          }
-        },
         {
           "source": "/api/v1/**",
           "run": {
@@ -51,6 +44,19 @@
         }
       ],
       "headers": [
+        {
+          "source": "/.well-known/**",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
         {
           "source": "**",
           "headers": [
@@ -68,7 +74,7 @@
       "cleanUrls": true,
       "ignore": [
         "firebase.json",
-        "**/.*",
+        "!**/.well-known/**",
         "**/node_modules/**"
       ],
       "rewrites": [
@@ -106,6 +112,19 @@
         }
       ],
       "headers": [
+        {
+          "source": "/.well-known/**",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
         {
           "source": "**",
           "headers": [

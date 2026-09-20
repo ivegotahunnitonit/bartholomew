@@ -9,8 +9,8 @@ pricing meters, security invariants, and cryptographic evidence formats.
 import json
 from typing import Dict, Any, Optional
 
-MANIFEST_VERSION = "1.0.0"
-BTP_PROTOCOL_VERSION = "1.0.0"
+MANIFEST_VERSION = "5.4.0"
+BTP_PROTOCOL_VERSION = "5.4.0"
 
 class BTPManifestBuilder:
     """Builder for machine-readable Bartholomew service manifests."""

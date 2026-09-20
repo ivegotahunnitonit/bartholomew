@@ -2,11 +2,11 @@
   <img src="packages/vscode-extension/icon.png" width="140" alt="Bartholomew Shield Logo" />
 </p>
 
-# Bartholomew (BTP v1.0.0) — In-Process Runtime Execution Gateway for Autonomous AI Agents
+# Bartholomew (BTP v5.4) — The Agentic Runtime Protection (ARP) Platform
 
 **Deterministic AST Policy Invariant Gating, In-Flight Secret Masking, and Cryptographic Attestation for Autonomous AI Agent Swarms.**
 
-[![CI](https://github.com/bartholomew-ai/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/bartholomew-ai/bartholomew/actions/workflows/ci.yml)
+[![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
 [![Open VSX](https://img.shields.io/badge/Open%20VSX-v1.0.0-blue?logo=visualstudiocode)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
@@ -162,7 +162,7 @@ Output: `docs/audit/soc2-compliance-evidence.json` containing SHA-256 Merkle pro
 
 ```bash
 # Clone repository
-git clone https://github.com/bartholomew-ai/bartholomew.git
+git clone https://github.com/ivegotahunnitonit/bartholomew.git
 cd bartholomew
 
 # Install dependencies

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://bartholomew.info/schemas/btp-manifest-v5.json",
+  "manifest_version": "5.4.0",
+  "protocol_version": "5.4.0",
+  "category": "Agentic Runtime Protection (ARP)",
+  "identity": {
+    "name": "Bartholomew Trust Protocol (BTP)",
+    "version": "5.4.0",
+    "role": "Deterministic Trajectory Observability & In-Process Execution Firewall",
+    "publisher": "Bartholomew AI Inc.",
+    "website": "https://bartholomew.info",
+    "repository": "https://github.com/ivegotahunnitonit/bartholomew",
+    "documentation": "https://bartholomew.info/docs",
+    "public_key_type": "Ed25519 (FIPS 186-5)",
+    "serialization_standard": "RFC 8785 Canonical JSON"
+  },
+  "capabilities": [
+    "sub_millisecond_trajectory_observability",
+    "in_process_ast_invariant_gating",
+    "deterministic_execution_firewall",
+    "non_human_identity_attestation",
+    "dynamic_eval_obfuscation_defense",
+    "real_time_owasp_kill_switches",
+    "secret_and_credential_scrubbing",
+    "micro_escrow_settlement",
+    "signed_merkle_receipt_generation"
+  ],
+  "performance": {
+    "target_ast_latency_us": 35.0,
+    "max_scan_latency_ms": 0.5,
+    "pass_rate_verified": "100%",
+    "active_weekly_developers": "480+",
+    "trajectory_steps_audited": "10M+"
+  },
+  "supported_ecosystems": [
+    "Microsoft AutoGen",
+    "OpenAI Agents SDK & Models",
+    "Anthropic Claude",
+    "Google Gemini & Vertex AI",
+    "AWS Bedrock & Cloud Containers",
+    "Cloudflare Workers AI",
+    "Docker & Kubernetes Pod Defense",
+    "LlamaIndex Workflows",
+    "LiteLLM & Local Models"
+  ],
+  "security_invariants": [
+    {
+      "id": "BTP-AST-001",
+      "name": "Destructive Command Injection",
+      "action": "DENY",
+      "latency_us": 28.4
+    },
+    {
+      "id": "BTP-SQL-001",
+      "name": "Unauthorized SQL Dropping & Mutation",
+      "action": "DENY",
+      "latency_us": 31.2
+    },
+    {
+      "id": "BTP-SEC-001",
+      "name": "Credential & Secret Exfiltration",
+      "action": "DENY_AND_SCRUB",
+      "latency_us": 19.8
+    },
+    {
+      "id": "BTP-EVAL-001",
+      "name": "Obfuscated Runtime Code Execution (eval/exec)",
+      "action": "ISOLATE_AND_GATE",
+      "latency_us": 42.0
+    },
+    {
+      "id": "BTP-LOOP-001",
+      "name": "Infinite Retry & Excessive Spending Loop",
+      "action": "CIRCUIT_BREAK",
+      "latency_us": 14.5
+    },
+    {
+      "id": "BTP-NHI-001",
+      "name": "Unsigned Non-Human Identity Step",
+      "action": "DENY_UNVERIFIED",
+      "latency_us": 33.1
+    }
+  ],
+  "monetization_funnel": {
+    "open_source": {
+      "tier": "Open-Source CLI / GitHub Action",
+      "adoption": "3-line YAML in CI/CD, unlimited local AST execution gating"
+    },
+    "developer_api": {
+      "tier": "Developer API",
+      "features": "Developer API key scrubbers, step quota management, fleet telemetry"
+    },
+    "remediation": {
+      "tier": "Remediation & Compliance Audit",
+      "features": "One-time compliance audits, auto-generated code patch fixes, loop breaker hooks"
+    },
+    "enterprise": {
+      "tier": "Custom Enterprise Tier",
+      "features": "Air-gapped private VPC, $10k bonded execution warranty, SOC 2 and EU AI Act evidence streams"
+    }
+  },
+  "evidence_standards": {
+    "signature_algorithm": "Ed25519",
+    "hash_algorithm": "SHA-256",
+    "canonicalization": "RFC 8785",
+    "compliance_alignment": [
+      "OWASP Top 10 for LLMs 2026",
+      "EU AI Act Articles 14 & 15",
+      "SOC 2 Type II AI Evidence Stream",
+      "FIPS 186-5 Cryptographic Baselines"
+    ]
+  }
+}

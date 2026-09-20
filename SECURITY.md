@@ -6,7 +6,7 @@ Security updates are provided for the following versions of the Bartholomew Trus
 
 | Version | Supported |
 | :--- | :--- |
-| 5.4.x | Supported (Active Production - Latest: v1.0.0) |
+| 5.4.x | Supported (Active Production - Latest: v5.4.0) |
 | 5.3.x | Supported (Active Enterprise) |
 | 5.2.x | Supported (Security Patches Only) |
 | < 5.0 | Unsupported |
@@ -24,7 +24,7 @@ Security updates are provided for the following versions of the Bartholomew Trus
 The Bartholomew team takes software security and vulnerability reports seriously. If you discover a security flaw, sandbox breakout, or cryptographic defect, please report it via private disclosure:
 
 * **Private Security Email**: `security@bartholomew.info`
-* **Encrypted Advisory**: You may also report vulnerabilities privately through GitHub Private Vulnerability Reporting at `https://github.com/bartholomew-ai/bartholomew/security/advisories/new`.
+* **Encrypted Advisory**: You may also report vulnerabilities privately through GitHub Private Vulnerability Reporting at `https://github.com/ivegotahunnitonit/bartholomew/security/advisories/new`.
 
 ### Information to Include:
 1. Clear description of the vulnerability, attack vector, or evasion method.
