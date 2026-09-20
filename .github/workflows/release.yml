@@ -35,10 +35,17 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Build IDE Extensions (.vsix)
+        run: |
+          python scripts/package_all_vsix.py
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           name: "BTP v${{ steps.version.outputs.VERSION }}"
+          files: |
+            packages/bartholomew-keystone/*.vsix
+            packages/vscode-extension/*.vsix
           body: |
             ## What's Changed
 
@@ -46,7 +53,11 @@ jobs:
 
             ---
 
-            **Install:**
+            **IDE Extensions Included:**
+            - `bartholomew-keystone-1.0.0.vsix` (Agent Capability Passkey clearance)
+            - `bartholomew-guard-vscode-1.0.0.vsix` (AST Invariant Gate & Dispatch Seam)
+
+            **SDK Install:**
             ```bash
             pip install btp-guard==${{ steps.version.outputs.VERSION }}
             # or
@@ -57,3 +68,4 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: false
+

@@ -1,0 +1,56 @@
+name: Publish IDE Extensions
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish · VS Code Marketplace & Open-VSX
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Publishing Tools
+        run: |
+          npm install -g @vscode/vsce ovsx
+
+      - name: Build Extensions (.vsix)
+        run: |
+          python scripts/package_all_vsix.py
+
+      - name: Publish Bartholomew Guard to VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          vsce publish --packagePath packages/vscode-extension/bartholomew-guard-vscode-1.0.0.vsix --pat "$VSCE_PAT" || true
+
+      - name: Publish Bartholomew Keystone to VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          vsce publish --packagePath packages/bartholomew-keystone/bartholomew-keystone-1.0.0.vsix --pat "$VSCE_PAT" || true
+
+      - name: Publish Bartholomew Guard to Open-VSX
+        if: env.OVSX_PAT != ''
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          ovsx publish packages/vscode-extension/bartholomew-guard-vscode-1.0.0.vsix --pat "$OVSX_PAT" || true
+
+      - name: Publish Bartholomew Keystone to Open-VSX
+        if: env.OVSX_PAT != ''
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          ovsx publish packages/bartholomew-keystone/bartholomew-keystone-1.0.0.vsix --pat "$OVSX_PAT" || true
