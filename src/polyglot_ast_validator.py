@@ -45,6 +45,7 @@ class PolyglotASTValidator:
         re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
         re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
         re.compile(r"\btruncate\s+table\b", re.IGNORECASE),
+        re.compile(r"\bunion\s+(all\s+)?select\b", re.IGNORECASE),
         # Advanced Obfuscation & Encoded Execution Patterns
         re.compile(r"\|\s*(base64\s+-d|openssl\s+enc|xxd\s+-r)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),
         re.compile(r"base64\s+(-d|--decode)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),

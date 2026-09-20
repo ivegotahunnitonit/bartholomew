@@ -206,6 +206,7 @@ class LicenseClaimRequest(BaseModel):
 # ---------------------------------------------------------------------------
 
 @app.get("/health")
+@app.get("/cloud-health")
 async def health_check():
     """Cloud Run container health probe."""
     return {

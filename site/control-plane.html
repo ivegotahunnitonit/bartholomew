@@ -778,16 +778,20 @@
       pingResult.style.color = "var(--cyan)";
 
       try {
-        const resp = await fetch(`${url}/health`, { method: 'GET', mode: 'cors' });
+        // Try telemetry stats directly (works via same-origin Firebase rewrite or Cloud Run direct)
+        let resp = await fetch(`${url}/api/v1/telemetry/stats`, { method: 'GET', mode: 'cors' });
+        if (!resp.ok) {
+          resp = await fetch(`${url}/health`, { method: 'GET', mode: 'cors' });
+        }
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
 
         liveGatewayUrl = url;
-        pingResult.innerText = `Connected: ${data.service || 'Bartholomew Cloud'} (${data.version || 'v5.4.0'})`;
+        pingResult.innerText = `Connected: ${data.compliance_status || data.service || 'Bartholomew Cloud'}`;
         pingResult.style.color = "var(--emerald)";
-        badge.innerText = "GATEWAY: LIVE CLOUD RUN";
+        badge.innerText = "GATEWAY: LIVE RUNTIME";
         badge.style.color = "var(--emerald)";
-        indicator.innerText = `CLOUD RUN LIVE: ${url.replace('https://', '')}`;
+        indicator.innerText = `GATEWAY LIVE: ${url.replace(/https?:\/\//, '')}`;
         indicator.style.color = "var(--emerald)";
 
         // Clear simulation loop and start live polling
@@ -940,7 +944,13 @@
       }, 4000);
     }
 
-    // Attempt auto-connect to live Cloud Run instance on load
+    // If hosted online, prioritize same-origin unified gateway
+    if (window.location.protocol.startsWith('http') && !window.location.hostname.includes('localhost')) {
+      const epInput = document.getElementById('gateway-endpoint-input');
+      if (epInput) epInput.value = window.location.origin;
+    }
+
+    // Attempt auto-connect to live gateway instance on load
     connectLiveGateway();
   </script>
 </body>

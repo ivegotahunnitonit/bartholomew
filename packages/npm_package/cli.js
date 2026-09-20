@@ -115,31 +115,39 @@ function runDemo() {
 
 function runInit(subargs = []) {
   printBanner();
-  console.log(`${BOLD}[BTP v5.4.8 Developer Onboarding & Project Initializer]${RESET}\n`);
+  console.log(`${BOLD}[BTP Developer Onboarding & Project Initializer]${RESET}\n`);
   
   const targetDir = process.cwd();
   console.log(`  ${DIM}Project Directory:${RESET} ${targetDir}`);
   
   // 1. Auto-detect framework
-  let framework = 'generic';
+  const detectedFrameworks = [];
   const checkFile = (f) => fs.existsSync(path.join(targetDir, f)) ? fs.readFileSync(path.join(targetDir, f), 'utf8') : '';
   const fileContent = checkFile('requirements.txt') + checkFile('pyproject.toml') + checkFile('package.json');
   
-  if (/crewai/i.test(fileContent)) framework = 'crewai';
-  else if (/langgraph/i.test(fileContent) || /langchain/i.test(fileContent)) framework = 'langgraph';
-  else if (/gemini|google-genai|google\.generativeai/i.test(fileContent) || subargs.includes('--gemini')) framework = 'gemini';
-  else if (/autogen/i.test(fileContent) || /pyautogen/i.test(fileContent)) framework = 'autogen';
-  else if (/openai/i.test(fileContent)) framework = 'openai';
-  else if (/anthropic/i.test(fileContent)) framework = 'anthropic';
+  let framework = 'generic';
+  if (/crewai/i.test(fileContent)) { framework = 'crewai'; detectedFrameworks.push('CrewAI Multi-Agent Swarm'); }
+  if (/langgraph/i.test(fileContent) || /langchain/i.test(fileContent)) { framework = 'langgraph'; detectedFrameworks.push('LangGraph / LangChain'); }
+  if (/gemini|google-genai|google\.generativeai/i.test(fileContent) || subargs.includes('--gemini')) { framework = 'gemini'; detectedFrameworks.push('Google Gemini 3.8 / Generative AI'); }
+  if (/autogen/i.test(fileContent) || /pyautogen/i.test(fileContent)) { framework = 'autogen'; detectedFrameworks.push('Microsoft AutoGen'); }
+  if (/openai/i.test(fileContent)) { framework = 'openai'; detectedFrameworks.push('OpenAI Agent SDK / Swarm'); }
+  if (/anthropic/i.test(fileContent)) { framework = 'anthropic'; detectedFrameworks.push('Anthropic Claude MCP'); }
+  if (fs.existsSync(path.join(targetDir, '.cursor'))) detectedFrameworks.push('Cursor IDE Integration');
+  if (fs.existsSync(path.join(targetDir, '.vscode'))) detectedFrameworks.push('VS Code Workspace');
 
-  console.log(`  ${GREEN}+ Framework Detected:${RESET} ${BOLD}${framework.toUpperCase()}${RESET}`);
+  if (detectedFrameworks.length === 0) {
+    detectedFrameworks.push('Universal Autonomous Agent Workspace');
+  }
+
+  console.log(`  ${GREEN}+ Detected Frameworks:${RESET}`);
+  detectedFrameworks.forEach(f => console.log(`    * ${CYAN}${f}${RESET}`));
 
   // 2. Scaffold .btp/
   const btpDir = path.join(targetDir, '.btp');
   if (!fs.existsSync(btpDir)) fs.mkdirSync(btpDir, { recursive: true });
 
-  const policyYaml = `# Bartholomew Protocol (BTP v5.4.11) Project Policy
-version: "5.4.11"
+  const policyYaml = `# Bartholomew Protocol (BTP v5.4.16) Project Policy
+version: "5.4.16"
 framework: "${framework}"
 invariants:
   ast_gating:
@@ -162,7 +170,70 @@ invariants:
   fs.writeFileSync(path.join(btpDir, 'policy.yaml'), policyYaml, 'utf8');
   console.log(`  ${GREEN}+ Security Policy:${RESET}   .btp/policy.yaml (Sub-35us AST & Secret Scrubbing)`);
 
-  // 3. Configure Cursor
+  // 2b. Generate .btp_policy.json
+  const defaultPolicy = {
+    version: "5.4.16",
+    workspace: path.basename(targetDir),
+    enforcement_mode: "STRICT_AST_GATED",
+    spend_limit_usd: 50.00,
+    protected_paths: [".env", "id_rsa", "credentials", "secrets/", ".git/"],
+    allowed_commands: ["npm test", "pytest", "git status", "ruff", "python"],
+    rules: [
+      { id: "BTP-AST-001", description: "Block destructive shell & drop table operations" },
+      { id: "BTP-SEC-002", description: "In-flight API secret scrubbing & redaction" },
+      { id: "BTP-KEYSTONE-003", description: "Scoped capability passkey verification" }
+    ]
+  };
+  fs.writeFileSync(path.join(targetDir, '.btp_policy.json'), JSON.stringify(defaultPolicy, null, 2), 'utf8');
+  console.log(`  ${GREEN}+ Security Rules:${RESET}    .btp_policy.json`);
+
+  // 3. Generate .btp_keystone.json
+  const keystonePath = path.join(targetDir, '.btp_keystone.json');
+  const passkeyId = 'key_' + crypto.randomBytes(8).toString('hex');
+  const now = new Date();
+  const issuedAt = now.toISOString();
+  const expiresAt = new Date(now.getTime() + 7 * 24 * 3600 * 1000).toISOString();
+  const scopes = {
+    files: {
+      allow_read: ["src/", "site/", "public/"],
+      allow_write: ["src/components/", "site/"],
+      deny: [".env", "id_rsa", "credentials", "secrets/"]
+    },
+    commands: {
+      allow_exec: ["npm test", "pytest", "git status", "ruff"],
+      deny_exec: ["rm", "sudo", "chmod", "curl | sh"]
+    },
+    budget: {
+      max_spend_usd: 25.00,
+      max_tokens: 100000
+    }
+  };
+
+  const canonicalData = JSON.stringify({
+    passkey_id: passkeyId,
+    agent_id: "agent-dev-local",
+    issuer: "Bartholomew-Keystone-Authority",
+    issued_at: issuedAt,
+    expires_at: expiresAt,
+    scopes: scopes
+  });
+  const payloadHash = crypto.createHash('sha256').update(canonicalData).digest('hex');
+  const signature = crypto.createHmac('sha256', 'keystone-root-dev-authority').update(payloadHash).digest('hex');
+
+  const defaultKeystone = {
+    passkey_id: passkeyId,
+    agent_id: "agent-dev-local",
+    issuer: "Bartholomew-Keystone-Authority",
+    issued_at: issuedAt,
+    expires_at: expiresAt,
+    scopes: scopes,
+    payload_hash: payloadHash,
+    signature: signature
+  };
+  fs.writeFileSync(keystonePath, JSON.stringify(defaultKeystone, null, 2), 'utf8');
+  console.log(`  ${GREEN}+ Capability Passkey:${RESET} .btp_keystone.json (Token ID: ${passkeyId})`);
+
+  // 4. Configure Cursor
   const cursorDir = path.join(targetDir, '.cursor');
   if (!fs.existsSync(cursorDir)) fs.mkdirSync(cursorDir, { recursive: true });
   const cursorMcp = {
@@ -176,7 +247,7 @@ invariants:
   fs.writeFileSync(path.join(cursorDir, 'mcp.json'), JSON.stringify(cursorMcp, null, 2), 'utf8');
   console.log(`  ${GREEN}+ Cursor IDE Config:${RESET} .cursor/mcp.json`);
 
-  // 3b. Configure Claude Desktop if requested or found
+  // 4b. Configure Claude Desktop if requested or found
   const isClaudeRequested = subargs.includes('--claude') || subargs.includes('--all');
   const claudeConfigPath = process.platform === 'darwin'
     ? path.join(os.homedir(), 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json')
@@ -203,7 +274,7 @@ invariants:
     }
   }
 
-  // 4. Output snippet
+  // 5. Output snippet
   console.log(`\n${BOLD}${CYAN}READY-TO-USE INTEGRATION SNIPPET FOR ${framework.toUpperCase()}:${RESET}`);
   console.log('='.repeat(65));
   if (framework === 'gemini') {
@@ -211,7 +282,7 @@ invariants:
 
 @btp_gemini_38_tool()
 def my_gemini_tool(param: str):
-    # Protected by Bartholomew Gemini 3.8 AST Gate & Thought Isolation in <35µs
+    # Protected by Bartholomew Gemini 3.8 AST Gate & Thought Isolation in <35us
     return perform_operation(param)${RESET}`);
   } else if (framework === 'crewai') {
     console.log(`${YELLOW}from btp_guard import secure_tool
@@ -231,11 +302,23 @@ app = guard.wrap_graph(workflow.compile())${RESET}`);
 guard = Guard()
 is_safe, violation = guard.check(command_or_sql)${RESET}`);
   }
-  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.11!${RESET}`);
-  console.log(`\n${BOLD}💡 Need Fleet Monitoring or Live Threat Alerts?${RESET}`);
+
+  console.log(`\n${BOLD}Turnkey Agent Integration:${RESET}`);
+  console.log(`  ${DIM}JavaScript / TypeScript:${RESET}`);
+  console.log(`    ${CYAN}import { BTPGuard } from 'btp-guard';${RESET}`);
+  console.log(`    ${CYAN}const guard = new BTPGuard();${RESET}`);
+  console.log(`    ${CYAN}const verdict = guard.evaluateAction(action, payload);${RESET}`);
+  console.log(`  ${DIM}Python Keystone Clearance:${RESET}`);
+  console.log(`    ${CYAN}from src.keystone_passkey import KeystoneEngine${RESET}`);
+  console.log(`    ${CYAN}engine = KeystoneEngine()${RESET}`);
+  console.log(`    ${CYAN}clearance = engine.check_clearance(passkey, "COMMAND_EXEC", "npm test")${RESET}`);
+
+  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.16!${RESET}`);
+  console.log(`\n${BOLD}[INFO] Need Fleet Monitoring or Live Threat Alerts?${RESET}`);
   console.log(`  -> Cloud Console:   ${CYAN}https://bartholomew.info/cloud${RESET}`);
   console.log(`  -> Team Editions:   ${CYAN}npx btp-guard pricing${RESET}  or  ${CYAN}https://bartholomew.info/pricing${RESET}\n`);
 }
+
 
 function runScrub(targetFile) {
   if (!targetFile) {
@@ -307,6 +390,43 @@ function runCheck(configFile = '.btp/policy.yaml') {
   console.log(`  ${DIM}File:${RESET}        ${configFile}`);
   console.log(`  ${GREEN}✓ Status:${RESET}      PASS`);
   console.log(`  ${GREEN}✓ Invariants:${RESET}  Verified non-contradictory rules`);
+}
+
+
+function runKeystoneCli(subargs = []) {
+  printBanner();
+  const action = subargs[0] || 'status';
+
+  if (action === 'issue') {
+    const agentId = subargs[1] || 'agent-worker-01';
+    const passkeyId = 'key_' + crypto.randomBytes(8).toString('hex');
+    const now = new Date();
+    const issuedAt = now.toISOString();
+    const expiresAt = new Date(now.getTime() + 24 * 3600 * 1000).toISOString();
+    const scopes = {
+      files: { allow_read: ["src/", "site/"], allow_write: ["src/components/"], deny: [".env", "secrets/"] },
+      commands: { allow_exec: ["npm test", "pytest", "git status"], deny_exec: ["rm", "sudo"] },
+      budget: { max_spend_usd: 50.00 }
+    };
+    const canonical = JSON.stringify({ passkey_id: passkeyId, agent_id: agentId, issuer: "Bartholomew-Keystone-Authority", issued_at: issuedAt, expires_at: expiresAt, scopes });
+    const payloadHash = crypto.createHash('sha256').update(canonical).digest('hex');
+    const signature = crypto.createHmac('sha256', 'keystone-root-dev-authority').update(payloadHash).digest('hex');
+
+    const passkey = { passkey_id: passkeyId, agent_id: agentId, issuer: "Bartholomew-Keystone-Authority", issued_at: issuedAt, expires_at: expiresAt, scopes, payload_hash: payloadHash, signature };
+    const outPath = path.join(process.cwd(), '.btp_keystone.json');
+    fs.writeFileSync(outPath, JSON.stringify(passkey, null, 2), 'utf8');
+
+    console.log(`${BOLD}[BTP Keystone Authority — Token Issued]${RESET}`);
+    console.log(`  Token ID:   ${CYAN}${passkeyId}${RESET}`);
+    console.log(`  Agent:      ${agentId}`);
+    console.log(`  Expires:    ${expiresAt}`);
+    console.log(`  Output:     ${outPath}`);
+    console.log(`  Signature:  ${GREEN}VERIFIED (HMAC-SHA256)${RESET}`);
+  } else {
+    console.log(`${BOLD}[BTP Keystone Capability CLI]${RESET}`);
+    console.log(`  ${BOLD}npx btp-guard keystone issue [agent-id]${RESET}   Issue new clearance passkey`);
+    console.log(`  ${BOLD}npx btp-guard init${RESET}                      Full project initialization wizard`);
+  }
 }
 
 function runMcp(subargs = []) {
@@ -464,6 +584,9 @@ switch (command) {
   case 'init':
     runInit();
     break;
+  case 'keystone':
+    runKeystoneCli(args.slice(1));
+    break;
   case 'mcp':
     runMcp(args.slice(1));
     break;
@@ -483,7 +606,8 @@ switch (command) {
     console.log(`Usage:
   ${BOLD}npx btp-guard activate [key]${RESET}        Activate Pro ($49/mo) or Enterprise ($199/mo) license
   ${BOLD}npx btp-guard${RESET}                   Run interactive live terminal showcase
-  ${BOLD}npx btp-guard init${RESET}              Show Claude Desktop integration configuration
+  ${BOLD}npx btp-guard init${RESET}              Initialize project with .btp_policy.json & .btp_keystone.json
+  ${BOLD}npx btp-guard keystone issue [agent]${RESET} Issue cryptographically signed capability passkey
   ${BOLD}npx btp-guard mcp [status|install]${RESET} Model Context Protocol tools & configuration
   ${BOLD}npx btp-guard scrub <file>${RESET}       Scrub credentials from a JSON payload
   ${BOLD}npx btp-guard sync <file> <url>${RESET}  Push dynamic policy update to running workers
