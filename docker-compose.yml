@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  btp-gateway:
+    image: bartholomew/btp-gateway:5.4.16
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bartholomew-cloud-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
