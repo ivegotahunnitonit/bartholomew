@@ -105,5 +105,10 @@ jobs:
 
       - name: Run Go tests
         run: |
-          cd src/go_services
-          go test ./... -timeout 60s || true
+          if [ -d "packages/sdk_go" ]; then
+            cd packages/sdk_go
+            go test -v ./... -timeout 60s
+          elif [ -d "src/go_verifier" ]; then
+            cd src/go_verifier
+            go test -v ./... -timeout 60s || true
+          fi
