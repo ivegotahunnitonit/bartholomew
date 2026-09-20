@@ -1,0 +1,23 @@
+{
+  "_comment": "BTP Guard MCP Configuration for Cursor, Claude Desktop, and Windsurf",
+  "mcpServers": {
+    "btp-guard": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server"
+      ],
+      "env": {
+        "BTP_ENFORCE_STRICT": "true",
+        "BTP_POLICY_ID": "urn:btp:policy:owasp-agentic-v2026.1",
+        "BTP_AST_GATE_ENABLED": "true"
+      },
+      "description": "Bartholomew Trust Protocol — 13 Active Invariant Security Tools & Sovereign Passports"
+    }
+  },
+  "instructions": {
+    "cursor": "Copy the 'btp-guard' block into your Cursor Settings -> Features -> MCP Servers.",
+    "claude_desktop": "Merge into %APPDATA%/Claude/claude_desktop_config.json (Windows) or ~/Library/Application Support/Claude/claude_desktop_config.json (macOS).",
+    "windsurf": "Merge into ~/.codeium/windsurf/mcp_config.json."
+  }
+}

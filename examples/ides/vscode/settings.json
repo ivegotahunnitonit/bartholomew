@@ -1,0 +1,10 @@
+{
+  "btpGuard.enable": true,
+  "btpGuard.policyId": "urn:btp:policy:vscode-agent-v2026.1",
+  "btpGuard.enforceStrict": true,
+  "btpGuard.astValidationEnabled": true,
+  "btpGuard.auditLedgerPath": "${workspaceFolder}/.btp/audit_ledger.jsonl",
+  "files.exclude": {
+    "**/.btp/private_keys": true
+  }
+}

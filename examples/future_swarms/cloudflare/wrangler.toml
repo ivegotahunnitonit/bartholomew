@@ -1,0 +1,15 @@
+name = "btp-edge-guard"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+BTP_ENVIRONMENT = "production"
+BTP_PROTOCOL_VERSION = "BTP/A2A/3.1"
+BTP_MAX_DRIFT_SECONDS = "300"
+
+# Optional Cloudflare KV Namespace for distributed nonce replay defense
+# Create via: wrangler kv:namespace create BTP_REPLAY_KV
+# kv_namespaces = [
+#   { binding = "BTP_REPLAY_KV", id = "<YOUR_KV_NAMESPACE_ID>" }
+# ]

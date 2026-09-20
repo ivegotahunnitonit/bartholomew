@@ -1,0 +1,9 @@
+# BTP Guard — Windsurf Cascade Invariant Rules
+# Place this file in your project root as .windsurfrules
+
+# Security Invariant Enforcement:
+- Cascade Agent must strictly respect the BTP Security Boundary:
+  1. No unconstrained shell commands (`rm -rf`, `mkfs`, fork bombs).
+  2. No reading of private authentication keys, SSH certificates, or API secrets.
+  3. All database drops, schema truncations, or mass removals require explicit developer confirmation.
+- Use `btp-guard` MCP tools (`btp_verify_execution_receipt`, `btp_verify_agent_passport`) to certify cross-file changes.

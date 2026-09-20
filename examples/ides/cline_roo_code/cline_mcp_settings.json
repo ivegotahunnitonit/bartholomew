@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "btp-guard": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server"
+      ],
+      "env": {
+        "BTP_ENFORCE_STRICT": "true",
+        "BTP_POLICY_ID": "urn:btp:policy:cline-autonomous-agent-v2026.1"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "btp_verify_execution_receipt",
+        "btp_verify_agent_passport",
+        "btp_get_kernel_policy",
+        "btp_discover_agent_peers"
+      ]
+    }
+  }
+}
