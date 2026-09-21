@@ -227,3 +227,100 @@ def test_mcp_get_security_status(mcp_server):
     assert data["protocol"] == "BTP v2.8.0"
     assert "RFC 9591" in data["threshold_quorum"]
 
+
+
+def test_mcp_keystone_passkey_lifecycle(mcp_server):
+    # 1. Issue passkey
+    issue_req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 11,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_issue_keystone_passkey",
+            "arguments": {
+                "agent_id": "test-agent-mcp-01",
+                "ttl_minutes": 120
+            }
+        }
+    })
+    res = json.loads(mcp_server.process_message(issue_req))
+    assert res["result"]["isError"] is False
+    passkey = json.loads(res["result"]["content"][0]["text"])
+    assert passkey["agent_id"] == "test-agent-mcp-01"
+    assert passkey["passkey_id"].startswith("key_")
+    assert len(passkey["signature"]) == 64
+
+    # 2. Verify safe action (in-scope file read)
+    verify_req_safe = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 12,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_verify_keystone_clearance",
+            "arguments": {
+                "passkey": passkey,
+                "action_type": "FILE_READ",
+                "target": "src/main.py"
+            }
+        }
+    })
+    res_safe = json.loads(mcp_server.process_message(verify_req_safe))
+    assert res_safe["result"]["isError"] is False
+    verdict_safe = json.loads(res_safe["result"]["content"][0]["text"])
+    assert verdict_safe["verdict"] == "ALLOW"
+    assert verdict_safe["status"] == "CLEARANCE_GRANTED"
+
+    # 3. Intercept unsafe action (forbidden secret read)
+    verify_req_unsafe = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 13,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_verify_keystone_clearance",
+            "arguments": {
+                "passkey": passkey,
+                "action_type": "FILE_READ",
+                "target": ".env"
+            }
+        }
+    })
+    res_unsafe = json.loads(mcp_server.process_message(verify_req_unsafe))
+    assert res_unsafe["result"]["isError"] is True
+    verdict_unsafe = json.loads(res_unsafe["result"]["content"][0]["text"])
+    assert verdict_unsafe["verdict"] == "DENY"
+
+    # 4. Revoke passkey
+    revoke_req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 14,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_revoke_keystone_passkey",
+            "arguments": {
+                "passkey_id": passkey["passkey_id"]
+            }
+        }
+    })
+    res_revoke = json.loads(mcp_server.process_message(revoke_req))
+    assert res_revoke["result"]["isError"] is False
+    revoke_data = json.loads(res_revoke["result"]["content"][0]["text"])
+    assert revoke_data["revoked"] is True
+
+    # 5. Verify revoked passkey is immediately denied
+    verify_req_revoked = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 15,
+        "method": "tools/call",
+        "params": {
+            "name": "btp_verify_keystone_clearance",
+            "arguments": {
+                "passkey": passkey,
+                "action_type": "FILE_READ",
+                "target": "src/main.py"
+            }
+        }
+    })
+    res_revoked = json.loads(mcp_server.process_message(verify_req_revoked))
+    assert res_revoked["result"]["isError"] is True
+    revoked_verdict = json.loads(res_revoked["result"]["content"][0]["text"])
+    assert revoked_verdict["status"] == "PASSKEY_REVOKED"

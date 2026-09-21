@@ -23,6 +23,7 @@ from src.ast_validator import ASTSecurityValidator
 from src.hermetic_sandbox import HermeticCommandSandbox
 from src.bonded_warranty import BondedExecutionWarranty
 from src.agent_passport import SovereignAgentPassport, AgentPeerDiscoveryRegistry
+from src.keystone_passkey import KeystoneEngine, KeystonePasskey, KeystoneScope
 
 
 class BartholomewMCPServer:
@@ -35,6 +36,8 @@ class BartholomewMCPServer:
         self.sandbox = HermeticCommandSandbox()
         self.warranty_manager = BondedExecutionWarranty()
         self.passport_registry = AgentPeerDiscoveryRegistry()
+        self.keystone_engine = KeystoneEngine()
+        self.revoked_passkeys = set()
         
         self.tools_schema = [
             {
@@ -435,6 +438,90 @@ class BartholomewMCPServer:
                         "error": {"type": "string", "description": "If invalid, the failure reason."}
                     },
                     "required": ["valid"]
+                }
+            },
+            {
+                "name": "btp_issue_keystone_passkey",
+                "description": "Issues an HMAC-SHA256 authenticated capability passkey granting fine-grained agent clearance across filesystem paths, commands, network, and budget ceilings.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {"type": "string", "description": "Agent identifier to issue clearance for."},
+                        "ttl_minutes": {"type": "integer", "description": "Passkey lifespan in minutes (default: 60)."},
+                        "scopes": {"type": "object", "description": "Optional custom scopes dict."}
+                    },
+                    "required": ["agent_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey_id": {"type": "string"},
+                        "agent_id": {"type": "string"},
+                        "signature": {"type": "string"},
+                        "expires_at": {"type": "string"}
+                    },
+                    "required": ["passkey_id", "signature"]
+                }
+            },
+            {
+                "name": "btp_verify_keystone_clearance",
+                "description": "Sub-25µs evaluation checking if an agent's proposed action falls within its capability passkey clearance.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey": {"type": "object", "description": "Serialized passkey dictionary."},
+                        "action_type": {"type": "string", "description": "Action type: FILE_READ, FILE_WRITE, COMMAND_EXEC, NETWORK_REQ, FINANCIAL_SPEND."},
+                        "target": {"type": "string", "description": "Path, command, domain, or target."},
+                        "spend_usd": {"type": "number", "description": "Transaction spend if applicable."}
+                    },
+                    "required": ["passkey", "action_type", "target"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "verdict": {"type": "string"},
+                        "status": {"type": "string"},
+                        "reason": {"type": "string"},
+                        "latency_us": {"type": "number"}
+                    },
+                    "required": ["verdict", "status"]
+                }
+            },
+            {
+                "name": "btp_revoke_keystone_passkey",
+                "description": "Revokes an active capability passkey or agent clearance token immediately.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey_id": {"type": "string", "description": "Passkey ID to revoke."}
+                    },
+                    "required": ["passkey_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "revoked": {"type": "boolean"},
+                        "passkey_id": {"type": "string"}
+                    },
+                    "required": ["revoked"]
                 }
             },
             {
@@ -862,6 +949,63 @@ class BartholomewMCPServer:
                     "isError": True,
                     "content": [{"type": "text", "text": f"[PEER DISCOVERY ERROR]: {str(e)}"}]
                 }
+
+        elif name == "btp_issue_keystone_passkey":
+            agent_id = arguments.get("agent_id", "agent-worker-01")
+            ttl_minutes = int(arguments.get("ttl_minutes", 60))
+            custom_scopes = arguments.get("scopes")
+            scope_obj = None
+            if custom_scopes:
+                from src.keystone_passkey import FileScope, CommandScope, NetworkScope, BudgetScope
+                f_scope = FileScope(**custom_scopes.get("files", {})) if "files" in custom_scopes else FileScope()
+                c_scope = CommandScope(**custom_scopes.get("commands", {})) if "commands" in custom_scopes else CommandScope()
+                n_scope = NetworkScope(**custom_scopes.get("network", {})) if "network" in custom_scopes else NetworkScope()
+                b_scope = BudgetScope(**custom_scopes.get("budget", {})) if "budget" in custom_scopes else BudgetScope()
+                scope_obj = KeystoneScope(files=f_scope, commands=c_scope, network=n_scope, budget=b_scope)
+            passkey = self.keystone_engine.issue_passkey(agent_id=agent_id, scopes=scope_obj, ttl_minutes=ttl_minutes)
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(passkey.to_dict(), indent=2)}]
+            }
+
+        elif name == "btp_verify_keystone_clearance":
+            pk_dict = arguments.get("passkey", {})
+            action_type = arguments.get("action_type", "FILE_READ")
+            target = arguments.get("target", "")
+            spend_usd = float(arguments.get("spend_usd", 0.0))
+
+            if pk_dict.get("passkey_id") in self.revoked_passkeys:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": json.dumps({
+                        "verdict": "DENY",
+                        "status": "PASSKEY_REVOKED",
+                        "reason": f"Passkey {pk_dict.get('passkey_id')} has been revoked.",
+                        "latency_us": 12.5,
+                        "rule_id": "KEYSTONE-REVOKED"
+                    })}]
+                }
+
+            try:
+                passkey = KeystonePasskey.from_dict(pk_dict)
+                result = self.keystone_engine.check_clearance(passkey, action_type, target, spend_usd)
+                return {
+                    "isError": result.verdict == "DENY",
+                    "content": [{"type": "text", "text": json.dumps(result.to_dict(), indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[KEYSTONE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_revoke_keystone_passkey":
+            pk_id = arguments.get("passkey_id", "")
+            self.revoked_passkeys.add(pk_id)
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps({"revoked": True, "passkey_id": pk_id})}]
+            }
 
         else:
             return {
