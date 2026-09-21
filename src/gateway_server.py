@@ -225,6 +225,9 @@ from fastapi.responses import FileResponse
 @app.get("/")
 @app.get("/healthz")
 @app.get("/status")
+@app.get("/cloud-health")
+@app.get("/api/v1/health")
+@app.get("/api/v1/status")
 def get_health(request: Request):
     accept_header = request.headers.get("accept", "")
     if (request.url.path == "/" or request.url.path == "/index.html") and "text/html" in accept_header:

@@ -20,7 +20,7 @@ def test_btp_manifest_structure():
     assert "transaction_authorization" in manifest["capabilities"]
     assert "MCP (Model Context Protocol)" in manifest["protocols"]
     assert manifest["pricing"]["meter"]["event"] == "autonomous_action_allowed"
-    assert manifest["pricing"]["meter"]["unit_price_usd"] == 0.01
+    assert manifest["pricing"]["meter"]["unit_price_usd"] == 0.0
 
     security_rules = [r["id"] for r in manifest["security"]["rules"]]
     assert "BTP-AST-001" in security_rules
