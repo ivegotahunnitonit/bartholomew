@@ -33,6 +33,7 @@ from src.trust_protocol import BartholomewTrustAuthority
 from src.marketplace.sla_contract import ZKTaskCompletionProof
 from src.daemon.m2m_wire_daemon import GLOBAL_M2M_LEDGER
 from src.btp_manifest import generate_manifest
+from src.btp_guard.stripe_bridge import StripeMeterBridge
 
 logger = logging.getLogger("btp.cloud_engine")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -158,6 +159,15 @@ def hashlib_sha256(text: str) -> str:
 
 db = TelemetryStore()
 
+# Stripe Metered Usage Engine
+_STRIPE_KEY = os.getenv("BTP_STRIPE_API_KEY") or os.getenv("STRIPE_SECRET_KEY", "")
+_STRIPE_METER = os.getenv("BTP_STRIPE_METER_NAME", "autonomous_tool_evaluations")
+try:
+    _STRIPE_CUSTOMERS = json.loads(os.getenv("BTP_STRIPE_CUSTOMER_MAP", "{}"))
+except Exception:
+    _STRIPE_CUSTOMERS = {}
+stripe_meter_bridge = StripeMeterBridge(api_key=_STRIPE_KEY, meter_name=_STRIPE_METER, customer_map=_STRIPE_CUSTOMERS) if _STRIPE_KEY else None
+
 
 # ---------------------------------------------------------------------------
 # Request Models
@@ -230,6 +240,8 @@ async def ingest_telemetry_batch(payload: BatchIngestPayload, background_tasks: 
     for ev in payload.events:
         data = ev.model_dump() if hasattr(ev, "model_dump") else ev.dict()
         db.record_event(data)
+        if stripe_meter_bridge and data.get("verdict") == "ALLOW":
+            background_tasks.add_task(stripe_meter_bridge.report_usage, data)
 
     return {
         "status": "accepted",
@@ -237,6 +249,25 @@ async def ingest_telemetry_batch(payload: BatchIngestPayload, background_tasks: 
         "server_time": time.time()
     }
 
+
+
+@app.get("/api/v1/billing/meter/status")
+@app.post("/api/v1/billing/meter/sync")
+async def sync_stripe_meter_status():
+    """Validates Stripe meter bridge status and active meter events."""
+    if not stripe_meter_bridge:
+        return {
+            "status": "unconfigured",
+            "reason": "STRIPE_SECRET_KEY not supplied in cloud environment",
+            "meter_name": _STRIPE_METER
+        }
+    cfg = stripe_meter_bridge.validate_configuration("tenant-demo")
+    return {
+        "status": "active",
+        "configuration": cfg,
+        "active_subscription": "sub_1UG6CWDwLfE70w9SrtoYbes8",
+        "meter_name": _STRIPE_METER
+    }
 
 @app.get("/api/v1/telemetry/events")
 async def get_telemetry_events(

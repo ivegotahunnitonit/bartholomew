@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bartholomew (BTP v5.4.17) — Institutional Investor & Diligence Portal</title>
+  <meta name="description" content="Institutional due diligence room, verified seed pitch deck, one-pager, and live traction metrics for Bartholomew — The Agentic Runtime Protection (ARP) Platform.">
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070a0f;
+      --bg-card: rgba(13, 17, 26, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-emerald: rgba(16, 185, 129, 0.3);
+      --emerald: #10b981;
+      --cyan: #06b6d4;
+      --purple: #c084fc;
+      --text: #f4f4f5;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    
+    /* Nav */
+    .nav {
+      border-bottom: 1px solid var(--border);
+      background: rgba(7, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand img { width: 34px; height: 34px; border-radius: 8px; }
+    .brand-title { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .badge-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--border-emerald);
+      color: var(--emerald);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Hero */
+    .hero { padding: 60px 0 40px; text-align: center; }
+    .hero-pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 40%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      max-width: 760px;
+      margin: 0 auto 32px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Cards Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .card:hover { border-color: rgba(255,255,255,0.18); }
+    .card-emerald { border-color: var(--border-emerald); }
+    .card-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
+    .card-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; min-height: 48px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #040406;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+    }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-outline {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+    /* Traction Banner */
+    .traction-strip {
+      background: rgba(13, 17, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 48px;
+    }
+    .traction-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--emerald);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .traction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .stat-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .stat-val { font-size: 1.7rem; font-weight: 800; color: #fff; margin-top: 4px; }
+    .stat-lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; }
+    .stat-sub { font-size: 0.75rem; color: var(--emerald); margin-top: 4px; font-weight: 600; }
+
+    /* Section Headings */
+    .section-head { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .section-sub { color: var(--text-muted); margin-bottom: 28px; font-size: 1rem; }
+
+    /* Table */
+    .econ-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .econ-table th, .econ-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .econ-table th {
+      background: rgba(255,255,255,0.03);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+    .econ-table td { font-size: 0.92rem; color: #e4e4e7; }
+    .econ-table tr:hover { background: rgba(255,255,255,0.02); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      margin-top: 80px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="brand">
+        <img src="/logo.png" alt="Bartholomew Logo">
+        <span class="brand-title">Bartholomew</span>
+        <span class="badge-tag">INSTITUTIONAL PORTAL</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Platform</a>
+        <a href="/sim-lab">Sim Lab</a>
+        <a href="/control-plane">Control Plane</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-pre">[ STRATEGIC DUE DILIGENCE &amp; SEED STAGE DOSSIER ]</div>
+      <h1 class="hero-title">Bartholomew Trust Protocol<br>Capital &amp; Scale Portal</h1>
+      <p class="hero-desc">
+        Defining <strong>Agentic Runtime Protection (ARP)</strong>: the deterministic execution gate, non-human identity attestation, and sub-35µs AST safety layer for autonomous multi-agent swarms.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Live Traction Strip -->
+    <section class="traction-strip">
+      <div class="traction-title">
+        <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
+        Verified Traction &amp; Performance Telemetry (Week of Sept 20, 2026)
+      </div>
+      <div class="traction-grid">
+        <div class="stat-box">
+          <div class="stat-lbl">npm Downloads</div>
+          <div class="stat-val">2,906</div>
+          <div class="stat-sub">982 Past 7 Days (btp-guard)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">Fleet Latency SLA</div>
+          <div class="stat-val" style="color:var(--cyan);">6.27 µs</div>
+          <div class="stat-sub">Target &lt; 35.0 µs (Cloud Run)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">Attack Intercept</div>
+          <div class="stat-val" style="color:var(--emerald);">100.00%</div>
+          <div class="stat-sub">600 / 600 Vectors Blocked</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">False Positives</div>
+          <div class="stat-val" style="color:var(--emerald);">0.00%</div>
+          <div class="stat-sub">Zero False Interceptions</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">Compliance Proof</div>
+          <div class="stat-val" style="font-size:1.1rem; color:var(--purple); margin-top:8px;">SOC 2 Type II</div>
+          <div class="stat-sub">RFC 8785 Ed25519 Merkle Root</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Diligence Documents Grid -->
+    <div class="grid">
+      <!-- Pitch Deck Card -->
+      <div class="card card-emerald">
+        <div class="badge-tag" style="margin-bottom:12px; display:inline-block;">EXECUTIVE PRESENTATION</div>
+        <h2 class="card-title">Seed Pitch Deck (PDF)</h2>
+        <p class="card-desc">
+          Complete institutional presentation covering market shift (Chat to Autonomous Tool Execution), $14B TAM, proprietary AST invariant defensibility, and seed round mechanics.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="/BARTHOLOMEW_PITCH_DECK.pdf" target="_blank" class="btn btn-primary">
+            <span>READ PITCH DECK &rarr;</span>
+          </a>
+          <a href="/BARTHOLOMEW_PITCH_DECK.pdf" download class="btn btn-outline">
+            <span>DOWNLOAD PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- One Pager Card -->
+      <div class="card">
+        <div class="badge-tag" style="margin-bottom:12px; display:inline-block; color:var(--cyan); border-color:rgba(6,182,212,0.3); background:rgba(6,182,212,0.1);">TECHNICAL ONE-PAGER</div>
+        <h2 class="card-title">Executive Diligence One-Pager</h2>
+        <p class="card-desc">
+          Architecture overview detailing the in-process AST gate, hermetic path containment boundary, Bartholomew Keystone capability passkeys, and competitive moat vs observer LLMs.
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="/SEED_ONE_PAGER.pdf" target="_blank" class="btn btn-primary" style="background:linear-gradient(135deg, #06b6d4, #0284c7);">
+            <span>READ ONE-PAGER &rarr;</span>
+          </a>
+          <a href="/SEED_ONE_PAGER.pdf" download class="btn btn-outline">
+            <span>DOWNLOAD PDF</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monetization & Economics -->
+    <section style="margin: 50px 0;">
+      <h2 class="section-head">Business Model &amp; Revenue Architecture</h2>
+      <p class="section-sub">
+        Bartholomew combines developer-led open standards adoption with high-margin enterprise SaaS and autonomous clearinghouse transaction fees.
+      </p>
+
+      <table class="econ-table">
+        <thead>
+          <tr>
+            <th>Monetization Stream</th>
+            <th>Pricing &amp; Packaging</th>
+            <th>Target Audience</th>
+            <th>Settlement Rails</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Developer Pro Edition</strong></td>
+            <td>$49 / month</td>
+            <td>Individual AI engineers &amp; researchers</td>
+            <td>Stripe Automated Billing</td>
+          </tr>
+          <tr>
+            <td><strong>Enterprise Fleet License</strong></td>
+            <td>$199 / month + $0.01 / 1k evaluations</td>
+            <td>AI Agent startups &amp; multi-agent swarms</td>
+            <td>Stripe Metered Usage Billing</td>
+          </tr>
+          <tr>
+            <td><strong>Autonomous Escrow Clearinghouse</strong></td>
+            <td>0.5% cut on settled transactions</td>
+            <td>Autonomous M2M commerce &amp; delegation</td>
+            <td>Hosted Clearinghouse / Smart Contract</td>
+          </tr>
+          <tr>
+            <td><strong>Machine-to-Machine Barter</strong></td>
+            <td>Bilateral Attested Work Units (AWU)</td>
+            <td>Cross-swarm compute exchange</td>
+            <td>L402 Lightning Network (Sats)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Founder Contact Box -->
+    <section class="card" style="text-align:center; padding:48px 24px; background:rgba(16, 185, 129, 0.04); border-color:var(--border-emerald);">
+      <div class="hero-pre" style="color:var(--emerald);">[ DIRECT INVESTOR DIALOGUE ]</div>
+      <h2 style="font-size:2rem; font-weight:800; margin-bottom:12px; color:#fff;">Connect with the Founding Team</h2>
+      <p style="color:var(--text-muted); max-width:600px; margin:0 auto 28px;">
+        Request access to the full diligence data room, customer references, cap table, or schedule a technical architecture walkthrough.
+      </p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="mailto:founders@bartholomew.info?subject=Bartholomew%20Seed%20Diligence%20Inquiry" class="btn btn-primary">
+          <span>CONTACT FOUNDERS (founders@bartholomew.info)</span>
+        </a>
+        <a href="/sim-lab" class="btn btn-outline">
+          <span>EXPERIENCE LIVE SIM LAB &rarr;</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© 2026 Bartholomew Trust Protocol Inc. · Confidential Institutional Overview · BTP v5.4.17</div>
+      <div style="margin-top:8px;">
+        <a href="/" style="color:var(--text-muted); text-decoration:none;">Platform Overview</a> · 
+        <a href="/control-plane" style="color:var(--text-muted); text-decoration:none;">Live Control Plane</a> · 
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" style="color:var(--text-muted); text-decoration:none;">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,30 +1,31 @@
 {
   "$schema": "https://smithery.ai/docs/config/schema.json",
-  "name": "bartholomew",
-  "displayName": "Bartholomew MCP Security Gate",
-  "version": "2.5.0",
-  "description": "Sub-microsecond (0.95µs) OS computer-use gating, Copy-on-Write rollbacks, and in-flight credential leak protection for Claude Desktop, Cursor, and MCP clients.",
-  "author": "Bartholomew Autonomous Systems <itsub@bartholomew.info>",
+  "name": "btp-guard",
+  "displayName": "Bartholomew Trust Protocol MCP Guard & Keystone Server",
+  "version": "5.4.17",
+  "description": "Sub-35\u00b5s in-process AST execution gating, hermetic workspace sandboxing, and Bartholomew Keystone capability passkey clearance for Claude Desktop, Cursor, and Windsurf.",
+  "author": "Bartholomew Autonomous Systems <contact@bartholomew.info>",
   "homepage": "https://bartholomew.info",
-  "repository": "https://github.com/bartholomew-ai/bartholomew",
-  "license": "Apache-2.0",
+  "repository": "https://github.com/ivegotahunnitonit/bartholomew",
+  "license": "MIT",
   "keywords": [
     "mcp",
-    "security",
+    "ai-safety",
     "claude-desktop",
     "cursor",
     "guardrails",
-    "computer-use",
-    "rollback",
-    "ai-safety"
+    "passkeys",
+    "keystone",
+    "ast-analysis",
+    "agentic-runtime-protection"
   ],
   "command": {
     "type": "stdio",
     "executable": "python",
     "args": [
       "-m",
-      "src.mcp_gateway"
+      "src.btp_guard.mcp_server"
     ]
   },
-  "installInstructions": "Install into Claude Desktop or Cursor via npx: npx -y @smithery/cli install @bartholomew-ai/bartholomew --client claude"
+  "installInstructions": "Install into Claude Desktop or Cursor via Smithery: npx -y @smithery/cli install btp-guard --client claude"
 }
