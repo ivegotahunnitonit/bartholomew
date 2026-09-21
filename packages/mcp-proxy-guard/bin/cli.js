@@ -101,15 +101,9 @@ function runActivate(key) {
     return;
   }
 
-  console.log(`Upgrade your MCP server with certified security:`);
-  console.log(`  [1] Pro Tier ($49/mo)       - Unlimited calls & dynamic cloud policy sync`);
-  console.log(`      \x1b[36m${STRIPE_PRO_URL}\x1b[0m`);
-  console.log(`  [2] Enterprise Tier ($199/mo) - SOC 2 Type II evidence & SIEM team audit logs`);
-  console.log(`      \x1b[36m${STRIPE_ENTERPRISE_URL}\x1b[0m`);
-  console.log(`  [3] Official Storefront:`);
-  console.log(`      \x1b[36m${STORE_URL}\x1b[0m\n`);
-  console.log(`To activate your key, run:`);
-  console.log(`  \x1b[1mnpx mcp-proxy-guard activate <your-license-key>\x1b[0m\n`);
+  console.log(`\x1b[32m✓ MCP-PROXY-GUARD Sovereign Enterprise Active\x1b[0m`);
+  console.log(`  All credentials scrubbed in-flight and destructive commands vetoed.`);
+  console.log(`  Portal: https://bartholomew.info\n`);
 }
 
 function runProxy(targetArgs) {

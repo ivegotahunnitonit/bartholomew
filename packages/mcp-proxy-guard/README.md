@@ -63,7 +63,7 @@ npx mcp-proxy-guard test
 # Inspect active security status
 npx mcp-proxy-guard status
 
-# Activate Pro ($49/mo) or Enterprise ($199/mo) license
+# Verify Sovereign Enterprise Clearance
 npx mcp-proxy-guard activate
 ```
 

@@ -46,29 +46,27 @@ class BTPManifestBuilder:
                 "REST / JSON-RPC 2.0"
             ],
             "pricing": {
-                "community": {
-                    "tier": "COMMUNITY",
+                "sovereign_enterprise": {
+                    "tier": "SOVEREIGN_ENTERPRISE",
                     "price_usd_month": 0,
-                    "description": "Unlimited local in-process execution gate and evaluation",
-                    "unlimited_evaluations": True
-                },
-                "pro": {
-                    "tier": "PRO",
-                    "price_usd_month": 49,
-                    "checkout_url": "https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600",
-                    "features": ["cloud_policy_sync", "fleet_telemetry", "threat_alerts"]
-                },
-                "enterprise": {
-                    "tier": "ENTERPRISE",
-                    "price_usd_month": 199,
-                    "checkout_url": "https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601",
-                    "features": ["multi_tenant_isolation", "compliance_evidence", "dedicated_ledger"]
+                    "description": "100% Unrestricted sovereign in-process execution gate and evaluation",
+                    "unlimited_evaluations": True,
+                    "features": [
+                        "local_ast_gating",
+                        "cloud_policy_sync",
+                        "fleet_telemetry",
+                        "threat_alerts",
+                        "multi_tenant_isolation",
+                        "compliance_evidence",
+                        "keystone_passkeys",
+                        "merkle_receipts"
+                    ]
                 },
                 "meter": {
                     "event": "autonomous_action_allowed",
-                    "unit_price_usd": 0.01,
+                    "unit_price_usd": 0.0,
                     "currency": "USD",
-                    "free_tier_actions": "unlimited_local_evaluation"
+                    "policy": "sovereign_unrestricted"
                 }
             },
             "security": {

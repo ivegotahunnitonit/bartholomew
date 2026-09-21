@@ -74,5 +74,5 @@ export function loadLicense() {
       }
     } catch {}
   }
-  return { licensed: false, tier: 'COMMUNITY', status: 'FREE' };
+  return { licensed: true, tier: 'SOVEREIGN_ENTERPRISE', status: 'ACTIVE' };
 }

@@ -55,7 +55,7 @@ export function activate(context: ExtensionContext) {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'bartholomew.viewStatus';
   statusBarItem.text = `$(shield) BTP: ACTIVE (<25µs)`;
-  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v1.0.0) - Free Tier | Click to View Status or Upgrade to Pro ($49/mo)`;
+  statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4) - Sovereign Enterprise Active (<25µs)`;
   context.subscriptions.push(statusBarItem);
   statusBarItem.show();
 
@@ -98,13 +98,11 @@ export function activate(context: ExtensionContext) {
     const isConfigured = fs.existsSync(btpDir);
 
     const message = isConfigured
-      ? `Bartholomew Autonomous AI Guard (BTP v1.0.0)\n\n• Status: ACTIVE (Community Edition)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Claude/Cursor MCP Server: REGISTERED\n• L402 Lightning Settlements: READY\n\nNeed Team Cloud Telemetry, Slack Alerts, or SOC 2 Dossiers?`
-      : `Bartholomew BTP v1.0.0 is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
+      ? `Bartholomew Autonomous AI Guard (BTP v5.4)\n\n• Status: ACTIVE (Sovereign Enterprise Unrestricted)\n• In-Process AST Gating: Sub-25 µs\n• Merkle Receipt Ledger: ENABLED\n• Keystone Capability Passkeys: ARMED\n• Claude/Cursor MCP Server: REGISTERED\n• L402 Lightning Settlements: READY`
+      : `Bartholomew BTP is not yet initialized in this workspace.\n\nRun 'btp-guard init' in terminal to generate keys & policy.`;
 
-    vscode.window.showInformationMessage(message, 'Upgrade to Pro ($49/mo)', 'Open Cloud Vault', 'Validate Policy').then((selection: any) => {
-      if (selection === 'Upgrade to Pro ($49/mo)') {
-        vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
-      } else if (selection === 'Open Cloud Vault') {
+    vscode.window.showInformationMessage(message, 'Open Cloud Vault', 'Validate Policy').then((selection: any) => {
+      if (selection === 'Open Cloud Vault') {
         vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info/cloud'));
       } else if (selection === 'Validate Policy') {
         vscode.commands.executeCommand('bartholomew.validatePolicy');
@@ -114,14 +112,14 @@ export function activate(context: ExtensionContext) {
 
   const upgradeProCmd = vscode.commands.registerCommand('bartholomew.upgradePro', () => {
     vscode.window.showInformationMessage(
-      'Bartholomew Pro ($49/mo): Unlock real-time Cloud Telemetry, team CISO dashboard, and Slack/Discord security webhooks.',
-      'Subscribe Now',
-      'View Plans'
+      'Bartholomew Sovereign Enterprise: All invariants, AST safety gates, Keystone capability passkeys, and multi-agent consensus are 100% unlocked.',
+      'Open Cloud Vault',
+      'View Docs'
     ).then((selection: any) => {
-      if (selection === 'Subscribe Now') {
-        vscode.env.openExternal(vscode.Uri.parse('https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600'));
-      } else if (selection === 'View Plans') {
-        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info#pricing'));
+      if (selection === 'Open Cloud Vault') {
+        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info/cloud'));
+      } else if (selection === 'View Docs') {
+        vscode.env.openExternal(vscode.Uri.parse('https://bartholomew.info'));
       }
     });
   });

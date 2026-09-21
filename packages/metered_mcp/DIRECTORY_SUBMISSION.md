@@ -6,7 +6,7 @@
 - **Display Name**: Bartholomew AI Security Gate
 - **Endpoint**: `https://bartholomew-metered-mcp-322603900775.us-central1.run.app/mcp/v1`
 - **Protocol**: MCP 2024-11-05 / JSON-RPC 2.0
-- **Pricing**: $0.005 per tool evaluation call (L402 metered) · Pro flat $49/mo · Enterprise $199/mo
+- **Pricing**: $0.005 per tool evaluation call (L402 metered) · Open-core sovereign runtime
 
 ---
 
@@ -54,8 +54,8 @@ When your autonomous agent tries to `DROP TABLE`, run `rm -rf /`, or leak an API
 | Tier | Price | Benefit |
 | ---- | ----- | ------- |
 | **Pay-Per-Call** | $0.005 / check | No commitment, pay via L402 |
-| **Pro** | $49/mo | Unlimited checks + Cloud Dashboard + SOC 2 export |
-| **Enterprise Fleet** | $199/mo | Multi-agent fleet telemetry + compliance packs + priority support |
+| **Sovereign Core** | Free / Open | Unlimited checks + Cloud Dashboard + SOC 2 export |
+| **Dedicated Clusters** | Custom / VPC | Air-gapped enterprise clusters and dedicated CISO root authority |
 
 **Subscribe**: [https://bartholomew.info/store/](https://bartholomew.info/store/)
 

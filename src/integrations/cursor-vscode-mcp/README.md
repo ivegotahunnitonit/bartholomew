@@ -29,13 +29,12 @@ Bartholomew Guard is an in-process safety seam for AI developer agents (Cursor C
 
 ---
 
-## 💼 Team Tier & Bartholomew Cloud ($15/seat or $49/$199 Tier)
+## 💼 Sovereign Enterprise Architecture
 
-While the core local execution firewall is free for individual open-source development:
-
-- **Team Tier ($15/seat)**: Centrally lock agent permissions across your entire developer team. Ensure no developer agent can accidentally wipe a database or exfiltrate production secrets.
-- **Pro Tier ($49/mo)**: Unlimited multi-agent cloud telemetry, SIEM streaming, and Merkle audit trails.
-- **Enterprise Fleet ($199/mo)**: Full fleet management, SLA warranties, custom AST invariants, and automated SOC 2 Type II audit report generation.
+Bartholomew provides 100% unrestricted sovereign execution gating for developer agents:
+- **Zero Paywalls**: AST gating, secret scrubbing, and local Merkle receipts are fully unlocked.
+- **Keystone Capability Passkeys**: Ephemeral cryptographically signed capability tokens.
+- **SOC 2 Type II Dossiers**: Machine-verifiable audit proofs out of the box.
 
 👉 **Get Your Cloud API Key**: [https://bartholomew.info/cloud](https://bartholomew.info/cloud)  
 👉 **Pricing & Subscriptions**: [https://bartholomew.info/store/](https://bartholomew.info/store/)

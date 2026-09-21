@@ -38,7 +38,7 @@
       },
       {
         "command": "bartholomew.upgradePro",
-        "title": "Bartholomew: Upgrade to Pro (Cloud Telemetry & Slack Alerts)",
+        "title": "Bartholomew: View Sovereign Security Status & Telemetry",
         "icon": "$(zap)"
       },
       {

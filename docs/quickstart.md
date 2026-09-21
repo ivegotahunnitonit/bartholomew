@@ -112,8 +112,8 @@ Test preset attacks (`rm -rf`, `DROP TABLE`, credential leak) live in your brows
 | Tier | Price | Best For | What You Get |
 | :--- | :--- | :--- | :--- |
 | **Builder / OSS** | **$0** (Free Forever) | Indie builders & solo devs | Unlimited local evals, in-memory AST engine, IDE rules |
-| **Pro Startup** | **$49 / month** | Startups & lean teams | 1M evals/mo, real-time secret scrubber, runaway spend caps, Slack threat alerts |
+| **Sovereign Enterprise** | **Open Core** | Full multi-agent swarms | Unlimited evals, real-time secret scrubber, spend caps, Keystone passkeys |
 | **Team Fleet** | **$199 / month** | Scaling teams & agencies | Multi-tenant workspaces, SOC 2 Type II audit packs, dedicated CISO ledger |
 
-* Direct Checkout: [Subscribe to Pro ($49/mo)](https://buy.stripe.com/fZu28rbNz5TYcmAddK9R600) &bull; [Subscribe to Team Fleet ($199/mo)](https://buy.stripe.com/fZu14ng3PgyC9ao2z69R601)
+* Runtime Activation: Run `btp-guard activate` to verify sovereign clearance.
 * Web Portal: [https://bartholomew.info](https://bartholomew.info)

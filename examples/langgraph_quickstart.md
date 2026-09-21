@@ -63,5 +63,5 @@ Or test attacks live in your browser:
 ## Pricing for Startups & Small Teams
 
 - **Core Engine**: 100% Free & Open-Source (Apache 2.0).
-- **Pro Tier**: $49/month for growing startups needing team metrics and cloud telemetry.
+- **Sovereign Enterprise**: Unrestricted access to cloud telemetry, AST gating, and Keystone passkeys.
 - **Fleet Tier**: $199/month for teams needing multi-agent cluster synchronization.
