@@ -1,0 +1,54 @@
+version: "3.8"
+
+# ==============================================================================
+# Bartholomew Trust Protocol (BTP v5.4) - NVIDIA NIM Microservice Stack
+# Turnkey GPU-accelerated NIM container deployment with BTP Runtime Protection
+# ==============================================================================
+
+services:
+  nvidia-nim-llm:
+    image: nvcr.io/nim/meta/llama-3.1-8b-instruct:latest
+    container_name: btp-nvidia-nim-8b
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY:?NGC_API_KEY required from NVIDIA Inception / NGC}
+      - NIM_CACHE_PATH=/opt/nim/.cache
+      - NIM_MAX_NUM_SEQS=256
+      - NIM_HTTP_PORT=8000
+    volumes:
+      - ./nim_cache:/opt/nim/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  btp-nim-guard-proxy:
+    image: python:3.11-slim
+    container_name: btp-nim-guard-proxy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NIM_BASE_URL=http://nvidia-nim-llm:8000/v1
+      - BTP_ENFORCE_KEYSTONE=true
+      - BTP_SPEND_CAP_USD=250.0
+    depends_on:
+      nvidia-nim-llm:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+      - ./pyproject.toml:/app/pyproject.toml
+    working_dir: /app
+    command: >
+      bash -c "pip install -e . && python -m uvicorn src.integrations.nvidia_nim_proxy:app --host 0.0.0.0 --port 8080"
