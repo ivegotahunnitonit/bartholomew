@@ -1,8 +1,8 @@
 {
   "name": "bartholomew-keystone",
-  "displayName": "Bartholomew Keystone — Agent Capability Passkey",
+  "displayName": "Bartholomew Keystone \u2014 Agent Capability Passkey",
   "description": "Cryptographically signed clearance tokens granting autonomous AI agents scoped access across IDEs, programs, and web searches.",
-  "version": "1.0.0",
+  "version": "5.4.18",
   "publisher": "Bartholomew",
   "icon": "icon.png",
   "license": "Apache-2.0",
@@ -46,12 +46,19 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "build": "tsc -p ./"
+    "compile": "node ../vscode-extension/node_modules/typescript/bin/tsc -p ./",
+    "build": "node ../vscode-extension/node_modules/typescript/bin/tsc -p ./"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.80.0",
     "typescript": "^5.3.0"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bartholomew-ai/bartholomew.git"
   }
 }

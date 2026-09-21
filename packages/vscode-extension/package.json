@@ -2,7 +2,7 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Autonomous AI Guard",
   "description": "Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
-  "version": "1.0.0",
+  "version": "5.4.18",
   "publisher": "Bartholomew",
   "icon": "icon.png",
   "license": "Apache-2.0",
@@ -30,20 +30,43 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
+        "commands": [
       {
         "command": "bartholomew.viewStatus",
         "title": "Bartholomew: View Security Status & Trust Roots",
         "icon": "$(shield)"
       },
       {
-        "command": "bartholomew.upgradePro",
-        "title": "Bartholomew: View Sovereign Security Status & Telemetry",
-        "icon": "$(zap)"
+        "command": "bartholomew.issueKeystonePasskey",
+        "title": "Keystone: Issue Agent Capability Passkey",
+        "icon": "$(key)"
+      },
+      {
+        "command": "bartholomew.inspectKeystoneClearance",
+        "title": "Keystone: Inspect Active Agent Clearance",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "bartholomew.revokeKeystonePasskey",
+        "title": "Keystone: Revoke Current Agent Passkey",
+        "icon": "$(close)"
+      },
+      {
+        "command": "bartholomew.validateKeystoneAction",
+        "title": "Keystone: Validate Agent Action against Passkey"
+      },
+      {
+        "command": "bartholomew.runSwarmBenchmark",
+        "title": "Bartholomew: Run Swarm Stress-Benchmark (100 Agents)",
+        "icon": "$(pulse)"
       },
       {
         "command": "bartholomew.openDashboard",
         "title": "Bartholomew: Open Visual Policy Editor"
+      },
+      {
+        "command": "bartholomew.openTelemetry",
+        "title": "Bartholomew: Open Live Swarm Telemetry Vault"
       },
       {
         "command": "bartholomew.validatePolicy",
@@ -59,7 +82,7 @@
       },
       {
         "command": "bartholomew.installMcp",
-        "title": "Bartholomew: Install MCP Server"
+        "title": "Bartholomew: Install MCP Server (Claude & Cursor)"
       }
     ]
   },
