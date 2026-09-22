@@ -1,11 +1,11 @@
 {
   "name": "bartholomew-keystone",
   "displayName": "Bartholomew Keystone \u2014 Agent Capability Passkey",
-  "description": "Cryptographically signed clearance tokens granting autonomous AI agents scoped access across IDEs, programs, and web searches.",
-  "version": "5.4.18",
+  "description": "Give your AI agent a signed permission slip. Define exactly which files, commands, and domains it can access. Works alongside Bartholomew Guard.",
+  "version": "5.4.19",
   "publisher": "Bartholomew",
   "icon": "icon.png",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "categories": [
     "Machine Learning",
     "Security",

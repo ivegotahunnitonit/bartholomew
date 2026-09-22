@@ -1,11 +1,11 @@
 {
   "name": "bartholomew-guard-vscode",
-  "displayName": "Bartholomew Autonomous AI Guard",
-  "description": "Sub-25µs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
-  "version": "5.4.18",
+  "displayName": "Bartholomew Guard — AI Agent Safety",
+  "description": "Sub-25Âµs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
+  "version": "5.4.19",
   "publisher": "Bartholomew",
   "icon": "icon.png",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "galleryBanner": {
     "color": "#0f0f1a",
     "theme": "dark"
@@ -25,9 +25,7 @@
     "Linters",
     "Machine Learning"
   ],
-  "keywords": [
-    "ai", "security", "agent", "mcp", "trust", "guardrails", "cursor", "copilot"
-  ],
+  "keywords": ["ai","security","agent","mcp","trust","guardrails","cursor","copilot","claude","safety","ast","firewall","theia","codium","open-vsx"],
   "main": "./dist/extension.js",
   "contributes": {
         "commands": [
@@ -98,3 +96,4 @@
     "typescript": "^5.3.0"
   }
 }
+

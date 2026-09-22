@@ -1,37 +1,73 @@
-# Bartholomew Keystone — Agent Capability Passkey (BTP v1.0)
+# Bartholomew Keystone — Control What Your AI Agent Can Do
 
-**Cryptographically signed clearance tokens granting autonomous AI agents scoped execution rights across IDEs, programs, and web searches.**
+Give your AI agent a signed permission slip. It can only do what you said it could.
 
----
-
-## What is Keystone?
-
-Today, autonomous coding agents (in Cursor, VS Code, and terminal runners) operate with **all-or-nothing root privileges**. If an agent hallucinates or encounters a prompt injection, it can delete system files, exfiltrate API secrets, or run infinite compute loops.
-
-**Bartholomew Keystone** introduces capability-based security (Object-Capability model):
-1. **Developer Issues Passkey**: You click `Keystone: Issue Agent Capability Passkey` in your IDE and set the boundaries (allowed write paths, forbidden commands, max spend).
-2. **Cryptographic Attestation**: An ephemeral Ed25519/HMAC signed `.btp_keystone.json` is generated.
-3. **Sub-15µs Verification**: Whenever the agent proposes an action, Keystone verifies its clearance before execution reaches the host or network. Any out-of-scope action is blocked instantly.
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.18-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-keystone)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Works With](https://img.shields.io/badge/Works%20With-Bartholomew%20Guard-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 
 ---
 
-## ⚡ Core Scopes & Clearance Limits
+## What It Does
 
-| Scope Dimension | Description | Default Clearance |
-| :--- | :--- | :--- |
-| **Filesystem** | Allowed read/write glob patterns | Read all, write to specified dirs, strictly deny `.env` & secrets |
-| **Command Execution** | Allowed test/build binaries | Allow `npm test`, `pytest`; deny `rm`, `curl`, `sudo` |
-| **Network & Web** | Approved external API & search domains | Allow `github.com`, `docs.python.org`; deny arbitrary endpoints |
-| **Autonomous Spend** | Financial & API token budget ceiling | Hard dollar limit per transaction (e.g. $25.00) |
+Right now, AI coding agents work with all-or-nothing access. If you give Cursor or Copilot permission to run code, it can run *anything* — including things you didn't intend.
+
+Keystone fixes that. You issue a cryptographically signed passkey that defines exactly what the agent can and can't do. Then Keystone enforces those limits on every action the agent attempts.
 
 ---
 
-## 🚀 Usage in Cursor / VS Code
+## Guard vs. Keystone — Start Here
+
+| | **Guard** | **Keystone** (this extension) |
+|---|---|---|
+| **What it does** | Automatically blocks known-dangerous code and credential leaks | Lets you define custom rules — what files, commands, and actions are allowed |
+| **Install order** | Install Guard first | Add Keystone for fine-grained control |
+| **Get Guard** | [Install Bartholomew Guard](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode) | You're here |
+
+---
+
+## What You Can Control
+
+When you issue a passkey, you decide:
+
+| Permission | Example |
+|---|---|
+| **Which files the agent can write** | Allow `src/` only, block everything else |
+| **Which commands are allowed** | Allow `pytest`, `npm test` — block `rm`, `curl`, `sudo` |
+| **Which external domains it can reach** | Allow `github.com`, block everything else |
+| **How long the permission lasts** | Session-only, or time-bounded |
+
+Every decision the agent makes is logged with a tamper-evident Ed25519 signed receipt — so you always have a record of what it did.
+
+---
+
+## How It Works
+
+1. Press `Ctrl+Shift+P` then run **`Keystone: Issue Agent Capability Passkey`**
+2. Set your rules — allowed paths, allowed commands, expiry
+3. Keystone generates a signed `.btp_keystone.json` permission file
+4. The agent can now only act within what you defined — anything outside gets blocked instantly
+
+---
+
+## Commands
 
 Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS):
-- `Keystone: Issue Agent Capability Passkey`: Generate a new scoped token for your agent.
-- `Keystone: Inspect Active Agent Clearance`: View active token claims, expiration, and remaining budget.
-- `Keystone: Revoke Current Agent Passkey`: Instantly strip agent privileges.
-- `Keystone: Validate Agent Action against Passkey`: Dry-run test any proposed command or file path.
 
-Documentation: [https://bartholomew.info](https://bartholomew.info)
+| Command | What It Does |
+|---|---|
+| `Keystone: Issue Agent Capability Passkey` | Create a new signed permission for your agent |
+| `Keystone: Inspect Active Agent Clearance` | See what the current passkey allows |
+| `Keystone: Revoke Current Agent Passkey` | Immediately remove the agent permissions |
+| `Keystone: Validate Agent Action against Passkey` | Test whether a specific action would be allowed |
+
+---
+
+## Open Source
+
+Bartholomew Keystone is **MIT licensed** and fully open source.
+
+- [bartholomew.info](https://bartholomew.info)
+- [Guard Extension](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode) — install this first
+- Python: `pip install btp-guard`
+- npm: `npm install btp-guard`
