@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "5.4.19"
+version = "5.4.20"
 description = "Bartholomew Trust Protocol (BTP v5.4) - The Agentic Runtime Protection (ARP) platform. Sub-35us in-process execution gating, AST inspection, cryptographic audit trails, and tool-call security for autonomous AI agents."
 readme = "README.md"
 authors = [

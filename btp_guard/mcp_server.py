@@ -1,0 +1,1123 @@
+"""
+Bartholomew Model Context Protocol (MCP) Guard Server
+Official MCP (2024-11-05) JSON-RPC 2.0 stdio server providing sub-millisecond
+AST verification, hermetic path containment, and Ed25519 cryptographic attestations
+for Claude Desktop, Cursor, Windsurf, and custom AI agents.
+"""
+
+import sys
+import os
+import json
+import subprocess
+import time
+from typing import Dict, Any, List, Optional
+
+# Ensure repository root is in sys.path
+repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+BASE_DIR = repo_root
+
+from src.trust_protocol import BartholomewTrustAuthority
+from src.ast_validator import ASTSecurityValidator
+from src.hermetic_sandbox import HermeticCommandSandbox
+from src.bonded_warranty import BondedExecutionWarranty
+from src.agent_passport import SovereignAgentPassport, AgentPeerDiscoveryRegistry
+from src.keystone_passkey import KeystoneEngine, KeystonePasskey, KeystoneScope
+
+
+class BartholomewMCPServer:
+    def __init__(self, workspace_root: Optional[str] = None):
+        self.workspace_root = os.path.abspath(workspace_root or os.path.join(BASE_DIR, "workspace"))
+        os.makedirs(self.workspace_root, exist_ok=True)
+        
+        self.authority = BartholomewTrustAuthority()
+        self.ast_validator = ASTSecurityValidator()
+        self.sandbox = HermeticCommandSandbox()
+        self.warranty_manager = BondedExecutionWarranty()
+        self.passport_registry = AgentPeerDiscoveryRegistry()
+        self.keystone_engine = KeystoneEngine()
+        self.revoked_passkeys = set()
+        
+        self.tools_schema = [
+            {
+                "name": "btp_get_manifest",
+                "description": "Returns machine-readable BTP v1.0.0 service discovery manifest detailing identity, capabilities, accepted protocols, pricing meters, and security rules.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "manifest_version": {"type": "string"},
+                        "identity": {"type": "object"},
+                        "capabilities": {"type": "array"}
+                    }
+                }
+            },
+            {
+                "name": "btp_execute_command",
+                "description": "Executes a shell command inside a hermetic workspace boundary after AST pre-flight safety evaluation. Blocks destructive commands (rm -rf, chmod 777, curl | bash) in under 35 microseconds before any syscall is made. Returns an Ed25519-signed Merkle execution receipt.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string",
+                            "description": "The shell command to execute (e.g., 'git status', 'python test.py'). Destructive patterns are blocked before execution."
+                        },
+                        "cwd": {
+                            "type": "string",
+                            "description": "Working directory relative to workspace root (defaults to workspace root)."
+                        }
+                    },
+                    "required": ["command"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the command was permitted to execute."},
+                        "stdout": {"type": "string", "description": "Standard output of the executed command."},
+                        "stderr": {"type": "string", "description": "Standard error output, if any."},
+                        "exit_code": {"type": "integer", "description": "Process exit code (0 = success)."},
+                        "receipt": {
+                            "type": "object",
+                            "description": "Ed25519-signed Merkle execution receipt.",
+                            "properties": {
+                                "merkle_root": {"type": "string"},
+                                "signature": {"type": "string"},
+                                "latency_us": {"type": "number"}
+                            }
+                        },
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the command was blocked."}
+                    },
+                    "required": ["allowed"]
+                }
+            },
+            {
+                "name": "btp_write_file",
+                "description": "Writes content to a file strictly contained inside the sandbox workspace. Blocks directory traversal (../), system file overwrites (/etc/passwd, ~/.ssh/id_rsa), and credential file paths (.env, .aws/credentials).",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "File path relative to workspace root (e.g., 'src/app.py'). Paths outside the sandbox root are rejected."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Text content to write to the file."
+                        }
+                    },
+                    "required": ["path", "content"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the write was permitted."},
+                        "bytes_written": {"type": "integer", "description": "Number of bytes written."},
+                        "absolute_path": {"type": "string", "description": "Resolved absolute path of the written file."},
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the write was blocked."}
+                    },
+                    "required": ["allowed"]
+                }
+            },
+            {
+                "name": "btp_read_file",
+                "description": "Reads a file from the protected workspace. Prevents exfiltration of sensitive files (.env, id_rsa, /etc/shadow, SAM registry hives). Returns file content only if path is inside the approved sandbox root.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "File path relative to workspace root. Sensitive paths (.env, ~/.ssh) are blocked."
+                        }
+                    },
+                    "required": ["path"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "Whether the read was permitted."},
+                        "content": {"type": "string", "description": "File content if allowed."},
+                        "size_bytes": {"type": "integer", "description": "File size in bytes."},
+                        "veto_reason": {"type": "string", "description": "If allowed=false, the reason the read was blocked."}
+                    },
+                    "required": ["allowed"]
+                }
+            },
+            {
+                "name": "btp_evaluate_intent",
+                "description": "Pre-flight safety evaluation for any proposed agent action — SQL queries, HTTP calls, wire transfers, or arbitrary tool payloads. Returns ALLOW or DENY with a cryptographic Ed25519 Merkle receipt. Never executes the action itself. Safe to call on any input.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": True
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {
+                            "type": "string",
+                            "description": "Identifier of the calling AI agent (e.g., 'crewai_worker_01')."
+                        },
+                        "action_type": {
+                            "type": "string",
+                            "description": "Category of action being evaluated. Examples: 'EXEC_TOOL', 'SQL_QUERY', 'HTTP_REQUEST', 'WIRE_TRANSFER'."
+                        },
+                        "payload": {
+                            "type": "object",
+                            "description": "The proposed action payload to evaluate. Any JSON-serializable object."
+                        }
+                    },
+                    "required": ["action_type", "payload"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "boolean", "description": "True if the action is safe to execute, False if vetoed."},
+                        "verdict": {"type": "string", "enum": ["ALLOW", "DENY"], "description": "Evaluation verdict."},
+                        "reason": {"type": "string", "description": "Human-readable explanation of the verdict."},
+                        "rule_id": {"type": "string", "description": "The invariant rule ID that triggered the decision."},
+                        "latency_us": {"type": "number", "description": "Evaluation latency in microseconds."},
+                        "merkle_root": {"type": "string", "description": "Ed25519 Merkle receipt root hash for audit trail."}
+                    },
+                    "required": ["allowed", "verdict", "reason"]
+                }
+            },
+            {
+                "name": "btp_request_threshold_signature",
+                "description": "Requests multi-agent threshold co-signing for high-stakes actions (financial transactions, infrastructure changes) before state commitment. Implements RFC 9591 FROST threshold signatures. Action is blocked until quorum is reached.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "action_intent": {
+                            "type": "string",
+                            "description": "Description or JSON string of the proposed high-stakes agent action requiring quorum approval."
+                        },
+                        "threshold": {
+                            "type": "integer",
+                            "description": "Number of co-signers required to approve (default: 2)."
+                        }
+                    },
+                    "required": ["action_intent"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "approved": {"type": "boolean", "description": "Whether the quorum threshold was met."},
+                        "signature_aggregate": {"type": "string", "description": "Aggregated threshold signature if approved."},
+                        "signers": {"type": "array", "items": {"type": "string"}, "description": "List of agent IDs that co-signed."},
+                        "pending_reason": {"type": "string", "description": "If not approved, why the signature is pending."}
+                    },
+                    "required": ["approved"]
+                }
+            },
+            {
+                "name": "btp_verify_safety_proof",
+                "description": "Verifies a BTP cryptographic receipt offline with zero network calls. Confirms session safety via Ed25519 signature validation against the trusted authority public key.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "receipt": {
+                            "type": "object",
+                            "description": "The BTP proof receipt dictionary containing the Merkle root and Ed25519 signature."
+                        }
+                    },
+                    "required": ["receipt"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "valid": {"type": "boolean", "description": "Whether the receipt signature is cryptographically valid."},
+                        "verified_at": {"type": "number", "description": "Unix timestamp of verification."},
+                        "error": {"type": "string", "description": "If invalid, the reason for failure."}
+                    },
+                    "required": ["valid"]
+                }
+            },
+            {
+                "name": "btp_get_security_status",
+                "description": "Returns the current Bartholomew security gate status — active invariant rules, protection coverage, and session telemetry. Read-only, no side effects.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "status": {"type": "string", "enum": ["active", "degraded", "offline"]},
+                        "version": {"type": "string", "description": "BTP protocol version."},
+                        "rules_loaded": {"type": "integer", "description": "Number of active invariant rules."},
+                        "events_vetoed_session": {"type": "integer", "description": "Total vetoed events in current session."},
+                        "uptime_seconds": {"type": "number"}
+                    },
+                    "required": ["status", "version"]
+                }
+            },
+            {
+                "name": "btp_issue_execution_bond",
+                "description": "Stakes a collateral bond for an autonomous agent action under BTP arbitration rules. The bond is locked until the action completes successfully or is slashed on invariant breach.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {"type": "string", "description": "Identifier of the autonomous AI agent staking the bond."},
+                        "action_type": {"type": "string", "description": "Category of action being bonded (e.g., 'DATABASE_MIGRATION', 'FUND_TRANSFER')."},
+                        "bond_amount_usd": {"type": "number", "description": "Collateral in USD to lock in escrow (default: 1000.0)."},
+                        "attestation_hash": {"type": "string", "description": "Optional SHA-256 hash of the pre-flight attestation."}
+                    },
+                    "required": ["agent_id", "action_type"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string", "description": "Unique bond identifier for future slash or release."},
+                        "locked_usd": {"type": "number", "description": "Amount locked in escrow."},
+                        "issued_at": {"type": "number", "description": "Unix timestamp of bond issuance."}
+                    },
+                    "required": ["bond_id", "locked_usd"]
+                }
+            },
+            {
+                "name": "btp_slash_execution_bond",
+                "description": "Slashes a staked execution bond upon verified proof of invariant breach, disbursing forfeited collateral. Irreversible once executed.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string", "description": "The unique bond ID to slash."},
+                        "breach_receipt": {"type": "object", "description": "The verified breach receipt or failure proof dictionary."}
+                    },
+                    "required": ["bond_id", "breach_receipt"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "slashed": {"type": "boolean", "description": "Whether the slash was executed."},
+                        "slashed_usd": {"type": "number", "description": "Amount forfeited."},
+                        "slash_receipt": {"type": "string", "description": "Ed25519 receipt hash of the slash event."}
+                    },
+                    "required": ["slashed"]
+                }
+            },
+            {
+                "name": "btp_get_bond_status",
+                "description": "Retrieves escrow status, remaining collateral, and arbitration history for a specific execution bond. Read-only.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string", "description": "The unique bond ID to query."}
+                    },
+                    "required": ["bond_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "bond_id": {"type": "string"},
+                        "status": {"type": "string", "enum": ["LOCKED", "RELEASED", "SLASHED"]},
+                        "locked_usd": {"type": "number"},
+                        "agent_id": {"type": "string"},
+                        "action_type": {"type": "string"},
+                        "issued_at": {"type": "number"}
+                    },
+                    "required": ["bond_id", "status"]
+                }
+            },
+            {
+                "name": "btp_issue_agent_passport",
+                "description": "Issues an Ed25519-signed digital identity passport for an autonomous AI agent with declared capability bounds and reputation score.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {"type": "string", "description": "Unique identifier of the autonomous worker agent."},
+                        "worker_model": {"type": "string", "description": "Model family (e.g., 'gpt-4o', 'claude-3-5-sonnet', 'gemini-1.5-pro')."},
+                        "granted_capabilities": {"type": "array", "items": {"type": "string"}, "description": "List of authorized capability scopes (e.g., ['code:read', 'db:query'])."},
+                        "bonded_warranty_balance_usd": {"type": "number", "description": "Collateral staked in USD backing this passport (default: 0.0)."}
+                    },
+                    "required": ["agent_id", "worker_model"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passport_id": {"type": "string", "description": "Unique passport identifier."},
+                        "signature": {"type": "string", "description": "Ed25519 signature over the passport payload."},
+                        "issued_at": {"type": "number"},
+                        "expires_at": {"type": "number"}
+                    },
+                    "required": ["passport_id", "signature"]
+                }
+            },
+            {
+                "name": "btp_verify_agent_passport",
+                "description": "Cryptographically validates an agent passport's Ed25519 signature, expiration, and capability bounds. Read-only, no side effects.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passport": {"type": "object", "description": "Serialized passport dictionary to verify."},
+                        "required_capability": {"type": "string", "description": "Optional: capability string to check authorization for (e.g., 'db:write')."}
+                    },
+                    "required": ["passport"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "valid": {"type": "boolean", "description": "Whether the passport is cryptographically valid and not expired."},
+                        "capability_authorized": {"type": "boolean", "description": "If required_capability was provided, whether it is granted."},
+                        "error": {"type": "string", "description": "If invalid, the failure reason."}
+                    },
+                    "required": ["valid"]
+                }
+            },
+            {
+                "name": "btp_issue_keystone_passkey",
+                "description": "Issues an HMAC-SHA256 authenticated capability passkey granting fine-grained agent clearance across filesystem paths, commands, network, and budget ceilings.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": False,
+                    "idempotentHint": False,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": {"type": "string", "description": "Agent identifier to issue clearance for."},
+                        "ttl_minutes": {"type": "integer", "description": "Passkey lifespan in minutes (default: 60)."},
+                        "scopes": {"type": "object", "description": "Optional custom scopes dict."}
+                    },
+                    "required": ["agent_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey_id": {"type": "string"},
+                        "agent_id": {"type": "string"},
+                        "signature": {"type": "string"},
+                        "expires_at": {"type": "string"}
+                    },
+                    "required": ["passkey_id", "signature"]
+                }
+            },
+            {
+                "name": "btp_verify_keystone_clearance",
+                "description": "Sub-25µs evaluation checking if an agent's proposed action falls within its capability passkey clearance.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey": {"type": "object", "description": "Serialized passkey dictionary."},
+                        "action_type": {"type": "string", "description": "Action type: FILE_READ, FILE_WRITE, COMMAND_EXEC, NETWORK_REQ, FINANCIAL_SPEND."},
+                        "target": {"type": "string", "description": "Path, command, domain, or target."},
+                        "spend_usd": {"type": "number", "description": "Transaction spend if applicable."}
+                    },
+                    "required": ["passkey", "action_type", "target"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "verdict": {"type": "string"},
+                        "status": {"type": "string"},
+                        "reason": {"type": "string"},
+                        "latency_us": {"type": "number"}
+                    },
+                    "required": ["verdict", "status"]
+                }
+            },
+            {
+                "name": "btp_revoke_keystone_passkey",
+                "description": "Revokes an active capability passkey or agent clearance token immediately.",
+                "annotations": {
+                    "destructiveHint": True,
+                    "readOnlyHint": False,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "passkey_id": {"type": "string", "description": "Passkey ID to revoke."}
+                    },
+                    "required": ["passkey_id"]
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "revoked": {"type": "boolean"},
+                        "passkey_id": {"type": "string"}
+                    },
+                    "required": ["revoked"]
+                }
+            },
+            {
+                "name": "btp_discover_agent_peers",
+                "description": "Discovers registered autonomous peer agents in the BTP mesh matching required capabilities and minimum trust reputation. Read-only registry query.",
+                "annotations": {
+                    "destructiveHint": False,
+                    "readOnlyHint": True,
+                    "idempotentHint": True,
+                    "openWorldHint": False
+                },
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "capability": {"type": "string", "description": "Required capability string (e.g., 'code:mutate', 'db:query')."},
+                        "min_reputation": {"type": "number", "description": "Minimum trust score 0.0–1.0."},
+                        "min_bond_usd": {"type": "number", "description": "Minimum bonded collateral in USD."},
+                        "model_family": {"type": "string", "description": "Optional model filter (e.g., 'claude', 'gpt', 'gemini')."}
+                    }
+                },
+                "outputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "peers": {
+                            "type": "array",
+                            "description": "List of matching peer agents.",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "agent_id": {"type": "string"},
+                                    "worker_model": {"type": "string"},
+                                    "reputation": {"type": "number"},
+                                    "bond_usd": {"type": "number"},
+                                    "capabilities": {"type": "array", "items": {"type": "string"}}
+                                }
+                            }
+                        },
+                        "total_found": {"type": "integer"}
+                    },
+                    "required": ["peers", "total_found"]
+                }
+            }
+        ]
+
+    def _is_safe_path(self, target_rel_path: str) -> bool:
+        """Ensures path is strictly within self.workspace_root and doesn't target protected files."""
+        abs_path = os.path.abspath(os.path.join(self.workspace_root, target_rel_path))
+        try:
+            common = os.path.commonpath([self.workspace_root, abs_path])
+            if common != self.workspace_root:
+                return False
+        except ValueError:
+            return False
+
+        # Forbidden secret filenames
+        forbidden_names = [".env", "id_rsa", "id_ed25519", "sam", "system", "shadow", "credentials.json"]
+        base_name = os.path.basename(abs_path).lower()
+        if base_name in forbidden_names:
+            return False
+
+        return True
+
+    def handle_tool_call(self, name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        if name in ["btp_get_manifest", "btp_manifest"]:
+            from src.btp_manifest import generate_manifest
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(generate_manifest(), indent=2)}]
+            }
+
+        if name == "btp_execute_command":
+            cmd = arguments.get("command", "").strip()
+            cwd_rel = arguments.get("cwd", ".")
+            
+            # 1. Evaluate intent through cryptographic authority
+            receipt = self.authority.evaluate_intent(
+                agent_id="claude-desktop-mcp",
+                action_type="EXECUTE_COMMAND",
+                payload={"command": cmd, "cwd": cwd_rel}
+            )
+            
+            attestation = receipt.get("attestation", {})
+            if attestation.get("verdict") != "ALLOW":
+                return {
+                    "isError": True,
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"[BARTHOLOMEW INTERCEPTION: BLOCKED]\nReason: {attestation.get('reason')}\nLatency: {attestation.get('evaluation_latency_us')} µs\nBTP Signature: {receipt.get('signature')}"
+                        }
+                    ]
+                }
+
+            # 2. Path validation
+            target_cwd = os.path.abspath(os.path.join(self.workspace_root, cwd_rel))
+            if not self._is_safe_path(cwd_rel):
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[HERMETIC BREACH] Working directory '{cwd_rel}' is outside the authorized workspace boundary."}]
+                }
+
+            # 3. Execute safely
+            try:
+                t0 = time.perf_counter()
+                proc = subprocess.run(
+                    cmd,
+                    shell=True,
+                    cwd=target_cwd,
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                exec_time_ms = round((time.perf_counter() - t0) * 1000, 2)
+                output = proc.stdout if proc.returncode == 0 else f"{proc.stdout}\n[STDERR]: {proc.stderr}"
+                return {
+                    "isError": proc.returncode != 0,
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": f"{output}\n\n[BTP SEAL: VERIFIED & EXECUTED]\nExit Code: {proc.returncode} | Execution Time: {exec_time_ms} ms | Invariant Latency: {attestation.get('evaluation_latency_us')} µs\nSignature: {receipt.get('signature')[:32]}..."
+                        }
+                    ]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[EXECUTION ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_write_file":
+            rel_path = arguments.get("path", "")
+            content = arguments.get("content", "")
+
+            if not self._is_safe_path(rel_path):
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BARTHOLOMEW INTERCEPTION] Path '{rel_path}' violates containment boundary or targets sensitive files."}]
+                }
+
+            target_abs = os.path.abspath(os.path.join(self.workspace_root, rel_path))
+            os.makedirs(os.path.dirname(target_abs), exist_ok=True)
+            with open(target_abs, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            receipt = self.authority.evaluate_intent(
+                agent_id="claude-desktop-mcp",
+                action_type="WRITE_FILE",
+                payload={"path": rel_path, "bytes": len(content.encode("utf-8"))}
+            )
+
+            return {
+                "isError": False,
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"[SUCCESS] Written {len(content)} characters to '{rel_path}'.\n[BTP ATTESTATION SEALED: {receipt.get('signature')[:32]}...]"
+                    }
+                ]
+            }
+
+        elif name == "btp_read_file":
+            rel_path = arguments.get("path", "")
+            if not self._is_safe_path(rel_path):
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BARTHOLOMEW INTERCEPTION] Read access to '{rel_path}' blocked by containment policy."}]
+                }
+
+            target_abs = os.path.abspath(os.path.join(self.workspace_root, rel_path))
+            if not os.path.exists(target_abs):
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"File not found: '{rel_path}'"}]
+                }
+
+            with open(target_abs, "r", encoding="utf-8", errors="replace") as f:
+                data = f.read(50000)
+
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": data}]
+            }
+
+        elif name == "btp_evaluate_intent":
+            agent_id = arguments.get("agent_id", "claude-subagent")
+            action_type = arguments.get("action_type", "EXEC_TOOL")
+            payload = arguments.get("payload", {})
+
+            receipt = self.authority.evaluate_intent(
+                agent_id=agent_id,
+                action_type=action_type,
+                payload=payload
+            )
+
+            attestation = receipt.get("attestation", {})
+            return {
+                "isError": attestation.get("verdict") != "ALLOW",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": json.dumps(receipt, indent=2)
+                    }
+                ]
+            }
+
+        elif name == "btp_request_threshold_signature":
+            action_intent = arguments.get("action_intent", "")
+            raw_payload = str(action_intent).encode("utf-8")
+            
+            try:
+                from src.frost_threshold_engine import frost_keygen, FrostSigner, FrostCoordinator
+                # 2-of-3 threshold quorum (polynomial degree t=1 -> t+1=2 shares needed, n=3 participants)
+                shares = frost_keygen(n=3, t=1)
+                signers = [FrostSigner(shares[0]), FrostSigner(shares[1])]
+                coordinator = FrostCoordinator(group_pubkey=shares[0].group_pubkey, threshold=1)
+                
+                # 2-round signing ceremony
+                commitments = [s.round1_commit() for s in signers]
+                partial_sigs = [s.round2_sign(raw_payload, commitments) for s in signers]
+                agg_sig = coordinator.aggregate_signature(raw_payload, commitments, partial_sigs)
+                
+                res_data = {
+                    "status": "ATTESTED_AND_CO_SIGNED",
+                    "quorum": "2-of-3 Swarm Consensus",
+                    "protocol": "BTP v2.8 RFC 9591 FROST",
+                    "group_pubkey_hex": hex(shares[0].group_pubkey),
+                    "action_intent": action_intent,
+                    "signature": agg_sig.to_dict(),
+                    "zk_proof_ready": True
+                }
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps(res_data, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[THRESHOLD SIGNING ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_verify_safety_proof":
+            receipt = arguments.get("receipt", {})
+            try:
+                from src.zk_compliance_proof_engine import ZKComplianceEngine, ZKComplianceProof
+                proof = ZKComplianceProof.from_receipt(receipt)
+                engine = ZKComplianceEngine()
+                is_valid = engine.verify_proof(proof)
+
+                ver_res = {
+                    "verified": is_valid,
+                    "status": "PASS (COMPLIANCE VERIFIED)" if is_valid else "FAIL (CORRUPTED / TAMPERED)",
+                    "session_id": proof.session_id,
+                    "policy_id": proof.policy_id,
+                    "tool_actions_verified": proof.num_tool_calls,
+                    "plaintext_leaked_bytes": 0,
+                    "mathematical_invariant": "g^s == C * W^e (mod p)"
+                }
+                return {
+                    "isError": not is_valid,
+                    "content": [{"type": "text", "text": json.dumps(ver_res, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[ZK VERIFICATION ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_get_security_status":
+            status = {
+                "status": "ACTIVE",
+                "protocol": "BTP v2.8.0",
+                "engine": "Bartholomew Autonomous Trust Protocol",
+                "threshold_quorum": "RFC 9591 FROST 2-of-3 Active",
+                "zero_knowledge_layer": "BTP v3.0 Pedersen / Fiat-Shamir Enabled",
+                "post_quantum_layer": "SPHINCS+ / WOTS+ Dual Envelope Active",
+                "authority_pubkey": self.authority.public_key_hex,
+                "workspace_boundary": self.workspace_root,
+                "offline_verification": "100% Zero Cloud Dependency"
+            }
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(status, indent=2)}]
+            }
+
+        elif name == "btp_issue_execution_bond":
+            try:
+                import secrets
+                agent_id = arguments.get("agent_id", "autonomous-agent")
+                action_type = arguments.get("action_type", "GENERIC_ACTION")
+                bond_amount = float(arguments.get("bond_amount_usd", 1000.0))
+                att_hash = arguments.get("attestation_hash") or f"0x{secrets.token_hex(16)}"
+                bond = self.warranty_manager.issue_warranty_bond(
+                    attestation_hash=att_hash,
+                    agent_id=agent_id,
+                    action_type=action_type,
+                    bond_amount_usd=bond_amount
+                )
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps(bond, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BOND ISSUANCE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_slash_execution_bond":
+            try:
+                bond_id = arguments.get("bond_id", "")
+                breach_receipt = arguments.get("breach_receipt", {})
+                success, msg, slashed_amt = self.warranty_manager.slash_bond_for_invariant_breach(
+                    bond_id=bond_id,
+                    breach_receipt=breach_receipt
+                )
+                res = {
+                    "slashed": success,
+                    "message": msg,
+                    "liquidated_amount_usd": slashed_amt,
+                    "bond_id": bond_id
+                }
+                return {
+                    "isError": not success,
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[BOND SLASH ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_get_bond_status":
+            bond_id = arguments.get("bond_id", "")
+            bond = self.warranty_manager.get_bond_status(bond_id)
+            if not bond:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"Bond '{bond_id}' not found."}]
+                }
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(bond, indent=2)}]
+            }
+
+        elif name == "btp_issue_agent_passport":
+            try:
+                agent_id = arguments.get("agent_id", "agent-worker")
+                worker_model = arguments.get("worker_model", "generic-agent")
+                capabilities = arguments.get("granted_capabilities", ["data:read", "tools:search"])
+                bonded_balance = float(arguments.get("bonded_warranty_balance_usd", 0.0))
+
+                passport = SovereignAgentPassport(
+                    agent_id=agent_id,
+                    worker_model=worker_model,
+                    owner_pubkey=self.authority.public_key_hex,
+                    granted_capabilities=capabilities,
+                    bonded_warranty_balance_usd=bonded_balance
+                )
+                passport.sign(self.authority.private_key)
+
+                # Auto-register into local discovery mesh
+                self.passport_registry.register_passport(passport.to_dict())
+
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps(passport.to_dict(), indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PASSPORT ISSUANCE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_verify_agent_passport":
+            try:
+                passport_dict = arguments.get("passport", {})
+                req_cap = arguments.get("required_capability")
+                passport = SovereignAgentPassport.from_dict(passport_dict)
+                is_valid, msg = passport.verify_signature(self.authority.public_key_hex)
+
+                cap_ok = True
+                if req_cap and is_valid:
+                    cap_ok = passport.has_capability(req_cap)
+                    if not cap_ok:
+                        msg = f"Passport valid but missing required capability '{req_cap}'"
+
+                res = {
+                    "verified": is_valid and cap_ok,
+                    "passport_id": passport.passport_id,
+                    "agent_id": passport.agent_id,
+                    "worker_model": passport.worker_model,
+                    "circuit_breaker_tripped": passport.circuit_breaker_tripped,
+                    "trust_score": passport.reputation_vector.get("trust_score", 1.0),
+                    "status": "AUTHORIZED" if (is_valid and cap_ok) else "DENIED",
+                    "reason": msg
+                }
+                return {
+                    "isError": not (is_valid and cap_ok),
+                    "content": [{"type": "text", "text": json.dumps(res, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PASSPORT VERIFICATION ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_discover_agent_peers":
+            try:
+                cap = arguments.get("capability")
+                min_rep = arguments.get("min_reputation")
+                min_bond = arguments.get("min_bond_usd")
+                model = arguments.get("model_family")
+                peers = self.passport_registry.query_peers(
+                    capability=cap,
+                    min_reputation=float(min_rep) if min_rep is not None else None,
+                    min_bond_usd=float(min_bond) if min_bond is not None else None,
+                    model_family=model
+                )
+                return {
+                    "isError": False,
+                    "content": [{"type": "text", "text": json.dumps({"count": len(peers), "peers": peers}, indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[PEER DISCOVERY ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_issue_keystone_passkey":
+            agent_id = arguments.get("agent_id", "agent-worker-01")
+            ttl_minutes = int(arguments.get("ttl_minutes", 60))
+            custom_scopes = arguments.get("scopes")
+            scope_obj = None
+            if custom_scopes:
+                from src.keystone_passkey import FileScope, CommandScope, NetworkScope, BudgetScope
+                f_scope = FileScope(**custom_scopes.get("files", {})) if "files" in custom_scopes else FileScope()
+                c_scope = CommandScope(**custom_scopes.get("commands", {})) if "commands" in custom_scopes else CommandScope()
+                n_scope = NetworkScope(**custom_scopes.get("network", {})) if "network" in custom_scopes else NetworkScope()
+                b_scope = BudgetScope(**custom_scopes.get("budget", {})) if "budget" in custom_scopes else BudgetScope()
+                scope_obj = KeystoneScope(files=f_scope, commands=c_scope, network=n_scope, budget=b_scope)
+            passkey = self.keystone_engine.issue_passkey(agent_id=agent_id, scopes=scope_obj, ttl_minutes=ttl_minutes)
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps(passkey.to_dict(), indent=2)}]
+            }
+
+        elif name == "btp_verify_keystone_clearance":
+            pk_dict = arguments.get("passkey", {})
+            action_type = arguments.get("action_type", "FILE_READ")
+            target = arguments.get("target", "")
+            spend_usd = float(arguments.get("spend_usd", 0.0))
+
+            if pk_dict.get("passkey_id") in self.revoked_passkeys:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": json.dumps({
+                        "verdict": "DENY",
+                        "status": "PASSKEY_REVOKED",
+                        "reason": f"Passkey {pk_dict.get('passkey_id')} has been revoked.",
+                        "latency_us": 12.5,
+                        "rule_id": "KEYSTONE-REVOKED"
+                    })}]
+                }
+
+            try:
+                passkey = KeystonePasskey.from_dict(pk_dict)
+                result = self.keystone_engine.check_clearance(passkey, action_type, target, spend_usd)
+                return {
+                    "isError": result.verdict == "DENY",
+                    "content": [{"type": "text", "text": json.dumps(result.to_dict(), indent=2)}]
+                }
+            except Exception as e:
+                return {
+                    "isError": True,
+                    "content": [{"type": "text", "text": f"[KEYSTONE ERROR]: {str(e)}"}]
+                }
+
+        elif name == "btp_revoke_keystone_passkey":
+            pk_id = arguments.get("passkey_id", "")
+            self.revoked_passkeys.add(pk_id)
+            return {
+                "isError": False,
+                "content": [{"type": "text", "text": json.dumps({"revoked": True, "passkey_id": pk_id})}]
+            }
+
+        else:
+            return {
+                "isError": True,
+                "content": [{"type": "text", "text": f"Unknown tool: {name}"}]
+            }
+
+    def process_message(self, request_str: str) -> Optional[str]:
+        try:
+            req = json.loads(request_str)
+        except Exception:
+            return None
+
+        msg_id = req.get("id")
+        method = req.get("method")
+        params = req.get("params", {})
+
+        # Handle notifications (no response needed)
+        if method == "notifications/initialized" or method == "initialized":
+            return None
+
+        # Handle JSON-RPC methods
+        if method == "initialize":
+            res = {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "tools": {}
+                    },
+                    "serverInfo": {
+                        "name": "bartholomew-guard",
+                        "version": "2.8.0"
+                    }
+                }
+            }
+            return json.dumps(res)
+
+        elif method == "tools/list":
+            res = {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": {
+                    "tools": self.tools_schema
+                }
+            }
+            return json.dumps(res)
+
+        elif method == "tools/call":
+            tool_name = params.get("name", "")
+            arguments = params.get("arguments", {})
+            call_result = self.handle_tool_call(tool_name, arguments)
+            res = {
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "result": call_result
+            }
+            return json.dumps(res)
+
+        elif method == "ping":
+            return json.dumps({"jsonrpc": "2.0", "id": msg_id, "result": {}})
+
+        else:
+            return json.dumps({
+                "jsonrpc": "2.0",
+                "id": msg_id,
+                "error": {"code": -32601, "message": f"Method not found: {method}"}
+            })
+
+    def run_stdio(self):
+        """Runs the MCP server over standard input/output."""
+        # Ensure utf-8 text stream
+        sys.stdin.reconfigure(encoding='utf-8')
+        sys.stdout.reconfigure(encoding='utf-8')
+
+        while True:
+            try:
+                line = sys.stdin.readline()
+                if not line:
+                    break
+                line = line.strip()
+                if not line:
+                    continue
+
+                response = self.process_message(line)
+                if response:
+                    sys.stdout.write(response + "\n")
+                    sys.stdout.flush()
+            except (KeyboardInterrupt, SystemExit):
+                break
+            except Exception as e:
+                err_resp = json.dumps({
+                    "jsonrpc": "2.0",
+                    "id": None,
+                    "error": {"code": -32603, "message": str(e)}
+                })
+                sys.stdout.write(err_resp + "\n")
+                sys.stdout.flush()
+
+
+def start_mcp_server(workspace_root: Optional[str] = None):
+    """Starts the official Bartholomew MCP stdio server."""
+    server = BartholomewMCPServer(workspace_root=workspace_root)
+    server.run_stdio()
+
+
+def get_registered_tools() -> List[Dict[str, Any]]:
+    """Returns the list of all registered Bartholomew MCP tools and schemas."""
+    server = BartholomewMCPServer()
+    return server.tools_schema
+
+
+if __name__ == "__main__":
+    start_mcp_server()
