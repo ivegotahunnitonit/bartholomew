@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="packages/vscode-extension/icon.png" width="140" alt="Bartholomew Shield Logo" />
+  <img src="packages/vscode-extension/icon.png" width="130" alt="Bartholomew Shield Logo" />
+</p>
+
+<p align="center">
+  <a href="https://bartholomew.info"><img src="docs/assets/terminal_hero.svg" width="800" alt="Bartholomew Sub-35µs AST Invariant Gate in Action" /></a>
 </p>
 
 # Bartholomew (BTP v5.4) — The Agentic Runtime Protection (ARP) Platform

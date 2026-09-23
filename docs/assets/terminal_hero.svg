@@ -1,0 +1,118 @@
+<svg fill="none" viewBox="0 0 840 460" width="840" height="460" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        .terminal-window {
+          background-color: #0b0f19;
+          border: 1px solid #1f293d;
+          border-radius: 12px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15);
+          color: #f1f5f9;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+          font-size: 13.5px;
+          line-height: 1.6;
+          padding: 16px 20px;
+          height: 420px;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
+        .header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 14px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #1e293b;
+        }
+        .dots {
+          display: flex;
+          gap: 6px;
+        }
+        .dot {
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+        .title {
+          flex: 1;
+          text-align: center;
+          color: #94a3b8;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+        .prompt { color: #38bdf8; font-weight: 700; }
+        .cmd { color: #f8fafc; font-weight: 600; }
+        .pass { color: #10b981; font-weight: 700; }
+        .veto { color: #ef4444; font-weight: 700; }
+        .scrub { color: #c084fc; font-weight: 700; }
+        .dim { color: #64748b; }
+        .cyan { color: #38bdf8; }
+        .yellow { color: #fbbf24; }
+
+        /* Animation Keyframes */
+        @keyframes line1 { 0% { opacity: 0; } 5% { opacity: 1; } 100% { opacity: 1; } }
+        @keyframes line2 { 0%, 12% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 1; } }
+        @keyframes line3 { 0%, 25% { opacity: 0; } 32% { opacity: 1; } 100% { opacity: 1; } }
+        @keyframes line4 { 0%, 40% { opacity: 0; } 48% { opacity: 1; } 100% { opacity: 1; } }
+        @keyframes line5 { 0%, 58% { opacity: 0; } 66% { opacity: 1; } 100% { opacity: 1; } }
+        @keyframes line6 { 0%, 75% { opacity: 0; } 82% { opacity: 1; } 100% { opacity: 1; } }
+
+        .l1 { animation: line1 9s infinite; }
+        .l2 { animation: line2 9s infinite; }
+        .l3 { animation: line3 9s infinite; }
+        .l4 { animation: line4 9s infinite; }
+        .l5 { animation: line5 9s infinite; }
+        .l6 { animation: line6 9s infinite; }
+      </style>
+
+      <div class="terminal-window">
+        <div class="header">
+          <div class="dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="title">Bartholomew Sentinel (BTP v5.4.20) — Sub-35µs AST Invariant Gate</div>
+          <div style="width: 45px;"></div>
+        </div>
+
+        <div class="content">
+          <div class="l1">
+            <span class="prompt">agent@swarm</span>:<span class="dim">~/project</span>$ <span class="cmd">npx btp-guard hud</span><br/>
+            <span class="dim">╔════════════════════════════════════════════════════════════════════════════╗</span><br/>
+            <span class="cyan">║ ⚡ BARTHOLOMEW SENTINEL ACTIVE • DETERMINISTIC IN-PROCESS AST GATEWAY   ║</span><br/>
+            <span class="dim">╚════════════════════════════════════════════════════════════════════════════╝</span>
+          </div>
+
+          <div class="l2" style="margin-top: 10px;">
+            <span class="yellow">[TOOL_PROPOSAL]</span> LangChain Agent executing: <span class="cmd">'SELECT id FROM users'</span><br/>
+            <span class="pass">[VERDICT: ALLOW]</span> Pre-flight AST safe <span class="cyan">(14.2 µs)</span> • Ed25519 Receipt signed
+          </div>
+
+          <div class="l3" style="margin-top: 10px;">
+            <span class="yellow">[TOOL_PROPOSAL]</span> Claude Code Agent attempting: <span class="veto">'rm -rf /var/data'</span><br/>
+            <span class="veto">[VERDICT: VETO 🛑]</span> <span class="veto">BTP-AST-001: Catastrophic shell pattern detected in 18.6 µs</span><br/>
+            <span class="dim">                  ↳ Execution halted prior to OS dispatch. Merkle receipt anchored.</span>
+          </div>
+
+          <div class="l4" style="margin-top: 10px;">
+            <span class="yellow">[TOOL_PROPOSAL]</span> AutoGen Agent query: <span class="veto">'SELECT * FROM users; DROP TABLE users;'</span><br/>
+            <span class="veto">[VERDICT: VETO 🛑]</span> <span class="veto">BTP-SQL-002: Destructive table drop blocked in 16.1 µs</span>
+          </div>
+
+          <div class="l5" style="margin-top: 10px;">
+            <span class="yellow">[TOOL_PROPOSAL]</span> Outbound API payload: <span class="scrub">'Authorization: Bearer sk-proj-999...'</span><br/>
+            <span class="scrub">[VERDICT: SCRUB 🔐]</span> In-flight secret masked in <span class="cyan">28.9 µs</span> (Zero token leakage)
+          </div>
+
+          <div class="l6" style="margin-top: 12px; border-top: 1px dashed #1e293b; padding-top: 8px;">
+            <span class="pass">✓ SOC 2 Merkle Root:</span> <span class="dim">0xefdf8419a32fcf53...3b4c6</span> | <span class="cyan">Avg Latency: 19.4 µs</span> | <span class="pass">GPU VRAM: 0 MB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
