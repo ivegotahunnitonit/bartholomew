@@ -21,6 +21,8 @@
 [![AutoGen](https://img.shields.io/badge/Microsoft-AutoGen%20Swarm-00A4EF?logo=microsoft&logoColor=white)](examples/README.md)
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM%20Guard-76B900?logo=nvidia&logoColor=white)](docs/NVIDIA_NIM_INTEGRATION_GUIDE.md)
 [![Cursor & Windsurf](https://img.shields.io/badge/Cursor%20%26%20Windsurf-Rules%20Included-7C3AED?logo=visualstudiocode&logoColor=white)](docs/CURSORRULES_DIRECTORY_SUBMISSION.md)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Bartholomew%20ARP-purple?logo=githubactions&logoColor=white)](docs/GITHUB_ACTION_MARKETPLACE.md)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-Sentinel%20Ready-D97706?logo=anthropic&logoColor=white)](docs/CLAUDE_CODE_INTEGRATION_GUIDE.md)
 [![IDE](https://img.shields.io/badge/IDE-Cursor%20%2F%20VS%20Code-7C3AED?logo=githubcopilot&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 
 ---
@@ -60,6 +62,29 @@ It sits between an agent and real-world execution (shell, SQL, file I/O, cloud A
 - **Zero Network Overhead**: Evaluates locally inside the host process runtime without external API latency or second-model token billing.
 
 ---
+
+---
+
+## Claude Code & GitHub Action Sentinels
+
+### 1. Anthropic Claude Code 1-Click Sentinel
+Protect **Claude Code** terminal agent sessions from catastrophic shell commands (`rm -rf`) and secret exposure:
+```bash
+npx btp-guard claude
+# Or configure MCP gate: claude mcp add bartholomew -- npx -y btp-guard mcp start
+```
+View the complete [Claude Code Integration Guide](docs/CLAUDE_CODE_INTEGRATION_GUIDE.md).
+
+### 2. CI/CD GitHub Action for AI-Generated PRs
+Automatically audit Pull Requests proposed by AI coding agents (Devin, Copilot, SWE-bench bots) for secret leaks and destructive shell patterns in `.github/workflows/ai-guard.yml`:
+```yaml
+- name: Bartholomew ARP Guard
+  uses: ivegotahunnitonit/bartholomew@main
+  with:
+    fail-on-violation: 'true'
+    spend-cap: '50.0'
+```
+View the [GitHub Action Marketplace Guide](docs/GITHUB_ACTION_MARKETPLACE.md).
 
 ## Quickstart
 

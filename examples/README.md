@@ -16,6 +16,7 @@ Every script below is self-contained and runnable in one command:
 | **[03. LangGraph Workflow Node](03_langgraph_safe_workflow.py)** | LangGraph | State machine mutation barrier, pipe execution denial | `python examples/03_langgraph_safe_workflow.py` |
 | **[04. NVIDIA NIM Microservice Guard](04_nvidia_nim_llama3_guard.py)** | NVIDIA NIM | Prompt injection filter, tool AST veto, 0 GPU VRAM impact | `python examples/04_nvidia_nim_llama3_guard.py` |
 | **[05. 1-Line Decorator Quickstart](05_one_line_decorator_quickstart.py)** | Standard Python / All | 1-line `@secure_tool` interceptor for any Python callable | `python examples/05_one_line_decorator_quickstart.py` |
+| **[06. Claude Code Sentinel](06_claude_code_sentinel.py)** | Anthropic Claude Code | Terminal tool gating, secret suppression, Ed25519 receipts | `python examples/06_claude_code_sentinel.py` |
 
 ---
 

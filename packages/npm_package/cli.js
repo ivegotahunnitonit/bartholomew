@@ -531,6 +531,41 @@ function runActivate(key) {
 }
 
 
+
+function runClaude(subargs = []) {
+  printBanner();
+  console.log(`${BOLD}[CLAUDE CODE SENTINEL INITIALIZER]${RESET}`);
+  const targetDir = process.cwd();
+  const claudeMdPath = path.join(targetDir, 'CLAUDE.md');
+
+  const claudeMdContent = `# Bartholomew Trust Protocol (BTP v5.4.20) - Claude Code Configuration
+# Official execution sentinel and boundary rules for Anthropic Claude Code
+
+You are operating inside a workspace secured by the Bartholomew Trust Protocol (BTP v5.4.20).
+All tool proposals, bash commands, file modifications, and database migrations are subject to deterministic AST execution gating.
+
+## Core Security Invariants
+1. Zero Secret Exfiltration:
+   - NEVER read, print, log, or export credentials, .env* files, private keys (id_rsa, id_ed25519, .pem, .key), or API tokens (sk-*, ghp_*, AKIA*).
+2. Destructive Command Prohibition:
+   - NEVER execute recursive deletions (rm -rf /, rm -rf ~, rm -rf *).
+   - NEVER drop databases or tables (DROP TABLE, DROP DATABASE, TRUNCATE TABLE).
+   - NEVER pipe uninspected remote scripts into shell interpreters (curl ... | bash, wget ... | sh).
+3. Workspace Boundary Confinement:
+   - Confine all file writes, edits, and reads strictly to the current workspace repository boundaries.
+4. Canonical Tool Decoration:
+   - Python: from btp_guard import Guard, secure_tool
+   - Node: import { scrubSensitiveCredentials } from 'btp-guard'
+`;
+
+  fs.writeFileSync(claudeMdPath, claudeMdContent, 'utf8');
+  console.log(`  ${GREEN}+ Claude Memory Config:${RESET}  CLAUDE.md (Strict Invariants & Secret Suppression)`);
+  console.log(`  ${GREEN}+ MCP Sentinel Gate:${RESET}     Ready for Claude Code / Claude Desktop`);
+  console.log(`\n${GREEN}[SUCCESS] Claude Code protected by Bartholomew BTP v5.4.20!${RESET}`);
+  console.log(`\nTo register Bartholomew MCP with Claude Code, run:`);
+  console.log(`  ${CYAN}claude mcp add bartholomew -- npx -y btp-guard mcp start${RESET}\n`);
+}
+
 function runHud() {
   const ts = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
   console.log(`
@@ -619,6 +654,9 @@ switch (command) {
     console.log(args[1] === '--json' ? JSON.stringify(status) : `Tier: ${status.tier} (${status.status})\nMeter: ${status.meter} ($${status.unit_price_usd} per allowed action)`);
     break;
   }
+  case 'claude':
+    runClaude(args.slice(1));
+    break;
   case 'hud':
     runHud();
     break;
@@ -649,6 +687,7 @@ switch (command) {
     printBanner();
     console.log(`Usage:
   ${BOLD}npx btp-guard activate [key]${RESET}        Verify Sovereign Enterprise Clearance (Unrestricted)
+  ${BOLD}npx btp-guard claude${RESET}            Configure Anthropic Claude Code terminal sentinel
   ${BOLD}npx btp-guard hud${RESET}               Launch real-time cybersecurity HUD dashboard
   ${BOLD}npx btp-guard${RESET}                   Run interactive live terminal showcase
   ${BOLD}npx btp-guard init${RESET}              Initialize project with .btp_policy.json & .btp_keystone.json

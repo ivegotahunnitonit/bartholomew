@@ -1,0 +1,22 @@
+name: Bartholomew AI Agent & PR Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  btp-guard:
+    name: Bartholomew AST & Secret Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Bartholomew ARP Guard
+        uses: ./
+        with:
+          fail-on-violation: 'false'
+          scan-path: '.'
+          spend-cap: '50.0'
