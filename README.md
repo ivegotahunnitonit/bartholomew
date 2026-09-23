@@ -7,7 +7,8 @@
 **Deterministic AST Policy Invariant Gating, In-Flight Secret Masking, and Cryptographic Attestation for Autonomous AI Agent Swarms.**
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v1.0.0-blue?logo=visualstudiocode)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/itsubsolomon.bartholomew-guard-vscode?color=blue&logo=visualstudiocode&label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=itsubsolomon.bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.19-purple?logo=eclipseide)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -102,20 +103,34 @@ if (!verdict.allowed) {
 
 ---
 
-## MCP Server (Model Context Protocol)
+## Cursor, Windsurf & MCP 1-Click Integration
 
-Bartholomew provides a native Model Context Protocol (MCP) server for Claude Desktop, Cursor, Windsurf, and any MCP-compatible client:
+Bartholomew provides deterministic execution firewalls and capability scoping directly inside Cursor, Windsurf, and Claude Code.
+
+### 1. Cursor & Windsurf Rules (`.cursorrules` / `.windsurfrules`)
+Drop the pre-configured `.cursorrules` into your project root to enforce AST boundary checks and block destructive terminal actions:
+- Blocks recursive directory deletion (`rm -rf`) and database destruction (`DROP TABLE`).
+- Masks `.env`, private keys (`id_rsa`, `id_ed25519`), and API secrets from LLM context.
+- Confines autonomous agent file mutations strictly to the active workspace.
+
+### 2. Model Context Protocol (MCP) Server Setup
+Add Bartholomew to your `cursor.json`, `claude_desktop_config.json`, or Windsurf MCP settings:
 
 ```json
 {
   "mcpServers": {
     "bartholomew": {
       "command": "python",
-      "args": ["-m", "src.mcp_server"]
+      "args": ["-m", "btp_guard.mcp_server"]
     }
   }
 }
 ```
+
+### 3. Native IDE Extensions
+Install the in-process execution sentry directly from your IDE's marketplace:
+- **VS Code / Cursor:** [`itsubsolomon.bartholomew-guard-vscode`](https://marketplace.visualstudio.com/items?itemName=itsubsolomon.bartholomew-guard-vscode) & [`itsubsolomon.bartholomew-keystone`](https://marketplace.visualstudio.com/items?itemName=itsubsolomon.bartholomew-keystone)
+- **VSCodium / Theia (Open VSX):** [`Bartholomew.bartholomew-guard-vscode`](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode) (2,340+ installs)
 
 ---
 

@@ -1,0 +1,37 @@
+# Bartholomew Cursor Configuration & Agent Rules (.cursorrules)
+# BTP v5.4 Agentic Runtime Protection (ARP)
+
+[ai]
+system_prompt_guard = """
+You are operating under the Bartholomew Trust Protocol (BTP v5.4) local execution boundary.
+1. NEVER attempt to read, write, or exfiltrate credentials, .env files, private keys (id_rsa, id_ed25519), or API secrets.
+2. NEVER emit destructive file system deletion commands (such as rm -rf, mkfs, format) or unverified shell pipes (curl | sh).
+3. Confine all automated tool calls, file mutations, and terminal execution to the active workspace project boundaries.
+4. When writing code that executes external tools or shell commands, integrate the in-process Bartholomew guardrail:
+   - Python: from btp_guard import BTPGuard
+   - Node/TypeScript: import { BTPGuard } from 'btp-guard'
+   - MCP: Route tool calls through the local Bartholomew MCP gateway.
+"""
+
+[terminal]
+blocked_patterns = [
+    "rm -rf /",
+    "rm -rf ~",
+    "DROP TABLE",
+    "DROP DATABASE",
+    "curl * | sh",
+    "wget * | sh",
+    "chmod 777",
+    "chown -R"
+]
+
+[privacy]
+protected_paths = [
+    ".env*",
+    "**/*secret*",
+    "**/*credential*",
+    "**/*id_rsa*",
+    "**/*id_ed25519*",
+    "**/*.pem",
+    "**/*.key"
+]

@@ -1,6 +1,6 @@
 {
   "name": "btp-guard",
-  "version": "5.4.18",
+  "version": "5.4.19",
   "description": "BTP v1.0.0 The AI Agent Execution Gateway - Sub-35us In-Process Tool Gating, Autonomous Micro-Escrow & SOC 2 Merkle Receipts",
   "main": "index.js",
   "types": "index.d.ts",
