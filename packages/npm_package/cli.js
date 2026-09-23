@@ -40,7 +40,7 @@ function showFirstUseUpgradeOffer() {
 function printBanner() {
   console.log(`
 ${BOLD}${CYAN}╔══════════════════════════════════════════════════════════════════════╗
-║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.11) -- EXECUTION SENTINEL${CYAN}    ║
+║   ${YELLOW}* BARTHOLOMEW TRUST PROTOCOL (BTP v5.4.19) -- EXECUTION SENTINEL${CYAN}    ║
 ║   ${RESET}Sub-35us AST Safety Gating, Zero Leakage & SOC 2 Merkle Receipts   ${BOLD}${CYAN}║
 ╚══════════════════════════════════════════════════════════════════════╝${RESET}
 `);
@@ -145,8 +145,8 @@ function runInit(subargs = []) {
   const btpDir = path.join(targetDir, '.btp');
   if (!fs.existsSync(btpDir)) fs.mkdirSync(btpDir, { recursive: true });
 
-  const policyYaml = `# Bartholomew Protocol (BTP v5.4.16) Project Policy
-version: "5.4.16"
+  const policyYaml = `# Bartholomew Protocol (BTP v5.4.19) Project Policy
+version: "5.4.19"
 framework: "${framework}"
 invariants:
   ast_gating:
@@ -171,7 +171,7 @@ invariants:
 
   // 2b. Generate .btp_policy.json
   const defaultPolicy = {
-    version: "5.4.16",
+    version: "5.4.19",
     workspace: path.basename(targetDir),
     enforcement_mode: "STRICT_AST_GATED",
     spend_limit_usd: 50.00,
@@ -231,6 +231,33 @@ invariants:
   };
   fs.writeFileSync(keystonePath, JSON.stringify(defaultKeystone, null, 2), 'utf8');
   console.log(`  ${GREEN}+ Capability Passkey:${RESET} .btp_keystone.json (Token ID: ${passkeyId})`);
+
+  // 4a. Configure Cursor (.cursorrules)
+  const cursorRulesPath = path.join(targetDir, '.cursorrules');
+  const cursorRulesContent = `# Bartholomew Cursor Configuration (.cursorrules) - BTP v5.4.19
+[ai]
+system_prompt_guard = """
+You are operating under the Bartholomew Trust Protocol (BTP v5.4.19) local execution boundary.
+1. NEVER attempt to read, write, or exfiltrate credentials, .env files, private keys (id_rsa, id_ed25519), or API secrets.
+2. NEVER emit destructive file system deletion commands (such as rm -rf, mkfs, format) or unverified shell pipes (curl | sh).
+3. Confine all automated tool calls, file mutations, and terminal execution to the active workspace project boundaries.
+"""
+[terminal]
+blocked_patterns = ["rm -rf /", "rm -rf ~", "DROP TABLE", "DROP DATABASE", "curl * | sh", "wget * | sh"]
+[privacy]
+protected_paths = [".env*", "**/*secret*", "**/*credential*", "**/*id_rsa*", "**/*.pem", "**/*.key"]
+`;
+  if (!fs.existsSync(cursorRulesPath)) {
+    fs.writeFileSync(cursorRulesPath, cursorRulesContent, 'utf8');
+    console.log(`  ${GREEN}+ Cursor Guardrules:${RESET}  .cursorrules (In-Flight Secret & Boundary Masking)`);
+  }
+
+  // 4b. Configure Windsurf (.windsurfrules)
+  const windsurfRulesPath = path.join(targetDir, '.windsurfrules');
+  if (!fs.existsSync(windsurfRulesPath)) {
+    fs.writeFileSync(windsurfRulesPath, cursorRulesContent.replace('Cursor Configuration', 'Windsurf Configuration'), 'utf8');
+    console.log(`  ${GREEN}+ Windsurf Rules:${RESET}     .windsurfrules (Autonomous Agent Protection)`);
+  }
 
   // 4. Configure Cursor
   const cursorDir = path.join(targetDir, '.cursor');
@@ -312,7 +339,7 @@ is_safe, violation = guard.check(command_or_sql)${RESET}`);
   console.log(`    ${CYAN}engine = KeystoneEngine()${RESET}`);
   console.log(`    ${CYAN}clearance = engine.check_clearance(passkey, "COMMAND_EXEC", "npm test")${RESET}`);
 
-  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.16!${RESET}`);
+  console.log(`\n${GREEN}[SUCCESS] Project protected by Bartholomew BTP v5.4.19!${RESET}`);
   console.log(`\n${BOLD}[INFO] Need Fleet Monitoring or Live Threat Alerts?${RESET}`);
   console.log(`  -> Cloud Console:   ${CYAN}https://bartholomew.info/cloud${RESET}`);
   console.log(`  -> Team Editions:   ${CYAN}npx btp-guard pricing${RESET}  or  ${CYAN}https://bartholomew.info/pricing${RESET}\n`);
