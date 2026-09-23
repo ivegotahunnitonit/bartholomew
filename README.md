@@ -19,6 +19,8 @@
 [![LangChain](https://img.shields.io/badge/LangChain-Runtime%20Guard-1C3C3C?logo=langchain&logoColor=white)](examples/README.md)
 [![CrewAI](https://img.shields.io/badge/CrewAI-Agent%20Guard-FF4B4B)](examples/README.md)
 [![AutoGen](https://img.shields.io/badge/Microsoft-AutoGen%20Swarm-00A4EF?logo=microsoft&logoColor=white)](examples/README.md)
+[![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM%20Guard-76B900?logo=nvidia&logoColor=white)](docs/NVIDIA_NIM_INTEGRATION_GUIDE.md)
+[![Cursor & Windsurf](https://img.shields.io/badge/Cursor%20%26%20Windsurf-Rules%20Included-7C3AED?logo=visualstudiocode&logoColor=white)](docs/CURSORRULES_DIRECTORY_SUBMISSION.md)
 [![IDE](https://img.shields.io/badge/IDE-Cursor%20%2F%20VS%20Code-7C3AED?logo=githubcopilot&logoColor=white)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
 
 ---
@@ -68,11 +70,16 @@ pip install btp-guard
 ```
 
 ```python
-from btp_guard import Guard
+from btp_guard import Guard, secure_tool
 
+# 1. Protect any tool function in 1 line
+@secure_tool
+def execute_query(sql: str):
+    return db.query(sql) # Blocks DROP TABLE / deletions in <35µs
+
+# 2. Or initialize a custom guard with budget caps
 guard = Guard(spend_cap=100.0, strict=True)
 
-# 1. Protect any tool function via decorator
 @guard.protect
 def execute_shell(command: str):
     return f"Executed: {command}"
@@ -103,15 +110,34 @@ if (!verdict.allowed) {
 
 ---
 
+---
+
+## NVIDIA NIM Microservice Integration
+
+Bartholomew provides sub-35µs zero-overhead AST execution gating and prompt injection screening for self-hosted or cloud-hosted **NVIDIA NIM inference microservices** (TensorRT-LLM, Llama 3.1 70B/8B, Nemotron, Mistral).
+
+- **12,000x Faster Than LLM-as-a-Judge**: Evaluates commands in microseconds on CPU without 500ms+ second-model lag.
+- **Zero GPU VRAM Impact**: 100% of GPU memory remains dedicated to your NIM foundation model.
+- **Turnkey Container Deployment**: Launch a fully guarded NIM stack with one command:
+  ```bash
+  docker compose -f docker-compose.nim.yml up -d
+  ```
+
+Read the complete [NVIDIA NIM Integration Guide](docs/NVIDIA_NIM_INTEGRATION_GUIDE.md) and view the [NVIDIA Developer Forum Showcase](docs/NVIDIA_DEVELOPER_FORUM_POST.md).
+
 ## Cursor, Windsurf & MCP 1-Click Integration
 
 Bartholomew provides deterministic execution firewalls and capability scoping directly inside Cursor, Windsurf, and Claude Code.
 
 ### 1. Cursor & Windsurf Rules (`.cursorrules` / `.windsurfrules`)
-Drop the pre-configured `.cursorrules` into your project root to enforce AST boundary checks and block destructive terminal actions:
-- Blocks recursive directory deletion (`rm -rf`) and database destruction (`DROP TABLE`).
-- Masks `.env`, private keys (`id_rsa`, `id_ed25519`), and API secrets from LLM context.
-- Confines autonomous agent file mutations strictly to the active workspace.
+Auto-scaffold or drop the pre-configured rules into your project root:
+```bash
+npx btp-guard init
+```
+- **Terminal Invariant Defense**: Blocks recursive deletions (`rm -rf`), database destructions (`DROP TABLE`), and pipe execution (`curl | sh`).
+- **Zero Secret Leakage**: Masks `.env*`, private keys (`id_rsa`, `id_ed25519`, `.pem`, `.key`), and credentials from AI agent context.
+- **Boundary Confinement**: Restricts agent file modifications strictly to the active workspace.
+- View the submission specs: [Cursorrules Directory Pack](docs/CURSORRULES_DIRECTORY_SUBMISSION.md) | [Windsurf Rules Pack](docs/WINDSURF_RULES_SUBMISSION.md).
 
 ### 2. Model Context Protocol (MCP) Server Setup
 Add Bartholomew to your `cursor.json`, `claude_desktop_config.json`, or Windsurf MCP settings:

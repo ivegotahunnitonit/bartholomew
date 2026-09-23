@@ -177,4 +177,3 @@ vscode-extension/*.vsix
 
 # IDE Cursor rules
 .cursor/
-.cursorrules

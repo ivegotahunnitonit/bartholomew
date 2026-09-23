@@ -13,12 +13,14 @@ from .smolagents import BtpSmolagentsGuard
 from .langgraph import LangGraphBTPGuard, btp_langchain_tool
 from .autogen import AutoGenBTPInterceptor, btp_autogen_guard
 from .llamaindex import LlamaIndexBTPToolGuard, btp_llamaindex_tool
+from .nvidia_nim import BartholomewNIMGuard
 
 from . import crewai
 from . import langchain
 from . import langgraph
 from . import autogen
 from . import llamaindex
+from . import nvidia_nim
 from . import pydanticai
 from . import smolagents
 from . import swarm
@@ -35,12 +37,14 @@ __all__ = [
     "AutoGenBTPInterceptor",
     "btp_autogen_guard",
     "LlamaIndexBTPToolGuard",
+    "BartholomewNIMGuard",
     "btp_llamaindex_tool",
     "crewai",
     "langchain",
     "langgraph",
     "autogen",
     "llamaindex",
+    "nvidia_nim",
     "pydanticai",
     "smolagents",
     "swarm",
