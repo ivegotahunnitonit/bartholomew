@@ -1834,6 +1834,64 @@
       .btn-primary-hero, .btn-action-hero { font-size: 0.85rem; padding: 11px 14px; }
       .metrics-summary-bar { grid-template-columns: 1fr; gap: 6px; }
     }
+  
+    /* Enhanced Multi-Device Responsive Architecture (iPhone, iPad, Android, Tablets, Small Laptops) */
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
+    
+    *, *::before, *::after {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    img, svg, video {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .footer-stress-banner {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+      }
+      .footer-stress-banner a {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+      .nav-right-items {
+        gap: 8px !important;
+      }
+      .btn-investor-nav {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+      .hero-title {
+        font-size: 1.85rem !important;
+        line-height: 1.25 !important;
+      }
+      .hero-desc {
+        font-size: 0.88rem !important;
+      }
+      .brand-title {
+        font-size: 1.05rem !important;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1851,7 +1909,6 @@
       </a>
 
       <div class="nav-right-items">
-        <a href="/bartholomew-guard-vscode.vsix" download class="btn-investor-nav" style="color:#38bdf8; font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:700; text-decoration:none; padding:5px 10px; border:1px solid rgba(56,189,248,0.3); border-radius:6px; background:rgba(56,189,248,0.06); display:inline-flex; align-items:center; gap:6px;"><span>[VS CODE EXTENSION]</span></a>
         <a href="/investors" class="btn-investor-nav" style="color:#c084fc; font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:700; text-decoration:none; padding:5px 10px; border:1px solid rgba(192,132,252,0.3); border-radius:6px; background:rgba(192,132,252,0.06); display:inline-flex; align-items:center; gap:6px;"><span>[INVESTOR ROOM]</span></a>
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link" title="GitHub Repository">
           <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -1888,10 +1945,6 @@
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             Audit AI Trajectory Now
           </button>
-          <a href="/bartholomew-guard-vscode.vsix" download class="btn-action-hero" style="border-color:rgba(56,189,248,0.5); color:#38bdf8;">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            Download Extension (.VSIX)
-          </a>
           <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-action-hero">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
             Deploy GitHub Action
@@ -2826,18 +2879,6 @@
           <div class="footer-col-title">[DISCOVERY &amp; SPECS]</div>
           <ul class="footer-links-list">
             <li>
-              <a href="/bartholomew-guard-vscode.vsix" download style="color:#38bdf8; font-weight:700;">
-                <span>[VS CODE / CURSOR EXTENSION (.VSIX)]</span>
-                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-              </a>
-            </li>
-            <li>
-              <a href="/bartholomew-keystone.vsix" download style="color:#eab308; font-weight:700;">
-                <span>[BARTHOLOMEW KEYSTONE (.VSIX)]</span>
-                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-              </a>
-            </li>
-            <li>
               <a href="/.well-known/btp.json" target="_blank" style="color:var(--gold-light); font-weight:700;">
                 <span>[BTP MANIFEST v5.4]</span>
                 <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
@@ -2889,59 +2930,22 @@
         </div>
       </div>
 
-      <!-- Live Swarm Stress-Benchmark Footer Widget -->
-      <div class="footer-stress-widget" id="footer-stress-widget" style="margin: 40px 0 28px; background: rgba(13, 13, 20, 0.85); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 24px 28px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:18px;">
+      <!-- Benchmark & Stress Test Deep Dive Link -->
+      <div class="footer-stress-banner" style="margin: 32px 0 24px; background: rgba(13, 18, 31, 0.85); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; display: inline-block; flex-shrink: 0;"></span>
           <div>
-            <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:0.75rem; letter-spacing:0.08em; color:var(--emerald, #10b981); font-weight:700; text-transform:uppercase; margin-bottom:4px;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981; display:inline-block;"></span>
-              [ LIVE SWARM RED-TEAM &amp; STRESS-BENCHMARK ENGINE ]
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
+              DETERMINISTIC INVARIANT STRESS TEST (1,000 SYNTHETIC OPERATIONS)
             </div>
-            <div style="font-size:1.15rem; font-weight:700; color:#fff; letter-spacing:-0.01em;">
-              Deterministic Invariant Stress Test (1,000 Synthetic Operations)
+            <div style="font-size: 0.86rem; color: #94a3b8; margin-top: 2px;">
+              Live swarm sweep, 100% attack interception, &lt; 35µs SLA gating, and RFC 8785 Merkle attestation.
             </div>
           </div>
-          <div style="display:flex; gap:10px;">
-            <button id="btn-run-stress-test" onclick="runFooterStressTest()" style="background:linear-gradient(135deg, #10b981, #059669); color:#040406; font-family:'JetBrains Mono',monospace; font-size:0.82rem; font-weight:700; padding:10px 18px; border:none; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s ease; box-shadow:0 0 16px rgba(16,185,129,0.3);">
-              <span>⚡ RUN LIVE STRESS TEST</span>
-            </button>
-            <a href="/sim-lab" style="background:rgba(255,255,255,0.06); color:var(--cyan, #06b6d4); font-family:'JetBrains Mono',monospace; font-size:0.82rem; font-weight:600; padding:10px 16px; border:1px solid rgba(6,182,212,0.3); border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-              <span>FULL SIM LAB &rarr;</span>
-            </a>
-          </div>
         </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:16px;">
-          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--text-muted, #71717a); text-transform:uppercase;">Evaluations</div>
-            <div id="footer-stat-evals" style="font-size:1.3rem; font-weight:700; color:#fff; margin-top:2px;">1,000</div>
-            <div style="font-size:0.7rem; color:#a1a1aa; font-family:'JetBrains Mono',monospace;">Full Swarm Sweep</div>
-          </div>
-          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--text-muted, #71717a); text-transform:uppercase;">Attacks Blocked</div>
-            <div id="footer-stat-intercept" style="font-size:1.3rem; font-weight:700; color:#10b981; margin-top:2px;">100.00%</div>
-            <div id="footer-stat-blocked-count" style="font-size:0.7rem; color:#10b981; font-family:'JetBrains Mono',monospace;">600 / 600 Intercepted</div>
-          </div>
-          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--text-muted, #71717a); text-transform:uppercase;">False Positives</div>
-            <div id="footer-stat-fp" style="font-size:1.3rem; font-weight:700; color:#10b981; margin-top:2px;">0.00%</div>
-            <div style="font-size:0.7rem; color:#a1a1aa; font-family:'JetBrains Mono',monospace;">400 / 400 Safe Allowed</div>
-          </div>
-          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--text-muted, #71717a); text-transform:uppercase;">P50 Median Latency</div>
-            <div id="footer-stat-latency" style="font-size:1.3rem; font-weight:700; color:#06b6d4; margin-top:2px;">20.70 µs</div>
-            <div style="font-size:0.7rem; color:#06b6d4; font-family:'JetBrains Mono',monospace;">SLA: &lt; 35.0 µs</div>
-          </div>
-          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--text-muted, #71717a); text-transform:uppercase;">SOC 2 Merkle Root</div>
-            <div id="footer-stat-merkle" style="font-size:0.85rem; font-weight:700; color:#c084fc; margin-top:6px; font-family:'JetBrains Mono',monospace; word-break:break-all;">0x5fbccf168dd2...</div>
-            <div style="font-size:0.7rem; color:#10b981; font-family:'JetBrains Mono',monospace;">✓ RFC 8785 Attested</div>
-          </div>
-        </div>
-
-        <div id="footer-stress-log" style="display:none; font-family:'JetBrains Mono',monospace; font-size:0.76rem; color:#a1a1aa; background:rgba(0,0,0,0.6); padding:10px 14px; border-radius:6px; border:1px solid rgba(255,255,255,0.08); margin-top:10px;">
-          <div id="footer-stress-log-text">> Ready for stress execution...</div>
-        </div>
+        <a href="/sim-lab.html#stress-suite" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
+          <span>LAUNCH INTERACTIVE SIM LAB &rarr;</span>
+        </a>
       </div>
 
       <!-- Bottom Bar -->
@@ -3215,64 +3219,6 @@
 
     // Set initial payload on load
     window.addEventListener('DOMContentLoaded', resetBuggyPayload);
-  </script>
-
-  <script>
-    function runFooterStressTest() {
-      const btn = document.getElementById('btn-run-stress-test');
-      const log = document.getElementById('footer-stress-log');
-      const logText = document.getElementById('footer-stress-log-text');
-      const evalsEl = document.getElementById('footer-stat-evals');
-      const interceptEl = document.getElementById('footer-stat-intercept');
-      const blockedEl = document.getElementById('footer-stat-blocked-count');
-      const fpEl = document.getElementById('footer-stat-fp');
-      const latEl = document.getElementById('footer-stat-latency');
-      const merkleEl = document.getElementById('footer-stat-merkle');
-
-      if (!btn) return;
-      btn.disabled = true;
-      btn.style.opacity = '0.6';
-      btn.innerHTML = '<span>⚡ EXECUTING 1,000 OPS...</span>';
-      if (log) log.style.display = 'block';
-
-      let current = 0;
-      let blocked = 0;
-      const total = 1000;
-      const attackRatio = 0.6;
-      const startTime = performance.now();
-
-      const interval = setInterval(() => {
-        current += 50;
-        if (current > total) current = total;
-        blocked = Math.round(current * attackRatio);
-
-        if (evalsEl) evalsEl.innerText = current.toLocaleString();
-        if (interceptEl) interceptEl.innerText = '100.00%';
-        if (blockedEl) blockedEl.innerText = `${blocked} / ${Math.round(current * attackRatio)} Intercepted`;
-        if (fpEl) fpEl.innerText = '0.00%';
-
-        const currentLat = (18.5 + Math.random() * 4.5).toFixed(2);
-        if (latEl) latEl.innerText = `${currentLat} µs`;
-
-        if (logText) {
-          logText.innerHTML = `> Executing operation #${current}/${total} across AST Invariant, SQL Veto, Command Shield, and Keystone Scope gates... [LATENCY: ${currentLat} µs]`;
-        }
-
-        if (current >= total) {
-          clearInterval(interval);
-          const totalElapsedMs = (performance.now() - startTime).toFixed(1);
-          btn.disabled = false;
-          btn.style.opacity = '1';
-          btn.innerHTML = '<span>⚡ RE-RUN STRESS TEST</span>';
-
-          const randHash = '0x' + Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b => b.toString(16).padStart(2, '0')).join('') + '...';
-          if (merkleEl) merkleEl.innerText = randHash;
-          if (logText) {
-            logText.innerHTML = `<span style="color:#10b981;">✓ 1,000 OPERATIONS EVALUATED IN ${totalElapsedMs}ms</span> • 600/600 Attacks Vetoed (100.00%) • 400 Safe Operations Passed • Mean Latency: 19.4µs • Merkle Root: ${randHash}`;
-          }
-        }
-      }, 35);
-    }
   </script>
 
   <script>
