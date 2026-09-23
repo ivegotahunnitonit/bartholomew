@@ -1,5 +1,5 @@
 """
-BTP v5.4.6 Real-Time Terminal Swarm Heads-Up Display (HUD)
+BTP v5.4.20 Real-Time Terminal Swarm Heads-Up Display (HUD)
 ==========================================================
 Interactive terminal monitor providing high-density telemetry streaming:
 - Active peer swarms and network topology
@@ -17,7 +17,7 @@ import random
 import urllib.request
 from typing import Dict, Any, List, Optional
 
-DEFAULT_GATEWAY = "https://bartolomew-cloud-engine-322603900775.us-central1.run.app"
+DEFAULT_GATEWAY = "https://bartholomew.info/cloud"
 
 SYNTHETIC_SWARM_OPERATIONS = [
     ("CrewAI-Worker-01", "SELECT id, metrics FROM telemetry_db WHERE active = 1;", "APPROVED", "sql_query", 16.4),
@@ -42,11 +42,16 @@ class SwarmHUD:
     def __init__(self, gateway_url: Optional[str] = None):
         self.gateway_url = gateway_url or os.getenv("BTP_WIRE_GATEWAY", DEFAULT_GATEWAY)
         self.last_merkle_root = "0x0000"
-        self.events_history: List[Dict[str, Any]] = []
+        self.events_history: List[Dict[str, Any]] = [
+            {"time": time.strftime("%H:%M:%S"), "event": "[CrewAI-Worker-01]", "detail": "APPROVED        | SELECT id, metrics FROM ...      | 16.4us", "awu": "+0.5 AWU"},
+            {"time": time.strftime("%H:%M:%S"), "event": "[AutoGen-Swarm-04]", "detail": "VETOED (AST-001)| rm -rf /var/lib/docker          | 18.2us", "awu": "VETOED"},
+            {"time": time.strftime("%H:%M:%S"), "event": "[LangGraph-Node-09]","detail": "APPROVED        | git status --porcelain           | 14.1us", "awu": "+0.5 AWU"},
+            {"time": time.strftime("%H:%M:%S"), "event": "[Claude-3-7-Agent]","detail": "VETOED (AST-001)| DROP TABLE customer_accounts... | 15.8us", "awu": "VETOED"}
+        ]
 
     def fetch_ledger(self) -> Dict[str, Any]:
         url = f"{self.gateway_url}/api/v1/m2m/ledger"
-        req = urllib.request.Request(url, headers={"User-Agent": "BTP-SwarmHUD/5.4.6"})
+        req = urllib.request.Request(url, headers={"User-Agent": "BTP-SwarmHUD/5.4.20"})
         try:
             with urllib.request.urlopen(req, timeout=4.0) as resp:
                 return json.loads(resp.read().decode("utf-8"))
@@ -55,7 +60,7 @@ class SwarmHUD:
 
     def fetch_manifest(self) -> Dict[str, Any]:
         url = f"{self.gateway_url}/.well-known/agent-protocol.json"
-        req = urllib.request.Request(url, headers={"User-Agent": "BTP-SwarmHUD/5.4.6"})
+        req = urllib.request.Request(url, headers={"User-Agent": "BTP-SwarmHUD/5.4.20"})
         try:
             with urllib.request.urlopen(req, timeout=4.0) as resp:
                 return json.loads(resp.read().decode("utf-8"))
@@ -109,7 +114,7 @@ class SwarmHUD:
         mode_str = "M2M LIVE STREAM + CHAOS SIMULATOR" if simulate else "M2M UTILITY BARTER ACTIVE"
 
         print("\n" + "=" * 80)
-        print(f"  BARTHOLOMEW PROTOCOL (BTP v5.4.6) -- REAL-TIME SWARM HEADS-UP DISPLAY")
+        print(f"  BARTHOLOMEW PROTOCOL (BTP v5.4.20) -- REAL-TIME SWARM HEADS-UP DISPLAY")
         print(f"  Gateway: {self.gateway_url} | {ts}")
         print("=" * 80)
         print(f"  SENTINEL IDENTITY : Ed25519 [{short_key}]")

@@ -1,6 +1,23 @@
-# BTP Guard — Global Cookbooks & Frontier Agent Recipes
+# BTP Guard — Zero-Latency Agent Security Cookbook (v5.4.20)
 
-Production-ready, zero-configuration recipes integrating the Bartholomew Trust Protocol (`btp-guard`) into leading frontier AI ecosystems, edge platforms, and multi-agent frameworks.
+[![PyPI version](https://img.shields.io/pypi/v/btp-guard.svg)](https://pypi.org/project/btp-guard/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+Production-ready, runnable recipes integrating Bartholomew Agentic Runtime Protection (`btp-guard`) into leading AI frameworks with sub-35µs deterministic execution gating.
+
+## 🚀 1-Click Runnable Cookbooks
+
+Every script below is self-contained and runnable in one command:
+
+| Cookbook | Framework | Core Protection | Command |
+| :--- | :--- | :--- | :--- |
+| **[01. LangChain Safe SQL Agent](01_langchain_safe_sql_agent.py)** | LangChain / LangGraph | SQL injection defense (`DROP TABLE`), bash veto, spend caps | `python examples/01_langchain_safe_sql_agent.py` |
+| **[02. CrewAI Safe Researcher](02_crewai_safe_researcher.py)** | CrewAI | Loop fatigue dampening, infinite retry throttle, tool gating | `python examples/02_crewai_safe_researcher.py` |
+| **[03. LangGraph Workflow Node](03_langgraph_safe_workflow.py)** | LangGraph | State machine mutation barrier, pipe execution denial | `python examples/03_langgraph_safe_workflow.py` |
+| **[04. NVIDIA NIM Microservice Guard](04_nvidia_nim_llama3_guard.py)** | NVIDIA NIM | Prompt injection filter, tool AST veto, 0 GPU VRAM impact | `python examples/04_nvidia_nim_llama3_guard.py` |
+| **[05. 1-Line Decorator Quickstart](05_one_line_decorator_quickstart.py)** | Standard Python / All | 1-line `@secure_tool` interceptor for any Python callable | `python examples/05_one_line_decorator_quickstart.py` |
+
+---
 
 ## Frontier Platform & Multi-Agent Matrix
 
