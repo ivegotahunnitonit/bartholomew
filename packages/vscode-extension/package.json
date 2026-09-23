@@ -1,9 +1,9 @@
 {
   "name": "bartholomew-guard-vscode",
-  "displayName": "Bartholomew Guard — AI Agent Safety",
-  "description": "Sub-25Âµs in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
+  "displayName": "Bartholomew Guard \u2014 AI Agent Safety",
+  "description": "Sub-25\u00c2\u00b5s in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
   "version": "5.4.19",
-  "publisher": "Bartholomew",
+  "publisher": "itsubsolomon",
   "icon": "icon.png",
   "license": "MIT",
   "galleryBanner": {
@@ -25,10 +25,26 @@
     "Linters",
     "Machine Learning"
   ],
-  "keywords": ["ai","security","agent","mcp","trust","guardrails","cursor","copilot","claude","safety","ast","firewall","theia","codium","open-vsx"],
+  "keywords": [
+    "ai",
+    "security",
+    "agent",
+    "mcp",
+    "trust",
+    "guardrails",
+    "cursor",
+    "copilot",
+    "claude",
+    "safety",
+    "ast",
+    "firewall",
+    "theia",
+    "codium",
+    "open-vsx"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
-        "commands": [
+    "commands": [
       {
         "command": "bartholomew.viewStatus",
         "title": "Bartholomew: View Security Status & Trust Roots",
@@ -96,4 +112,3 @@
     "typescript": "^5.3.0"
   }
 }
-

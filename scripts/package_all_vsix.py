@@ -15,7 +15,7 @@ def pack_package(pkg_dir, out_vsix_name, package_id, display_name, description):
     vsixmanifest_xml = f"""<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Language="en-US" Id="{package_id}" Version="1.0.0" Publisher="Bartholomew" />
+    <Identity Language="en-US" Id="{package_id}" Version="5.4.19" Publisher="itsubsolomon" />
     <DisplayName>{display_name}</DisplayName>
     <Description xml:space="preserve">{description}</Description>
     <Tags>ai,security,agent,mcp,trust,guardrails,cursor,copilot</Tags>
@@ -53,14 +53,14 @@ if __name__ == '__main__':
     root = os.path.abspath('.')
     pack_package(
         os.path.join(root, 'packages/bartholomew-keystone'),
-        'bartholomew-keystone-1.0.0.vsix',
+        'bartholomew-keystone-5.4.19.vsix',
         'bartholomew-keystone',
         'Bartholomew Keystone — Agent Capability Passkey',
         'Cryptographically signed clearance tokens granting autonomous AI agents scoped access across IDEs, programs, and web searches.'
     )
     pack_package(
         os.path.join(root, 'packages/vscode-extension'),
-        'bartholomew-guard-vscode-1.0.0.vsix',
+        'bartholomew-guard-vscode-5.4.19.vsix',
         'bartholomew-guard-vscode',
         'Bartholomew Autonomous AI Guard',
         'Sub-25µs in-process tool execution gateway, runtime dispatch seam, and AST security gate.'
