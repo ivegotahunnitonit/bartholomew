@@ -1,0 +1,19 @@
+{
+  "engine": "BTP In-Process AST Invariant Evaluator",
+  "version": "5.4.20",
+  "vectors_count": 10000,
+  "throughput_eps": 33659.6,
+  "p50_us": 11.4,
+  "p99_us": 146.8,
+  "sub_35us_met": true,
+  "receipt_sha256": "3baa8526f52c7914c8f38882c556e35cae6ff10369bb6e66d205125ebc87a6cc",
+  "latency_percentiles_us": {
+    "min": 4.0,
+    "p50": 11.4,
+    "p90": 85.0,
+    "p95": 117.2,
+    "p99": 146.8,
+    "max": 1346.6,
+    "mean": 29.01158
+  }
+}

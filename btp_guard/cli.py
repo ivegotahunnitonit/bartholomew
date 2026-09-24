@@ -285,6 +285,9 @@ def cmd_benchmark_ast(args):
             "max": max_lat,
             "mean": mean_lat
         }
+        out_dir = os.path.dirname(os.path.abspath(out_path))
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(receipt_raw, f, indent=2)
         print(f"[+] Benchmark receipt exported to: {out_path}\n")
