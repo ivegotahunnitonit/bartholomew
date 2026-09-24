@@ -791,6 +791,15 @@ rules:
     print(f"[OK] Sovereign Public Key (Ed25519): {authority.public_key_hex}")
     if getattr(args, "pair", None):
         print(f"[OK] Paired with framework target: {args.pair}")
+
+    # Auto-detect Git and install pre-commit security hook
+    git_dir = os.path.join(os.getcwd(), ".git")
+    if os.path.exists(git_dir):
+        try:
+            cmd_hook_install(args)
+        except Exception:
+            pass
+
     print("[OK] Bartholomew local workspace initialized successfully.")
 
 
@@ -1033,9 +1042,10 @@ def cmd_mcp_verify(args):
         "authority_pubkey": "ba7d8ab0d3c86b95f19dbd5f9e618b75fa1fa1cd47d8cc3336526ffd2007bc1a",
         "nonce": nonce,
         "ed25519_signature": ed25519_sig,
-        "badge_asset": "https://github.com/ivegotahunnitonit/bartholomew/raw/main/docs/assets/verified_mcp_seal.png",
-        "embed_markdown": "[![Bartholomew Verified MCP](https://github.com/ivegotahunnitonit/bartholomew/raw/main/docs/assets/verified_mcp_seal.png)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)",
-        "registry_url": "https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard"
+        "badge_asset": "https://bartholomew.info/badge.svg",
+        "embed_markdown": "[![Bartholomew Verified MCP](https://bartholomew.info/badge.svg)](https://bartholomew.info/verified-mcp.html)",
+        "embed_html": '<a href="https://bartholomew.info/verified-mcp.html"><img src="https://bartholomew.info/badge.svg" alt="Bartholomew Verified MCP" /></a>',
+        "registry_url": "https://bartholomew.info/verified-mcp.html"
     }
 
     with open(out_file, "w", encoding="utf-8") as f:
@@ -1044,9 +1054,10 @@ def cmd_mcp_verify(args):
     print("--------------------------------------------------------------------------------")
     print("[+] CERTIFICATION SUCCESSFUL: 100/100 (Zero Invariant Violations)")
     print(f"[+] Output Seal Certificate written to: {out_file}")
-    print("\nEmbed this badge in your MCP Server repository:")
+    print("\nEmbed this badge in your MCP Server README.md:")
     print("--------------------------------------------------------------------------------")
-    print(seal_data["embed_markdown"])
+    print(f"  Markdown: {seal_data['embed_markdown']}")
+    print(f"  HTML:     {seal_data['embed_html']}")
     print("--------------------------------------------------------------------------------")
     is_register = getattr(args, "register", False)
     if is_register:

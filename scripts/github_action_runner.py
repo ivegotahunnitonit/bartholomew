@@ -124,26 +124,30 @@ if github_output:
         gh_out.write(f"compliance-status={compliance_status}\n")
 
 # Write GitHub Step Summary
+# Write GitHub Step Summary
 step_summary = os.getenv("GITHUB_STEP_SUMMARY")
 if step_summary:
     with open(step_summary, "a", encoding="utf-8") as s_out:
-        s_out.write(f"## 🛡️ Bartholomew Agentic Runtime Protection (ARP) Audit\n\n")
+        s_out.write("### Bartholomew Agentic Runtime Protection (ARP) Audit\n\n")
         if compliance_status == "PASSED":
-            s_out.write(f"> **Status: ✅ PASSED** — All {scanned_count} files verified against sub-35µs AST safety invariants.\n\n")
+            s_out.write(f"> **Status: PASSED (Zero Violations)** -- All {scanned_count} files verified against sub-35us AST safety invariants.\n\n")
         else:
-            s_out.write(f"> **Status: 🛑 FAILED** — {len(violations)} safety violations detected in agent changes.\n\n")
+            s_out.write(f"> **Status: FAILED** -- {len(violations)} safety violations detected in agent changes.\n\n")
         
-        s_out.write(f"| Metric | Value |\n| :--- | :--- |\n")
+        s_out.write("| Metric | Value |\n| :--- | :--- |\n")
         s_out.write(f"| **Scanned Files** | `{scanned_count}` |\n")
         s_out.write(f"| **Evaluation Time** | `{scan_duration_ms:.2f} ms` |\n")
         s_out.write(f"| **Ed25519 Merkle Root** | `{receipt_digest}` |\n")
-        s_out.write(f"| **Zero False Negatives Invariant** | `ENFORCED` |\n\n")
+        s_out.write("| **Zero False Negatives Invariant** | `ENFORCED (Sub-35us Polyglot AST)` |\n")
+        s_out.write("| **Verification Authority** | [Bartholomew Trust Protocol](https://bartholomew.info) |\n\n")
 
         if violations:
-            s_out.write("### ⚠️ Intercepted Invariant Violations\n\n")
+            s_out.write("#### Intercepted Invariant Violations\n\n")
             s_out.write("| Severity | Location | Rule ID | Description |\n| :--- | :--- | :--- | :--- |\n")
             for v in violations:
                 s_out.write(f"| **{v['severity']}** | `{v['file']}` | `{v['rule_id']}` | {v['reason']} |\n")
+        else:
+            s_out.write("[![Bartholomew Verified](https://bartholomew.info/badge.svg)](https://bartholomew.info/verified-mcp.html)\n\n")
 
 if len(violations) > 0 and FAIL_ON_VIOLATION:
     print(f"\n[ACTION FAILED] {len(violations)} critical safety invariant violations found.")
