@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Documentation — Bartholomew Agentic Runtime Protection (BTP v5.4)</title>
+  <meta name="description" content="Technical documentation and developer integration guide for Bartholomew: sub-35us AST invariant gating, universal 1-line agent wrappers, and eBPF kernel process sandboxing." />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #070a0f;
+      --bg-card: rgba(13, 18, 31, 0.75);
+      --bg-elevated: #0d1322;
+      --bg-code: #04070d;
+      --border-subtle: rgba(45, 62, 80, 0.65);
+      --border-focus: rgba(16, 185, 129, 0.6);
+      
+      --gold: #eab308;
+      --emerald: #10b981;
+      --emerald-dim: rgba(16, 185, 129, 0.12);
+      --purple: #a855f7;
+      --purple-dim: rgba(168, 85, 247, 0.12);
+      --blue: #3b82f6;
+      --rose: #f43f5e;
+      --rose-dim: rgba(244, 63, 94, 0.12);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Top Nav */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 10, 15, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .nav-brand img { width: 30px; height: 30px; border-radius: 6px; }
+    .nav-tag {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: var(--purple-dim);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Layout */
+    .docs-container {
+      display: flex;
+      max-width: 1380px;
+      margin: 0 auto;
+      min-height: calc(100vh - 65px);
+    }
+
+    /* Sidebar */
+    .docs-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border-subtle);
+      padding: 28px 20px;
+    }
+    .sidebar-group-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin: 20px 0 8px 8px;
+    }
+    .sidebar-group-title:first-child { margin-top: 0; }
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+    .sidebar-nav a {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+    .sidebar-nav a:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .sidebar-nav a.active {
+      color: var(--emerald);
+      background: var(--emerald-dim);
+      font-weight: 600;
+    }
+
+    /* Content Area */
+    .docs-content {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 960px;
+    }
+
+    .docs-hero {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 30px;
+    }
+    .docs-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .docs-sub {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 720px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 44px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    p.lead-p {
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      font-size: 0.98rem;
+    }
+
+    /* Tabs */
+    .tab-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      margin: 18px 0 28px 0;
+      overflow: hidden;
+    }
+    .tab-header {
+      display: flex;
+      background: rgba(4, 7, 13, 0.7);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 4px 10px 0 10px;
+      gap: 6px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 8px 14px;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover { color: var(--text-main); }
+    .tab-btn.active {
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.08);
+      border-bottom: 2px solid var(--emerald);
+    }
+    .tab-pane {
+      display: none;
+      position: relative;
+    }
+    .tab-pane.active { display: block; }
+
+    pre.code-block {
+      background: var(--bg-code);
+      padding: 18px 20px;
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      color: #e2e8f0;
+      line-height: 1.55;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: all 0.15s ease;
+    }
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+    }
+
+    /* Badges */
+    .badge-callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--emerald-dim);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 0.92rem;
+    }
+    .badge-callout.purple {
+      background: var(--purple-dim);
+      border-color: rgba(168, 85, 247, 0.35);
+    }
+
+    /* Feature Grid */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .param-table th, .param-table td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .param-table th {
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    .param-table code {
+      font-family: var(--font-mono);
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .docs-container { flex-direction: column; }
+      .docs-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .docs-content { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a href="/index.html" class="nav-brand">
+      <img src="/logo.png" alt="Bartholomew Sentinel Logo" />
+      <span>Bartholomew</span>
+      <span class="nav-tag">BTP v5.4.20</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/index.html">Overview</a></li>
+      <li><a href="/docs.html" class="active">Docs</a></li>
+      <li><a href="/sim-lab.html">Simulator Lab</a></li>
+      <li><a href="/control-plane.html">Control Plane</a></li>
+      <li><a href="/verified-mcp.html">Verified MCP</a></li>
+      <li><a href="/investors.html">Investors</a></li>
+      <li>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="btn-github">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </li>
+    </ul>
+  </header>
+
+  <!-- Docs Container -->
+  <div class="docs-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-group-title">Getting Started</div>
+      <ul class="sidebar-nav">
+        <li><a href="#quickstart" class="active">1-Line Installation</a></li>
+        <li><a href="#core-architecture">Architecture &amp; Benchmarks</a></li>
+      </ul>
+
+      <div class="sidebar-group-title">Agent Protection</div>
+      <ul class="sidebar-nav">
+        <li><a href="#universal-python">Python: protect_agent</a></li>
+        <li><a href="#universal-node">TypeScript: protectAgent</a></li>
+        <li><a href="#framework-crewai">CrewAI &amp; LangChain</a></li>
+        <li><a href="#framework-autogen">AutoGen &amp; Claude Code</a></li>
+      </ul>
+
+      <div class="sidebar-group-title">Process &amp; OS Sandboxing</div>
+      <ul class="sidebar-nav">
+        <li><a href="#kernel-runner">btp-guard run (CLI)</a></li>
+        <li><a href="#docker-sandbox">Docker Hermetic Sandbox</a></li>
+        <li><a href="#vscode-extension">Cursor / VS Code Extension</a></li>
+      </ul>
+
+      <div class="sidebar-group-title">Compliance &amp; Verification</div>
+      <ul class="sidebar-nav">
+        <li><a href="#mcp-security">MCP Verification Seal</a></li>
+        <li><a href="#offline-verification">Ed25519 Receipts</a></li>
+        <li><a href="#compliance-dossier">SOC 2 / EU AI Act Export</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      
+      <div class="docs-hero">
+        <h1 class="docs-title">Bartholomew Developer Documentation</h1>
+        <p class="docs-sub">Deterministic sub-35µs AST invariant verification, credential scrubbing, and eBPF kernel process sandboxing for autonomous AI agent swarms.</p>
+      </div>
+
+      <!-- Quickstart Section -->
+      <section id="quickstart">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--emerald)"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          1-Line Installation &amp; Setup
+        </h2>
+        <p class="lead-p">Install Bartholomew across any environment in seconds with zero configuration required:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-install-posix')">curl (Linux / macOS)</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-install-ps1')">PowerShell (Windows)</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-install-pip')">Python (PyPI)</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-install-npm')">Node.js (npm)</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-install-brew')">Homebrew</button>
+          </div>
+          <div class="tab-pane active" id="tab-install-posix">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">curl -fsSL https://bartholomew.info/install.sh | bash</pre>
+          </div>
+          <div class="tab-pane" id="tab-install-ps1">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">irm https://bartholomew.info/install.ps1 | iex</pre>
+          </div>
+          <div class="tab-pane" id="tab-install-pip">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">pip install --upgrade btp-guard</pre>
+          </div>
+          <div class="tab-pane" id="tab-install-npm">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">npm install btp-guard</pre>
+          </div>
+          <div class="tab-pane" id="tab-install-brew">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">brew tap ivegotahunnitonit/bartholomew && brew install btp-guard</pre>
+          </div>
+        </div>
+
+        <div class="badge-callout">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20" style="color:var(--emerald); flex-shrink:0;"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+          <div><strong>Instant Verification:</strong> After installing, test your local invariant gate with <code>btp-guard try</code>. It runs a live AST safety simulation in under 3 seconds.</div>
+        </div>
+      </section>
+
+      <!-- Universal Python Wrapper -->
+      <section id="universal-python">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--purple)"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Python: protect_agent(agent)
+        </h2>
+        <p class="lead-p">Wrap any autonomous agent (CrewAI, LangChain, AutoGen, or custom) in a single line of code. All agent tools and lifecycle methods are automatically shielded:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-py-crewai')">CrewAI</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-py-langchain')">LangChain</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-py-custom')">Custom Agent</button>
+          </div>
+          <div class="tab-pane active" id="tab-py-crewai">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">from crewai import Agent
+from btp_guard import protect_agent
+
+# 1. Instantiate any CrewAI agent
+raw_agent = Agent(
+    role="Fintech Ops Analyst",
+    goal="Query database and execute verified transaction settlements",
+    tools=[db_query_tool, bash_runner_tool]
+)
+
+# 2. Wrap in 1 line:
+agent = protect_agent(raw_agent, spend_cap=50.0, strict=True)
+
+# Gated execution: secrets auto-scrubbed, catastrophic commands blocked in <35µs
+result = agent.execute_task("Analyze monthly invoices and query balance")</pre>
+          </div>
+          <div class="tab-pane" id="tab-py-langchain">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">from langchain.agents import create_react_agent
+from btp_guard import protect_agent
+
+raw_agent = create_react_agent(llm, tools)
+
+# 1-Line Universal Protection:
+agent = protect_agent(raw_agent, spend_cap=25.0)
+
+# Destructive shell actions (rm -rf, DROP TABLE) return self-correction feedback
+response = agent.invoke({"input": "Perform system maintenance on /var/log"})</pre>
+          </div>
+          <div class="tab-pane" id="tab-py-custom">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">from btp_guard import protect_agent
+
+class AutonomousDevBot:
+    def __init__(self):
+        self.tools = [execute_sql, run_shell]
+    def run(self, prompt: str) -> str:
+        return f"Executing {prompt}"
+
+bot = protect_agent(AutonomousDevBot(), spend_cap=100.0)
+bot.run("SELECT id FROM users")  # Allowed
+bot.run("rm -rf /")             # Blocked with [BLOCKED BY BARTHOLOMEW] feedback</pre>
+          </div>
+        </div>
+
+        <table class="param-table">
+          <thead>
+            <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>agent</code></td><td>Object</td><td>Required</td><td>Any agent instance containing lifecycle methods or a <code>tools</code> list.</td></tr>
+            <tr><td><code>spend_cap</code></td><td>float</td><td><code>50.0</code></td><td>Cumulative dollar limit for billable tool executions.</td></tr>
+            <tr><td><code>strict</code></td><td>bool</td><td><code>True</code></td><td>If true, destructive invariant violations raise exceptions; if false, emits LLM feedback strings.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Universal TypeScript Wrapper -->
+      <section id="universal-node">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--emerald)"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          TypeScript: protectAgent(agent)
+        </h2>
+        <p class="lead-p">Full parity for Node.js, Vercel AI SDK, Mastra, and LangChain.js agents:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-ts-langchain')">LangChain.js</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-ts-vercel')">Vercel AI SDK</button>
+          </div>
+          <div class="tab-pane active" id="tab-ts-langchain">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">import { protectAgent } from 'btp-guard';
+
+const agent = protectAgent(myLangChainAgent, {
+  spendCap: 50.0,
+  strict: true
+});
+
+// All tool calls and prompt dispatches evaluated in <35µs
+const output = await agent.invoke({ input: "Analyze accounts" });</pre>
+          </div>
+          <div class="tab-pane" id="tab-ts-vercel">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">import { protectAgent } from 'btp-guard';
+
+const customWorker = {
+  name: 'DataPipelineWorker',
+  tools: [sqlQueryTool, fileWriteTool],
+  async run(prompt) { return `Done: ${prompt}`; }
+};
+
+const safeWorker = protectAgent(customWorker);
+await safeWorker.run("Sync customer balances"); // Allowed</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- OS Kernel Process Sandbox -->
+      <section id="kernel-runner">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--gold)"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          btp-guard run (Process Sandbox)
+        </h2>
+        <p class="lead-p">Execute any arbitrary command or subagent process under Bartholomew's dual-layer AST invariant check and eBPF syscall monitor:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-cli-run')">CLI Execution</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-cli-docker')">Docker Container</button>
+          </div>
+          <div class="tab-pane active" id="tab-cli-run">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Safe command execution with cryptographic Merkle receipt:
+btp-guard run -- python agent.py
+
+# Destructive attacks are intercepted before kernel execve:
+btp-guard run -- rm -rf /
+# Output: [!] EXECUTION BLOCKED BY BARTHOLOMEW GATE (Exit code 126)</pre>
+          </div>
+          <div class="tab-pane" id="tab-cli-docker">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Run any untrusted agent inside hardened non-root container sandbox:
+docker run --rm -v $(pwd):/workspace bartholomew-sandbox python agent.py</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- MCP Security Verification -->
+      <section id="mcp-security">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Model Context Protocol (MCP) Security
+        </h2>
+        <p class="lead-p">Audit and sign your MCP servers for Claude Desktop, Cursor, and Windsurf:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-mcp-verify')">Verify MCP Server</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-mcp-config')">Cursor / Claude JSON</button>
+          </div>
+          <div class="tab-pane active" id="tab-mcp-verify">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Audit local or remote MCP server and generate cryptographic seal:
+btp-guard verify-mcp --url http://localhost:8000/sse
+
+# Install Bartholomew MCP Proxy for Claude Desktop & Cursor:
+btp-guard mcp install</pre>
+          </div>
+          <div class="tab-pane" id="tab-mcp-config">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">{
+  "mcpServers": {
+    "bartholomew-guard": {
+      "command": "btp-guard",
+      "args": ["mcp", "start", "--port", "8000"]
+    }
+  }
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Offline Verification -->
+      <section id="offline-verification">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--emerald)"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m4.354 8.707a21.88 21.88 0 01-3.364-3.364"/></svg>
+          Cryptographic Verification
+        </h2>
+        <p class="lead-p">Every execution produces an RFC 8785 Ed25519 digital signature verifiable completely offline with zero network connection:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-receipt-verify')">Verify Receipt</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-soc2-export')">SOC 2 Export</button>
+          </div>
+          <div class="tab-pane active" id="tab-receipt-verify">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Verify any BTP execution receipt offline:
+btp-guard verify-offline --receipt receipt.json</pre>
+          </div>
+          <div class="tab-pane" id="tab-soc2-export">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Export auditor-ready SOC 2 Type II & EU AI Act compliance dossier:
+btp-guard export-compliance --out soc2_dossier.json</pre>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function switchTab(btn, paneId) {
+      const container = btn.closest('.tab-container');
+      container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const pane = container.querySelector('#' + paneId);
+      if (pane) pane.classList.add('active');
+    }
+
+    function copySnippet(btn) {
+      const pre = btn.nextElementSibling;
+      if (pre) {
+        navigator.clipboard.writeText(pre.innerText.trim()).then(() => {
+          const orig = btn.innerText;
+          btn.innerText = 'Copied!';
+          btn.style.color = 'var(--emerald)';
+          setTimeout(() => {
+            btn.innerText = orig;
+            btn.style.color = '';
+          }, 2000);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

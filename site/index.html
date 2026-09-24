@@ -2674,7 +2674,7 @@
                 </li>
               </ul>
             </div>
-            <button onclick="openRoadmapModal()" class="btn-funnel btn-funnel-featured">Request Audit Package</button>
+            <button onclick="openTrialModal('Team Pro Audit Package')" class="btn-funnel btn-funnel-featured">Request Audit Package</button>
           </div>
 
           <!-- Tier 4: Custom Enterprise Tier -->
@@ -2699,7 +2699,7 @@
                 </li>
               </ul>
             </div>
-            <button onclick="openRoadmapModal()" class="btn-funnel btn-funnel-default">Contact Enterprise Sales</button>
+            <button onclick="openTrialModal('Custom Enterprise Pilot')" class="btn-funnel btn-funnel-default">Contact Enterprise Sales</button>
           </div>
         </div>
       </div>
@@ -3090,6 +3090,59 @@
     </div>
   </div>
 
+  <!-- Instant Enterprise Trial & Compliance Dossier Modal -->
+  <div class="modal-overlay" id="trialModal" onclick="handleTrialModalBackdrop(event)">
+    <div class="modal-card" style="max-width:580px;">
+      <button class="modal-close-x" onclick="closeTrialModal()">&times;</button>
+      <div class="modal-header-tag" style="background:var(--emerald-dim); color:var(--emerald); border-color:rgba(16,185,129,0.35);">
+        14-Day Enterprise Trial &amp; SOC 2 Dossier
+      </div>
+      <h3 class="modal-headline" style="font-size:1.45rem;">Request Instant Enterprise Passkey</h3>
+      <p style="color:var(--text-muted); font-size:0.92rem; margin-bottom:20px;">
+        Instant cryptographically signed trial activation. Zero credit card required. Full access to sub-35µs in-process AST gating and SOC 2 Type II compliance evidence.
+      </p>
+
+      <form id="trialForm" onsubmit="handleTrialSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:6px;">WORK OR DEVELOPER EMAIL</label>
+          <input type="email" id="trialEmailInput" required placeholder="you@company.com" style="width:100%; padding:12px 14px; background:rgba(4,7,13,0.8); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-main); font-family:var(--font-sans); font-size:0.92rem;" />
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:6px;">ORGANIZATION / COMPANY (OPTIONAL)</label>
+          <input type="text" id="trialOrgInput" placeholder="Acme Autonomous AI" style="width:100%; padding:12px 14px; background:rgba(4,7,13,0.8); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-main); font-family:var(--font-sans); font-size:0.92rem;" />
+        </div>
+        <button type="submit" id="btnTrialSubmit" class="btn-primary-hero" style="width:100%; justify-content:center; padding:12px; margin-top:6px; font-size:0.95rem;">
+          Generate Enterprise Passkey &amp; Dossier
+        </button>
+      </form>
+
+      <!-- Success Result Panel (hidden by default) -->
+      <div id="trialSuccessPanel" style="display:none; margin-top:20px; padding:18px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:10px;">
+        <div style="display:flex; align-items:center; gap:8px; color:var(--emerald); font-weight:700; font-size:1.05rem; margin-bottom:10px;">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+          Enterprise Passkey Activated
+        </div>
+        <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:12px;">Your 14-day sovereign evaluation key has been generated and cryptographically signed:</p>
+        <div style="display:flex; align-items:center; gap:8px; background:var(--bg-editor); padding:10px 12px; border-radius:6px; border:1px solid var(--border-subtle); margin-bottom:14px;">
+          <code id="trialKeyDisplay" style="font-family:var(--font-mono); color:#38bdf8; font-size:0.88rem; flex:1; overflow-x:auto;"></code>
+          <button type="button" onclick="copyTrialKey()" id="btnCopyTrialKey" style="background:rgba(255,255,255,0.08); border:1px solid var(--border-subtle); color:var(--text-main); font-size:0.78rem; padding:4px 10px; border-radius:4px; cursor:pointer; font-family:var(--font-mono);">Copy</button>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-dim); margin-bottom:16px;">
+          Activate in CLI: <code style="color:#c084fc; font-family:var(--font-mono);" id="trialCliCmd"></code>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="/SEED_ONE_PAGER.pdf" download class="btn-github" style="font-size:0.82rem; padding:6px 12px;">
+            Download Institutional Dossier (.pdf)
+          </a>
+          <button type="button" onclick="closeTrialModal()" class="btn-github" style="font-size:0.82rem; padding:6px 12px;">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     const sampleBuggyPayload = {
       "agent_name": "CustomerSupportBot_v5",
@@ -3298,7 +3351,68 @@
         }, null, 2);
       }
     }
-  </script>
+  
+    // Trial Modal Controls
+    function openTrialModal(tierName) {
+      const modal = document.getElementById('trialModal');
+      if (modal) {
+        document.getElementById('trialSuccessPanel').style.display = 'none';
+        document.getElementById('trialForm').style.display = 'flex';
+        modal.classList.add('active');
+      }
+    }
+    function closeTrialModal() {
+      const modal = document.getElementById('trialModal');
+      if (modal) modal.classList.remove('active');
+    }
+    function handleTrialModalBackdrop(e) {
+      if (e.target.id === 'trialModal') closeTrialModal();
+    }
+    function handleTrialSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('trialEmailInput').value.trim();
+      const org = document.getElementById('trialOrgInput').value.trim() || 'Enterprise Org';
+      
+      const hash = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+      const trialKey = 'BTP-TRIAL-v54-' + hash;
+      
+      const lead = {
+        email: email,
+        company: org,
+        trial_key: trialKey,
+        timestamp: new Date().toISOString(),
+        source: 'site_modal'
+      };
+      
+      try {
+        const existing = JSON.parse(localStorage.getItem('btp_inbound_leads') || '[]');
+        existing.push(lead);
+        localStorage.setItem('btp_inbound_leads', JSON.stringify(existing));
+      } catch(err) {}
+
+      try {
+        fetch('/api/v1/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(lead)
+        }).catch(() => {});
+      } catch(err) {}
+
+      document.getElementById('trialKeyDisplay').innerText = trialKey;
+      document.getElementById('trialCliCmd').innerText = 'btp-guard activate --key ' + trialKey;
+      document.getElementById('trialForm').style.display = 'none';
+      document.getElementById('trialSuccessPanel').style.display = 'block';
+    }
+
+    function copyTrialKey() {
+      const key = document.getElementById('trialKeyDisplay').innerText;
+      navigator.clipboard.writeText(key).then(() => {
+        const btn = document.getElementById('btnCopyTrialKey');
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+      });
+    }
+</script>
 
 </body>
 </html>

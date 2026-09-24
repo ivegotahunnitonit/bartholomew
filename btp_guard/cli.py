@@ -605,6 +605,14 @@ def cmd_leads_list(args):
                     local_leads = json.load(f)
             except Exception:
                 pass
+        try:
+            from src.lead_manager import get_inbound_leads
+            inbound = get_inbound_leads()
+            for item in inbound:
+                if not any(l.get("email") == item.get("email") for l in local_leads):
+                    local_leads.append(item)
+        except Exception:
+            pass
 
     print(f"[+] Query complete: {len(cloud_leads)} live cloud events, {len(local_leads)} queue leads.\n")
 
