@@ -26,7 +26,7 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP) v1.0.0 -- Autonomous AI Agent Execution Gateway")
+    print("Bartholomew Protocol (BTP v5.4.20) -- The #1 Agentic Runtime Protection (ARP) Platform")
     print("Engine: In-Process AST Gating, In-Flight Secret Scrubber & SOC 2 Merkle Receipts")
     print("Latency: Sub-35 microseconds (in-process) | Throughput: 1.05M evals/sec")
     print("Status: Community Free Tier active (Local AST Gating)")

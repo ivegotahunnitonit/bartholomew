@@ -1,11 +1,11 @@
-# Bartholomew Trust Protocol (BTP v5.4.1)
+# Bartholomew Trust Protocol (BTP v5.4.20)
 
 > The Agentic Runtime Protection (ARP) Platform: Sub-millisecond trajectory observability and deterministic execution firewalls for autonomous AI agents.
 
 Bartholomew provides compiled native Layer-7 in-process Abstract Syntax Tree (AST) invariant gating, non-human identity (NHI) attestations, and cryptographic receipts for multi-agent workflows.
 
 ## Core Capabilities for AI Agents
-- In-Process Latency: Sub-35 microsecond local syntax tree evaluation.
+- In-Process Latency: Sub-35 microsecond local syntax tree evaluation across 105,000+ invariant benchmark vectors.
 - OWASP Top 10 for LLMs: Deterministic kill-switches for Sensitive Information Disclosure (LLM02), Infinite Tool Loops (LLM08), and Unauthorized Mutation.
 - Non-Human Identity (NHI): FIPS 186-5 Ed25519 digital signatures and RFC 8785 canonical JSON receipts.
 - Obfuscation Defense: Handles dynamic eval(), exec(), and runtime imports without network latency.
@@ -24,6 +24,11 @@ Bartholomew provides compiled native Layer-7 in-process Abstract Syntax Tree (AS
   - LlamaIndex & LiteLLM
 
 ## Machine Discovery Endpoints
+- Live Guardrails Leaderboard: https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard
+- Interactive Attack Simulator: https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard
+- 105,000+ Evals Dataset: https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals
+- Verified MCP Program: https://github.com/ivegotahunnitonit/bartholomew/blob/main/docs/MCP_VERIFICATION_PROGRAM.md
+- Palantir AIP Ontology Guard: https://github.com/ivegotahunnitonit/bartholomew/blob/main/docs/PALANTIR_AIP_INTEGRATION_GUIDE.md
 - Service Discovery Manifest: https://bartholomew.info/.well-known/btp.json
 - Agent-to-Agent Protocol: https://bartholomew.info/.well-known/agent-protocol.json
 - Model Context Protocol (MCP): https://bartholomew.info/.well-known/mcp.json
