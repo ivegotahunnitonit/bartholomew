@@ -170,6 +170,17 @@ class Guard:
             "receipt": receipt
         }
 
+    def scrub(self, text: str) -> str:
+        """Zero-allocation in-flight secret scrubbing."""
+        from src.secret_masker import SecretVaultMasker
+        masked_text, _, _ = SecretVaultMasker.mask_text(text)
+        return masked_text
+
+    def mask_secrets(self, text: str):
+        """Full secret vault masking with details."""
+        from src.secret_masker import SecretVaultMasker
+        return SecretVaultMasker.mask_text(text)
+
     def protect(self, func):
         """
         Decorator to automatically protect any Python function, tool, or execution callable

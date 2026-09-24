@@ -30,6 +30,7 @@ Bartholomew is the industry standard **agentic runtime security firewall**, prov
 [![LangChain](https://img.shields.io/badge/LangChain-Runtime%20Guard-1C3C3C?logo=langchain&logoColor=white)](examples/README.md)
 [![CrewAI](https://img.shields.io/badge/CrewAI-Agent%20Guard-FF4B4B)](examples/README.md)
 [![AutoGen](https://img.shields.io/badge/Microsoft-AutoGen%20Swarm-00A4EF?logo=microsoft&logoColor=white)](examples/README.md)
+[![Palantir AIP](https://img.shields.io/badge/Palantir-AIP%20Ontology%20Guard-000000?logo=palantir&logoColor=white)](docs/PALANTIR_AIP_INTEGRATION_GUIDE.md)
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM%20Guard-76B900?logo=nvidia&logoColor=white)](docs/NVIDIA_NIM_INTEGRATION_GUIDE.md)
 [![Cursor & Windsurf](https://img.shields.io/badge/Cursor%20%26%20Windsurf-Rules%20Included-7C3AED?logo=visualstudiocode&logoColor=white)](docs/CURSORRULES_DIRECTORY_SUBMISSION.md)
 [![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Bartholomew%20ARP-purple?logo=githubactions&logoColor=white)](docs/GITHUB_ACTION_MARKETPLACE.md)

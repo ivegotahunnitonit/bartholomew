@@ -38,6 +38,7 @@ from src import (
     MarginalUtilityTracker,
     secure_tool,
     SecurityVetoException,
+    SecurityVetoException as BTPViolationError,
     guard
 )
 from src.polyglot_ast_validator import PolyglotASTValidator
@@ -58,6 +59,7 @@ __all__ = [
     "Guard",
     "secure_tool",
     "SecurityVetoException",
+    "BTPViolationError",
     "wrap_client",
     "guard",
     "BartholomewTrustAuthority",
