@@ -1,5 +1,9 @@
 # 🛡️ Bartholomew Verified MCP Security Seal Program
 
+<p align="center">
+  <img src="assets/verified_mcp_seal.png" width="160" alt="Official Bartholomew Verified MCP Security Seal" />
+</p>
+
 The **Bartholomew Verified MCP Security Seal** is the cryptographic verification standard for Model Context Protocol (MCP) servers and autonomous AI agent tools.
 
 As thousands of unvetted community MCP tools flood IDEs and agent swarms (Cursor, Windsurf, Claude Code, Cline), developers and enterprises require provable guarantees that tools will not exfiltrate credentials, execute destructive shell breakouts, or poison context.
@@ -47,7 +51,7 @@ Upon passing 100% of invariant checks, the engine generates an Ed25519 signed ve
 Add the official seal badge to your MCP server repository:
 
 ```markdown
-[![Bartholomew Verified MCP](https://img.shields.io/badge/Bartholomew-Verified%20MCP%20Seal-blue?logo=shield)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
+[![Bartholomew Verified MCP](https://github.com/ivegotahunnitonit/bartholomew/raw/main/docs/assets/verified_mcp_seal.png)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
 ```
 
 ---
