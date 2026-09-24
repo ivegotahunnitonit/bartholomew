@@ -1,19 +1,19 @@
-# Bartholomew Agent Security Gate (GitHub Action)
+# Bartholomew Agentic Runtime Protection (GitHub Action)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8.svg)](https://go.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
+[![PyPI](https://img.shields.io/badge/PyPI-v5.4.20-blue.svg)](https://pypi.org/project/btp-guard/)
 [![CI/CD Status](https://img.shields.io/badge/CI%2FCD-Active-10b981.svg)]()
 
-Prevent API key leaks, credential exposure, and silent error fallbacks in your AI agent codebases before code merges into production.
+Deterministic AST invariant verification, credential leak prevention, and cryptographic Ed25519 execution receipts for autonomous AI agent codebases before pull requests merge into production.
 
 ---
 
-##  Quick Start
+## Quickstart
 
-Add the following step to your `.github/workflows/security.yml` file:
+Add the following step to your `.github/workflows/agent_security.yml` file:
 
 ```yaml
-name: Security & Secret Audit
+name: Agentic Runtime Protection (ARP) Audit
 
 on:
   push:
@@ -26,31 +26,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Bartholomew Security Gate
-        uses: bartholomew-ai/bartholomew@main
+        uses: ivegotahunnitonit/bartholomew/packages/github_action@main
         with:
           audit-path: '.'
-          action-command: 'python scripts/run_agent.py'
-          action-type: 'shell'
-          agent-id: 'github-actions'
-          fail-on-action-deny: 'true'
+          run-ast-benchmark: 'true'
+          fail-on-violation: 'true'
+          export-telemetry: 'true'
 ```
 
 ---
 
-## Key Features
+## Key Capabilities
 
-1. **Automated Secret Leak Prevention:** Audits the repository for credential exposure.
-2. **Execution Gate:** Evaluates `action-command` through Bartholomew and returns `ALLOW` or `DENY`.
-3. **CI/CD Build Enforcer:** Fails the workflow when the configured action is denied.
-4. **Receipts:** Exposes the rule ID and SHA-256 authorization receipt as action outputs.
+1. **Sub-35µs AST Invariant Gating:** Evaluates shell, SQL, and Python code blocks against catastrophic execution patterns (`DROP TABLE`, `rm -rf /`, fork bombs, unauthorized net egress).
+2. **Zero-Leak Secret Redaction:** Scrubbing OpenAI, Anthropic, AWS, Stripe, and GitHub credentials in `<100µs`.
+3. **RFC 8785 Canonical JSON Audit Receipts:** Issues FIPS 186-5 Ed25519 verifiable SHA-256 receipts on every CI/CD run.
+4. **OpenTelemetry (OTel) SIEM Export:** Directly compatible with Datadog, Splunk, and corporate SOC monitoring.
 
 ---
 
-##  Licensing & Commercial Retainers
+## Support & Enterprise Retainers
 
-For enterprise custom rules, dedicated SLA support, or custom FastAPI routing patches, contact the ACN Security Team at `security@acn-network.org` or visit our live auditor dashboard:
-
-`https://acn-network.org/dashboard/orchestrator.html`
+For custom AST invariant rule packs, dedicated authority nodes, or enterprise fleet licenses, contact:
+`security@bartholomew.info` or visit [https://bartholomew.info](https://bartholomew.info).

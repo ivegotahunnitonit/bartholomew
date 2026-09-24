@@ -1,10 +1,10 @@
 [package]
 name = "btp-guard"
-version = "2.2.0"
+version = "5.4.20"
 edition = "2021"
 description = "Sub-millisecond cryptographic execution guard for autonomous AI agents."
-license = "Apache-2.0"
-repository = "https://github.com/bartholomew-ai/bartholomew"
+license = "MIT"
+repository = "https://github.com/ivegotahunnitonit/bartholomew"
 
 [dependencies]
 sha2 = "0.10"
