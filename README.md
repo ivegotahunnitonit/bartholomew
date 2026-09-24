@@ -20,6 +20,8 @@
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Simulator%20Space-yellow)](https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard)
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Red--Team%20Evals-orange)](https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals)
 [![Leaderboard](https://img.shields.io/badge/%F0%9F%8F%86%20Leaderboard-Rank%20%231%20(%3C35%C2%B5s)-gold)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors)](https://github.com/sponsors/ivegotahunnitonit)
+[![MCP Verified](https://img.shields.io/badge/MCP-Verification%20Program-blue?logo=shield)](docs/MCP_VERIFICATION_PROGRAM.md)
 
 [![OpenAI](https://img.shields.io/badge/OpenAI-Agents%20SDK-10A37F?logo=openai&logoColor=white)](examples/README.md)
 [![Anthropic](https://img.shields.io/badge/Anthropic-Claude%20Tool%20Guard-D97706?logo=anthropic&logoColor=white)](examples/README.md)
@@ -113,6 +115,19 @@ Automatically audit Pull Requests proposed by AI coding agents (Devin, Copilot, 
     spend-cap: '50.0'
 ```
 View the [GitHub Action Marketplace Guide](docs/GITHUB_ACTION_MARKETPLACE.md).
+
+
+---
+
+## Autonomous Agent Economy & Enterprise Security
+
+Bartholomew provides foundational economic and trust primitives for autonomous AI swarms:
+
+1. **[Verified MCP Security Seal Program](docs/MCP_VERIFICATION_PROGRAM.md)**: Cryptographic safety certification for Model Context Protocol (MCP) servers and community tools against our 2,920+ attack benchmark.
+2. **[HTTP 402 / L402 Autonomous M2M Attestation](docs/L402_M2M_ATTESTATION_PROTOCOL.md)**: Sub-millisecond pay-per-receipt attestation where autonomous agent swarms settle micro-fees (10 sats / $0.0001) directly on the wire without human credit cards.
+3. **[Bonded Agent Insurance & Escrow Protocol](docs/BONDED_AGENT_INSURANCE_PROTOCOL.md)**: Cryptographic micro-bonding pools that underwrite agent execution liability and indemnify host infrastructure against unauthorized mutations.
+
+---
 
 ## Quickstart
 
