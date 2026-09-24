@@ -1,5 +1,5 @@
 name: 'Bartholomew Agentic Runtime Protection (ARP)'
-description: 'Sub-35µs deterministic AST execution gating, secret scrubbing, and Ed25519 Merkle receipts for AI coding agents & Pull Requests.'
+description: 'Sub-35us deterministic AST execution gating, secret scrubbing, and Ed25519 Merkle receipts for AI coding agents & Pull Requests.'
 author: 'Autonomous Circularity Labs / Itsub Alemayehu'
 branding:
   icon: 'shield'
