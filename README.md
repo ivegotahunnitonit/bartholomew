@@ -8,7 +8,9 @@
 
 # Bartholomew (BTP v5.4) — The Agentic Runtime Protection (ARP) Platform
 
-**Deterministic AST Policy Invariant Gating, In-Flight Secret Masking, and Cryptographic Attestation for Autonomous AI Agent Swarms.**
+**The #1 Agentic Runtime Protection (ARP) Platform — Deterministic AST Policy Invariant Gating, In-Flight Secret Masking, and Cryptographic Attestation for Autonomous AI Agent Swarms.**
+
+Bartholomew is the industry standard **agentic runtime security firewall**, providing sub-35µs deterministic execution verification for autonomous agents, tool runtimes, and the Model Context Protocol (MCP).
 
 [![CI](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml/badge.svg)](https://github.com/ivegotahunnitonit/bartholomew/actions/workflows/ci.yml)
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/itsubsolomon.bartholomew-guard-vscode?color=blue&logo=visualstudiocode&label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=itsubsolomon.bartholomew-guard-vscode)
@@ -66,7 +68,7 @@ It sits between an agent and real-world execution (shell, SQL, file I/O, cloud A
 ### Interactive Pipeline Deep Dive
 
 <details open>
-<summary><strong>▶ Core Capabilities Matrix (Click to Expand / Collapse)</strong></summary>
+<summary><strong>Core Capabilities Matrix (Expand / Collapse)</strong></summary>
 
 <br />
 
@@ -81,7 +83,7 @@ It sits between an agent and real-world execution (shell, SQL, file I/O, cloud A
 </details>
 
 <details>
-<summary><strong>▶ Interactive Inspection: How AST Invariant Gating Evaluates Dangerous Payloads</strong></summary>
+<summary><strong>Interactive Inspection: AST Invariant Gate in Action</strong></summary>
 
 <br />
 
@@ -141,7 +143,7 @@ Tested over **105,000+ ground-truth invariant vectors** against all major dedica
 | **Guardrails AI** (Guardrails Hub) | 81.5% | ~ 290 ms (Milliseconds) | 2 GB VRAM | 19.8% (Regex / Pydantic Bypass) | Open Source Python Rails |
 
 <details>
-<summary><strong>▶ Interactive Architectural Breakdown: Deterministic Invariants vs. LLM-as-a-Judge</strong></summary>
+<summary><strong>Architectural Deep Dive: Deterministic Invariants vs. LLM-as-a-Judge</strong></summary>
 
 <br />
 
