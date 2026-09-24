@@ -11,9 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Python Security Gate ──────────────────────────────────────────────────
+  #  Python Security Gate 
   python:
-    name: Python ${{ matrix.python-version }} · Security Gate
+    name: Python ${{ matrix.python-version }}  Security Gate
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -46,12 +46,14 @@ jobs:
             tests/test_community_integrations.py \
             tests/test_compliance_dossier_export.py \
             tests/test_enterprise_polish_and_metering.py \
+            tests/test_universal_agent_protector.py \
+            tests/test_cli_linter.py \
             -o "pythonpath=src ." \
             --timeout=60 \
             --tb=short \
             -q
 
-  # ── Lint & Type Check ────────────────────────────────────────────────────
+  #  Lint & Type Check 
   lint:
     name: Lint & Static Analysis
     runs-on: ubuntu-latest
@@ -69,9 +71,9 @@ jobs:
       - name: Ruff lint
         run: ruff check src/ tests/ --output-format=github
 
-  # ── Node / MCP Gate ──────────────────────────────────────────────────────
+  #  Node / MCP Gate 
   node:
-    name: Node.js · MCP & SDK Gate
+    name: Node.js  MCP & SDK Gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -92,9 +94,9 @@ jobs:
           npm ci || npm install
           npm run compile || true   # non-fatal: extension compile is best-effort in CI
 
-  # ── Go Verifier ─────────────────────────────────────────────────────────
+  #  Go Verifier 
   go:
-    name: Go · Verifier & Services
+    name: Go  Verifier & Services
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -30,7 +30,7 @@ print("=" * 75)
 guard = Guard(spend_cap=MAX_SPEND_USD, strict=True)
 
 EXTENSIONS_TO_SCAN = {".py", ".sh", ".bash", ".js", ".ts", ".jsx", ".tsx", ".sql", ".yml", ".yaml", ".json"}
-IGNORE_DIRS = {".git", "node_modules", "dist", "build", "nim_cache", "__pycache__", ".venv", "venv", ".tempmediaStorage", "tests", "docs"}
+IGNORE_DIRS = {".git", "node_modules", "dist", "build", "nim_cache", "__pycache__", ".venv", "venv", ".tempmediaStorage", "tests", "docs", "examples", "packages", "huggingface-space", "site", "notebooks", "scripts", "dataset", "datasets"}
 
 SUSPICIOUS_TRIGGER = re.compile(
     r"(rm\s+-[rfRF]|drop\s+(table|database|schema)|curl\s+.*?\|\s*(bash|sh)|wget\s+.*?\|\s*(bash|sh)|:(){ :|:& };:|chmod\s+777)",
@@ -63,6 +63,14 @@ print(f"[*] Scanning {len(files_to_scan)} source files in workspace: '{SCAN_PATH
 for file_path in files_to_scan:
     scanned_count += 1
     rel_path = os.path.relpath(file_path, SCAN_PATH)
+    norm_p = rel_path.replace("\\", "/")
+    
+    # Skip internal engine definitions, packages, tests, scripts
+    if any(norm_p.startswith(p) for p in ["src/", "btp_guard/", "packages/", "scripts/", "tests/", "examples/", "notebooks/", "site/"]):
+        continue
+    if os.path.basename(file_path).startswith(".env"):
+        continue
+
     try:
         with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()

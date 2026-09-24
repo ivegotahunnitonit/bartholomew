@@ -309,6 +309,7 @@ from src.dispatch_seam import (
 
 __all__ = [
     "Guard",
+    "protect_agent",
     "wrap_client",
     "dispatch_seam_guard",
     "DispatchSeamInterceptor",
@@ -325,3 +326,5 @@ __all__ = [
     "EVMEscrowGateway",
     "EscrowSlashingClaim"
 ]
+
+from .agent_protector import protect_agent

@@ -29,6 +29,7 @@ if _repo_root not in sys.path:
     sys.path.insert(0, _repo_root)
 
 # Core imports
+from src.agent_protector import protect_agent
 from src import (
     Guard,
     wrap_client,
@@ -57,6 +58,7 @@ __version__ = "5.4.20"
 
 __all__ = [
     "Guard",
+    "protect_agent",
     "secure_tool",
     "SecurityVetoException",
     "BTPViolationError",

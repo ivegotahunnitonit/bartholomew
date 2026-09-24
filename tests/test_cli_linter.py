@@ -102,3 +102,26 @@ def test_cli_swarm_command():
     args = DummyArgs()
     cmd_swarm_status(args)
 
+def test_cli_run_command():
+    import pytest
+    import sys
+    from src.btp_guard.cli import cmd_run
+
+    class DummyArgs:
+        def __init__(self, cmd, policy="strict", spend_cap=50.0):
+            self.cmd = cmd
+            self.policy = policy
+            self.spend_cap = spend_cap
+
+    # 1. Malicious command should exit with 126
+    malicious_args = DummyArgs(["--", "rm", "-rf", "/"])
+    with pytest.raises(SystemExit) as exc_info:
+        cmd_run(malicious_args)
+    assert exc_info.value.code == 126
+
+    # 2. Safe command should execute and exit with 0
+    safe_args = DummyArgs(["--", sys.executable, "-c", "print('safe')"])
+    with pytest.raises(SystemExit) as exc_info:
+        cmd_run(safe_args)
+    assert exc_info.value.code == 0
+

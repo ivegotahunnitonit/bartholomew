@@ -15,7 +15,7 @@ def test_btp_manifest_structure():
     """Validates the schema and key fields of the machine-readable manifest."""
     manifest = generate_manifest()
 
-    assert manifest["manifest_version"] == "5.4.0"
+    assert manifest["manifest_version"] == "5.4.20"
     assert manifest["identity"]["name"] == "Bartholomew Trust Protocol"
     assert "transaction_authorization" in manifest["capabilities"]
     assert "MCP (Model Context Protocol)" in manifest["protocols"]
