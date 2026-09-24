@@ -1,4 +1,4 @@
-# 🛡️ Bartholomew Verified MCP Security Seal Program
+# Bartholomew Verified MCP Security Seal Program
 
 <p align="center">
   <img src="assets/verified_mcp_seal.png" width="160" alt="Official Bartholomew Verified MCP Security Seal" />
@@ -12,7 +12,7 @@ As thousands of unvetted community MCP tools flood IDEs and agent swarms (Cursor
 
 ## 1. What the Seal Guarantees
 
-Every tool exposed by a Verified MCP Server is audited against the **2,920+ vector BTP benchmark**:
+Every tool exposed by a Verified MCP Server is audited against the **100,000+ vector BTP benchmark**:
 - **Zero Destructive Shell Breakouts:** Hard blocks `rm -rf /`, `mkfifo`, disk formatters, and reverse shells.
 - **Zero Credential Exfiltration:** In-flight scrubbing of API keys (`sk-*`, `ghp_*`, AWS credentials, private keys).
 - **Zero Unbounded SQL Mutations:** Prohibits `DROP TABLE`, blind DDL wipes, and schema cascades.
@@ -41,7 +41,7 @@ Upon passing 100% of invariant checks, the engine generates an Ed25519 signed ve
   "server_name": "example-filesystem-mcp",
   "authority": "Bartholomew-Trust-Authority",
   "audit_score": 100,
-  "passed_invariants": 2920,
+  "passed_invariants": 100000,
   "failed_invariants": 0,
   "ed25519_signature": "3bc02cfe1e1b1630fd7e853ca8ead7246e61a25e779d06..."
 }

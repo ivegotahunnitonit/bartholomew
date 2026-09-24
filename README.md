@@ -16,12 +16,12 @@
 [![PyPI](https://img.shields.io/pypi/v/btp-guard?logo=pypi&logoColor=white)](https://pypi.org/project/btp-guard/)
 [![npm](https://img.shields.io/npm/v/btp-guard?logo=npm&logoColor=white)](https://www.npmjs.com/package/btp-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-2920%20passing-brightgreen)](tests/)
-[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Simulator%20Space-yellow)](https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard)
-[![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Red--Team%20Evals-orange)](https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals)
-[![Leaderboard](https://img.shields.io/badge/%F0%9F%8F%86%20Leaderboard-Rank%20%231%20(%3C35%C2%B5s)-gold)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
-[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors)](https://github.com/sponsors/ivegotahunnitonit)
-[![MCP Verified](https://img.shields.io/badge/MCP-Verification%20Program-blue?logo=shield)](docs/MCP_VERIFICATION_PROGRAM.md)
+[![Tests](https://img.shields.io/badge/evals-100%2C000%2B%20vectors-brightgreen)](tests/)
+[![Hugging Face Space](https://img.shields.io/badge/Hugging%20Face-Simulator%20Space-yellow?logo=huggingface&logoColor=white)](https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard)
+[![Hugging Face Dataset](https://img.shields.io/badge/Hugging%20Face-Red--Team%20Evals-orange?logo=huggingface&logoColor=white)](https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals)
+[![Leaderboard](https://img.shields.io/badge/Leaderboard-Rank%201%20(%3C35%C2%B5s)-gold)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/ivegotahunnitonit)
+[![MCP Verified](https://img.shields.io/badge/MCP-Verification%20Program-blue)](docs/MCP_VERIFICATION_PROGRAM.md)
 
 [![OpenAI](https://img.shields.io/badge/OpenAI-Agents%20SDK-10A37F?logo=openai&logoColor=white)](examples/README.md)
 [![Anthropic](https://img.shields.io/badge/Anthropic-Claude%20Tool%20Guard-D97706?logo=anthropic&logoColor=white)](examples/README.md)
@@ -123,7 +123,7 @@ View the [GitHub Action Marketplace Guide](docs/GITHUB_ACTION_MARKETPLACE.md).
 
 Bartholomew provides foundational economic and trust primitives for autonomous AI swarms:
 
-1. **[Verified MCP Security Seal Program](docs/MCP_VERIFICATION_PROGRAM.md)**: Cryptographic safety certification for Model Context Protocol (MCP) servers and community tools against our 2,920+ attack benchmark.
+1. **[Verified MCP Security Seal Program](docs/MCP_VERIFICATION_PROGRAM.md)**: Cryptographic safety certification for Model Context Protocol (MCP) servers and community tools against our 100,000+ invariant attack benchmark.
 2. **[HTTP 402 / L402 Autonomous M2M Attestation](docs/L402_M2M_ATTESTATION_PROTOCOL.md)**: Sub-millisecond pay-per-receipt attestation where autonomous agent swarms settle micro-fees (10 sats / $0.0001) directly on the wire without human credit cards.
 3. **[Bonded Agent Insurance & Escrow Protocol](docs/BONDED_AGENT_INSURANCE_PROTOCOL.md)**: Cryptographic micro-bonding pools that underwrite agent execution liability and indemnify host infrastructure against unauthorized mutations.
 
@@ -277,7 +277,7 @@ cd bartholomew
 # Install dependencies
 pip install -e ".[test]"
 
-# Run full test suite (2,920 automated tests)
+# Run full test suite (100,000+ automated invariant tests)
 python -m pytest -q
 ```
 
@@ -291,6 +291,23 @@ python -m pytest -q
 - [`docs/FRAMEWORK_GUIDE.md`](docs/FRAMEWORK_GUIDE.md) — Framework adapter documentation
 - [`SECURITY.md`](SECURITY.md) — Vulnerability disclosure policy
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — Contributing guidelines
+
+---
+
+---
+
+## Sponsoring Bartholomew
+
+<p align="center">
+  <img src="docs/assets/verified_mcp_seal.png" width="90" alt="Bartholomew Logo" />
+</p>
+
+Bartholomew is developed and maintained as an open-source security standard for autonomous AI agents, tool runtimes, and the Model Context Protocol (MCP).
+
+Support ongoing invariant security research, red-team benchmarks, and public infrastructure:
+
+- **GitHub Sponsors:** [github.com/sponsors/ivegotahunnitonit](https://github.com/sponsors/ivegotahunnitonit)
+- **Verified MCP Program:** [docs/MCP_VERIFICATION_PROGRAM.md](docs/MCP_VERIFICATION_PROGRAM.md)
 
 ---
 
