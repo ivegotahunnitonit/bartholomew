@@ -90,6 +90,34 @@ def protect_agent(agent: Any, spend_cap: float = 50.0, strict: bool = True, guar
 
             setattr(agent, method_name, make_method_wrapper(original_method, method_name))
 
+    # 2.5 If agent is directly a callable function/lambda/class
+    if callable(agent) and not any(hasattr(agent, m) for m in ["invoke", "step", "execute_task"]):
+        orig_callable = agent
+        @functools.wraps(orig_callable)
+        def wrapped_callable(*args, **kwargs):
+            scrubbed_args = []
+            for arg in args:
+                if isinstance(arg, str):
+                    clean_str = guard.scrub(arg)
+                    chk = guard.check(clean_str)
+                    if not chk.get("allowed", True):
+                        veto_msg = f"[BLOCKED BY BARTHOLOMEW] {chk.get('reason', 'Policy violation')} (Receipt: {chk.get('receipt_sha256', 'N/A')[:16]}...)"
+                        if not strict:
+                            return veto_msg
+                        else:
+                            return veto_msg
+                    scrubbed_args.append(clean_str)
+                else:
+                    scrubbed_args.append(arg)
+            res = orig_callable(*scrubbed_args, **kwargs)
+            if isinstance(res, str):
+                res = guard.scrub(res)
+            return res
+        wrapped_callable.btp_guard = guard
+        wrapped_callable.is_btp_protected = True
+        wrapped_callable.get_audit_receipts = lambda: getattr(guard.gate, "receipts", [])
+        return wrapped_callable
+
     # 3. Attach metadata
     agent.btp_guard = guard
     agent.is_btp_protected = True

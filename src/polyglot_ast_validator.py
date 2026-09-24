@@ -44,7 +44,7 @@ class PolyglotASTValidator:
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
         re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
-        re.compile(r"\btruncate\s+table\b", re.IGNORECASE),
+        re.compile(r"\btruncate\s+(table\s+)?\w+", re.IGNORECASE),
         re.compile(r"\bunion\s+(all\s+)?select\b", re.IGNORECASE),
         # Advanced Obfuscation & Encoded Execution Patterns
         re.compile(r"\|\s*(base64\s+-d|openssl\s+enc|xxd\s+-r)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),
@@ -194,7 +194,13 @@ class PolyglotASTValidator:
 
             return True, "Python AST verified safe", {"node_count": len(list(ast.walk(tree)))}
         except SyntaxError:
-            # If not valid Python syntax, evaluate as text pattern
+            # If not valid Python syntax, evaluate as text pattern against hostile patterns
+            for pat in cls.FORBIDDEN_SHELL_PATTERNS:
+                if pat.search(code_str):
+                    return False, f"BTP-AST-001: Hostile syntax pattern detected in malformed Python source", {}
+            for danger in ["exec(", "eval(", "__import__", "os.system", "subprocess."]:
+                if danger in code_str:
+                    return False, f"BTP-AST-002: Forbidden call '{danger}' in malformed Python source", {}
             return True, "Non-standard syntax passed AST baseline", {"note": "syntax_fallback"}
 
     @classmethod
