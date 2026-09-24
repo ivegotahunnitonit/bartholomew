@@ -383,3 +383,113 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const ok = runNodeJsConformance();
   process.exit(ok ? 0 : 1);
 }
+
+/**
+ * Universal 1-line agent protector for Node.js / TypeScript agents.
+ * Compatible with LangChain.js, Vercel AI SDK, Mastra, AutoGen JS, Claude SDK.
+ *
+ * Usage:
+ *   import { protectAgent } from 'btp-guard';
+ *   const agent = protectAgent(myAgent, { spendCap: 50.0, strict: true });
+ */
+export function protectAgent(agent, options = {}) {
+  if (!agent || typeof agent !== 'object') {
+    return agent;
+  }
+
+  const spendCap = options.spendCap ?? 50.0;
+  const strict = options.strict ?? true;
+  const agentId = options.agentId || agent.name || agent.id || 'agent-js';
+
+  // Helper to wrap a tool invocation
+  function guardToolInvocation(fn, toolName = 'tool') {
+    return async function(...args) {
+      const payloadStr = args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ');
+      const intentResult = evaluateIntent({
+        agentId,
+        actionType: 'TOOL_INVOCATION',
+        payload: { tool: toolName, input: payloadStr }
+      });
+
+      if (!intentResult.allowed) {
+        const reason = intentResult.reason || 'Security Invariant Violation';
+        if (strict) {
+          const err = new Error(`[BTP-VETO] Call to '${toolName}' blocked by Bartholomew Guard: ${reason}`);
+          err.code = 'BTP_DISPATCH_VETO';
+          err.receipt = intentResult;
+          throw err;
+        }
+        return `[BLOCKED BY BARTHOLOMEW] ${reason}. Action vetoed to prevent catastrophic system modification.`;
+      }
+
+      // Scrub args
+      const scrubbed = args.map(a => {
+        if (typeof a === 'string') {
+          return scrubSensitiveCredentials({ text: a }).data?.text || a;
+        }
+        if (typeof a === 'object' && a !== null) {
+          return scrubSensitiveCredentials(a).data;
+        }
+        return a;
+      });
+
+      return await fn.apply(this, scrubbed);
+    };
+  }
+
+  // 1. Guard tools array if present
+  if (Array.isArray(agent.tools)) {
+    agent.tools = agent.tools.map((tool) => {
+      if (typeof tool === 'function') {
+        return guardToolInvocation(tool, tool.name || 'tool');
+      }
+      if (tool && typeof tool === 'object') {
+        const wrappedTool = Object.assign({}, tool);
+        if (typeof tool.call === 'function') {
+          wrappedTool.call = guardToolInvocation(tool.call.bind(tool), tool.name || 'tool');
+        }
+        if (typeof tool.execute === 'function') {
+          wrappedTool.execute = guardToolInvocation(tool.execute.bind(tool), tool.name || 'tool');
+        }
+        return wrappedTool;
+      }
+      return tool;
+    });
+  }
+
+  // 2. Wrap lifecycle methods
+  const methods = ['run', 'invoke', 'call', 'chat', 'step', 'executeTask', 'generate'];
+  for (const m of methods) {
+    if (typeof agent[m] === 'function') {
+      const origMethod = agent[m].bind(agent);
+      agent[m] = async function(...args) {
+        const payloadStr = args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ');
+        const intentResult = evaluateIntent({
+          agentId,
+          actionType: 'AGENT_DISPATCH',
+          payload: { method: m, input: payloadStr }
+        });
+
+        if (!intentResult.allowed) {
+          const reason = intentResult.reason || 'Security Invariant Violation';
+          const receiptSig = intentResult.signature ? intentResult.signature.slice(0, 32) : 'VERIFIED';
+          return `[BLOCKED BY BARTHOLOMEW] ${reason}. Action vetoed to prevent catastrophic system modification. (Receipt: ${receiptSig}...)`;
+        }
+
+        const scrubbedArgs = args.map(a => {
+          if (typeof a === 'string') {
+            return scrubSensitiveCredentials({ text: a }).data?.text || a;
+          }
+          if (typeof a === 'object' && a !== null) {
+            return scrubSensitiveCredentials(a).data;
+          }
+          return a;
+        });
+
+        return await origMethod(...scrubbedArgs);
+      };
+    }
+  }
+
+  return agent;
+}

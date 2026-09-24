@@ -1,0 +1,50 @@
+# ==============================================================================
+# Bartholomew Hermetic Agent Execution Sandbox (BTP v5.4)
+# https://bartholomew.info
+#
+# Provides a hardened, non-root isolated container environment for running
+# untrusted autonomous AI agent tasks with deterministic AST invariant gating.
+#
+# Usage:
+#   docker build -f Dockerfile.sandbox -t bartholomew-sandbox .
+#   docker run --rm -v $(pwd):/workspace bartholomew-sandbox ls -la
+# ==============================================================================
+
+FROM python:3.11-slim-bookworm
+
+# 1. System dependencies & Node.js for polyglot runtime support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    git \
+    gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Dedicated unprivileged agent execution user
+RUN groupadd -g 1000 agent && \
+    useradd -u 1000 -g agent -m -s /bin/bash agent
+
+WORKDIR /app
+
+# 3. Install Bartholomew Trust Protocol & Agentic Runtime Protection
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    BTP_SANDBOX_MODE=container
+
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+COPY btp_guard/ ./btp_guard/
+
+RUN pip install --no-cache-dir -e .
+
+# 4. Workspace mount point
+RUN mkdir -p /workspace && chown -R agent:agent /workspace /app /home/agent
+
+USER agent
+WORKDIR /workspace
+
+ENTRYPOINT ["btp-guard", "run", "--"]
+CMD ["python3", "-c", "print('Bartholomew Hermetic Agent Sandbox Ready.')"]

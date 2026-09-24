@@ -1,0 +1,32 @@
+# ==============================================================================
+# Bartholomew Hermetic Agent Sandbox Compose Configuration
+# https://bartholomew.info
+# ==============================================================================
+
+services:
+  agent-sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox
+    image: bartholomew-agent-sandbox:latest
+    container_name: bartholomew_agent_sandbox
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+    volumes:
+      - ./:/workspace:rw
+    environment:
+      - BTP_POLICY=strict
+      - BTP_SPEND_CAP=50.0
+    command: ["python3", "examples/universal_agent_protection_demo.py"]

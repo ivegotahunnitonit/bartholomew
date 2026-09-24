@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { rfc8785Canonicalize, verifyBtpReceipt, verifyTurnReceiptChaining, scrubSensitiveCredentials, evaluateIntent, verifyReceipt } from './index.js';
+import { rfc8785Canonicalize, verifyBtpReceipt, verifyTurnReceiptChaining, scrubSensitiveCredentials, evaluateIntent, verifyReceipt, protectAgent } from './index.js';
 import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function runTests() {
+async function runTests() {
   console.log("==========================================================");
   console.log("  BTP v5.4.10 Node.js Verifier Self-Test Suite");
   console.log("==========================================================");
@@ -87,6 +87,54 @@ function runTests() {
   const blockedIntentOk = blockedIntent.allowed === false && blockedIntent.verdict === "DENY" && receiptValid === true;
   console.log(`[07/07] In-Process Intent Gate (Blocked):  ${blockedIntentOk ? "PASS" : "FAIL"} (Signature Valid: ${receiptValid})`);
 
+  
+  // 8. Test protectAgent safe agent execution
+  const mockAgent = {
+    name: 'ResearchAgent',
+    async run(prompt) {
+      return `Processed: ${prompt}`;
+    },
+    tools: [
+      {
+        name: 'database_query',
+        async call(sql) {
+          return `Query Result: ${sql}`;
+        }
+      }
+    ]
+  };
+
+  const guarded = protectAgent(mockAgent);
+
+  // Safe run test
+  let safeRunOk = false;
+  try {
+    const resSafe = await guarded.run("Analyze Q3 earnings and report metrics");
+    safeRunOk = resSafe.includes("Processed: Analyze Q3 earnings");
+  } catch (e) {
+    safeRunOk = false;
+  }
+  console.log(`[08/10] Universal protectAgent (Safe Run):   ${safeRunOk ? "PASS" : "FAIL"}`);
+
+  // Blocked run test
+  let blockedRunOk = false;
+  try {
+    const resBlocked = await guarded.run("rm -rf / --no-preserve-root");
+    blockedRunOk = typeof resBlocked === "string" && resBlocked.includes("[BLOCKED BY BARTHOLOMEW]");
+  } catch (e) {
+    blockedRunOk = false;
+  }
+  console.log(`[09/10] Universal protectAgent (Blocked Run): ${blockedRunOk ? "PASS" : "FAIL"}`);
+
+  // Guarded tool invocation test
+  let toolVetoOk = false;
+  try {
+    await guarded.tools[0].call("DROP TABLE sensitive_users CASCADE;");
+  } catch (err) {
+    toolVetoOk = err.code === "BTP_DISPATCH_VETO" || err.message.includes("blocked by Bartholomew Guard");
+  }
+  console.log(`[10/10] Universal protectAgent (Tool Veto):  ${toolVetoOk ? "PASS" : "FAIL"}`);
+
   console.log("==========================================================");
 
   if (canonHex === tv.canonical_payload_utf8_hex && 
@@ -95,8 +143,11 @@ function runTests() {
       scrubOk && 
       chainOk &&
       safeIntentOk &&
-      blockedIntentOk) {
-    console.log("ALL 7 NODE.JS TESTS PASSED (100.00%)");
+      blockedIntentOk &&
+      safeRunOk &&
+      blockedRunOk &&
+      toolVetoOk) {
+    console.log("ALL 10 NODE.JS TESTS PASSED (100.00%)");
     process.exit(0);
   } else {
     console.error("TEST FAILED");

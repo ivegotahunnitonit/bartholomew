@@ -97,6 +97,11 @@
       {
         "command": "bartholomew.installMcp",
         "title": "Bartholomew: Install MCP Server (Claude & Cursor)"
+      },
+      {
+        "command": "bartholomew.runInSandbox",
+        "title": "Bartholomew: Run in Kernel Sandbox",
+        "category": "Bartholomew"
       }
     ]
   },

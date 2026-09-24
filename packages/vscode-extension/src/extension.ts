@@ -104,7 +104,42 @@ export function activate(context: ExtensionContext) {
   statusBarItem.command = 'bartholomew.viewStatus';
   statusBarItem.text = `$(shield) BTP: ARMED | $(key) KEYSTONE: ACTIVE`;
   statusBarItem.tooltip = `Bartholomew Autonomous AI Guard (BTP v5.4 Sovereign Enterprise) - Sub-25µs AST & Keystone Active`;
-  context.subscriptions.push(statusBarItem);
+  
+  // 15. Command: Run in Bartholomew Kernel Sandbox
+  const runInSandboxCmd = vscode.commands.registerCommand('bartholomew.runInSandbox', async () => {
+    const editor = vscode.window.activeTextEditor;
+    let defaultCmd = '';
+    if (editor && !editor.selection.isEmpty) {
+      defaultCmd = editor.document.getText(editor.selection).trim();
+    } else if (editor) {
+      const fileName = editor.document.fileName;
+      if (fileName.endsWith('.py')) {
+        defaultCmd = `python ${fileName}`;
+      } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
+        defaultCmd = `node ${fileName}`;
+      } else if (fileName.endsWith('.sh')) {
+        defaultCmd = `bash ${fileName}`;
+      }
+    }
+
+    const commandToRun = await vscode.window.showInputBox({
+      title: 'Bartholomew Kernel Sandbox Execution',
+      prompt: 'Enter agent command to execute under eBPF & AST invariant gating',
+      value: defaultCmd || 'python examples/universal_agent_protection_demo.py',
+      placeHolder: 'e.g. python agent.py or npm start'
+    });
+
+    if (!commandToRun) {
+      return;
+    }
+
+    const terminal = vscode.window.createTerminal('Bartholomew Sandbox');
+    terminal.show();
+    terminal.sendText(`btp-guard run -- ${commandToRun}`);
+  });
+
+  context.subscriptions.push(
+    runInSandboxCmd,statusBarItem);
   statusBarItem.show();
 
   // 2. Poll local daemon or files for real-time telemetry
@@ -431,7 +466,10 @@ export function activate(context: ExtensionContext) {
     terminal.sendText('python -m src.btp_guard.cli mcp install');
   });
 
+  
+  // 15. Command: Run in Bartholomew Kernel Sandbox
   context.subscriptions.push(
+    runInSandboxCmd,
     viewStatusCmd,
     issueKeystoneCmd,
     inspectKeystoneCmd,

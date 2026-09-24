@@ -127,3 +127,15 @@ export function emitVetoHook(command?: string, latencyUs?: number): void;
  */
 export function runNodeJsConformance(): boolean;
 
+
+export interface ProtectAgentOptions {
+  spendCap?: number;
+  strict?: boolean;
+  agentId?: string;
+}
+
+/**
+ * Universal 1-line agent protector for Node.js / TypeScript agents.
+ * Compatible with LangChain.js, Vercel AI SDK, Mastra, AutoGen JS, Claude SDK.
+ */
+export function protectAgent<T extends object>(agent: T, options?: ProtectAgentOptions): T;
