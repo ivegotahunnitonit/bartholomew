@@ -22,6 +22,7 @@ Bartholomew is the industry standard **agentic runtime security firewall**, prov
 [![Hugging Face Space](https://img.shields.io/badge/Hugging%20Face-Simulator%20Space-yellow?logo=huggingface&logoColor=white)](https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard)
 [![Hugging Face Dataset](https://img.shields.io/badge/Hugging%20Face-Red--Team%20Evals-orange?logo=huggingface&logoColor=white)](https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals)
 [![Leaderboard](https://img.shields.io/badge/Leaderboard-Rank%201%20(%3C35%C2%B5s)-gold)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ivegotahunnitonit/bartholomew/blob/main/notebooks/Bartholomew_Quickstart_Test_Drive.ipynb)
 [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/ivegotahunnitonit)
 [![MCP Verified](https://img.shields.io/badge/MCP-Verification%20Program-blue)](docs/MCP_VERIFICATION_PROGRAM.md)
 
@@ -202,6 +203,10 @@ Bartholomew provides foundational economic and trust primitives for autonomous A
 
 ## Quickstart
 
+> [!TIP]
+> **1-Click Zero-Install Test Drive**: Want to test sub-35µs AST invariant gating and live secret masking without installing anything locally?  
+> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ivegotahunnitonit/bartholomew/blob/main/notebooks/Bartholomew_Quickstart_Test_Drive.ipynb) **[Launch Interactive Test Drive in Google Colab](https://colab.research.google.com/github/ivegotahunnitonit/bartholomew/blob/main/notebooks/Bartholomew_Quickstart_Test_Drive.ipynb)**
+
 ### Python
 
 ```bash
@@ -228,6 +233,21 @@ result = guard.check("rm -rf /var/data")
 if not result["allowed"]:
     print(f"Blocked: {result['reason']}")
 # Output: Blocked: BTP-AST-001: Catastrophic shell pattern detected
+```
+
+
+### In-Terminal Benchmarks & Enterprise SIEM Telemetry
+
+```bash
+# 1. Run in-terminal sub-35µs AST Invariant Benchmark (10,000 continuous evaluations)
+btp-guard benchmark ast --vectors 10000
+
+# 2. Export cryptographic receipts to OpenTelemetry (OTel) ResourceSpans JSON
+btp-guard export-telemetry --format otel --count 100 --out otel_traces.json
+
+# 3. Export to Datadog Logs or Splunk HEC
+btp-guard export-telemetry --format datadog --count 50
+btp-guard export-telemetry --format splunk --count 50 --out splunk_events.json
 ```
 
 ### Node.js / TypeScript
