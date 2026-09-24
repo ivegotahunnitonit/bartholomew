@@ -871,7 +871,14 @@ def cmd_mcp_verify(args):
     print("--------------------------------------------------------------------------------")
     print(seal_data["embed_markdown"])
     print("--------------------------------------------------------------------------------")
-    print("[*] Your MCP server is eligible for priority listing on the Hugging Face Leaderboard.")
+    is_register = getattr(args, "register", False)
+    if is_register:
+        print("[*] REGISTRY ENROLLMENT: ACTIVE")
+        print(f"[*] Official Seal ID : BTP-SEAL-{nonce.upper()}")
+        print("[*] Direct Checkout  : https://bartholomew.info/checkout/mcp-seal-pass")
+        print("[*] Priority Listing : https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard")
+    else:
+        print("[*] Pass --register flag to enroll in the official Hugging Face Verified Registry.")
     print("================================================================================\n")
 
 def cmd_mcp_registry(args):
@@ -3090,11 +3097,13 @@ def main():
     mcp_ver_p = mcp_sub.add_parser("verify", help="Audit an MCP server and generate a cryptographically signed Bartholomew Verified Security Seal")
     mcp_ver_p.add_argument("--server", "-s", type=str, default="mcp-server", help="Path or command for the target MCP server")
     mcp_ver_p.add_argument("--output", "-o", type=str, default="btp-verified-seal.json", help="Output path for seal certificate")
+    mcp_ver_p.add_argument("--register", action="store_true", help="Register seal with the official Hugging Face & Bartholomew Verified Registry")
 
     # top-level alias: verify-mcp
     ver_p = subparsers.add_parser("verify-mcp", help="Audit an MCP server and generate a cryptographically signed Bartholomew Verified Security Seal")
     ver_p.add_argument("--server", "-s", type=str, default="mcp-server", help="Path or command for the target MCP server")
     ver_p.add_argument("--output", "-o", type=str, default="btp-verified-seal.json", help="Output path for seal certificate")
+    ver_p.add_argument("--register", action="store_true", help="Register seal with the official Hugging Face & Bartholomew Verified Registry")
 
     # policy
     policy_parser = subparsers.add_parser("policy", help="Manage declarative security policies")
