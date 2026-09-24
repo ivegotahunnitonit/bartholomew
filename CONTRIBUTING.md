@@ -1,98 +1,94 @@
-# Contributing to Bartholomew & BTP
+# Contributing to Bartholomew (BTP)
 
-Thank you for your interest in contributing to the **Bartholomew Autonomous Trust Protocol (BTP)**.
-
-We welcome contributions from the community to help secure autonomous AI agents and distributed machine execution.
+Thank you for contributing to **Bartholomew (BTP v5.4)**, the open runtime security standard for autonomous AI agents and Model Context Protocol (MCP) ecosystems.
 
 ---
 
-## 1. Code of Conduct and Standards
+## 1. Code Standards & Tooling
 
-To maintain high software engineering and security standards:
-* **Coding Style**: Follow PEP 8 for Python code and standard TypeScript/Go conventions.
-* **Formatting**: Maintain clean documentation and code without decorative emojis.
-* **Security First**: Never check in secrets, credentials, API keys, or unverified binary blobs.
+To ensure deterministic safety, zero regressive latency, and consistent code quality across Python, TypeScript, and Go runtimes:
+
+### Python Standards
+- **Linter & Formatter:** [Ruff](https://github.com/astral-sh/ruff) and [Black](https://github.com/psf/black)
+  ```bash
+  # Check linting & formatting
+  ruff check .
+  black --check .
+
+  # Automatically format code
+  ruff format .
+  black .
+  ```
+- **Type Checking:** Strict type hints using `mypy` or `pyright`:
+  ```bash
+  pyright btp_guard/
+  ```
+
+### TypeScript & Web Standards
+- **Formatter:** Prettier
+  ```bash
+  # Check formatting
+  npx prettier --check "**/*.{ts,js,json,html,css,md}"
+
+  # Auto-format
+  npx prettier --write "**/*.{ts,js,json,html,css,md}"
+  ```
+
+### Pre-Commit Hooks
+Run automated hooks locally before opening a pull request:
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
 
 ---
 
-## 2. Development Setup
+## 2. Commit Message Convention
 
-1. **Clone the Repository**:
+We strictly follow **Conventional Commits**. Please keep commit titles concise, professional, and descriptive (under 72 characters):
+
+- `feat: add AST invariant for base64-encoded bash pipes`
+- `fix: resolve microsecond clock drift in Ed25519 receipt generation`
+- `docs: update social preview and MCP verification workflow`
+- `test: expand adversarial red-team invariant suite to 105k vectors`
+- `perf: reduce regex allocation overhead in secret masker`
+- `chore: update dependencies and release tags`
+
+*Avoid long, repetitive, or concatenated commit messages.*
+
+---
+
+## 3. Pull Request Requirements
+
+Every Pull Request must meet these criteria before merge:
+
+1. **Deterministic Latency Invariant:** No change may increase average evaluation latency beyond **50 µs** on CPU.
+2. **Zero Regressions:** All unit tests and the 105,000+ invariant regression suite must pass:
    ```bash
-   git clone https://github.com/bartholomew-ai/bartholomew.git
-   cd bartholomew
+   python -m pytest tests/ -v
+   python tests/test_million_invariant_fuzz.py --samples 50000
    ```
+3. **No Secrets in History:** Never commit live API tokens, credentials, or private keys.
+4. **Documentation:** Update relevant guides in `docs/` or `README.md` if adding or changing public CLI flags or SDK APIs.
+5. **Signed Commits:** GPG/SSH signed commits are strongly encouraged.
 
-2. **Set Up Python Environment**:
+---
+
+## 4. Development Workflow
+
+1. Fork the repository and create a feature branch from `main`:
+   ```bash
+   git checkout -b feat/your-improvement
+   ```
+2. Set up a local development environment:
    ```bash
    python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install -e .
-   pip install pytest pyyaml cryptography
+   source .venv/bin/activate  # Or on Windows: .venv\Scripts\activate
+   pip install -e ".[test]"
    ```
+3. Implement your changes with clean unit tests in `tests/`.
+4. Ensure all linters and tests pass locally.
+5. Submit your PR with a concise description of changes and test evidence.
 
-3. **Run the 17-Suite Security & Invariant Gate**:
-   ```bash
-   python ci_security_gate.py
-   ```
-
----
-
-## 3. Contribution Workflow (Pull Requests)
-
-We use the standard GitHub Pull Request workflow:
-
-1. **Fork or Branch**: Create a descriptive feature branch from `main`:
-   ```bash
-   git checkout -b feat/your-feature-name
-   ```
-2. **Implement Changes**: Write clean, modular code with accompanying unit tests in `tests/`.
-3. **Verify CI Tests**: Ensure all 17 test suites pass 100% clean locally before opening a pull request.
-4. **Submit PR**: Open a Pull Request targeting `main` with a clear description of the problem solved, architectural rationale, and verification steps.
-5. **Code Review**: Maintainers will review the submission, request revisions if necessary, and merge once tests pass.
-
----
-
-## 4. Reporting Issues and Vulnerabilities
-
-* **Bug Reports & Enhancements**: Open an issue at [https://github.com/bartholomew-ai/bartholomew/issues](https://github.com/bartholomew-ai/bartholomew/issues).
-* **Security Vulnerabilities**: For responsible disclosure of security flaws, please refer to [SECURITY.md](SECURITY.md) or email security@bartholomew.info.
-
----
-
-## 5. Licensing of Contributions
-
-By contributing to this repository, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE) (Apache License 2.0 / BSL 1.1).
-
-
----
-
-## 6. Developer Certificate of Origin (DCO)
-
-To maintain clear ownership and licensing, this project requires all contributors to agree to the Developer Certificate of Origin (DCO). 
-
-All commits submitted to this project must be signed off by the author, indicating agreement to the DCO. You can do this by using the `-s` or `--signoff` flag when committing:
-
-```bash
-git commit -s -m "Your commit message"
-```
-
-By signing off a commit, you certify the following:
-
-```
-Developer Certificate of Origin
-Version 1.1
-
-Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
-1.1 Click-use Open Source Software License Agreement.
-
-By making a contribution to this project, I certify that:
-
-(a) The contribution was created in whole or in part by me and I have the right to submit it under the open source license indicated in the file; or
-
-(b) The contribution is based upon previous work that, to the best of my knowledge, is covered under an appropriate open source license and I have the right under that license to submit that work with modifications, whether created in whole or in part by me, under the same open source license (unless I am permitted to submit under a different license), as indicated in the file; or
-
-(c) The contribution was provided directly to me by some other person who certified (a), (b) or (c) and I have not modified it.
-
-(d) I understand and agree that this project and the contribution are public and that a record of the contribution (including all personal information I submit with it, including my sign-off) is maintained indefinitely and may be redistributed consistent with this project or the open source license(s) involved.
-```
+For security-sensitive vulnerability disclosures, refer to [SECURITY.md](SECURITY.md).

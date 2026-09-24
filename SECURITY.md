@@ -1,56 +1,71 @@
-# Security Policy and Vulnerability Disclosure Procedure
+# Security Policy & Vulnerability Disclosure Procedure
 
 ## 1. Supported Versions
 
-Security updates are provided for the following versions of the Bartholomew Trust Protocol:
+Security updates are actively maintained and published for the following versions:
 
-| Version | Supported |
-| :--- | :--- |
-| 5.4.x | Supported (Active Production - Latest: v5.4.0) |
-| 5.3.x | Supported (Active Enterprise) |
-| 5.2.x | Supported (Security Patches Only) |
-| < 5.0 | Unsupported |
-
----
-
-## 1.1 Supply Chain Security & SLSA Provenance
-* **SLSA Level 3**: Releases are built with cryptographic build provenance attestations via OpenSSF SLSA GitHub Generator.
-* **Socket.dev Policy**: Capability profiles defined in `socket.yml` enforce zero unauthorized telemetry, zero malicious install scripts, and zero obfuscated code.
+| Version | Status | Security Support Tier |
+| :--- | :--- | :--- |
+| **5.4.x** | **Active Production** | Full security advisories, zero-day invariant patches, dependency updates |
+| **5.3.x** | Active Enterprise | Critical vulnerability patches only |
+| **< 5.3** | Deprecated / End of Life | Unsupported |
 
 ---
 
 ## 2. Reporting a Vulnerability
 
-The Bartholomew team takes software security and vulnerability reports seriously. If you discover a security flaw, sandbox breakout, or cryptographic defect, please report it via private disclosure:
+The Bartholomew Protocol engineering team takes runtime security, invariant evasion, and cryptographic integrity seriously. If you identify a potential security flaw, sandbox escape, secret disclosure, or AST parser bypass, disclose it privately:
 
-* **Private Security Email**: `security@bartholomew.info`
-* **Encrypted Advisory**: You may also report vulnerabilities privately through GitHub Private Vulnerability Reporting at `https://github.com/ivegotahunnitonit/bartholomew/security/advisories/new`.
+- **Primary Security Contact:** `security@bartholomew.info`
+- **GitHub Private Vulnerability Advisory:** [Report via GitHub Security Advisory](https://github.com/ivegotahunnitonit/bartholomew/security/advisories/new)
+- **PGP Encryption (Optional):**
+  - **Key ID:** `0x9B4E3FA1C2D87B04`
+  - **Fingerprint:** `5E81 A20F 761C B499 D203  579E 9B4E 3FA1 C2D8 7B04`
 
-### Information to Include:
-1. Clear description of the vulnerability, attack vector, or evasion method.
-2. Minimal reproducible proof-of-concept (PoC) script or test trajectory.
-3. Assessment of potential severity and affected components.
-
----
-
-## 3. Vulnerability Response SLA
-
-* **Initial Acknowledgment**: Within 24 hours of receipt (guaranteed < 7 business days).
-* **Triage & Reproduction**: Within 48 hours.
-* **Security Patch Release**: Within 7 days for critical severity issues.
-
-Please do not disclose security issues publicly on public issue trackers until a patched release has been published and coordinated.
+### Vulnerability Report Requirements:
+1. **Description:** High-level summary of the vulnerability and attack vector.
+2. **Reproducible Trajectory:** Minimal proof-of-concept (PoC) code or agent tool call payload demonstrating the invariant bypass or flaw.
+3. **Affected Subsystem:** Specific component (e.g., `polyglot_ast_validator`, `secret_masker`, `mcp_server`, or `cli`).
+4. **Severity Assessment:** Proposed CVSS score and real-world blast radius.
 
 ---
 
-## 4. Boundary Protection & Capability Matrix
+## 3. Vulnerability Response SLA & Expected Timelines
 
-Bartholomew enforces a strict decoupling between **Pre-Execution Invariant Gates** (for non-idempotent/irreversible operations like networks and subprocesses) and **Transactional State Rollbacks** (for local mutable filesystem state):
+We adhere to strict response and remediation SLAs:
 
-| Boundary Layer | Inspection Mechanism | Enforcement Timing | Failure Action | Containment & Recovery Guarantee | Target Latency |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Filesystem** | In-Memory Copy-on-Write (CoW) Shadow Ledger & Path Canonicalization | **Post-Mutation Atomic Checkpoint** | **ROLLBACK (Revert Tree)** | Zero orphaned files or partial edits; atomic filesystem tree restoration + JSON-RPC diagnostic hint | `< 120µs` |
-| **Subprocess** | Local AST Abstract Syntax Parsing & Shell Delimiter Normalization | **Pre-Execution Gate** (Before OS `fork`/`exec`) | **DROP (DENY Call)** | Subprocess is never spawned; zero OS-level side effects; invariant violation logged to Merkle tree | `< 18µs` |
-| **Network Egress** | CIDR/Domain Allowlist & High-Entropy Payload Heuristics | **Pre-Execution Gate** (Before Socket `connect()`) | **VETO (Block Socket)** | TCP handshake never initiates; raw exfiltration credentials stripped before wire dispatch | `< 35µs` |
-| **External APIs** | Schema Policy Validator & Bearer Credential In-Memory Scrubber | **Pre-Execution Gate** (Before HTTP Dispatch) | **SCRUB or REJECT** | Private prompts/tokens sanitized in-memory; unapproved endpoints fail closed with 403 Forbidden | `< 45µs` |
+| Phase | Guaranteed Timeframe | Action |
+| :--- | :--- | :--- |
+| **Initial Acknowledgment** | **< 24 Hours** | Written receipt of report with assigned tracking ticket ID |
+| **Triage & Reproduction** | **< 48 Hours** | Technical reproduction, risk validation, and CVSS severity scoring |
+| **Security Patch Release** | **< 7 Calendar Days** | Verified patch release on PyPI, npm, and Open VSX with CVE advisory |
+| **Coordinated Disclosure** | **30 Days Post-Patch** | Public advisory publication with full researcher credit |
 
+---
+
+## 4. Scope & Boundary Matrix
+
+### In-Scope:
+- Invariant escapes allowing catastrophic shell commands (`rm -rf`, reverse shells) through AST parser evasion
+- SQL parser bypasses permitting unauthorized DDL mutations (`DROP TABLE`, blind schema drops)
+- In-flight secret masker leakage of credentials (`sk-*`, `ghp_*`, AWS keys, private keys)
+- Cryptographic receipt spoofing or Ed25519 signature malleability
+- MCP server boundary breakouts or privilege escalation
+
+### Out-of-Scope:
+- Volumetric denial of service (DoS) against documentation or demo websites
+- Social engineering targeting maintainers or users
+- Weaknesses in underlying third-party host operating system kernels
+
+---
+
+## 5. Defense Boundary Architecture
+
+Bartholomew enforces strict pre-execution gating before OS dispatch:
+
+| Boundary Layer | Inspection Mechanism | Enforcement Point | Action | Latency Target |
+| :--- | :--- | :--- | :--- | :--- |
+| **Filesystem & Subprocess** | Abstract Syntax Tree (AST) Parsing | Pre-OS `execve()` Dispatch | **BLOCK & VETO** | `< 18 µs` |
+| **Network Egress** | CIDR / Domain Allowlist + Heuristics | Pre-Socket `connect()` | **BLOCK & LOG** | `< 25 µs` |
+| **Credentials & Secrets** | Zero-Allocation Regex + Entropy Vault | In-Flight Memory Scrub | **MASK & REDACT** | `< 20 µs` |
+| **Database & SQL** | Multi-Dialect AST Parsing | Pre-Client `execute()` | **ABORT MUTATION** | `< 32 µs` |
