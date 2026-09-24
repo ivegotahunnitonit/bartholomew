@@ -19,6 +19,7 @@
 [![Tests](https://img.shields.io/badge/tests-2920%20passing-brightgreen)](tests/)
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Simulator%20Space-yellow)](https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard)
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Red--Team%20Evals-orange)](https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals)
+[![Leaderboard](https://img.shields.io/badge/%F0%9F%8F%86%20Leaderboard-Rank%20%231%20(%3C35%C2%B5s)-gold)](https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard)
 
 [![OpenAI](https://img.shields.io/badge/OpenAI-Agents%20SDK-10A37F?logo=openai&logoColor=white)](examples/README.md)
 [![Anthropic](https://img.shields.io/badge/Anthropic-Claude%20Tool%20Guard-D97706?logo=anthropic&logoColor=white)](examples/README.md)
