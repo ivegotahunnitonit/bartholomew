@@ -170,6 +170,10 @@ class Guard:
             "receipt": receipt
         }
 
+    def evaluate_intent(self, prompt: str, agent_id: str = "agent-1") -> dict:
+        """Evaluates high-level prompt intent for adversarial jailbreaks and destructive directives."""
+        return self.check(prompt, agent_id=agent_id)
+
     def scrub(self, text: str) -> str:
         """Zero-allocation in-flight secret scrubbing."""
         from src.secret_masker import SecretVaultMasker

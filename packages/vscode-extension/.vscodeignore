@@ -1,0 +1,17 @@
+# Files NOT to include in the packaged .vsix
+.vscode/**
+.vscode-test/**
+node_modules/**
+.gitignore
+.eslintrc.json
+tsconfig.json
+webpack.config.js
+**/*.map
+**/*.ts
+!out/**/*.js
+test/**
+**/.nyc_output
+coverage/**
+CONTRIBUTING.md
+CHANGELOG.md
+*.vsix

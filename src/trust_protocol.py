@@ -53,7 +53,7 @@ class BartholomewTrustAuthority:
             "rm -rf", "drop table", "drop schema", "drop database", "truncate table", "truncate ",
             "aws_" + "secret_access_key", "id_" + "rsa", "/etc/shadow", "malicious", "system override",
             "sk" + "-live", "eval(", "exec(", "<script>", "import os", "mkfs", "dd if=", ":(){",
-            "chmod -r 777", "curl ", "wget ", "drop column", "base64 -d", "base64 --decode",
+            "chmod -r 777", "curl ", "wget ", "drop column", "base64 -d", "base64 --decode", "developer mode", "you are now dan", "ignore all previous instructions", "alter table", "shutdown", "reboot", "cat /etc/", 
             "printf '\\x", "\\x72\\x6d", "rm\t", "rm  "
         ]
         

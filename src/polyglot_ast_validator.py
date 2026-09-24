@@ -34,17 +34,19 @@ class PolyglotASTValidator:
     }
 
     FORBIDDEN_SHELL_PATTERNS = [
-        re.compile(r"rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)+(\S+)", re.IGNORECASE),
-        re.compile(r"rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)*(/|/\*|~|\$HOME|/etc|/var|/usr|[a-zA-Z]:[\\/])", re.IGNORECASE),
+        re.compile(r"(\/bin\/|\/usr\/bin\/)?rm\s+([-\w\s]*?-[rfRF]+[-\w\s]*?)\s*(/|/\*|~|\$HOME|/etc|/var|/usr|[a-zA-Z]:[\\/])", re.IGNORECASE),
+        re.compile(r"(\/bin\/|\/usr\/bin\/)?rm\s+.*--no-preserve-root.*", re.IGNORECASE),
+        re.compile(r"(\/bin\/|\/usr\/bin\/)?rm\s+(-[rfRF]+\s+|-[rR]\s+-[fF]\s+)+(\S+)", re.IGNORECASE),
         re.compile(r"mkfs(\.\w+)?\s+", re.IGNORECASE),
         re.compile(r"dd\s+if=\S+\s+of=(/dev/|/boot|\S+)", re.IGNORECASE),
         re.compile(r":\(\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:", re.IGNORECASE), # Fork bomb
-        re.compile(r"chmod\s+(-R\s+)?777\s+/", re.IGNORECASE),
+        re.compile(r"(chmod|chown)\s+(-R\s+)?.*\s+/", re.IGNORECASE),
         re.compile(r"curl\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r">\s*/dev/(sd[a-z]|nvme\w+|disk\w+)", re.IGNORECASE),
-        re.compile(r"\bdrop\s+(table|schema|database)\b", re.IGNORECASE),
-        re.compile(r"\btruncate\s+(table\s+)?\w+", re.IGNORECASE),
+        re.compile(r"(drop|alter)(\s+|/\*.*?\*/|--.*?\n)+(table|schema|database)", re.IGNORECASE),
+        re.compile(r"\b(shutdown|reboot)\b", re.IGNORECASE),
+        re.compile(r"truncate(\s+|/\*.*?\*/|--.*?\n)+(table(\s+|/\*.*?\*/|--.*?\n)+)?\w+", re.IGNORECASE),
         re.compile(r"\bunion\s+(all\s+)?select\b", re.IGNORECASE),
         # Advanced Obfuscation & Encoded Execution Patterns
         re.compile(r"\|\s*(base64\s+-d|openssl\s+enc|xxd\s+-r)\s*\|\s*(sh|bash|zsh|python|perl|dash)", re.IGNORECASE),
@@ -189,7 +191,7 @@ class PolyglotASTValidator:
                 # 4. Check direct Import of hostile root modules if restricted
                 if isinstance(node, ast.Import):
                     for alias in node.names:
-                        if alias.name in {"pty", "posix", "ctypes"}:
+                        if alias.name in {"pty", "posix", "ctypes", "socket"}:
                             return False, f"BTP-AST-004: Restricted module import '{alias.name}'", {}
 
             return True, "Python AST verified safe", {"node_count": len(list(ast.walk(tree)))}
