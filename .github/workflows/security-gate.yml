@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Bartholomew Security Gate
-        uses: ivegotahunnitonit/bartholomew@main
+        uses: ivegotahunnitonit/bartholomew@v5.4.21
         with:
           audit-path: "."
           policy-file: "policies/default_security_policy.yaml"

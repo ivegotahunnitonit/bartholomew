@@ -1,0 +1,16 @@
+{
+  "benchmark_name": "100-Agent Concurrent Swarm Stress Benchmark",
+  "concurrency_agents": 100,
+  "total_operations": 50000,
+  "wall_clock_seconds": 2.095,
+  "throughput_ops_sec": 23860.8,
+  "mean_latency_us": 483.03,
+  "p50_latency_us": 15.7,
+  "p90_latency_us": 105.3,
+  "p99_latency_us": 1480.1,
+  "threats_intercepted": 25000,
+  "safe_authorized": 25000,
+  "intercept_rate_pct": 100.0,
+  "sla_target_us": 35.0,
+  "sla_compliance": true
+}
