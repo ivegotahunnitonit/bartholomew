@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "e2d774a3-7641-4c12-8889-cb4a6bf6ea24",
+  "name": "BartholomewGateV1",
+  "friendlyName": "Bartholomew Agent Security Gate",
+  "description": "Deterministic AST invariant firewall, secret scrubbing, and Verified Bartholomew Seal attestation for Azure Pipelines.",
+  "helpMarkDown": "[Bartholomew Protocol Documentation](https://bartholomew.info)",
+  "category": "Utility",
+  "visibility": ["Build", "Release"],
+  "author": "Bartholomew AI Inc.",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "instanceNameFormat": "Bartholomew Security Gate $(scanPath)",
+  "inputs": [
+    {
+      "name": "scanPath",
+      "type": "filePath",
+      "label": "Target Path to Scan",
+      "defaultValue": "$(Build.SourcesDirectory)",
+      "required": true,
+      "helpMarkDown": "The directory containing code or agent artifacts to audit."
+    },
+    {
+      "name": "failOnViolation",
+      "type": "boolean",
+      "label": "Fail on Violation",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Fail the pipeline job if high-severity AST invariant violations or exposed secrets are detected."
+    },
+    {
+      "name": "mintSeal",
+      "type": "boolean",
+      "label": "Mint Bartholomew Seal",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Contact the Bartholomew Authority Fleet to mint an attestation seal record."
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "index.js"
+    },
+    "Node20_1": {
+      "target": "index.js"
+    }
+  }
+}

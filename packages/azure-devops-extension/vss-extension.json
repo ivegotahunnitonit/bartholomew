@@ -1,0 +1,74 @@
+{
+  "manifestVersion": 1,
+  "id": "bartholomew-devops-gate",
+  "name": "Bartholomew DevOps Gate — Agent Security & Attestation",
+  "version": "1.0.0",
+  "publisher": "itsubsolomon",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "CI/CD security gate for autonomous AI agents. Deterministic AST invariant firewall, secret scrubbing, and Verified Bartholomew Seal attestation for Azure Pipelines.",
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "tags": [
+    "ai",
+    "security",
+    "agent",
+    "copilot",
+    "cursor",
+    "compliance",
+    "soc2",
+    "audit"
+  ],
+  "icons": {
+    "default": "images/icon.png"
+  },
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  },
+  "links": {
+    "home": {
+      "uri": "https://bartholomew.info"
+    },
+    "getstarted": {
+      "uri": "https://bartholomew.info"
+    },
+    "support": {
+      "uri": "https://github.com/bartholomew-ai/bartholomew/issues"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/bartholomew-ai/bartholomew.git"
+  },
+  "contributions": [
+    {
+      "id": "bartholomew-pipeline-gate",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks/BartholomewGateV1"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "tasks/BartholomewGateV1"
+    },
+    {
+      "path": "images/icon.png",
+      "addressable": true
+    },
+    {
+      "path": "overview.md",
+      "addressable": true
+    }
+  ]
+}
