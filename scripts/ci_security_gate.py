@@ -21,16 +21,16 @@ def run_gate():
     print("=" * 80 + "\n")
 
     steps = [
-        ("1. Validate Declarative Security Policy", ["python", "cli.py", "policy", "validate"]),
+        ("1. Validate Declarative Security Policy", ["python", "-m", "btp_guard.cli", "policy", "validate"]),
         ("2. Test Law of Diminishing Marginal Utility (LDMU) Engine", ["python", "-m", "pytest", "tests/test_marginal_utility_engine.py"]),
         ("3. Test Merkle Audit Tree & SOC 2 Inclusion Proofs", ["python", "tests/test_audit_merkle_tree.py"]),
         ("4. Test Claude Desktop & Cursor MCP Guard Server", ["python", "-m", "pytest", "tests/test_mcp_guard.py"]),
-        ("5. Test Hermetic Command & File Containment Sandbox", ["python", "test_hermetic_command_sandbox.py"]),
-        ("6. Test 1-Line Drop-In Client Wrapper", ["python", "test_client_wrapper.py"]),
+        ("5. Test Hermetic Command & File Containment Sandbox", ["python", "tests/test_hermetic_command_sandbox.py"]),
+        ("6. Test 1-Line Drop-In Client Wrapper", ["python", "tests/test_client_wrapper.py"]),
         ("7. Test Enterprise Fleet Telemetry & OpenTelemetry Exporter", ["python", "-m", "pytest", "tests/test_fleet_telemetry.py"]),
         ("8. Test Native Invariant Micro-Engine & Sub-5µs Latency", ["python", "-m", "pytest", "tests/test_native_core.py"]),
         ("9. Test Autonomous Policy Synthesizer", ["python", "-m", "pytest", "tests/test_policy_synthesizer.py"]),
-        ("10. Test LangChain Guardrails", ["python", "test_langchain_guard.py"]),
+        ("10. Test LangChain Guardrails", ["python", "tests/test_langchain_guard.py"]),
         ("11. Test Information Theory & Epistemic Grounding Engine", ["python", "tests/test_entropy_grounding_engine.py"]),
         ("12. Test Epistemic & Physical Invariant Engine", ["python", "tests/test_epistemic_physics_engine.py"]),
         ("13. Test Advanced Cosmology, PCP & Neuro-Epistemic Engine", ["python", "tests/test_advanced_cosmology_neuro_engine.py"]),
@@ -39,6 +39,7 @@ def run_gate():
         ("16. Test Compliance & SOC 2 Audit Report Generator", ["python", "tests/test_compliance_report_generator.py"]),
         ("17. Test Simple Drop-In Guard Interface", ["python", "tests/test_simple_guard.py"]),
         ("18. Test Container Hardware Sandbox & Fallback Engine", ["python", "-m", "pytest", "tests/test_container_sandbox.py"]),
+        ("19. Test 550+ Adversarial Jailbreak Fuzzer Battery", ["python", "-m", "pytest", "tests/test_adversarial_jailbreak_fuzzer.py"]),
     ]
 
     all_passed = True

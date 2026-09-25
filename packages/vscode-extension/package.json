@@ -2,7 +2,7 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Guard \u2014 AI Agent Safety",
   "description": "Sub-35us in-process tool execution gateway, runtime dispatch seam, policy dry-run linter, and offline Merkle receipts for Cursor and VS Code.",
-  "version": "5.4.20",
+  "version": "5.4.21",
   "publisher": "itsubsolomon",
   "icon": "icon.png",
   "license": "MIT",
