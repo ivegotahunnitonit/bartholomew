@@ -1909,8 +1909,8 @@
       </a>
 
       <div class="nav-right-items">
-        <a href="/verified-mcp.html" class="btn-verified-mcp-nav" style="color:#34d399; font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:700; text-decoration:none; padding:5px 10px; border:1px solid rgba(52,211,153,0.3); border-radius:6px; background:rgba(52,211,153,0.06); display:inline-flex; align-items:center; gap:6px;"><span>[VERIFIED MCP]</span></a>
-        <a href="/investors.html" class="btn-investor-nav" style="color:#c084fc; font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:700; text-decoration:none; padding:5px 10px; border:1px solid rgba(192,132,252,0.3); border-radius:6px; background:rgba(192,132,252,0.06); display:inline-flex; align-items:center; gap:6px;"><span>[INVESTOR ROOM]</span></a>
+        <a href="/docs.html" class="nav-doc-link" style="color:#94a3b8; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700; text-decoration:none; padding:6px 12px; border-radius:6px; transition:color 0.2s;">Docs</a>
+        <a href="/sim-lab.html" class="nav-doc-link" style="color:#38bdf8; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700; text-decoration:none; padding:6px 12px; border-radius:6px; transition:color 0.2s;">Simulator</a>
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link" title="GitHub Repository">
           <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span class="nav-github-label">GitHub</span>
@@ -1963,9 +1963,6 @@
           <a href="https://open-vsx.org/extension/itsubsolomon/bartholomew-keystone" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding: 10px 18px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-family:'JetBrains Mono',monospace; font-size:0.82rem; font-weight:800; border-radius: 8px; transition: all 0.2s;">
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             Install Keystone Passkey (492+)
-          </a>
-          <a href="/verified-mcp.html#certify" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding: 10px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family:'JetBrains Mono',monospace; font-size:0.82rem; font-weight:700; border-radius: 8px; transition: all 0.2s;">
-            Claim Verified B-Stamp ($249)
           </a>
         </div>
 
@@ -2740,35 +2737,37 @@
       </div>
     </section>
 
-    <!-- Dedicated VC / Investor Callout Box -->
-    <section class="investor-callout-sec">
-      <div class="container">
-        <div class="investor-callout-card">
-          <div class="investor-callout-content">
-            <div class="vc-badge">
-              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.51L20.08 19H3.92L12 5.51zM11 10h2v4h-2v-4zm0 6h2v2h-2v-2z"/></svg>
-              <span>Seed Institutional Round Active</span>
-            </div>
-            <h3 class="investor-callout-title">
-              Raising Seed Round — Building the sovereign security layer for the $100B agent ecosystem.
-            </h3>
-            <p class="investor-callout-desc">
-              Bartholomew establishes the native execution firewall for autonomous AI agent tool dispatch. Request our 8-slide seed pitch deck, technical due diligence whitepaper, and pilot customer data room.
-            </p>
-          </div>
 
-          <button onclick="openRoadmapModal()" class="btn-vc-cta">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            <span>Request Seed Pitch Deck &amp; Data Room</span>
-          </button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- Restored Rich Footers & Verification Seals from Previous Deployment -->
   <footer class="site-footer">
     <div class="container">
+      <!-- Dedicated Seed Institutional Round & Investor Room Callout in Footer -->
+      <div class="investor-callout-card" style="margin-bottom: 2.5rem; background: radial-gradient(circle at top right, rgba(192, 132, 252, 0.12), rgba(13, 18, 31, 0.95)); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 800; color: #c084fc; background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.3); padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; text-transform: uppercase;">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.51L20.08 19H3.92L12 5.51zM11 10h2v4h-2v-4zm0 6h2v2h-2v-2z"/></svg>
+            <span>Seed Institutional Round Active</span>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 6px;">
+            Raising Seed Round — Building the sovereign security layer for the $100B agent ecosystem.
+          </h3>
+          <p style="font-size: 0.86rem; color: #94a3b8; line-height: 1.5; margin: 0;">
+            Bartholomew establishes the native execution firewall for autonomous AI agent tool dispatch. Request our 8-slide seed pitch deck, technical due diligence whitepaper, and pilot customer data room.
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="/investors.html" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; font-weight: 800; padding: 12px 22px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(168, 85, 247, 0.35);">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <span>Enter Investor Room</span>
+          </a>
+          <button onclick="openRoadmapModal()" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; font-weight: 700; padding: 12px 20px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <span>Seed Pitch Deck</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Interactive NVIDIA NIM & Keystone Passkey Live Sandbox -->
       <div class="footer-nim-sandbox-box" style="margin-bottom: 2rem; background: rgba(13, 18, 31, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; border-bottom:1px solid rgba(56,189,248,0.15); padding-bottom:0.75rem;">
@@ -2915,6 +2914,18 @@
           <div class="footer-col-title">[DISCOVERY &amp; SPECS]</div>
           <ul class="footer-links-list">
             <li>
+              <a href="/investors.html" style="color:#c084fc; font-weight:700;">
+                <span>[INVESTOR ROOM]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/investors.html#round" style="color:#f59e0b; font-weight:700;">
+                <span>[SEED INSTITUTIONAL ROUND ACTIVE]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
               <a href="/.well-known/btp.json" target="_blank" style="color:var(--gold-light); font-weight:700;">
                 <span>[BTP MANIFEST v5.4]</span>
                 <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
@@ -2993,7 +3004,11 @@
       <!-- Bottom Bar -->
       <div class="footer-bottom-bar">
         <div>© 2026 BARTHOLOMEW TRUST PROTOCOL · SOVEREIGN OPEN STANDARDS (BTP v5.4)</div>
-        <div style="display:flex; align-items:center; gap:16px;">
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <a href="/investors.html" style="color: #c084fc; font-weight: 700; text-decoration: none;">[INVESTOR ROOM]</a>
+          <span>•</span>
+          <a href="/investors.html#round" style="color: #f59e0b; font-weight: 700; text-decoration: none;">(Seed Institutional Round Active)</a>
+          <span>•</span>
           <a href="/sim-lab.html" style="color: #38bdf8; font-weight: 700; text-decoration: none;">[LIVE ATTACK SIMULATOR]</a>
           <span>•</span>
           <a href="/robots.txt">robots.txt</a>
@@ -3532,74 +3547,6 @@
         setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
       });
     }
-</script>
-
-
-<!-- 24/7 Autonomous Sovereign Support Liaison Floating Sentinel -->
-<div id="btpSupportWidget" style="position:fixed; bottom:24px; right:24px; z-index:9999; font-family:var(--font-sans);">
-  <button id="btnToggleSupport" onclick="toggleSupportChat()" style="display:flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0ea5e9, #6366f1); color:#fff; border:none; border-radius:30px; padding:12px 20px; font-weight:700; font-size:0.88rem; box-shadow:0 10px 25px rgba(14,165,233,0.4); cursor:pointer; transition:transform 0.2s;">
-    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-    <span>Ask Support Liaison (24/7)</span>
-  </button>
-  
-  <div id="btpSupportPanel" style="display:none; width:340px; background:rgba(8,12,20,0.96); backdrop-filter:blur(16px); border:1px solid rgba(56,189,248,0.3); border-radius:14px; box-shadow:0 20px 40px rgba(0,0,0,0.8); overflow:hidden; margin-bottom:12px;">
-    <div style="padding:14px 16px; background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
-        <span style="font-weight:700; font-size:0.88rem; color:#fff;">Support Liaison Agent</span>
-      </div>
-      <button onclick="toggleSupportChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.1rem; cursor:pointer;">&times;</button>
-    </div>
-    
-    <div id="supportMessages" style="padding:14px; height:220px; overflow-y:auto; font-size:0.84rem; display:flex; flex-direction:column; gap:10px;">
-      <div style="background:rgba(255,255,255,0.05); padding:10px 12px; border-radius:8px; color:var(--text-main); border:1px solid rgba(255,255,255,0.06);">
-        Hi! I am the Bartholomew Technical Support Liaison. Tell me what error code or integration issue you are encountering and I will triage it instantly.
-      </div>
-    </div>
-    
-    <form onsubmit="handleSupportSend(event)" style="padding:10px 14px; border-top:1px solid rgba(255,255,255,0.08); display:flex; gap:8px;">
-      <input type="text" id="supportInput" placeholder="e.g. install failing or MCP gate" required style="flex:1; background:rgba(4,7,13,0.8); border:1px solid var(--border-subtle); border-radius:6px; color:#fff; padding:8px 10px; font-size:0.82rem;" />
-      <button type="submit" style="background:#0ea5e9; border:none; border-radius:6px; color:#fff; padding:8px 12px; font-size:0.82rem; font-weight:700; cursor:pointer;">Send</button>
-    </form>
-  </div>
-</div>
-
-<script>
-function toggleSupportChat() {
-  const p = document.getElementById('btpSupportPanel');
-  p.style.display = p.style.display === 'none' ? 'block' : 'none';
-}
-
-async function handleSupportSend(e) {
-  e.preventDefault();
-  const input = document.getElementById('supportInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  
-  const box = document.getElementById('supportMessages');
-  box.innerHTML += `<div style="align-self:flex-end; background:#0ea5e9; color:#fff; padding:8px 12px; border-radius:8px; max-width:85%;">${msg}</div>`;
-  box.scrollTop = box.scrollHeight;
-  
-  try {
-    let reply = "Ticket triaged: please upgrade with `pip install --upgrade btp-guard` or check docs.html.";
-    try {
-      const res = await fetch('https://btp-liaison-fleet-322603900775.us-central1.run.app/support', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({payload: {id: 'WEB-' + Date.now().toString(16), message: msg}}),
-        signal: AbortSignal.timeout(2500)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        reply = data.response || reply;
-      }
-    } catch(err) {}
-    
-    box.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:10px 12px; border-radius:8px; color:var(--text-main); border:1px solid rgba(255,255,255,0.06);">${reply}</div>`;
-    box.scrollTop = box.scrollHeight;
-  } catch(e) {}
-}
 </script>
 
 </body>

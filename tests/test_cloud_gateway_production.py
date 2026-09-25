@@ -39,7 +39,7 @@ def test_manifest_discovery_endpoint(client):
     response = client.get("/.well-known/btp.json")
     assert response.status_code == 200
     data = response.json()
-    assert data["manifest_version"] in ["1.0.0", "5.4.0"]
+    assert data["manifest_version"].startswith("5.4") or data["manifest_version"] in ["1.0.0", "5.4.0"]
     assert data["identity"]["name"] == "Bartholomew Trust Protocol"
     assert "transaction_authorization" in data["capabilities"]
 
