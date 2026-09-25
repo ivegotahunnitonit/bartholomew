@@ -1892,6 +1892,145 @@
       }
     }
 
+  
+    /* Navigation Seal & Open VSX Badges */
+    .nav-seal-link {
+      color: #10b981;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-seal-link:hover {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    .nav-openvsx-link {
+      color: #c084fc;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      background: rgba(192, 132, 252, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-openvsx-link:hover {
+      background: rgba(192, 132, 252, 0.18);
+      border-color: #c084fc;
+      color: #e9d5ff;
+    }
+
+    /* Mobile Header Perfection (Phone Screens <= 640px) */
+    @media (max-width: 640px) {
+      .nav-inner {
+        height: 56px !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
+      }
+      .brand-wrap {
+        gap: 6px !important;
+        flex-shrink: 1 !important;
+        min-width: 0 !important;
+      }
+      .brand-title {
+        font-size: 0.96rem !important;
+      }
+      .badge-protocol {
+        display: none !important;
+      }
+      .nav-right-items {
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+        flex-wrap: nowrap !important;
+      }
+      .nav-seal-link {
+        padding: 5px 8px !important;
+        font-size: 0.72rem !important;
+        gap: 4px !important;
+      }
+      .nav-openvsx-link {
+        padding: 5px 8px !important;
+        font-size: 0.72rem !important;
+        gap: 4px !important;
+      }
+      .btn-sandbox-nav {
+        padding: 5px 8px !important;
+        font-size: 0.72rem !important;
+        gap: 4px !important;
+      }
+      .btn-sandbox-label {
+        display: none !important;
+      }
+    }
+
+    /* Ultra-Compact Phones (<= 420px: iPhone SE, Galaxy, Pixel) */
+    @media (max-width: 420px) {
+      .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+      .brand-title {
+        font-size: 0.88rem !important;
+      }
+      .nav-right-items {
+        gap: 4px !important;
+      }
+      .nav-seal-text {
+        display: none !important;
+      }
+      .nav-openvsx-text {
+        display: none !important;
+      }
+      .nav-seal-link {
+        padding: 6px !important;
+        width: 32px !important;
+        height: 32px !important;
+        justify-content: center !important;
+        border-radius: 6px !important;
+      }
+      .nav-openvsx-link {
+        padding: 6px !important;
+        width: 32px !important;
+        height: 32px !important;
+        justify-content: center !important;
+        border-radius: 6px !important;
+      }
+      .nav-github-link {
+        padding: 6px !important;
+        width: 32px !important;
+        height: 32px !important;
+        justify-content: center !important;
+        border-radius: 6px !important;
+      }
+      .btn-sandbox-nav {
+        padding: 6px !important;
+        width: 32px !important;
+        height: 32px !important;
+        justify-content: center !important;
+        border-radius: 6px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1909,13 +2048,13 @@
       </a>
 
       <div class="nav-right-items">
-        <a href="/verify.html" class="nav-seal-link" style="color:#10b981; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700; text-decoration:none; padding:7px 14px; border-radius:8px; transition:all 0.2s; border:1px solid rgba(16,185,129,0.35); background:rgba(16,185,129,0.08); display:inline-flex; align-items:center; gap:6px;">
+        <a href="/verify.html" class="nav-seal-link" title="Verify Bartholomew Seal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>Verify Seal</span>
+          <span class="nav-seal-text">Verify Seal</span>
         </a>
-        <a href="https://open-vsx.org/publisher/itsubsolomon" target="_blank" class="nav-openvsx-link" style="color:#c084fc; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700; text-decoration:none; padding:7px 14px; border-radius:8px; transition:all 0.2s; border:1px solid rgba(192,132,252,0.3); background:rgba(192,132,252,0.08); display:inline-flex; align-items:center; gap:6px;" title="Download Bartholomew Extensions on Open VSX Registry (Cursor, VS Code, Windsurf)">
+        <a href="https://open-vsx.org/publisher/itsubsolomon" target="_blank" class="nav-openvsx-link" title="Download Extensions on Open VSX (Cursor, Windsurf, VS Code)">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L2 6v12l10 5 10-5V6L12 1zm0 2.24l7.6 3.8-3.4 1.7-7.6-3.8 3.4-1.7zm-8 4.23l7 3.5v7.57l-7-3.5V7.47zm9 11.07v-7.57l7-3.5v7.57l-7 3.5z"/></svg>
-          <span>Open VSX</span>
+          <span class="nav-openvsx-text">Open VSX</span>
         </a>
         <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link" title="GitHub Repository">
           <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>

@@ -456,6 +456,60 @@
       transform: translateY(0);
       opacity: 1;
     }
+  
+    /* Mobile Header Responsiveness */
+    @media (max-width: 640px) {
+      header {
+        margin-bottom: 24px !important;
+        padding-bottom: 14px !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+      }
+      .brand {
+        flex-shrink: 0 !important;
+      }
+      .brand img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      .brand span {
+        font-size: 0.92rem !important;
+      }
+      .nav-links {
+        gap: 5px !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+        align-items: center !important;
+      }
+      .nav-links a {
+        padding: 5px 8px !important;
+        font-size: 0.72rem !important;
+        white-space: nowrap !important;
+      }
+      .nav-links a[href="/"] {
+        display: none !important;
+      }
+    }
+    @media (max-width: 420px) {
+      .container {
+        padding: 16px 12px 40px !important;
+      }
+      .brand span {
+        font-size: 0.88rem !important;
+      }
+      .nav-links a {
+        padding: 5px 6px !important;
+        font-size: 0.7rem !important;
+      }
+      .cert-card {
+        padding: 20px 14px !important;
+      }
+      .mint-card {
+        padding: 18px 14px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
