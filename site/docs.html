@@ -552,6 +552,141 @@ await safeWorker.run("Sync customer balances"); // Allowed</pre>
         </div>
       </section>
 
+      
+      <!-- CrewAI & LangChain Integration -->
+      <section id="framework-crewai">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--emerald)"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          CrewAI &amp; LangChain Integration
+        </h2>
+        <p class="lead-p">Intercept autonomous agent tool-calling pre-flight with zero overhead. Blocks destructive commands, secret leaks, and spend overruns before tool execution:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-langchain-py')">LangChain (Python)</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-crewai-py')">CrewAI (Python)</button>
+          </div>
+          <div class="tab-pane active" id="tab-langchain-py">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">from langchain.agents import initialize_agent, load_tools
+from langchain_openai import ChatOpenAI
+from btp_guard import BTPCallbackHandler
+
+# 1-Line Drop-in Callback Handler
+guard = BTPCallbackHandler(max_spend_usd=250.0, auto_raise=True)
+
+llm = ChatOpenAI(temperature=0)
+tools = load_tools(["serpapi", "python_repl"], llm=llm)
+
+agent = initialize_agent(tools, llm, agent="zero-shot-react-description")
+
+# Every tool execution is audited, masked, and verified (<35µs AST checks)
+result = agent.run("Calculate quarterly tax estimate", callbacks=[guard])
+print("Audit Receipt:", guard.last_receipt.signature)</pre>
+          </div>
+          <div class="tab-pane" id="tab-crewai-py">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">from crewai import Agent, Task, Crew
+from btp_guard import bartholomew_guard
+
+@bartholomew_guard(scope="data_engineering", max_spend_usd=100.0)
+class SecureAnalysisAgent(Agent):
+    pass
+
+researcher = SecureAnalysisAgent(
+    role="Senior Quantitative Researcher",
+    goal="Analyze market volatility invariants without leaking confidential keys",
+    backstory="Protected by Bartholomew AST Gateway and Ed25519 Merkle receipts",
+    verbose=True
+)
+
+crew = Crew(agents=[researcher], tasks=[...])
+crew.kickoff()</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- AutoGen & Claude Code Integration -->
+      <section id="framework-autogen">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--cyan)"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          AutoGen &amp; Claude Code (MCP)
+        </h2>
+        <p class="lead-p">Wrap AutoGen conversational agents or Claude Code terminals with deterministic execution gating:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-claude-code')">Claude Code / Terminal</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-autogen-py')">AutoGen Swarm</button>
+          </div>
+          <div class="tab-pane active" id="tab-claude-code">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Protect Claude Code or any bash-enabled agent in-flight:
+npx -y btp-guard run -- claude
+
+# Intercept and wrap an untrusted MCP server for Claude Desktop / Code:
+npx -y mcp-proxy-guard -- npx -y @modelcontextprotocol/server-postgres "postgresql://db:5432"</pre>
+          </div>
+          <div class="tab-pane" id="tab-autogen-py">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block">import autogen
+from btp_guard import protect_autogen_assistant
+
+config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
+assistant = autogen.AssistantAgent("coder", llm_config={"config_list": config_list})
+user_proxy = autogen.UserProxyAgent("user_proxy", code_execution_config={"work_dir": "workspace"})
+
+# Enforce sub-35µs execution boundaries on assistant's suggested code
+protect_autogen_assistant(assistant, allowed_modules=["math", "pandas", "numpy"])
+
+user_proxy.initiate_chat(assistant, message="Plot normalized retention cohort curves")</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- IDE & Extension Guides -->
+      <section id="vscode-extension">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--purple)"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          Cursor, Windsurf &amp; Azure DevOps
+        </h2>
+        <p class="lead-p">Install the official Bartholomew Guard and Keystone Passkey extensions directly across your development environments:</p>
+
+        <div class="tab-container">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab-ext-cli')">1-Click Install</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-ext-ado')">Azure DevOps Pipeline</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab-ext-gh')">GitHub Action</button>
+          </div>
+          <div class="tab-pane active" id="tab-ext-cli">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># Install from Open VSX (Cursor, Windsurf, VS Code):
+code --install-extension Bartholomew.bartholomew-guard-vscode
+code --install-extension Bartholomew.bartholomew-keystone</pre>
+          </div>
+          <div class="tab-pane" id="tab-ext-ado">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># azure-pipelines.yml
+steps:
+- task: BartholomewGateV1@1
+  displayName: 'Verify Autonomous Code Safety'
+  inputs:
+    scanPath: '$(Build.SourcesDirectory)'
+    failOnViolation: true
+    mintSeal: true</pre>
+          </div>
+          <div class="tab-pane" id="tab-ext-gh">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            <pre class="code-block"># .github/workflows/verify.yml
+steps:
+- uses: ivegotahunnitonit/bartholomew@v5.4.21
+  with:
+    path: '.'
+    strict: 'true'</pre>
+          </div>
+        </div>
+      </section>
+
       <!-- OS Kernel Process Sandbox -->
       <section id="kernel-runner">
         <h2 class="section-title">

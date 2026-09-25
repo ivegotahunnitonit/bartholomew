@@ -1,4 +1,4 @@
-class BtpGuard < Formula
+class Bartholomew < Formula
   include Language::Python::Virtualenv
 
   desc "Deterministic AST execution gating, secret scrubbing, and receipts for AI agents"
