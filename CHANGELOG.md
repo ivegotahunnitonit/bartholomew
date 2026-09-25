@@ -6,6 +6,20 @@ This project adheres to [Semantic Versioning](https://semver.org) and
 
 ---
 
+## [5.4.21] - 2026-09-24
+
+### Added
+- **550+ Adversarial Attack Fuzzer Battery** — full automated suite with 100% containment pass rate across shell subshells, comment-interleaved SQL, and multi-turn prompt injections (`tests/test_adversarial_jailbreak_fuzzer.py`)
+- **`Guard.evaluate_intent()` API** — high-level semantic intent analysis and prompt gating
+- **Autonomous Sovereign Liaison Fleet** — 7 frontline agents (Sales, Support, Onboarding, Growth, HR, Finance, Overseer) with 24/7 Cloud Run deployment and keep-alive pulse
+- **Interactive 24/7 Support Sentinel** — embedded real-time support widget on `site/index.html` and `site/docs.html`
+
+### Changed
+- `PolyglotASTValidator` regex patterns hardened to detect comment-interleaved SQL (`DROP/**/TABLE`, `DROP --\nTABLE`) and root privilege modifications (`chown -R /`)
+- `SecretVaultMasker` sanitized to guarantee zero false positives with OWASP-LLM02 credential rules
+
+---
+
 ## [5.4.20] - 2026-09-24
 
 ### Added
