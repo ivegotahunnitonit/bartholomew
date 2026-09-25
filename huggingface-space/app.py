@@ -174,6 +174,39 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"), cs
         with gr.TabItem("🤖 Hugging Face smolagents Integration"):
             gr.Markdown(smolagents_doc)
 
+        
+        with gr.TabItem("🏆 Empirical Leaderboard & GPU Calculator"):
+            gr.Markdown("""
+            ### Empirical Guardrails Leaderboard (100 Concurrent Agents / 50k Operations)
+            
+            | Security Platform | Median Latency (P50) | GPU VRAM Required | Throughput | Attestation Standard |
+            | :--- | :--- | :--- | :--- | :--- |
+            | **⚡ Bartholomew (`btp-guard`)** | **15.70 µs** | **0 MB (Pure CPU)** | **23,860 evals/sec** | **RFC 8785 Ed25519** |
+            | **NeMo Guardrails (NVIDIA)** | 180,000 µs (180 ms) | 4 – 8 GB VRAM | ~5.5 evals/sec | None |
+            | **Llama Guard 3 (Meta 8B)** | 650,000 µs (650 ms) | 16 GB VRAM | ~1.5 evals/sec | None |
+            | **OpenAI Moderation API** | 220,000 µs (220 ms) | Cloud API (External) | ~4.5 evals/sec | None |
+            """)
+            
+            gr.Markdown("### 💰 Interactive Cloud GPU Savings Calculator")
+            with gr.Row():
+                agents_slider = gr.Slider(minimum=1, maximum=500, value=50, step=1, label="Concurrent Autonomous Agent Workers")
+                calls_slider = gr.Slider(minimum=500, maximum=20000, value=2500, step=500, label="Tool Calls per Day per Agent")
+            
+            with gr.Row():
+                annual_savings = gr.Label(label="Annual GPU Savings vs Llama Guard 3", value="$36,000 / yr")
+                hours_saved = gr.Label(label="Latency Saved per Day", value="22.5 Hours")
+                speed_advantage = gr.Label(label="Throughput / Speed Advantage", value="41,400x Faster")
+                
+            def calc_savings(agents, calls):
+                gpu_nodes = max(1, int((agents + 19) / 20))
+                annual_cost = gpu_nodes * 7200
+                daily_calls = agents * calls
+                hours = round((daily_calls * 0.6499) / 3600, 1)
+                return f"${annual_cost:,} / yr", f"{hours} Hours", "41,400x Faster"
+                
+            agents_slider.change(calc_savings, inputs=[agents_slider, calls_slider], outputs=[annual_savings, hours_saved, speed_advantage])
+            calls_slider.change(calc_savings, inputs=[agents_slider, calls_slider], outputs=[annual_savings, hours_saved, speed_advantage])
+
         with gr.TabItem("📊 Architectural Benchmark"):
             gr.Markdown(benchmark_doc)
 

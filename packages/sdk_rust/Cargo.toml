@@ -1,6 +1,6 @@
 [package]
 name = "btp-guard"
-version = "5.4.20"
+version = "5.4.21"
 edition = "2021"
 description = "Sub-millisecond cryptographic execution guard for autonomous AI agents."
 license = "MIT"
