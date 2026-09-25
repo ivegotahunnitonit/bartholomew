@@ -1,3 +1,4 @@
+from .webhook_dispatcher import dispatch_incident, get_dispatcher
 """
 Bartholomew (btp_guard) Drop-In SDK
 ====================================

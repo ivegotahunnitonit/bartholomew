@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bartholomew-arp-daemonset
+  namespace: security-gate
+  labels:
+    app.kubernetes.io/name: bartholomew-arp
+    app.kubernetes.io/version: "5.4.21"
+spec:
+  selector:
+    matchLabels:
+      name: bartholomew-arp-sidecar
+  template:
+    metadata:
+      labels:
+        name: bartholomew-arp-sidecar
+    spec:
+      containers:
+        - name: bartholomew-proxy
+          image: ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.21
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+              name: proxy-http
+          env:
+            - name: PROXY_PORT
+              value: "9090"
+            - name: PROXY_HOST
+              value: "0.0.0.0"
+            - name: UPSTREAM_URL
+              value: "http://127.0.0.1:8080"
+            - name: BTP_ALERT_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: bartholomew-config
+                  key: alert_channel
+                  optional: true
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9090
+            initialDelaySeconds: 2
+            periodSeconds: 10

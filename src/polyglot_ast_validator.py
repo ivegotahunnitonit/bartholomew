@@ -40,6 +40,8 @@ class PolyglotASTValidator:
         re.compile(r"mkfs(\.\w+)?\s+", re.IGNORECASE),
         re.compile(r"dd\s+if=\S+\s+of=(/dev/|/boot|\S+)", re.IGNORECASE),
         re.compile(r":\(\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:", re.IGNORECASE), # Fork bomb
+        re.compile(r"\/dev\/tcp\/\S+\/\d+", re.IGNORECASE), # Interactive reverse TCP socket
+        re.compile(r"nc\s+.*?-e\s+(\/bin\/)?(sh|bash)", re.IGNORECASE), # Netcat reverse shell
         re.compile(r"(chmod|chown)\s+(-R\s+)?.*\s+/", re.IGNORECASE),
         re.compile(r"curl\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),
         re.compile(r"wget\s+.*?\|\s*(bash|sh|zsh|python|perl)", re.IGNORECASE),

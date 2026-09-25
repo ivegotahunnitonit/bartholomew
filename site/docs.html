@@ -778,6 +778,121 @@ btp-guard export-compliance --out soc2_dossier.json</pre>
         </div>
       </section>
 
+    
+      <!-- ZERO-CODE SIDECAR PROXY -->
+      <section class="doc-card" id="sidecar-proxy" style="border-left: 3px solid var(--emerald); margin-top: 32px;">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--emerald)"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          Enterprise Zero-Code Sidecar Proxy (Docker &amp; K8s)
+        </h2>
+        <p class="lead-p">Intercept outbound agent tool calls and REST endpoints transparently with zero code changes in the agent application. Runs as a high-throughput sidecar container in Kubernetes pods or Docker Compose.</p>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="switchTab('sidecar', 'tab-sidecar-docker', this)">Docker Compose</button>
+          <button class="tab-btn" onclick="switchTab('sidecar', 'tab-sidecar-k8s', this)">Kubernetes DaemonSet</button>
+          <button class="tab-btn" onclick="switchTab('sidecar', 'tab-sidecar-curl', this)">cURL Health Check</button>
+        </div>
+
+        <div id="tab-sidecar-docker" class="tab-pane active" data-group="sidecar">
+          <pre><code><span style="color:#64748b;"># docker-compose.sidecar.yml</span>
+<span style="color:var(--gold);">services</span>:
+  <span style="color:var(--emerald);">bartholomew-sidecar</span>:
+    <span style="color:#94a3b8;">image</span>: ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.21
+    <span style="color:#94a3b8;">ports</span>:
+      - <span style="color:#38bdf8;">"9090:9090"</span>
+    <span style="color:#94a3b8;">environment</span>:
+      - PROXY_PORT=9090
+      - UPSTREAM_URL=http://agent-app:8000
+      - BTP_ALERT_CHANNEL=slack
+      - BTP_WEBHOOK_URL=${BTP_WEBHOOK_URL}
+    <span style="color:#94a3b8;">restart</span>: unless-stopped
+
+  <span style="color:var(--emerald);">agent-app</span>:
+    <span style="color:#94a3b8;">image</span>: your-agent-image:latest
+    <span style="color:#94a3b8;">environment</span>:
+      - HTTP_PROXY=http://bartholomew-sidecar:9090</code></pre>
+        </div>
+
+        <div id="tab-sidecar-k8s" class="tab-pane" data-group="sidecar">
+          <pre><code><span style="color:#64748b;"># deploy/kubernetes/sidecar-daemonset.yaml</span>
+<span style="color:var(--gold);">apiVersion</span>: apps/v1
+<span style="color:var(--gold);">kind</span>: DaemonSet
+<span style="color:var(--gold);">metadata</span>:
+  <span style="color:#94a3b8;">name</span>: bartholomew-arp-daemonset
+  <span style="color:#94a3b8;">namespace</span>: security-gate
+<span style="color:var(--gold);">spec</span>:
+  <span style="color:#94a3b8;">template</span>:
+    <span style="color:#94a3b8;">spec</span>:
+      <span style="color:#94a3b8;">containers</span>:
+        - <span style="color:var(--emerald);">name</span>: bartholomew-proxy
+          <span style="color:#94a3b8;">image</span>: ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.21
+          <span style="color:#94a3b8;">ports</span>:
+            - <span style="color:#94a3b8;">containerPort</span>: 9090
+          <span style="color:#94a3b8;">resources</span>:
+            <span style="color:#94a3b8;">limits</span>: { <span style="color:#94a3b8;">cpu</span>: <span style="color:#38bdf8;">"500m"</span>, <span style="color:#94a3b8;">memory</span>: <span style="color:#38bdf8;">"128Mi"</span> }
+            <span style="color:#94a3b8;">requests</span>: { <span style="color:#94a3b8;">cpu</span>: <span style="color:#38bdf8;">"50m"</span>, <span style="color:#94a3b8;">memory</span>: <span style="color:#38bdf8;">"32Mi"</span> }</code></pre>
+        </div>
+
+        <div id="tab-sidecar-curl" class="tab-pane" data-group="sidecar">
+          <pre><code><span style="color:#64748b;"># Verify sidecar health (<1ms CPU AST engine, 0 MB GPU VRAM)</span>
+curl -s http://127.0.0.1:9090/health | jq .
+
+<span style="color:#64748b;"># Response</span>
+{
+  <span style="color:var(--emerald);">"status"</span>: <span style="color:#38bdf8;">"HEALTHY"</span>,
+  <span style="color:var(--emerald);">"version"</span>: <span style="color:#38bdf8;">"5.4.21"</span>,
+  <span style="color:var(--emerald);">"engine"</span>: <span style="color:#38bdf8;">"Bartholomew-Compiler-AST"</span>,
+  <span style="color:var(--emerald);">"latency_median_us"</span>: <span style="color:#38bdf8;">15.70</span>,
+  <span style="color:var(--emerald);">"gpu_vram_mb"</span>: <span style="color:#38bdf8;">0</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- REAL-TIME INCIDENT WEBHOOKS -->
+      <section class="doc-card" id="realtime-webhooks" style="border-left: 3px solid var(--info); margin-top: 32px;">
+        <h2 class="section-title">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--info)"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Real-Time Incident Webhooks (Slack, Discord, PagerDuty &amp; SIEM)
+        </h2>
+        <p class="lead-p">Stream instant, structured security alerts to your SecOps workflow whenever an autonomous agent attempts a destructive breakout, SSRF exfiltration, or wallet drain.</p>
+
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="switchTab('webhooks', 'tab-wh-env', this)">Environment Setup</button>
+          <button class="tab-btn" onclick="switchTab('webhooks', 'tab-wh-python', this)">Python Code</button>
+          <button class="tab-btn" onclick="switchTab('webhooks', 'tab-wh-slack', this)">Slack Alert Preview</button>
+        </div>
+
+        <div id="tab-wh-env" class="tab-pane active" data-group="webhooks">
+          <pre><code><span style="color:#64748b;"># .env configuration (dispatches asynchronously on background pool)</span>
+<span style="color:var(--emerald);">BTP_ALERT_CHANNEL</span>=slack           <span style="color:#64748b;"># slack | discord | pagerduty | siem</span>
+<span style="color:var(--emerald);">BTP_WEBHOOK_URL</span>=https://hooks.slack.com/services/T00/B00/XXXXX
+<span style="color:var(--emerald);">BTP_PAGERDUTY_KEY</span>=pd-routing-key  <span style="color:#64748b;"># for PagerDuty Events API v2</span></code></pre>
+        </div>
+
+        <div id="tab-wh-python" class="tab-pane" data-group="webhooks">
+          <pre><code><span style="color:var(--gold);">from</span> btp_guard <span style="color:var(--gold);">import</span> Guard
+<span style="color:var(--gold);">from</span> btp_guard.webhook_dispatcher <span style="color:var(--gold);">import</span> dispatch_incident
+
+<span style="color:#64748b;"># Invariant checks automatically trigger async alerts when DENY occurs</span>
+guard = Guard()
+res = guard.check(<span style="color:#38bdf8;">"rm -rf / --no-preserve-root"</span>)
+
+<span style="color:var(--gold);">if not</span> res[<span style="color:#38bdf8;">"allowed"</span>]:
+    <span style="color:var(--emerald);">print</span>(<span style="color:#38bdf8;">f"Threat intercepted in {res['latency_us']}µs! Alert dispatched."</span>)</code></pre>
+        </div>
+
+        <div id="tab-wh-slack" class="tab-pane" data-group="webhooks">
+          <pre><code><span style="color:#64748b;"># Sample Rich Slack Alert Block Payload</span>
+🚨 [Bartholomew ARP] Agent Security Intercept: DENY (BLOCKED)
+• Agent ID:    `agent-swarm-worker-42`
+• Severity:    `CRITICAL`
+• AST Latency: `15.7 µs`
+• Threat:      `BTP-AST-001: Catastrophic shell pattern detected`
+• Offending:   `rm -rf / --no-preserve-root`
+• Receipt:     `ed25519:5ed00027...` | Frame: `BTP/2.2`</code></pre>
+        </div>
+      </section>
+
     </main>
   </div>
 

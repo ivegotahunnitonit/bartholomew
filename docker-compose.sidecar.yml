@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  # Bartholomew ARP Zero-Code Interceptor Sidecar
+  bartholomew-sidecar:
+    image: ghcr.io/ivegotahunnitonit/bartholomew-sidecar:5.4.21
+    build:
+      context: .
+      dockerfile: packages/sidecar_proxy/Dockerfile
+    ports:
+      - "9090:9090"
+    environment:
+      - PROXY_PORT=9090
+      - UPSTREAM_URL=http://agent-app:8000
+      - BTP_ALERT_CHANNEL=slack
+      - BTP_WEBHOOK_URL=${BTP_WEBHOOK_URL:-}
+    restart: unless-stopped
+    depends_on:
+      - agent-app
+
+  # Your Autonomous Agent or Tool Execution Backend
+  agent-app:
+    image: python:3.11-slim
+    command: python -m http.server 8000
+    expose:
+      - "8000"
