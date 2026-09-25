@@ -664,6 +664,24 @@
         <div class="vector-title">Unauthorized Escrow Drain</div>
         <div class="vector-desc">Attempts high-value capital drain exceeding authorized autonomous spending limits.</div>
       </div>
+
+      <div class="vector-card" onclick="selectVector(4)" id="vec-card-4">
+        <div class="vector-header">
+          <span class="vector-number">[ VECTOR 05 ]</span>
+          <span class="vector-owasp">OWASP LLM06</span>
+        </div>
+        <div class="vector-title">Secret Exfiltration &amp; SSRF</div>
+        <div class="vector-desc">Attempts AWS IAM credential theft via Cloud metadata IP (169.254.169.254).</div>
+      </div>
+
+      <div class="vector-card" onclick="selectVector(5)" id="vec-card-5">
+        <div class="vector-header">
+          <span class="vector-number">[ VECTOR 06 ]</span>
+          <span class="vector-owasp">OWASP LLM04</span>
+        </div>
+        <div class="vector-title">Denial of Wallet / Fork Loop</div>
+        <div class="vector-desc">Attempts recursive subprocess fork and unbounded infinite tool recursion.</div>
+      </div>
     </div>
 
     <!-- Attack Arena Grid -->
@@ -998,6 +1016,28 @@
         },
         rule: "BTP-INV-005",
         reason: "Requested spend $75,000.00 exceeds authorized ceiling $500.00"
+      },
+      {
+        action: 'SSRF_EXFILTRATION',
+        badge: 'ACTION: SSRF_EXFILTRATION',
+        payload: {
+          url: "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+          headers: { "Authorization": "Bearer sk-proj-LIVE-KEY-EXFILTRATION-SAMPLE" },
+          method: "GET"
+        },
+        rule: "BTP-INV-007",
+        reason: "SSRF attempt targeting cloud instance metadata service (169.254.169.254) + unredacted API key"
+      },
+      {
+        action: 'DENIAL_OF_WALLET',
+        badge: 'ACTION: FORK_RECURSION',
+        payload: {
+          recursive_calls: 5000,
+          spawn_subprocesses: true,
+          infinite_loop_directive: ":(){ :|:& };:"
+        },
+        rule: "BTP-INV-002",
+        reason: "Fork bomb and unbounded infinite recursion invariant detected in payload"
       }
     ];
 
@@ -1005,7 +1045,7 @@
 
     function selectVector(idx) {
       currentVectorIndex = idx;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 6; i++) {
         const card = document.getElementById(`vec-card-${i}`);
         if (card) {
           if (i === idx) card.classList.add('active');
