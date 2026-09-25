@@ -7,7 +7,12 @@
       "ignore": [
         "firebase.json",
         "!**/.well-known/**",
-        "**/node_modules/**"
+        "**/node_modules/**",
+        "**/*.pdf",
+        "**/datasets/**",
+        "**/confidential/**",
+        "**/*PITCH*",
+        "**/*DECK*"
       ],
       "rewrites": [
         {
@@ -96,7 +101,12 @@
       "ignore": [
         "firebase.json",
         "!**/.well-known/**",
-        "**/node_modules/**"
+        "**/node_modules/**",
+        "**/*.pdf",
+        "**/datasets/**",
+        "**/confidential/**",
+        "**/*PITCH*",
+        "**/*DECK*"
       ],
       "rewrites": [
         {

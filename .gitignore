@@ -1,3 +1,10 @@
+# Confidential Datasets, Inbound Leads, Treasury & Investor Private Files (Local Only)
+data/
+docs/datasets/
+docs/confidential/
+src/python_backend/datasets/
+scripts/treasury_*.py
+
 # Environment / Secrets (NEVER commit)
 .env
 .env.*

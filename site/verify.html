@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Bartholomew Verified B-Stamp Certificate | Cryptographic Attestation</title>
-  <meta name="description" content="Official cryptographic verification record for Bartholomew Verified B-Stamp Seal. Sub-35µs AST invariant containment, zero-leak credentials, and Ed25519 signed proof.">
+  <title>Verified Bartholomew Seal | Cryptographic Attestation Record</title>
+  <meta name="description" content="Official cryptographic verification record for Verified Bartholomew Seal. Sub-35µs AST invariant containment, zero-leak credentials, and Ed25519 signed proof.">
   <link rel="icon" type="image/png" href="/logo.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,15 +67,34 @@
       font-size: 1.15rem;
     }
     .brand img { width: 34px; height: 34px; border-radius: 8px; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.88rem;
-      margin-left: 20px;
+      font-size: 0.84rem;
       font-family: 'JetBrains Mono', monospace;
       transition: color 0.2s ease;
+      padding: 6px 12px;
+      border-radius: 6px;
     }
     .nav-links a:hover { color: #fff; }
+    .nav-links a.active {
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--border-emerald);
+    }
+    .nav-links a.openvsx {
+      color: #c084fc;
+      background: rgba(192, 132, 252, 0.08);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     /* Self-Serve Minting Card */
     .mint-card {
@@ -392,58 +411,27 @@
       background: rgba(16, 185, 129, 0.3);
     }
 
-    /* CTA Section */
-    .cta-banner {
-      margin-top: 40px;
-      background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(245,158,11,0.08) 100%);
-      border: 1px solid rgba(16,185,129,0.3);
-      border-radius: 16px;
-      padding: 28px;
+    /* Footer Section */
+    footer.cert-footer {
+      margin-top: 50px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
       flex-wrap: wrap;
-    }
-    .cta-info h3 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-    .cta-info p {
-      font-size: 0.86rem;
-      color: var(--text-muted);
-    }
-    .cta-buttons {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn-cta {
-      padding: 12px 20px;
-      border-radius: 8px;
+      gap: 16px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.84rem;
-      font-weight: 800;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+    footer.cert-footer a {
+      color: var(--text-muted);
       text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-block;
+      transition: color 0.2s ease;
     }
-    .btn-gold {
-      background: var(--gold);
-      color: #070a0f;
-    }
-    .btn-gold:hover {
-      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
-    }
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    footer.cert-footer a:hover {
       color: #fff;
-    }
-    .btn-outline:hover {
-      border-color: #fff;
     }
 
     /* Toast Notification */
@@ -479,28 +467,31 @@
       </a>
       <div class="nav-links">
         <a href="/">Protocol</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/sim-lab.html">Simulator</a>
-        <a href="/investors.html">Investors</a>
+        <a href="/verify.html" class="active">Verify Seal</a>
+        <a href="https://open-vsx.org/publisher/itsubsolomon" target="_blank" class="openvsx">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L2 6v12l10 5 10-5V6L12 1zm0 2.24l7.6 3.8-3.4 1.7-7.6-3.8 3.4-1.7zm-8 4.23l7 3.5v7.57l-7-3.5V7.47zm9 11.07v-7.57l7-3.5v7.57l-7 3.5z"/></svg>
+          Open VSX
+        </a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">GitHub</a>
       </div>
     </header>
 
-    <!-- Instant Self-Serve Audit & Minting Console -->
+    <!-- Instant Self-Serve Audit & Attestation Console -->
     <div class="mint-card">
       <div class="mint-header">
         <div class="mint-title">
-          <span>Instant B-Stamp Certification & Invariant Audit</span>
+          <span>Instant Bartholomew Seal Attestation & Invariant Audit</span>
         </div>
         <div class="mint-badge">SELF-SERVE v5.4.21</div>
       </div>
       <p class="mint-desc">
-        Enter your GitHub repository or MCP agent target to run an automated AST invariant scan, benchmark execution latency, and mint an official Ed25519-signed B-Stamp certificate.
+        Enter your GitHub repository or MCP agent target to run an automated AST invariant scan, benchmark execution latency, and mint an official Ed25519-signed Verified Bartholomew Seal.
       </p>
       <div class="mint-form">
         <input type="text" id="targetInput" class="mint-input" placeholder="github.com/my-org/my-agent-repo" value="github.com/my-org/production-mcp">
         <button id="runAuditBtn" class="mint-btn" onclick="startInstantAudit()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          Run Invariant Audit & Mint B-Stamp
+          Run Invariant Audit & Mint Seal
         </button>
       </div>
 
@@ -519,7 +510,7 @@
         <img src="/logo.png" alt="Bartholomew Shield Logo" class="seal-graphic">
         <div class="cert-meta">
           <div class="pretitle">OFFICIAL CRYPTOGRAPHIC ATTESTATION RECORD</div>
-          <h1 class="cert-title">Verified B-Stamp Seal</h1>
+          <h1 class="cert-title">Verified Bartholomew Seal</h1>
           <div class="cert-target" id="certTarget">github.com/my-org/production-mcp</div>
           <p style="color:var(--text-muted); font-size:0.88rem;">
             This repository has passed full continuous AST invariant gating and zero-leak credential containment across 550+ adversarial attack classes.
@@ -574,10 +565,10 @@
       <!-- Embed Section -->
       <div class="embed-card">
         <div class="embed-title">
-          <span>Embed Official B-Stamp on GitHub README</span>
+          <span>Embed Verified Bartholomew Seal on GitHub README</span>
           <span style="font-size:0.75rem; color:var(--emerald-light); font-family:'JetBrains Mono',monospace;">LIVE SYNCED</span>
         </div>
-        <textarea id="embedTextarea" class="embed-box" readonly onclick="this.select()">[![Bartholomew Verified](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=BTP-SEAL-v54-E5894F6BB021)</textarea>
+        <textarea id="embedTextarea" class="embed-box" readonly onclick="this.select()">[![Verified Bartholomew Seal](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=BTP-SEAL-v54-E5894F6BB021)</textarea>
         
         <div class="embed-actions">
           <button class="btn-action-small primary" onclick="copyBadgeMarkdown()">
@@ -594,19 +585,19 @@
           </button>
         </div>
       </div>
-
-      <!-- Viral Acquisition Banner -->
-      <div class="cta-banner">
-        <div class="cta-info">
-          <h3>Deploy Continuous Invariant Protection in CI/CD</h3>
-          <p>Add <code>uses: bartholomew-ai/btp-guard-action@v1</code> to test pull requests and auto-update your B-Stamp badge.</p>
-        </div>
-        <div class="cta-buttons">
-          <a href="/docs.html" class="btn-cta btn-gold">CI/CD Action Setup</a>
-          <a href="https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode" target="_blank" class="btn-cta btn-outline">Install Extension (2.4k+)</a>
-        </div>
-      </div>
     </div>
+
+    <!-- Symmetrical Footer Links -->
+    <footer class="cert-footer">
+      <div>© 2026 Bartholomew Trust Authority</div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <a href="/docs.html">[DOCUMENTATION]</a>
+        <a href="/sim-lab.html">[SIMULATOR]</a>
+        <a href="/investors.html">[INVESTORS]</a>
+        <a href="https://open-vsx.org/publisher/itsubsolomon" target="_blank">[OPEN VSX EXTENSIONS]</a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">[GITHUB]</a>
+      </div>
+    </footer>
   </div>
 
   <div id="toast" class="toast">Copied to clipboard!</div>
@@ -630,7 +621,7 @@
       document.getElementById('certTarget').textContent = target;
       document.getElementById('targetInput').value = target;
       
-      const embedMarkdown = `[![Bartholomew Verified](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=${sealId}&target=${encodeURIComponent(target)})`;
+      const embedMarkdown = `[![Verified Bartholomew Seal](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=${sealId}&target=${encodeURIComponent(target)})`;
       document.getElementById('embedTextarea').value = embedMarkdown;
 
       // Fetch dynamic verification data if available
@@ -712,7 +703,7 @@
         document.getElementById('proofSignature').textContent = newSig;
         document.getElementById('proofTimestamp').textContent = nowUtc;
 
-        const embedMarkdown = `[![Bartholomew Verified](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=${newSealId}&target=${encodeURIComponent(target)})`;
+        const embedMarkdown = `[![Verified Bartholomew Seal](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id=${newSealId}&target=${encodeURIComponent(target)})`;
         document.getElementById('embedTextarea').value = embedMarkdown;
 
         // Update URL
@@ -720,9 +711,9 @@
         window.history.pushState({ path: newUrl }, '', newUrl);
 
         btn.disabled = false;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Run Invariant Audit & Mint B-Stamp`;
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Run Invariant Audit & Mint Seal`;
 
-        showToast('B-Stamp Successfully Minted & Attested!');
+        showToast('Verified Bartholomew Seal Successfully Attested!');
       }, 2600);
     }
 
