@@ -52,6 +52,38 @@
           }
         },
         {
+          "source": "/docs",
+          "destination": "/docs.html"
+        },
+        {
+          "source": "/docs.html",
+          "destination": "/docs.html"
+        },
+        {
+          "source": "/sim-lab",
+          "destination": "/sim-lab.html"
+        },
+        {
+          "source": "/sim-lab.html",
+          "destination": "/sim-lab.html"
+        },
+        {
+          "source": "/control-plane",
+          "destination": "/control-plane.html"
+        },
+        {
+          "source": "/control-plane.html",
+          "destination": "/control-plane.html"
+        },
+        {
+          "source": "/investors",
+          "destination": "/investors.html"
+        },
+        {
+          "source": "/investors.html",
+          "destination": "/investors.html"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
@@ -144,6 +176,38 @@
             "serviceId": "acn-fastapi-backend",
             "region": "us-central1"
           }
+        },
+        {
+          "source": "/docs",
+          "destination": "/docs.html"
+        },
+        {
+          "source": "/docs.html",
+          "destination": "/docs.html"
+        },
+        {
+          "source": "/sim-lab",
+          "destination": "/sim-lab.html"
+        },
+        {
+          "source": "/sim-lab.html",
+          "destination": "/sim-lab.html"
+        },
+        {
+          "source": "/control-plane",
+          "destination": "/control-plane.html"
+        },
+        {
+          "source": "/control-plane.html",
+          "destination": "/control-plane.html"
+        },
+        {
+          "source": "/investors",
+          "destination": "/investors.html"
+        },
+        {
+          "source": "/investors.html",
+          "destination": "/investors.html"
         },
         {
           "source": "**",
