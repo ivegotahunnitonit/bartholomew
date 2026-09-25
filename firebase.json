@@ -11,6 +11,14 @@
       ],
       "rewrites": [
         {
+          "source": "/verify",
+          "destination": "/verify.html"
+        },
+        {
+          "source": "/seals/verify/**",
+          "destination": "/verify.html"
+        },
+        {
           "source": "/api/v1/**",
           "run": {
             "serviceId": "bartolomew-cloud-engine",
@@ -91,6 +99,14 @@
         "**/node_modules/**"
       ],
       "rewrites": [
+        {
+          "source": "/verify",
+          "destination": "/verify.html"
+        },
+        {
+          "source": "/seals/verify/**",
+          "destination": "/verify.html"
+        },
         {
           "source": "/api/v1/**",
           "run": {
