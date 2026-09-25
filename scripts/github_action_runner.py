@@ -147,7 +147,7 @@ if step_summary:
             for v in violations:
                 s_out.write(f"| **{v['severity']}** | `{v['file']}` | `{v['rule_id']}` | {v['reason']} |\n")
         else:
-            s_out.write("[![Bartholomew Verified](https://bartholomew.info/badge.svg)](https://bartholomew.info/verified-mcp.html)\n\n")
+            s_out.write(f"[![Verified Bartholomew Seal](https://acn-26670.web.app/assets/b_stamp_badge.svg)](https://acn-26670.web.app/verify.html?id={receipt_digest})\n\n")
 
 if len(violations) > 0 and FAIL_ON_VIOLATION:
     print(f"\n[ACTION FAILED] {len(violations)} critical safety invariant violations found.")
