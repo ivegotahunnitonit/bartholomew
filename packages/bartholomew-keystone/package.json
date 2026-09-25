@@ -19,7 +19,16 @@
     "security",
     "capabilities",
     "cursor",
-    "copilot"
+    "copilot",
+    "mcp",
+    "claude",
+    "cline",
+    "windsurf",
+    "permission-slip",
+    "zero-trust",
+    "open-vsx",
+    "deepseek",
+    "access-control"
   ],
   "main": "./dist/extension.js",
   "contributes": {

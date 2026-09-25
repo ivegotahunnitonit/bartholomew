@@ -40,7 +40,16 @@
     "firewall",
     "theia",
     "codium",
-    "open-vsx"
+    "open-vsx",
+    "cline",
+    "roo-code",
+    "windsurf",
+    "deepseek",
+    "mcp-server",
+    "secret-scanner",
+    "prompt-injection",
+    "jailbreak-defense",
+    "zero-leak"
   ],
   "main": "./dist/extension.js",
   "contributes": {

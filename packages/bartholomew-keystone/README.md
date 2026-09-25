@@ -2,9 +2,22 @@
 
 Give your AI agent a signed permission slip. It can only do what you said it could.
 
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.18-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-keystone)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.21-blue)](https://open-vsx.org/extension/itsubsolomon/bartholomew-keystone)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Works With](https://img.shields.io/badge/Works%20With-Bartholomew%20Guard-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Works With](https://img.shields.io/badge/Works%20With-Bartholomew%20Guard-blue)](https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode)
+
+---
+
+## Quick Installation
+
+```bash
+# Via VS Code / Cursor Terminal
+code --install-extension itsubsolomon.bartholomew-keystone
+
+# Or search "Bartholomew Keystone" in Extensions (Ctrl+Shift+X)
+```
+
+👉 **Recommended Companion:** Pair with [Bartholomew Guard](https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode) (`code --install-extension itsubsolomon.bartholomew-guard-vscode`) for AST invariant gating and sub-35µs zero-leak protection.
 
 ---
 
@@ -22,7 +35,7 @@ Keystone fixes that. You issue a cryptographically signed passkey that defines e
 |---|---|---|
 | **What it does** | Automatically blocks known-dangerous code and credential leaks | Lets you define custom rules — what files, commands, and actions are allowed |
 | **Install order** | Install Guard first | Add Keystone for fine-grained control |
-| **Get Guard** | [Install Bartholomew Guard](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode) | You're here |
+| **Get Guard** | [Install Bartholomew Guard](https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode) | You're here |
 
 ---
 
@@ -68,6 +81,6 @@ Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS):
 Bartholomew Keystone is **MIT licensed** and fully open source.
 
 - [bartholomew.info](https://bartholomew.info)
-- [Guard Extension](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode) — install this first
+- [Guard Extension](https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode) — install this first
 - Python: `pip install btp-guard`
 - npm: `npm install btp-guard`

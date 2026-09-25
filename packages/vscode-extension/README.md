@@ -2,10 +2,23 @@
 
 Stop your AI coding agent from doing things you didn't ask for.
 
-[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.19-blue)](https://open-vsx.org/extension/Bartholomew/bartholomew-guard-vscode)
+[![Open VSX](https://img.shields.io/badge/Open%20VSX-v5.4.21-blue)](https://open-vsx.org/extension/itsubsolomon/bartholomew-guard-vscode)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/Tests-2%2C956%20passed-brightgreen)](https://bartholomew.info)
 [![Security Audit](https://img.shields.io/badge/Security%20Audit-0%20vulnerabilities-brightgreen)](https://bartholomew.info)
+
+---
+
+## Quick Installation
+
+```bash
+# Via VS Code / Cursor Terminal
+code --install-extension itsubsolomon.bartholomew-guard-vscode
+
+# Or search "Bartholomew Guard" in Extensions (Ctrl+Shift+X)
+```
+
+👉 **Recommended Companion:** Pair with [Bartholomew Keystone](https://open-vsx.org/extension/itsubsolomon/bartholomew-keystone) (`code --install-extension itsubsolomon.bartholomew-keystone`) for cryptographically signed agent capability passkeys.
 
 ---
 
@@ -67,6 +80,6 @@ Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS):
 Bartholomew Guard is **MIT licensed** and fully open source at the core. No paywalls, no telemetry, no vendor lock-in.
 
 - [bartholomew.info](https://bartholomew.info)
-- [Keystone Extension](https://open-vsx.org/extension/Bartholomew/bartholomew-keystone) — add scoped agent permissions
+- [Keystone Extension](https://open-vsx.org/extension/itsubsolomon/bartholomew-keystone) — add scoped agent permissions
 - Python: `pip install btp-guard`
 - npm: `npm install btp-guard`
