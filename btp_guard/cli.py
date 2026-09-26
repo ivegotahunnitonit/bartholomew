@@ -855,7 +855,7 @@ def cmd_onboard(args):
             with open(dest, "w", encoding="utf-8") as f:
                 f.write(content)
             print(f"[OK] Generated: {dest}")
-        print("-> Run Cursor Composer: All agent edits now adhere to sub-35µs AST rules.")
+        print("-> Run Cursor Composer: All agent edits now adhere to sub-35us AST rules.")
 
     elif target == "windsurf":
         print("\n[+] Generating Windsurf Cascade Invariant Rules (.windsurfrules)...")
@@ -908,7 +908,7 @@ def cmd_onboard(args):
     res = guard.check("SELECT id, name FROM users WHERE active = true;")
     print(f"\n[BENCHMARK] Local In-Memory Verification:")
     print(f"  Verdict    : {res['verdict']} (Allowed: {res['allowed']})")
-    print(f"  Latency    : {res.get('latency_us', 24.5):.1f} µs")
+    print(f"  Latency    : {res.get('latency_us', 24.5):.1f} us")
     print(f"  Merkle Root: {res.get('receipt', {}).get('attestation', {}).get('action_payload_hash', 'verified')[:24]}...")
     print("=" * 70)
 
@@ -2278,10 +2278,10 @@ def cmd_benchmark_chaos(args):
     print(f"[+] Benign Allowed            : {report['benign_requests_executed']}")
     print(f"[+] Total Slashed             : ${report['total_collateral_slashed_usd']:,.2f} USD")
     print(f"[+] Throughput                : {report['throughput_ops_per_sec']} ops/sec")
-    print(f"[+] AST Latency (p50)         : {report['latency_p50_us']} µs")
-    print(f"[+] AST Latency (p95)         : {report['latency_p95_us']} µs")
-    print(f"[+] AST Latency (p99)         : {report['latency_p99_us']} µs")
-    print(f"[+] zk-Fault Proof (p50)      : {report['zk_fault_proof_p50_us']} µs")
+    print(f"[+] AST Latency (p50)         : {report['latency_p50_us']} us")
+    print(f"[+] AST Latency (p95)         : {report['latency_p95_us']} us")
+    print(f"[+] AST Latency (p99)         : {report['latency_p99_us']} us")
+    print(f"[+] zk-Fault Proof (p50)      : {report['zk_fault_proof_p50_us']} us")
     print("=" * 70)
 
     if getattr(args, "out", None):
@@ -3902,7 +3902,60 @@ def main():
     swarm_sub.add_parser("status", help="Display registered sovereign agent passports, multi-rail escrows, and barter reserves")
     swarm_sub.add_parser("mesh", help="Display sovereign agent passport mesh topology")
 
+    # btp-guard redteam
+    p_redteam = subparsers.add_parser("redteam", help="Run automated agent jailbreak and red-team evaluation suite")
+    p_redteam.add_argument("--concurrency", type=int, default=10, help="Concurrent attack workers")
+    p_redteam.add_argument("--report", type=str, default="", help="Path to write HTML audit report")
+
+    # btp-guard policy-sync
+    p_pol = subparsers.add_parser("policy-sync", help="Synchronize and hot-reload compliance policy packs")
+    p_pol.add_argument("--pack", type=str, choices=["soc2", "eu_ai_act", "nist_ai_rmf"], default="soc2", help="Compliance pack to install")
+    p_pol.add_argument("--dir", type=str, default="policies", help="Directory for policies")
+
+    # btp-guard kms
+    p_kms = subparsers.add_parser("kms", help="Verify Cloud KMS & HSM root-of-trust delegation")
+    p_kms.add_argument("--provider", type=str, default="aws_kms", choices=["aws_kms", "gcp_kms", "local_ed25519", "hashicorp_vault"])
+    p_kms.add_argument("--key-id", type=str, default="arn:aws:kms:us-east-1:123456789012:key/btp-root")
+
     args = parser.parse_args()
+
+    if args.command == "redteam":
+        from .redteam import RedTeamScanner
+        scanner = RedTeamScanner(concurrency=args.concurrency)
+        print("\n[*] [Bartholomew ARP] Launching Automated Agent Red-Team Audit...")
+        summary = scanner.run_suite()
+        print(f"\n[+] Audit Score: {summary['defense_rate_pct']}% Defense Rate")
+        print(f"[+] Vectors Evaluated: {summary['total_vectors']} (Passed: {summary['passed']}, Failed: {summary['failed']})")
+        print(f"[+] Median (P50) Latency: {summary['p50_latency_us']} us")
+        print("\nOWASP Category Breakdown:")
+        for cat, stats in summary["category_breakdown"].items():
+            print(f"  - {cat}: {stats['passed']}/{stats['total']} contained")
+        if args.report:
+            scanner.generate_html_report(summary, args.report)
+            print(f"\n[+] HTML Audit Report written to: {args.report}")
+        sys.exit(0 if summary['failed'] == 0 else 1)
+
+    elif args.command == "policy-sync":
+        from .policy_sync import PolicyDistributionManager
+        p_mgr = PolicyDistributionManager(policy_dir=args.dir)
+        res = p_mgr.install_compliance_pack(args.pack)
+        print(f"\n[+] [BTP] Installed Compliance Pack: {res['pack'].upper()}")
+        print(f"  - File: {res['file']}")
+        print(f"  - Active Rules: {res['rules']}")
+        sys.exit(0)
+
+    elif args.command == "kms":
+        from src.kms_provider import KMSKeyDelegationManager
+        kms_mgr = KMSKeyDelegationManager(provider=args.provider, key_id=args.key_id)
+        receipt = kms_mgr.get_delegation_receipt()
+        print(f"\n[+] [BTP] Hardware Security Root-of-Trust Attestation:")
+        print(f"  - Provider: {receipt['token']['kms_provider']}")
+        print(f"  - Root Key: {receipt['token']['root_key_id']}")
+        print(f"  - Delegation ID: {receipt['token']['delegation_id']}")
+        print(f"  - Standard: {receipt['token']['fips_compliance']}")
+        print(f"  - Ephemeral Session Pubkey: {receipt['token']['session_pubkey']}")
+        print(f"  - KMS Root Signature: {receipt['kms_signature'][:24]}...")
+        sys.exit(0)
 
     if args.command == "run":
         cmd_run(args)

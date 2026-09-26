@@ -1,0 +1,15 @@
+description: SOC 2 Type II Security & Audit Pack
+policy_id: urn:btp:compliance:soc2
+rules:
+- action: DENY
+  id: SOC2-CC6.1
+  name: Logical Access Restrictions
+  type: no_credentials_in_logs
+- action: DENY
+  id: SOC2-CC6.8
+  name: Malicious Software Prevention
+  type: no_arbitrary_shell_eval
+- action: ALLOW_WITH_AUDIT
+  id: SOC2-CC7.2
+  name: Vulnerability & Security Event Audit
+version: 2.2.0
