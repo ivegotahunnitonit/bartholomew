@@ -26,7 +26,7 @@ from src.policy_synthesizer import PolicySynthesizer
 
 
 def cmd_version(args):
-    print("Bartholomew Protocol (BTP v5.4.20) -- The #1 Agentic Runtime Protection (ARP) Platform")
+    print("Bartholomew Protocol (BTP v5.4.22) -- The #1 Agentic Runtime Protection (ARP) Platform")
     print("Engine: In-Process AST Gating, In-Flight Secret Scrubber & SOC 2 Merkle Receipts")
     print("Latency: Sub-35 microseconds (in-process) | Throughput: 1.05M evals/sec")
     print("Status: Community Free Tier active (Local AST Gating)")
@@ -167,7 +167,7 @@ def cmd_benchmark_ast(args):
     ]
 
     print("=" * 80)
-    print("      BARTHOLOMEW (BTP v5.4.20) IN-PROCESS AST INVARIANT BENCHMARK")
+    print("      BARTHOLOMEW (BTP v5.4.22) IN-PROCESS AST INVARIANT BENCHMARK")
     print("=" * 80)
     print(f"Target Vector Battery: {len(test_battery)} unique AST invariant patterns")
     print(f"Total Iterations:      {vectors_count:,} continuous in-process evaluations")
@@ -3177,7 +3177,7 @@ def cmd_export_telemetry(args):
     out_path = getattr(args, "out", None)
 
     print("=" * 80)
-    print(f"      BARTHOLOMEW (BTP v5.4.20) ENTERPRISE SIEM TELEMETRY EXPORTER")
+    print(f"      BARTHOLOMEW (BTP v5.4.22) ENTERPRISE SIEM TELEMETRY EXPORTER")
     print("=" * 80)
     print(f"Target Format:     {fmt.upper()}")
     print(f"Sample Records:    {count:,}")
@@ -3455,10 +3455,20 @@ def main():
     # demo-v24
     demo24_p = subparsers.add_parser("demo-v24", help="Run Bartholomew v2.4 Resilient MCP & Rollback Engine showcase")
 
-    # proxy (MCP stdio proxy)
+    # proxy (MCP stdio proxy) & sidecar
     proxy_p = subparsers.add_parser("proxy", help="Run Bartholomew as an inline MCP security proxy")
-    proxy_p.add_argument("--server-cmd", nargs="+", required=True, help="Downstream MCP server command to launch")
+    proxy_p.add_argument("--server-cmd", nargs="+", default=None, help="Downstream MCP server command to launch")
     proxy_p.add_argument("--workspace", default=None, help="Root workspace directory to bound tool mutations")
+    proxy_p.add_argument("--port", "-p", type=int, default=8080, help="Local listening port for reverse proxy")
+    proxy_p.add_argument("--upstream", "-u", type=str, default="http://localhost:11434", help="Upstream LLM server URL")
+    proxy_p.add_argument("--host", default="127.0.0.1", help="Host interface to bind")
+
+    sidecar_p = subparsers.add_parser("sidecar", help="Alias for zero-code reverse proxy")
+    sidecar_p.add_argument("--server-cmd", nargs="+", default=None, help="Downstream MCP server command to launch")
+    sidecar_p.add_argument("--workspace", default=None, help="Root workspace directory to bound tool mutations")
+    sidecar_p.add_argument("--port", "-p", type=int, default=8080, help="Local listening port for reverse proxy")
+    sidecar_p.add_argument("--upstream", "-u", type=str, default="http://localhost:11434", help="Upstream LLM server URL")
+    sidecar_p.add_argument("--host", default="127.0.0.1", help="Host interface to bind")
 
     # agent (Interactive REPL)
     agent_p = subparsers.add_parser("agent", help="Launch interactive live agent REPL protected by Bartholomew")
@@ -3927,9 +3937,12 @@ def main():
     p_mcp_s.add_argument("--payload", type=str, required=True, help="Tool payload to evaluate")
     p_mcp_s.add_argument("--price", type=float, default=0.10, help="Tool price in USD")
 
-    # btp-guard scout-buyers
+    # btp-guard scout-buyers & scout
     p_scout = subparsers.add_parser("scout-buyers", help="Scout and list institutional buyers for the 105k safety dataset")
     p_scout.add_argument("--filter", type=str, default="", help="Filter by organization or deal type")
+
+    p_scout_alias = subparsers.add_parser("scout", help="Alias for scouting commercial dataset buyers")
+    p_scout_alias.add_argument("--filter", type=str, default="", help="Filter by organization or deal type")
 
     args = parser.parse_args()
 
@@ -3970,7 +3983,7 @@ def main():
         print(f"  - Ephemeral Session Pubkey: {receipt['token']['session_pubkey']}")
         print(f"  - KMS Root Signature: {receipt['kms_signature'][:24]}...")
         sys.exit(0)
-    elif args.command == "scout-buyers":
+    elif args.command in ["scout-buyers", "scout"]:
         pipeline_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "dataset_buyers_pipeline.json")
         if os.path.exists(pipeline_path):
             with open(pipeline_path, "r", encoding="utf-8") as f:
@@ -4220,7 +4233,7 @@ def main():
     elif args.command == "demo-v24":
         from src.demo_v24 import run_demo_v24
         run_demo_v24()
-    elif args.command == "proxy":
+    elif args.command in ["proxy", "sidecar"]:
         from src.mcp_gateway import MCPProxyGateway
         gateway = MCPProxyGateway(workspace_root=args.workspace)
         gateway.run_stdio_proxy(args.server_cmd)

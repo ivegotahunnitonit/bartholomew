@@ -1,5 +1,25 @@
 # Changelog
 
+## [5.4.22] - 2026-09-26
+
+### Added
+- **Bonded Agent Warranty Fund (`btp_guard.warranty_service`)**:
+  - $100,000 algorithmic reserve pool backed by cryptographic proof-of-coverage.
+  - Subcommands: `btp-guard bond pool`, `btp-guard bond issue`, `btp-guard bond claim`, `btp-guard bond status`.
+- **MCP Clearinghouse (`btp_guard.mcp_clearinghouse`)**:
+  - In-flight micropayment settlement & runtime auditing with 2.5% take-rate.
+  - Subcommand: `btp-guard mcp-settle`.
+- **Commercial Dataset Pipeline (`scripts/package_commercial_evals.py`)**:
+  - Direct preference optimization (DPO) and trajectory extraction for AI safety model trainers.
+  - Subcommands: `btp-guard scout`, `btp-guard scout-buyers`.
+- **Zero-Code Sidecar Proxy & Webhook Dispatcher**:
+  - Reverse proxy guarding OpenAI/Anthropic tool-calling endpoints (`btp-guard sidecar`).
+  - SIEM / Datadog / Splunk / Slack real-time security incident webhooks (`btp-guard webhook`).
+- **Interactive Leaderboard & GPU Savings Calculator**:
+  - Live on `https://bartholomew.info/leaderboard` and Hugging Face Spaces.
+  - 100-Agent concurrent swarm stress benchmark (50,000 Ops at 23,860 ops/sec).
+
+
 All notable changes to **Bartholomew (BTP)** are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

@@ -1,5 +1,5 @@
 """
-Bartholomew Trust Protocol (BTP v5.4.19) - Agentic Runtime Protection (ARP)
+Bartholomew Trust Protocol (BTP v5.4.22) - Agentic Runtime Protection (ARP)
 =============================================================================
 High-performance execution guardrails, AST validation, and cryptographic audit receipts
 for autonomous AI agents (LangChain, CrewAI, AutoGen, Claude Code, Cursor, Windsurf).
@@ -52,11 +52,29 @@ from src.btp_guard.policy import Policy
 from src.btp_guard.stripe_bridge import StripeMeterBridge
 from src.btp_guard.telemetry import TelemetryEmitter
 from src.btp_guard.btp_guard import WireGuard
+from btp_guard.warranty_service import WarrantyFundManager
+from btp_guard.mcp_clearinghouse import MCPClearinghouseGateway
+from btp_guard.webhook_dispatcher import WebhookDispatcher, WebhookChannel, AlertSeverity
+from btp_guard.redteam import RedTeamScanner
 import btp_guard.integrations as integrations
 
-__version__ = "5.4.20"
+# Aliases for convenience
+BondedAgentWarrantyFund = WarrantyFundManager
+MCPClearinghouse = MCPClearinghouseGateway
+RedTeamHarness = RedTeamScanner
+
+__version__ = "5.4.22"
 
 __all__ = [
+    "WarrantyFundManager",
+    "BondedAgentWarrantyFund",
+    "MCPClearinghouseGateway",
+    "MCPClearinghouse",
+    "WebhookDispatcher",
+    "WebhookChannel",
+    "AlertSeverity",
+    "RedTeamScanner",
+    "RedTeamHarness",
     "Guard",
     "protect_agent",
     "secure_tool",

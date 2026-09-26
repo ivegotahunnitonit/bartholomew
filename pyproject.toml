@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btp-guard"
-version = "5.4.21"
+version = "5.4.22"
 description = "Bartholomew Trust Protocol (BTP v5.4) - The Agentic Runtime Protection (ARP) platform. Sub-35us in-process execution gating, AST inspection, cryptographic audit trails, and tool-call security for autonomous AI agents."
 readme = "README.md"
 authors = [
@@ -42,9 +42,9 @@ Repository = "https://github.com/ivegotahunnitonit/bartholomew"
 Tracker = "https://github.com/ivegotahunnitonit/bartholomew/issues"
 
 [project.scripts]
-bartholomew = "src.cli:main"
-btp-guard = "src.cli:main"
-btp = "src.cli:main"
+bartholomew = "btp_guard.cli:main"
+btp-guard = "btp_guard.cli:main"
+btp = "btp_guard.cli:main"
 btp-keystone = "src.keystone_passkey:main"
 btp-benchmark = "src.swarm_stress_benchmark:main"
 
