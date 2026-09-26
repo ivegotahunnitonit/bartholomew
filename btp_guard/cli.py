@@ -3927,6 +3927,10 @@ def main():
     p_mcp_s.add_argument("--payload", type=str, required=True, help="Tool payload to evaluate")
     p_mcp_s.add_argument("--price", type=float, default=0.10, help="Tool price in USD")
 
+    # btp-guard scout-buyers
+    p_scout = subparsers.add_parser("scout-buyers", help="Scout and list institutional buyers for the 105k safety dataset")
+    p_scout.add_argument("--filter", type=str, default="", help="Filter by organization or deal type")
+
     args = parser.parse_args()
 
     if args.command == "redteam":
@@ -3966,6 +3970,22 @@ def main():
         print(f"  - Ephemeral Session Pubkey: {receipt['token']['session_pubkey']}")
         print(f"  - KMS Root Signature: {receipt['kms_signature'][:24]}...")
         sys.exit(0)
+    elif args.command == "scout-buyers":
+        pipeline_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "dataset_buyers_pipeline.json")
+        if os.path.exists(pipeline_path):
+            with open(pipeline_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            print(f"\n[*] [DATASET SCOUT] Qualified Institutional Buyers ({len(data['buyers'])} Leads, Estimated Pipeline: {data['estimated_pipeline_value_usd']}):\n")
+            for b in data['buyers']:
+                print(f"  • {b['organization']} ({b['target_acv_usd']})")
+                print(f"    - Program: {b['program']}")
+                print(f"    - Roles: {', '.join(b['target_roles'])}")
+                print(f"    - Channel: {b['portal_url']}")
+                print(f"    - Hook: {b['our_hook'][:80]}...\n")
+        else:
+            print("[-] No pipeline data found.")
+        sys.exit(0)
+
     elif args.command == "mcp-settle":
         from .mcp_clearinghouse import MCPClearinghouseGateway
         gw = MCPClearinghouseGateway()
