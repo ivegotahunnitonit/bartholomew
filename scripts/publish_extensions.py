@@ -23,12 +23,12 @@ EXTENSIONS = [
     {
         "id": "bartholomew-guard-vscode",
         "dir": BASE_DIR / "packages" / "vscode-extension",
-        "vsix": BASE_DIR / "packages" / "vscode-extension" / "bartholomew-guard-vscode-5.4.21.vsix"
+        "vsix": BASE_DIR / "packages" / "vscode-extension" / "bartholomew-guard-vscode-5.4.22.vsix"
     },
     {
         "id": "bartholomew-keystone",
         "dir": BASE_DIR / "packages" / "bartholomew-keystone",
-        "vsix": BASE_DIR / "packages" / "bartholomew-keystone" / "bartholomew-keystone-5.4.21.vsix"
+        "vsix": BASE_DIR / "packages" / "bartholomew-keystone" / "bartholomew-keystone-5.4.22.vsix"
     }
 ]
 

