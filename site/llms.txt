@@ -1,4 +1,4 @@
-# Bartholomew Trust Protocol (BTP v5.4.20)
+# Bartholomew Trust Protocol (BTP v5.4.22)
 
 > The Agentic Runtime Protection (ARP) Platform: Sub-millisecond trajectory observability and deterministic execution firewalls for autonomous AI agents.
 

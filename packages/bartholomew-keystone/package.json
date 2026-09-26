@@ -2,7 +2,7 @@
   "name": "bartholomew-keystone",
   "displayName": "Bartholomew Keystone \u2014 Agent Capability Passkey",
   "description": "Give your AI agent a signed permission slip. Define exactly which files, commands, and domains it can access. Works alongside Bartholomew Guard.",
-  "version": "5.4.21",
+  "version": "5.4.22",
   "publisher": "itsubsolomon",
   "icon": "icon.png",
   "license": "MIT",

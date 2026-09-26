@@ -1,6 +1,6 @@
 {
   "name": "@bartholomew/btp-guard",
-  "version": "5.4.20",
+  "version": "5.4.22",
   "description": "Sub-35us cryptographic execution firewall and AST invariant gate for Vercel AI SDK, LangChain.js, and Anthropic MCP.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

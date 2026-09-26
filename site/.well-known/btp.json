@@ -1,11 +1,11 @@
 {
   "$schema": "https://bartholomew.info/schemas/btp-manifest-v5.json",
-  "manifest_version": "5.4.0",
-  "protocol_version": "5.4.0",
+  "manifest_version": "5.4.22",
+  "protocol_version": "5.4.22",
   "category": "Agentic Runtime Protection (ARP)",
   "identity": {
     "name": "Bartholomew Trust Protocol (BTP)",
-    "version": "5.4.0",
+    "version": "5.4.22",
     "role": "Deterministic Trajectory Observability & In-Process Execution Firewall",
     "publisher": "Bartholomew AI Inc.",
     "website": "https://bartholomew.info",
@@ -23,7 +23,11 @@
     "real_time_owasp_kill_switches",
     "secret_and_credential_scrubbing",
     "micro_escrow_settlement",
-    "signed_merkle_receipt_generation"
+    "signed_merkle_receipt_generation",
+    "bonded_warranty_fund",
+    "mcp_clearinghouse",
+    "sidecar_proxy",
+    "guardrails_leaderboard"
   ],
   "performance": {
     "target_ast_latency_us": 35.0,
