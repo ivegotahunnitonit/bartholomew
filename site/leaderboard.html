@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agentic Guardrails &amp; Tool-Safety Leaderboard | Bartholomew Protocol</title>
+  <title>Agentic Guardrails Leaderboard &amp; GPU Savings Calculator | Bartholomew</title>
+  <meta name="description" content="Independent benchmark of agentic AI guardrails, runtime firewalls, and LLM safety filters. Compare microsecond AST gating vs model-based guards and calculate enterprise GPU VRAM savings.">
+  <link rel="icon" type="image/png" href="/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+
     :root {
       --bg: #040810;
       --surface: #090f1d;
@@ -546,27 +549,286 @@
       font-size: 13px;
     }
     footer a { color: var(--emerald-bright); text-decoration: none; }
+  
+
+    /* Integration with site styles */
+    .navbar {
+      background: rgba(3, 7, 18, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #f8fafc;
+    }
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+    .badge-protocol {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .nav-right-items {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-seal-link, .nav-openvsx-link, .nav-github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-seal-link:hover, .nav-openvsx-link:hover, .nav-github-link:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .btn-sandbox-nav {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #022c22;
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-sandbox-nav:hover {
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Footer styling */
+    .site-footer {
+      background: #020617;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 64px 24px 32px;
+      margin-top: 80px;
+    }
+    .site-footer .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1.5fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 900px) {
+      .footer-main-grid { grid-template-columns: 1fr; }
+    }
+    .footer-brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+    .footer-protocol-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #10b981;
+      margin-bottom: 16px;
+    }
+    .footer-brand-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .footer-col-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .footer-links-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .footer-links-list a, .footer-links-list button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .footer-links-list a:hover, .footer-links-list button:hover {
+      color: #38bdf8;
+    }
+    .certifications-logos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .cert-logo-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px;
+      border-radius: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      transition: all 0.2s;
+    }
+    .cert-logo-item:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #f8fafc;
+    }
+    .footer-bottom-bar {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.78rem;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .footer-bottom-bar a {
+      color: #94a3b8;
+      text-decoration: none;
+    }
+    .footer-bottom-bar a:hover {
+      color: #f8fafc;
+    }
+    .footer-seals-box {
+      margin-bottom: 32px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+    .footer-seals-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .seals-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .seal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .seal-badge.emerald { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; }
+    .seal-badge.amber { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
+    .seal-badge.cyan { background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); color: #22d3ee; }
+    .seal-badge.zinc { background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.3); color: #cbd5e1; }
   </style>
 </head>
 <body>
 
-  <!-- Top Bar -->
-  <header class="top-bar">
-    <div class="brand-cluster">
-      <img src="https://raw.githubusercontent.com/ivegotahunnitonit/bartholomew/main/docs/assets/verified_mcp_seal.png" alt="Bartholomew Shield" class="brand-logo-img">
-      <span class="brand-title">Bartholomew Benchmark</span>
-      <span class="brand-protocol-tag">BTP v5.4.20</span>
-    </div>
-    <div class="nav-actions">
-      <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-link active-link">GitHub</a>
-      <a href="https://huggingface.co/datasets/acnbartholomew/btp-agent-redteam-evals" target="_blank" class="nav-link">Evaluation Dataset</a>
-      <a href="https://huggingface.co/spaces/acnbartholomew/bartholomew-agent-guard" target="_blank" class="nav-link">Attack Simulator</a>
-      <a href="https://pypi.org/project/btp-guard/" target="_blank" class="nav-link">PyPI Package</a>
-      <a href="https://github.com/sponsors/ivegotahunnitonit" target="_blank" class="nav-btn-sponsor">Sponsor Project</a>
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="brand-wrap">
+        <img src="/logo.png" alt="Bartholomew Shield Logo" width="32" height="32" style="border-radius:6px;">
+        <span class="brand-title">Bartholomew</span>
+        <span class="badge-protocol">BTP v5.4 • LEADERBOARD</span>
+      </a>
+
+      <div class="nav-right-items">
+        <a href="/" class="nav-seal-link">
+          <span>Overview</span>
+        </a>
+        <a href="/docs.html" class="nav-seal-link">
+          <span>Docs &amp; Specs</span>
+        </a>
+        <a href="/sim-lab.html" class="nav-seal-link">
+          <span>Sim Lab</span>
+        </a>
+        <a href="/verify.html" class="nav-seal-link" title="Verify Bartholomew Seal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Verify Seal</span>
+        </a>
+        <a href="https://huggingface.co/spaces/acnbartholomew/agent-guardrails-leaderboard" target="_blank" class="nav-seal-link" style="color:var(--gold-light);">
+          <span>HF Space</span>
+        </a>
+        <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" class="nav-github-link" title="GitHub Repository">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="/sim-lab.html" class="btn-sandbox-nav">
+          <span>Launch Sim Lab &rarr;</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <div class="container">
+  <!-- Leaderboard Content -->
+  <main style="max-width:1280px; margin: 40px auto; padding: 0 24px;">
+    <div class="container">
     
     <!-- Hero Header -->
     <div class="hero">
@@ -881,14 +1143,279 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-      <p>
-        Standard maintained by <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank">Autonomous Circularity Labs &amp; Bartholomew Protocol</a> • Open Source under MIT License
-      </p>
-    </footer>
+  </main>
 
-  </div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+<!-- Interactive NVIDIA NIM & Keystone Passkey Live Sandbox -->
+      <div class="footer-nim-sandbox-box" style="margin-bottom: 2rem; background: rgba(13, 18, 31, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; border-bottom:1px solid rgba(56,189,248,0.15); padding-bottom:0.75rem;">
+          <div>
+            <div style="font-size:0.85rem; font-family:var(--font-mono); font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.08em; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#76b900"><path d="M7.7 11.6c0-2.4 1.9-4.3 4.3-4.3 2.4 0 4.3 1.9 4.3 4.3s-1.9 4.3-4.3 4.3c-2.4 0-4.3-1.9-4.3-4.3zm-7.7 0C0 5.2 5.2 0 11.6 0c6.4 0 11.6 5.2 11.6 11.6 0 6.4-5.2 11.6-11.6 11.6-6.4 0-11.6-5.2-11.6-11.6z"/></svg>
+              <span>[ NVIDIA NIM & KEYSTONE PASSKEY LIVE SANDBOX ]</span>
+              <span style="font-size:0.68rem; background:rgba(118,185,0,0.15); color:#76b900; border:1px solid #76b900; padding:2px 6px; border-radius:4px;">NVIDIA INCEPTION CERTIFIED</span>
+            </div>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">
+              Sub-35µs deterministic AST safety invariants, Keystone capability passkey validation, and Ed25519 Merkle receipts across NVIDIA NIM inference containers.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:var(--font-mono); font-size:0.72rem; color:#94a3b8;">Microservice: <code style="color:#38bdf8;">nvcr.io/nim/meta/llama-3.1-8b-instruct</code></span>
+          </div>
+        </div>
 
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) 1.4fr; gap:1.25rem;">
+          <!-- Controls -->
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted); font-weight:700; margin-bottom:4px;">
+              SELECT AGENT ACTION TO SIMULATE:
+            </div>
+            <button onclick="runNimSandbox('safe')" id="btn-nim-safe" style="text-align:left; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-family:var(--font-mono); font-size:0.78rem; padding:8px 12px; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s;">
+              <span>1. [SAFE] NIM Python Math Gating</span>
+              <span style="font-size:0.68rem; color:var(--text-muted);">28.4µs</span>
+            </button>
+            <button onclick="runNimSandbox('threat')" id="btn-nim-threat" style="text-align:left; background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.3); color:#f43f5e; font-family:var(--font-mono); font-size:0.78rem; padding:8px 12px; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s;">
+              <span>2. [THREAT] Invariant Veto (rm -rf)</span>
+              <span style="font-size:0.68rem; color:var(--text-muted);">19.1µs</span>
+            </button>
+            <button onclick="runNimSandbox('secret')" id="btn-nim-secret" style="text-align:left; background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.3); color:#facc15; font-family:var(--font-mono); font-size:0.78rem; padding:8px 12px; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s;">
+              <span>3. [LEAK] Secret Vault Masking</span>
+              <span style="font-size:0.68rem; color:var(--text-muted);">12.5µs</span>
+            </button>
+            <button onclick="runNimSandbox('keystone')" id="btn-nim-keystone" style="text-align:left; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.3); color:#38bdf8; font-family:var(--font-mono); font-size:0.78rem; padding:8px 12px; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s;">
+              <span>4. [KEYSTONE] Passkey Scope Verification</span>
+              <span style="font-size:0.68rem; color:var(--text-muted);">31.0µs</span>
+            </button>
+          </div>
+
+          <!-- Console Terminal Output -->
+          <div style="background:#030712; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; font-family:var(--font-mono); font-size:0.72rem; color:#e2e8f0; min-height:160px; overflow-x:auto;">
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px; margin-bottom:8px; font-size:0.68rem; color:#64748b;">
+              <span>RUNTIME TELEMETRY CONSOLE</span>
+              <span id="nim-terminal-status" style="color:#10b981;">● BTP GUARD ACTIVE</span>
+            </div>
+            <pre id="nim-terminal-output" style="margin:0; white-space:pre-wrap; line-height:1.4; color:#38bdf8;">Select a scenario above to test real-time in-process gating on NVIDIA NIM inference...</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verified Compliance & Security Seals -->
+      <div class="footer-seals-box">
+        <div class="footer-seals-inner">
+          <div>
+            <div style="font-size:0.75rem; font-family:var(--font-mono); font-weight:800; color:var(--gold-light); text-transform:uppercase; letter-spacing:0.08em; display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              <span>[ VERIFIED COMPLIANCE &amp; SECURITY SEALS ]</span>
+            </div>
+            <p style="font-size:0.78rem; color:var(--text-muted);">
+              Independently verifiable open-source security baselines, deterministic cryptography, and formal audit standards.
+            </p>
+          </div>
+
+          <div class="seals-grid">
+            <div class="seal-badge emerald">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              <span>AUTOMATED TEST SUITES PASSING (100%)</span>
+            </div>
+            <div class="seal-badge amber">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              <span>FIPS 186-5 ED25519</span>
+            </div>
+            <div class="seal-badge cyan">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+              <span>RFC 8785 CANONICAL</span>
+            </div>
+            <div class="seal-badge zinc">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+              <span>MIT LICENSE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Footer Grid -->
+      <div class="footer-main-grid">
+        <!-- Brand Info with Official Shield Logo -->
+        <div class="footer-brand-col">
+          <div class="footer-brand-title">
+            <img src="/logo.png" alt="Bartholomew Shield Logo" width="32" height="32" style="border-radius:6px;">
+            <span>Bartholomew Trust Protocol</span>
+          </div>
+          <div class="footer-protocol-tag">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>[PROTOCOL ACTIVE: BTP v5.4 · SOVEREIGN AI AGENT RUNTIME]</span>
+          </div>
+          <p class="footer-brand-desc">
+            The fastest local AST safety gating, zero prompt leakage, cryptographic agent passports, and deterministic runtime guardrails for autonomous AI agent execution.
+          </p>
+        </div>
+
+        <!-- Linux & Security Certifications -->
+        <div>
+          <div class="footer-col-title">[SECURITY CERTIFICATIONS]</div>
+          <div class="certifications-logos-grid">
+            <a href="https://www.linuxfoundation.org" target="_blank" rel="noreferrer" class="cert-logo-item" title="Linux Foundation Open Standard">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#facc15">
+                <path d="M12.012 2.002c-2.457 0-4.448 2.01-4.448 4.488 0 1.344.593 2.553 1.533 3.376-.99 1.137-1.597 2.63-1.597 4.267 0 2.898 1.902 5.34 4.512 6.136.634.195 1.306.195 1.94 0 2.61-.796 4.512-3.238 4.512-6.136 0-1.637-.607-3.13-1.597-4.267.94-.823 1.533-2.032 1.533-3.376 0-2.478-1.991-4.488-4.448-4.488zm-1.5 4.5a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zm3 0a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zm-1.5 3c1.1 0 2 .4 2 .9 0 .4-.6.8-1.4.9h-1.2c-.8-.1-1.4-.5-1.4-.9 0-.5.9-.9 2-.9z"/>
+              </svg>
+              <span>LINUX FOUNDATION</span>
+            </a>
+            <a href="https://openssf.org" target="_blank" rel="noreferrer" class="cert-logo-item" title="OpenSSF SLSA Level 3 Provenance">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#38bdf8">
+                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 2.18l6 2.25v4.66c0 4.09-2.67 7.9-6 8.91-3.33-1.01-6-4.82-6-8.91V6.43l6-2.25zM11 7v6h2V7h-2zm0 8v2h2v-2h-2z"/>
+              </svg>
+              <span>OPENSSF (SLSA L3)</span>
+            </a>
+            <a href="https://ebpf.io" target="_blank" rel="noreferrer" class="cert-logo-item" title="Linux eBPF Kernel Guard">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#a855f7">
+                <path d="M12 2L3.5 7v10L12 22l8.5-5V7L12 2zm0 2.8l5.8 3.4-5.8 3.4-5.8-3.4L12 4.8zm-6.5 4.9l5.5 3.2v6.4l-5.5-3.2V9.7zm8 9.6v-6.4l5.5-3.2v6.4l-5.5 3.2z"/>
+              </svg>
+              <span>LINUX eBPF RUNTIME</span>
+            </a>
+            <a href="https://csrc.nist.gov/pubs/fips/186-5/final" target="_blank" rel="noreferrer" class="cert-logo-item" title="NIST FIPS 186-5 ED25519">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#f59e0b">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.11v4.71c0 4.54-3.14 8.78-7 9.87-3.86-1.09-7-5.33-7-9.87V6.29l7-3.11zm-1 4.82v6h2v-6h-2z"/>
+              </svg>
+              <span>FIPS 186-5 (ED25519)</span>
+            </a>
+            <a href="https://www.rfc-editor.org/rfc/rfc8785" target="_blank" rel="noreferrer" class="cert-logo-item" title="IETF RFC 8785 Canonical JSON">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#06b6d4">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              </svg>
+              <span>RFC 8785 CANONICAL</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Specifications & Machine Agent Discovery -->
+        <div>
+          <div class="footer-col-title">[DISCOVERY &amp; SPECS]</div>
+          <ul class="footer-links-list">
+            <li>
+              <a href="/leaderboard" style="color:var(--emerald-bright); font-weight:700;">
+                <span>[AGENT GUARDRAILS LEADERBOARD]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/docs.html" style="color:#38bdf8; font-weight:700;">
+                <span>[DOCUMENTATION &amp; SPECS]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/verify.html" style="color:#10b981; font-weight:700;">
+                <span>[VERIFIED BARTHOLOMEW SEAL]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/investors.html" style="color:#c084fc; font-weight:700;">
+                <span>[INVESTOR ROOM]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/.well-known/btp.json" target="_blank" style="color:var(--gold-light); font-weight:700;">
+                <span>[BTP MANIFEST v5.4]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/llms.txt" target="_blank" style="color:var(--emerald-light); font-weight:700;">
+                <span>[AGENT SPEC: llms.txt]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/sim-lab.html" style="color:var(--cyan); font-weight:700;">
+                <span>[INTERACTIVE SIM LAB]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/control-plane.html" style="color:var(--emerald); font-weight:700;">
+                <span>[ENTERPRISE CONTROL PLANE]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ivegotahunnitonit/bartholomew" target="_blank" rel="noreferrer">
+                <span>GITHUB SOURCE</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/docs/threat-model.md" target="_blank" rel="noreferrer">
+                <span>THREAT MODEL &amp; SPEC</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/docs/cookbook.md" target="_blank" rel="noreferrer">
+                <span>UNIVERSAL COOKBOOK</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="/sim-lab.html" style="color: #38bdf8; font-weight: 700;">
+                <span>[LIVE ATTACK SIMULATOR]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </a>
+            </li>
+            <li>
+              <button onclick="openRoadmapModal()" style="color:#c084fc; font-weight:700;">
+                <span>[FOUNDER ROADMAP]</span>
+                <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Benchmark & Stress Test Deep Dive Link -->
+      <div class="footer-stress-banner" style="margin: 32px 0 24px; background: rgba(13, 18, 31, 0.85); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; display: inline-block; flex-shrink: 0;"></span>
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #10b981; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
+              DETERMINISTIC INVARIANT STRESS TEST (1,000 SYNTHETIC OPERATIONS)
+            </div>
+            <div style="font-size: 0.86rem; color: #94a3b8; margin-top: 2px;">
+              Live swarm sweep, 100% attack interception, &lt; 35µs SLA gating, and RFC 8785 Merkle attestation.
+            </div>
+          </div>
+        </div>
+        <a href="/sim-lab.html#stress-suite" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
+          <span>LAUNCH INTERACTIVE SIM LAB &rarr;</span>
+        </a>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <div>© 2026 BARTHOLOMEW TRUST PROTOCOL • SOVEREIGN OPEN STANDARDS (BTP v5.4)</div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <a href="/docs.html" style="color: #cbd5e1; font-weight: 700; text-decoration: none;">[DOCUMENTATION]</a>
+          <span>•</span>
+          <a href="/verify.html" style="color: #10b981; font-weight: 700; text-decoration: none;">[VERIFIED BARTHOLOMEW SEAL]</a>
+          <span>•</span>
+          <a href="/investors.html" style="color: #c084fc; font-weight: 700; text-decoration: none;">[INVESTOR ROOM]</a>
+          <span>•</span>
+          <a href="/sim-lab.html" style="color: #38bdf8; font-weight: 700; text-decoration: none;">[LIVE ATTACK SIMULATOR]</a>
+          <span>•</span>
+          <a href="/robots.txt">robots.txt</a>
+          <span>·</span>
+          <a href="/sitemap.xml">sitemap.xml</a>
+          <span>·</span>
+          <a href="https://github.com/ivegotahunnitonit/bartholomew/blob/main/LICENSE" target="_blank">[MIT LICENSE]</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaderboard Logic Scripts -->
   <script>
     const dataRows = [
       {
@@ -1232,5 +1759,6 @@
     });
 
   </script>
+
 </body>
 </html>

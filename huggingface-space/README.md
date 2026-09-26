@@ -1,6 +1,6 @@
 ---
 title: Bartholomew AI Agent Attack Simulator
-emoji: ⚡
+emoji: 🛡️
 colorFrom: blue
 colorTo: indigo
 sdk: static

@@ -84,6 +84,14 @@
           "destination": "/investors.html"
         },
         {
+          "source": "/leaderboard",
+          "destination": "/leaderboard.html"
+        },
+        {
+          "source": "/leaderboard.html",
+          "destination": "/leaderboard.html"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
@@ -208,6 +216,14 @@
         {
           "source": "/investors.html",
           "destination": "/investors.html"
+        },
+        {
+          "source": "/leaderboard",
+          "destination": "/leaderboard.html"
+        },
+        {
+          "source": "/leaderboard.html",
+          "destination": "/leaderboard.html"
         },
         {
           "source": "**",
