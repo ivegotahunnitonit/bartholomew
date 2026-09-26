@@ -3556,6 +3556,7 @@ def main():
     bond_p = subparsers.add_parser("bond", help="BTP v3.1 Bonded Execution Warranty & Invariant Slashing Engine")
     bond_sub = bond_p.add_subparsers(dest="bond_cmd")
 
+    b_pool_p = bond_sub.add_parser("pool", help="Show Bartholomew Autonomous Agent Insurance Fund reserve status")
     b_issue_p = bond_sub.add_parser("issue", help="Issue an execution warranty bond for an autonomous agent action")
     b_issue_p.add_argument("--agent", "-a", required=True, help="Agent identifier")
     b_issue_p.add_argument("--action", default="EXECUTE_TOOL", help="Action type or tool category")
@@ -3917,6 +3918,15 @@ def main():
     p_kms.add_argument("--provider", type=str, default="aws_kms", choices=["aws_kms", "gcp_kms", "local_ed25519", "hashicorp_vault"])
     p_kms.add_argument("--key-id", type=str, default="arn:aws:kms:us-east-1:123456789012:key/btp-root")
 
+
+
+    # btp-guard mcp-settle
+    p_mcp_s = subparsers.add_parser("mcp-settle", help="Route paid MCP tool call with 2.5%% protocol clearinghouse take-rate")
+    p_mcp_s.add_argument("--agent", type=str, default="agent-default", help="Originating agent ID")
+    p_mcp_s.add_argument("--tool", type=str, required=True, help="Target MCP tool name")
+    p_mcp_s.add_argument("--payload", type=str, required=True, help="Tool payload to evaluate")
+    p_mcp_s.add_argument("--price", type=float, default=0.10, help="Tool price in USD")
+
     args = parser.parse_args()
 
     if args.command == "redteam":
@@ -3955,6 +3965,23 @@ def main():
         print(f"  - Standard: {receipt['token']['fips_compliance']}")
         print(f"  - Ephemeral Session Pubkey: {receipt['token']['session_pubkey']}")
         print(f"  - KMS Root Signature: {receipt['kms_signature'][:24]}...")
+        sys.exit(0)
+    elif args.command == "mcp-settle":
+        from .mcp_clearinghouse import MCPClearinghouseGateway
+        gw = MCPClearinghouseGateway()
+        res = gw.settle_tool_call(agent_id=args.agent, tool_name=args.tool, tool_payload=args.payload, tool_price_usd=args.price)
+        if res.get("settlement_status") == "SETTLED":
+            print(f"\n[+] [BTP CLEARINGHOUSE] MCP Tool Call Settled Successfully:")
+            print(f"  - Transaction ID: {res['tx_id']}")
+            print(f"  - Tool: {res['tool_name']}")
+            print(f"  - Tool Price: ${res['tool_price_usd']:,.4f}")
+            print(f"  - Protocol Take-Rate (2.5%): ${res['protocol_fee_usd']:,.4f}")
+            print(f"  - Provider Net Payout (97.5%): ${res['provider_net_payout_usd']:,.4f}")
+            print(f"  - AST Gate Latency: {res['latency_us']} us")
+        else:
+            print(f"\n[-] [BTP CLEARINGHOUSE] Tool Call Vetoed & Cancelled (No Charge):")
+            print(f"  - Reason: {res.get('reason')}")
+            print(f"  - Charged: $0.00")
         sys.exit(0)
 
     if args.command == "run":
@@ -4139,7 +4166,17 @@ def main():
         else:
             enc_p.print_help()
     elif args.command == "bond":
-        if args.bond_cmd == "issue":
+        if args.bond_cmd == "pool":
+            from .warranty_service import WarrantyFundManager
+            mgr = WarrantyFundManager()
+            status = mgr.get_status()
+            print("\n[+] [BTP BOND] Bartholomew Autonomous Agent Insurance Fund Status:")
+            print(f"  - Reserve Pool Capital: ${status['reserve_pool_usd']:,.2f} USD")
+            print(f"  - Active Bonds Underwritten: {status['active_bonds_count']}")
+            print(f"  - Maximum Single-Incident Indemnity: ${status['max_coverage_per_agent_usd']:,.2f} USD")
+            print(f"  - Historical Loss / Claims Ratio: {status['claims_paid_ratio']}")
+            sys.exit(0)
+        elif args.bond_cmd == "issue":
             cmd_bond_issue(args)
         elif args.bond_cmd == "slash":
             cmd_bond_slash(args)
