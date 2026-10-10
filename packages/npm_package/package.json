@@ -1,7 +1,7 @@
 {
   "name": "btp-guard",
-  "version": "6.4.5",
-  "description": "BTP v6.4.5 Agentic Runtime Protection (ARP) Gateway - Universal Framework Hooks, Sub-35us Tool Invariants, and Cryptographic Merkle Vault for Autonomous Agents",
+  "version": "6.4.6",
+  "description": "BTP v6.4.6 Agentic Runtime Protection (ARP) Gateway - Universal Framework Hooks, Sub-35us Tool Invariants, and Cryptographic Merkle Vault for Autonomous Agents",
   "main": "index.js",
   "types": "index.d.ts",
   "sideEffects": false,
