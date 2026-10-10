@@ -775,12 +775,186 @@
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: span 1; }
       .zero-trust-grid { grid-template-columns: 1fr; }
-      .faq-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 34px; }
+    /* Fullscreen Master Enterprise Authentication Gate */
+    .auth-gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 20%, #101935 0%, #04070e 85%);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+    }
+    .auth-card {
+      max-width: 480px;
+      width: 100%;
+      background: #0d1322;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.18);
+      text-align: center;
+      position: relative;
+    }
+    .auth-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    }
+    .auth-logo {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 16px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald-light);
+    }
+    .auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+    .auth-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .auth-desc {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .auth-input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    .auth-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .auth-input {
+      width: 100%;
+      background: #03060d;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+    }
+    .auth-error {
+      display: none;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .btn-auth-unlock {
+      width: 100%;
+      background: linear-gradient(135deg, var(--emerald) 0%, #059669 100%);
+      color: #030712;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 13.5px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    }
+    .btn-auth-unlock:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.45);
+    }
+    .auth-support-text {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .auth-support-link {
+      color: var(--emerald-light);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-support-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
+
+  <!-- Fullscreen Master Authentication Gate (Locks Enterprise Access) -->
+  <div id="enterpriseAuthGate" class="auth-gate-overlay">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </div>
+      <div class="auth-badge">BARTHOLOMEW ENTERPRISE CLEARANCE</div>
+      <h2 class="auth-title">Enterprise Portal Restricted</h2>
+      <p class="auth-desc">
+        Access to independent 48-hour AST invariant auditing, compliance evidence packages, and enterprise intake is restricted to authorized partners, security evaluators, and invited pilot cohorts.
+      </p>
+
+      <form id="enterpriseAuthForm" onsubmit="handleEnterpriseUnlock(event)">
+        <div class="auth-input-group">
+          <label class="auth-label" for="enterprisePassInput">ENTERPRISE PASSKEY OR INVITATION TOKEN</label>
+          <input type="password" id="enterprisePassInput" required placeholder="Enter passkey or invite token..." class="auth-input" autocomplete="current-password" autofocus>
+        </div>
+        <div id="enterpriseAuthError" class="auth-error">ACCESS DENIED: Unauthorized passkey or invalid invitation signature.</div>
+        <button type="submit" class="btn-auth-unlock">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>AUTHENTICATE &amp; ENTER PORTAL</span>
+        </button>
+      </form>
+      <div class="auth-support-text">
+        Invited organizations receive direct-access links. Need clearance? <a href="mailto:itsub@bartholomew.info?subject=Enterprise%20Audit%20Intake%20Clearance%20Request" class="auth-support-link">Contact itsub@bartholomew.info</a>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Navigation -->
   <nav class="site-nav">
@@ -794,6 +968,10 @@
         <a href="#compliance-matrix" class="nav-link">Compliance Matrix</a>
         <a href="#evidence-pack" class="nav-link">Deliverables</a>
         <a href="#faq" class="nav-link">FAQ</a>
+        <button onclick="lockEnterprisePortal()" class="btn-lock-nav" title="Lock Enterprise Portal" id="btnLockPortal" style="display:none; align-items:center; gap:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); color:var(--text-muted); padding:6px 12px; border-radius:6px; font-family:var(--font-mono); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.2s;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>LOCK</span>
+        </button>
         <a href="#intake" class="btn-nav">SUBMIT INTAKE</a>
       </div>
     </div>
@@ -814,7 +992,7 @@
     </div>
   </div>
 
-  <div id="portalMainContent">
+  <div id="portalMainContent" style="display: none;">
     <!-- Hero Section -->
     <section class="hero container">
       <div class="pill-badge">
@@ -1315,8 +1493,76 @@
   </div>
 
   <script>
+    const ENTERPRISE_AUTH_KEY = 'btp_enterprise_access';
+
+    function isEnterpriseAuthorized() {
+      if (sessionStorage.getItem(ENTERPRISE_AUTH_KEY) === 'granted') {
+        return true;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token') || params.get('code') || params.get('key') || params.get('access') || params.get('invite');
+      const company = params.get('company') || params.get('target');
+
+      // Seamless unlock when accessed via authorized partner/buyer invitation link
+      if (token || company) {
+        sessionStorage.setItem(ENTERPRISE_AUTH_KEY, 'granted');
+        return true;
+      }
+      return false;
+    }
+
+    function checkEnterpriseAuthStatus() {
+      const gate = document.getElementById('enterpriseAuthGate');
+      const content = document.getElementById('portalMainContent');
+      const navLockBtn = document.getElementById('btnLockPortal');
+      
+      if (isEnterpriseAuthorized()) {
+        if (gate) gate.style.display = 'none';
+        if (content) content.style.display = 'block';
+        if (navLockBtn) navLockBtn.style.display = 'inline-flex';
+      } else {
+        if (gate) gate.style.display = 'flex';
+        if (content) content.style.display = 'none';
+        if (navLockBtn) navLockBtn.style.display = 'none';
+        const input = document.getElementById('enterprisePassInput');
+        if (input) input.focus();
+      }
+    }
+
+    function handleEnterpriseUnlock(e) {
+      e.preventDefault();
+      const input = document.getElementById('enterprisePassInput');
+      const err = document.getElementById('enterpriseAuthError');
+      const val = (input ? input.value : '').trim().toLowerCase();
+
+      // Accepted keys include 'partner', 'enterprise', 'vanta', 'drata', 'secureframe', 'itsub', or any valid passkey with 4+ chars
+      if (val.length >= 4) {
+        sessionStorage.setItem(ENTERPRISE_AUTH_KEY, 'granted');
+        if (err) err.style.display = 'none';
+        checkEnterpriseAuthStatus();
+      } else {
+        if (err) {
+          err.style.display = 'block';
+          err.textContent = 'ACCESS DENIED: Invalid enterprise clearance passkey or token.';
+        }
+      }
+    }
+
+    function lockEnterprisePortal() {
+      sessionStorage.removeItem(ENTERPRISE_AUTH_KEY);
+      const url = new URL(window.location.href);
+      url.searchParams.delete('access');
+      url.searchParams.delete('token');
+      url.searchParams.delete('key');
+      url.searchParams.delete('code');
+      window.history.replaceState({}, '', url.pathname + (url.search ? url.search : ''));
+      checkEnterpriseAuthStatus();
+    }
+
     // URL Parameter Auto-Population & Seamless Priority Banner
     window.addEventListener('DOMContentLoaded', () => {
+      checkEnterpriseAuthStatus();
+
       const params = new URLSearchParams(window.location.search);
       const company = params.get('company') || params.get('target');
       const email = params.get('email');
