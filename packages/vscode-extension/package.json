@@ -2,7 +2,7 @@
   "name": "bartholomew-guard-vscode",
   "displayName": "Bartholomew Agent Guard - Coding Agent Runtime Protection",
   "description": "Deterministic workspace execution firewall, fail-closed pre-commit sentinel, and sub-millisecond AST invariant guard for AI coding agents (Cursor, Claude Code, Windsurf, Copilot, Cline, Aider, OpenHands, Smolagents).",
-  "version": "6.4.5",
+  "version": "6.4.6",
   "publisher": "bartholomew",
   "icon": "icon.png",
   "license": "Apache-2.0",

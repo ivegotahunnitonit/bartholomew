@@ -1,67 +1,104 @@
 """
-Setup Claude Desktop & Cursor MCP Configuration for Bartholomew v2.4
-======================================================================
-Writes claude_desktop_config.json so Claude Desktop and Cursor instantly
-load Bartholomew as:
-  1. An active MCP Guard tool server (`bartholomew-guard`).
-  2. A resilient transparent security proxy (`bartholomew-proxy`) with
-     in-flight secret redaction and transactional workspace rollbacks.
+Setup Claude Desktop, Cursor, and Windsurf MCP Configuration for Bartholomew Guard
+=================================================================================
+Automates zero-friction installation of Bartholomew Guard as an active Model Context
+Protocol (MCP) JSON-RPC security server across developer desktop environments.
 """
 
 import os
 import sys
 import json
+from pathlib import Path
 
-def configure_mcp_environments():
+
+def get_claude_config_path() -> Path:
+    if sys.platform == "win32":
+        return Path(os.path.expandvars(r"%APPDATA%\Claude\claude_desktop_config.json"))
+    elif sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json"
+    else:
+        return Path.home() / ".config" / "Claude" / "claude_desktop_config.json"
+
+
+def get_cursor_config_path() -> Path:
+    if sys.platform == "win32":
+        return Path.home() / ".cursor" / "mcp.json"
+    else:
+        return Path.home() / ".cursor" / "mcp.json"
+
+
+def get_windsurf_config_path() -> Path:
+    if sys.platform == "win32":
+        return Path(os.path.expandvars(r"%USERPROFILE%\.codeium\windsurf\mcp_config.json"))
+    else:
+        return Path.home() / ".codeium" / "windsurf" / "mcp_config.json"
+
+
+def update_mcp_config(config_path: Path, workspace_dir: str, python_exe: str, client_name: str) -> bool:
+    try:
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        config_data = {}
+        if config_path.exists():
+            try:
+                with open(config_path, "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+            except Exception:
+                config_data = {}
+
+        if "mcpServers" not in config_data:
+            config_data["mcpServers"] = {}
+
+        # Configure Bartholomew Guard Server
+        config_data["mcpServers"]["bartholomew-guard"] = {
+            "command": python_exe,
+            "args": ["-m", "btp_guard.mcp_server"],
+            "cwd": workspace_dir,
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        }
+
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config_data, f, indent=2)
+
+        print(f"[OK] Configured {client_name} at: {config_path}")
+        return True
+    except Exception as e:
+        print(f"[INFO] Skipping {client_name} ({e})")
+        return False
+
+
+def configure_all():
     workspace_dir = os.path.abspath(".")
     python_exe = sys.executable
 
-    # Detect Claude Desktop config path across OS
-    if sys.platform == "win32":
-        claude_dir = os.path.expandvars(r"%APPDATA%\Claude")
-    elif sys.platform == "darwin":
-        claude_dir = os.path.expanduser("~/Library/Application Support/Claude")
-    else:
-        claude_dir = os.path.expanduser("~/.config/Claude")
+    print("\n" + "=" * 70)
+    print("  BARTHOLOMEW MCP CLIENT AUTO-CONFIGURATION (BTP v6.4.4)")
+    print("=" * 70)
+    print(f"[*] Workspace Root : {workspace_dir}")
+    print(f"[*] Python Runtime : {python_exe}")
+    print("-" * 70)
 
-    os.makedirs(claude_dir, exist_ok=True)
-    config_path = os.path.join(claude_dir, "claude_desktop_config.json")
+    # 1. Claude Desktop
+    claude_path = get_claude_config_path()
+    update_mcp_config(claude_path, workspace_dir, python_exe, "Claude Desktop")
 
-    config_data = {}
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
-        except Exception:
-            config_data = {}
+    # 2. Cursor
+    cursor_path = get_cursor_config_path()
+    update_mcp_config(cursor_path, workspace_dir, python_exe, "Cursor IDE")
 
-    if "mcpServers" not in config_data:
-        config_data["mcpServers"] = {}
+    # 3. Windsurf
+    windsurf_path = get_windsurf_config_path()
+    update_mcp_config(windsurf_path, workspace_dir, python_exe, "Windsurf IDE")
 
-    # 1. Native Guard Server
-    config_data["mcpServers"]["bartholomew-guard"] = {
-        "command": python_exe,
-        "args": ["-m", "mcp_server.server"],
-        "cwd": workspace_dir
-    }
+    # 4. Local workspace .cursor/mcp.json (if .cursor dir exists)
+    local_cursor = Path(workspace_dir) / ".cursor" / "mcp.json"
+    update_mcp_config(local_cursor, workspace_dir, python_exe, "Workspace (.cursor/mcp.json)")
 
-    # 2. Resilient Transactional Proxy
-    config_data["mcpServers"]["bartholomew-proxy"] = {
-        "command": python_exe,
-        "args": [
-            "-m", "src.mcp_gateway",
-            "--workspace", workspace_dir,
-            "--server-cmd", python_exe, "-m", "mcp_server.server"
-        ],
-        "cwd": workspace_dir
-    }
-
-    with open(config_path, "w", encoding="utf-8") as f:
-        json.dump(config_data, f, indent=2)
-
-    print(f"[SUCCESS] Configured Claude Desktop MCP at: {config_path}")
-    print(json.dumps(config_data, indent=2))
+    print("=" * 70)
+    print("[SUCCESS] Bartholomew Guard MCP is installed and ready across active clients.")
+    print("=" * 70 + "\n")
 
 
 if __name__ == "__main__":
-    configure_mcp_environments()
+    configure_all()

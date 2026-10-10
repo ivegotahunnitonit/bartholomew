@@ -35,13 +35,21 @@ def cmd_gateway(args):
 
 def cmd_wrap(args):
     from btp_guard.llamacpp_adapter import GuardedLlamaProxy
-    upstream = getattr(args, "upstream", "http://localhost:8080") or "http://localhost:8080"
+    upstream = getattr(args, "upstream", None)
+    if getattr(args, "ollama", False) or getattr(args, "command", "") == "ollama":
+        upstream = upstream or "http://localhost:11434"
+    elif getattr(args, "vllm", False):
+        upstream = upstream or "http://localhost:8000"
+    else:
+        upstream = upstream or "http://localhost:8080"
     port = getattr(args, "port", 8081) or 8081
     host = getattr(args, "host", "127.0.0.1") or "127.0.0.1"
+    runtime_name = "Ollama" if "11434" in upstream else ("vLLM" if "8000" in upstream else "llama.cpp")
     print("\n" + "=" * 74)
-    print("   BARTHOLOMEW LLAMA.CPP & OLLAMA LOCAL GATEWAY (BTP v6.4.4)")
+    print(f"   BARTHOLOMEW {runtime_name.upper()} & LOCAL RUNTIME GATEWAY (BTP v6.4.4)")
     print("=" * 74)
-    print(f"  * Upstream Runtime  : {upstream}")
+    print(f"  * Runtime Type      : {runtime_name}")
+    print(f"  * Upstream Endpoint : {upstream}")
     print(f"  * Guarded Endpoint  : http://{host}:{port}/v1")
     print(f"  * AST Evaluation    : <35 microseconds (In-Process)")
     print(f"  * Air-Gapped        : 100% Offline (Zero Cloud Dependency)")
