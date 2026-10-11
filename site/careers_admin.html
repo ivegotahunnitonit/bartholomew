@@ -381,7 +381,8 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-bottom: 60px;
     }
     table.candidates-table {
@@ -562,6 +563,19 @@
       .filter-bar {
         flex-direction: column;
         align-items: stretch;
+      }
+      .nav-inner {
+        height: auto;
+        min-height: 64px;
+        padding: 12px 0;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .nav-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+        justify-content: flex-start;
       }
     }
   </style>
